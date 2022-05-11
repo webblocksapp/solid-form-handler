@@ -1,0 +1,8 @@
+{
+  "name": "solidjs-form-handler",
+  "version": "1.0.0",
+  "scripts": {},
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "name": "solidjs-form-handler",
+  "name": "@webblocksapp/solidjs-form-handler",
   "description": "A SolidJS library for simplifying form validations.",
   "version": "1.0.0",
   "author": {
@@ -10,7 +10,9 @@
     "url": "https://github.com/webblocksapp/solidjs-form-handler"
   },
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "link": "npm run build && npm link",
+    "test": "jest --coverage"
   },
   "peerDependencies": {
     "solid-js": "^1.3.17",
@@ -18,11 +20,17 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",
+    "@babel/plugin-transform-runtime": "^7.17.10",
     "@babel/preset-env": "^7.17.10",
     "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.5.1",
+    "@types/mocha": "^9.1.1",
     "babel-loader": "^8.2.5",
     "babel-preset-solid": "^1.3.17",
+    "jest": "^28.1.0",
+    "solid-jest": "solidjs/solid-jest",
     "solid-js": "^1.3.17",
+    "ts-jest": "^28.0.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4",
     "webpack": "^5.72.1",

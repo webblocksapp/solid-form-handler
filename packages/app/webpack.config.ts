@@ -1,5 +1,6 @@
 import { Configuration } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import path from 'path';
 import 'webpack-dev-server';
 
@@ -30,6 +31,7 @@ const config: Configuration = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    plugins: [new TsconfigPathsPlugin()],
   },
   plugins: [new HtmlWebpackPlugin({ template: 'index.html' })],
   output: {

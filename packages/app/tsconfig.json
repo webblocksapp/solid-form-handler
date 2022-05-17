@@ -6,7 +6,11 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "preserve",
-    "jsxImportSource": "solid-js"
+    "jsxImportSource": "solid-js",
+    "paths": {
+      "@layouts": ["src/layouts"],
+      "@routes": ["src/routes"]
+    }
   },
   "include": ["src"]
 }

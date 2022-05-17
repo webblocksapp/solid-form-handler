@@ -1,4 +1,5 @@
 import { CommonObject, FormField } from '@interfaces';
+import { onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError } from 'yup';
 
@@ -50,7 +51,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
           if (path === undefined) {
             continue;
           }
-          setFormFields(path, (formField) => ({ ...formField, isInvalid: true, message: errors[0] }));
+          setFormFields(path, (formField) => ({ ...formField, isInvalid: true, errorMessage: errors[0] }));
         }
       }
     }
@@ -78,16 +79,27 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Initializes the default state of a field.
    * By default the field is initialized as invalid.
+   * Use this method on any FormField mounted component lifecycle.
    */
   const initFormField = (path: string = '', value: any, field?: HTMLElement) => {
     if (!path) return;
-    setFormFields(path, {
+    setFormFields(path, (formField) => ({
+      ...formField,
       isInvalid: true,
       errorMessage: '',
-      field,
+      field: field ?? formField?.field,
       initialValue: value || '',
       touched: false,
       dirty: false,
+    }));
+  };
+
+  /**
+   * Initializes the default state of the form fields.
+   */
+  const initializeFormFields = (data: T) => {
+    Object.keys(data).forEach((path) => {
+      initFormField(path, formData);
     });
   };
 
@@ -138,6 +150,10 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
     return false;
   };
 
+  onMount(() => {
+    defaultFormData && initializeFormFields(defaultFormData);
+  });
+
   return {
     formHasChanges,
     getFieldError,
@@ -147,5 +163,6 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
     isFormInvalid,
     setFieldValue,
     validate,
+    validateField,
   };
 };

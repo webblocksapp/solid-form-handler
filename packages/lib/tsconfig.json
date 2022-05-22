@@ -10,8 +10,10 @@
     "jsxImportSource": "solid-js",
     "paths": {
       "@interfaces": ["src/interfaces"],
-      "@hooks": ["src/hooks"]
-    }
+      "@hooks": ["src/hooks"],
+      "@implementations": ["examples/implementations"]
+    },
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src"]
+  "include": ["src", "examples"]
 }

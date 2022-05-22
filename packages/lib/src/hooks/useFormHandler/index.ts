@@ -1,4 +1,4 @@
-import { CommonObject, FormField } from '@interfaces';
+import { CommonObject, FormField, SetFieldValueOptions } from '@interfaces';
 import { onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError } from 'yup';
@@ -10,15 +10,19 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Sets an specific field value of the form data according to the given path.
    */
-  const setFieldValue = async (path: string = '', value: any) => {
+  const setFieldValue = async (
+    path: string = '',
+    value: any,
+    options: SetFieldValueOptions = { touch: true, dirty: true, validate: true }
+  ) => {
     if (!path) {
       return;
     }
 
     setFormData(path, value);
-    touchField(path);
-    dirtyField(path);
-    await validateField(path);
+    options?.touch && touchField(path);
+    options?.dirty && dirtyField(path);
+    options?.validate && (await validateField(path));
   };
 
   /**
@@ -67,6 +71,13 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
    */
   const getFormData = () => {
     return formData as T;
+  };
+
+  /**
+   * Gets the form fields object.
+   */
+  const getFormFields = () => {
+    return formFields;
   };
 
   /**
@@ -159,6 +170,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
     getFieldError,
     getFieldValue,
     getFormData,
+    getFormFields,
     initFormField,
     isFormInvalid,
     setFieldValue,

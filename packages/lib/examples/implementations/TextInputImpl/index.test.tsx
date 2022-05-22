@@ -4,6 +4,9 @@ import { TextInputImpl } from './index';
 describe('Text input use case', () => {
   it('must render error message on input when value is empty', async () => {
     render(() => <TextInputImpl />);
-    expect(screen.getByText('x')).toBeDefined();
+    fireEvent.input(screen.getByTestId('test-input'), { target: { value: '' } });
+    await waitFor(() => {
+      expect(screen.getByText('name is a required field')).toBeDefined();
+    });
   });
 });

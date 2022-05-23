@@ -9,4 +9,12 @@ describe('Text input use case', () => {
       expect(screen.getByText('name is a required field')).toBeDefined();
     });
   });
+
+  it('must render error message on blur when value is empty', async () => {
+    render(() => <TextInputImpl />);
+    fireEvent.blur(screen.getByTestId('test-input'), { target: { value: '' } });
+    await waitFor(() => {
+      expect(screen.getByText('name is a required field')).toBeDefined();
+    });
+  });
 });

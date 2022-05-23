@@ -1,10 +1,12 @@
 import { Component } from 'solid-js';
-import { TextInputImpl } from '@implementations';
+import { TextInputImpl, SelectImpl, CheckboxImpl } from '@implementations';
 
 export const App: Component = () => {
   return (
     <>
       <TextInputImpl />
+      <SelectImpl />
+      <CheckboxImpl />
     </>
   );
 };

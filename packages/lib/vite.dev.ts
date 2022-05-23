@@ -4,5 +4,5 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [solidPlugin(), tsconfigPaths({ root: __dirname })],
-  root: 'examples',
+  root: './examples',
 });

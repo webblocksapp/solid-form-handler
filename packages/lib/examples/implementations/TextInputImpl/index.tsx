@@ -2,11 +2,11 @@ import { Component } from 'solid-js';
 import { useFormHandler } from '@hooks';
 import * as yup from 'yup';
 
-type Schema1 = {
+type Schema = {
   name: string;
 };
 
-const schema: yup.SchemaOf<Schema1> = yup.object().shape({
+const schema: yup.SchemaOf<Schema> = yup.object().shape({
   name: yup.string().required(),
 });
 
@@ -24,6 +24,7 @@ export const TextInputImpl: Component = () => {
           name="name"
           placeholder="Write your name"
           oninput={({ currentTarget: { name, value } }) => formHandler.setFieldValue(name, value)}
+          onblur={({ currentTarget: { name } }) => formHandler.validateField(name)}
         ></input>
         <br />
         <small style="color: red">{formHandler.getFieldError('name')}</small>

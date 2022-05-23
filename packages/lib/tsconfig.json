@@ -11,6 +11,7 @@
     "paths": {
       "@interfaces": ["src/interfaces"],
       "@hooks": ["src/hooks"],
+      "@utils": ["src/utils"],
       "@implementations": ["examples/implementations"]
     },
     "typeRoots": ["./node_modules/@types"]

@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { TextInputImpl, SelectImpl, CheckboxImpl } from '@implementations';
+import { TextInputImpl, SelectImpl, CheckboxImpl, FormImpl } from '@implementations';
 
 export const App: Component = () => {
   return (
@@ -7,6 +7,7 @@ export const App: Component = () => {
       <TextInputImpl />
       <SelectImpl />
       <CheckboxImpl />
+      <FormImpl />
     </>
   );
 };

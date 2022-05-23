@@ -1,4 +1,5 @@
-import { CommonObject, FormField, SetFieldValueOptions } from '@interfaces';
+import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
+import { FormErrorsException } from '@utils';
 import { onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError } from 'yup';
@@ -43,13 +44,24 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   };
 
   /**
+   * Validates the whole form data throwing an error exception
+   */
+  const validateForm = async () => {
+    await validate({ throwException: true });
+  };
+
+  /**
    * Validates the whole form data.
    */
-  const validate = async () => {
+  const validate = async (options?: { throwException: boolean }) => {
+    let isInvalid = false;
+
     try {
       await yupSchema.validate(formData, { abortEarly: false });
     } catch (validationErrors) {
       if (validationErrors instanceof ValidationError) {
+        isInvalid = true;
+
         for (let validationError of validationErrors.inner) {
           const { path, errors } = validationError;
           if (path === undefined) {
@@ -58,6 +70,10 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
           setFormFields(path, (formField) => ({ ...formField, isInvalid: true, errorMessage: errors[0] }));
         }
       }
+    }
+
+    if (options?.throwException && isInvalid) {
+      throw new FormErrorsException(getFormErrors());
     }
   };
 
@@ -85,6 +101,19 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
    */
   const getFieldError = (path: string = ''): string => {
     return formFields[path]?.errorMessage || '';
+  };
+
+  /**
+   * Gets all the form fields errors
+   */
+  const getFormErrors = () => {
+    const errors: ValidationResult[] = [];
+
+    for (let path in formFields) {
+      if (formFields[path].errorMessage) errors.push({ path, errorMessage: formFields[path].errorMessage });
+    }
+
+    return errors;
   };
 
   /**
@@ -175,6 +204,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
     isFormInvalid,
     setFieldValue,
     validate,
+    validateForm,
     validateField,
   };
 };

@@ -3776,6 +3776,11 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
+solid-app-router@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/solid-app-router/-/solid-app-router-0.3.3.tgz#21e6ea3d317e7f01bcc73cdcdbf8523c8b2898ae"
+  integrity sha512-JEn0gi6q8Pq9M2Ml3CLeNzenxuBrOrQg4aQyeIZTNjOAeEil/9YiaAJk+US78sIdVcqflTneN5KZgJMIGJ0rFQ==
+
 solid-jest@solidjs/solid-jest:
   version "0.2.0"
   resolved "https://codeload.github.com/solidjs/solid-jest/tar.gz/bac75127e9f29f42443b39a0c3b5128334e84f09"

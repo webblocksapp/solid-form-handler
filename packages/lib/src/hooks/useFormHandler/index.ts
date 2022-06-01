@@ -1,11 +1,10 @@
 import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
 import { FormErrorsException } from '@utils';
-import { onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError } from 'yup';
 
-export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, defaultFormData?: T) => {
-  const [formData, setFormData] = createStore<CommonObject>(defaultFormData as CommonObject);
+export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, defaultFormData?: Partial<T>) => {
+  const [formData, setFormData] = createStore<CommonObject>({});
   const [formFields, setFormFields] = createStore<{ [x: string]: FormField }>({});
 
   /**
@@ -121,11 +120,20 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
    * By default the field is initialized as invalid.
    * Use this method on any FormField mounted component lifecycle.
    */
-  const initFormField = (path: string = '', value: any, field?: HTMLElement) => {
+  const initFormField = async (path: string = '', value: any, field?: HTMLElement) => {
     if (!path) return;
+
+    let isInvalid = false;
+
+    try {
+      await yupSchema.validateAt(path, formData);
+    } catch (_) {
+      isInvalid = true;
+    }
+
     setFormFields(path, (formField) => ({
       ...formField,
-      isInvalid: true,
+      isInvalid,
       errorMessage: '',
       field: field ?? formField?.field,
       initialValue: value || '',
@@ -135,11 +143,15 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   };
 
   /**
-   * Initializes the default state of the form fields.
+   * Initializes the default state of the form.
    */
-  const initializeFormFields = (data: T) => {
+  const initializeForm = (data: T) => {
+    setFormData(data);
+    defaultFormData && validate();
+
     Object.keys(data).forEach((path) => {
-      initFormField(path, formData);
+      const value = data[path] === undefined ? '' : data[path];
+      initFormField(path, value);
     });
   };
 
@@ -190,9 +202,10 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
     return false;
   };
 
-  onMount(() => {
-    defaultFormData && initializeFormFields(defaultFormData);
-  });
+  /**
+   * Form is initialized before mounted.
+   */
+  initializeForm({ ...yupSchema.getDefaultFromShape(), ...defaultFormData } as T);
 
   return {
     formHasChanges,

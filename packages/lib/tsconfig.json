@@ -12,7 +12,8 @@
       "@interfaces": ["src/interfaces"],
       "@hooks": ["src/hooks"],
       "@utils": ["src/utils"],
-      "@implementations": ["examples/implementations"]
+      "@implementations": ["examples/implementations"],
+      "@routes": ["examples/routes"]
     },
     "typeRoots": ["./node_modules/@types"]
   },

@@ -1,13 +1,28 @@
+import { Link, useRoutes } from 'solid-app-router';
 import { Component } from 'solid-js';
-import { TextInputImpl, SelectImpl, CheckboxImpl, FormImpl } from '@implementations';
+import { mainRoutes } from '@routes';
 
 export const App: Component = () => {
   return (
-    <>
-      <TextInputImpl />
-      <SelectImpl />
-      <CheckboxImpl />
-      <FormImpl />
-    </>
+    <div style="display: grid; grid-template-columns: 200px 1fr">
+      <div>
+        <div>
+          <Link href="checkbox-impl">checkbox-impl</Link>
+        </div>
+        <div>
+          <Link href="form-impl">form-impl</Link>
+        </div>
+        <div>
+          <Link href="select-impl">select-impl</Link>
+        </div>
+        <div>
+          <Link href="text-input-impl">text-input-impl</Link>
+        </div>
+        <div>
+          <Link href="conditional-form-impl">conditional-form-impl</Link>
+        </div>
+      </div>
+      <div>{useRoutes(mainRoutes)}</div>
+    </div>
   );
 };

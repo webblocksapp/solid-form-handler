@@ -116,11 +116,11 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   };
 
   /**
-   * Initializes the default state of a field.
+   * Sets the default state of a field.
    * By default the field is initialized as invalid.
    * Use this method on any FormField mounted component lifecycle.
    */
-  const initFormField = async (path: string = '', value: any, field?: HTMLElement) => {
+  const setFormField = async (path: string = '', value: any, field?: HTMLElement) => {
     if (!path) return;
 
     let isInvalid = false;
@@ -143,6 +143,13 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   };
 
   /**
+   * Refresh the form field initial state
+   */
+  const refreshFormField = (path: string) => {
+    setFormField(path, formData[path]);
+  };
+
+  /**
    * Initializes the default state of the form.
    */
   const initializeForm = (data: T) => {
@@ -151,7 +158,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
 
     Object.keys(data).forEach((path) => {
       const value = data[path] === undefined ? '' : data[path];
-      initFormField(path, value);
+      setFormField(path, value);
     });
   };
 
@@ -213,11 +220,12 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
     getFieldValue,
     getFormData,
     getFormFields,
-    initFormField,
     isFormInvalid,
+    refreshFormField,
     setFieldValue,
+    setFormField,
     validate,
-    validateForm,
     validateField,
+    validateForm,
   };
 };

@@ -73,7 +73,7 @@ export const ConditionalFormImpl: Component = () => {
           name="hasHouse"
           onInput={(event) => {
             formHandler.setFieldValue('hasHouse', event.currentTarget.checked);
-            formHandler.validateField('houseAddress');
+            formHandler.refreshFormField('houseAddress');
           }}
         ></input>
         <br />

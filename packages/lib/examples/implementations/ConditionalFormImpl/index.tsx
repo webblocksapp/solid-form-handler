@@ -31,6 +31,10 @@ export const ConditionalFormImpl: Component = () => {
     formHandler.setFieldValue(name, value);
   };
 
+  const initializeForm = () => {
+    formHandler.initializeForm({name: 'John', age: 22, hasHouse: true, houseAddress: 'Street 123 #45'})
+  }
+
   const submit = async () => {
     try {
       setError('');
@@ -55,14 +59,14 @@ export const ConditionalFormImpl: Component = () => {
       <div>
         <label>Name</label>
         <br />
-        <input name="name" onInput={onInput}></input>
+        <input name="name" onInput={onInput} value={formData.name}></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('name')}</small>
       </div>
       <div>
         <label>Age</label>
         <br />
-        <input name="age" onInput={onInput}></input>
+        <input name="age" onInput={onInput} value={formData.age}></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('age')}</small>
       </div>
@@ -71,6 +75,7 @@ export const ConditionalFormImpl: Component = () => {
         <input
           type="checkbox"
           name="hasHouse"
+          checked={formData.hasHouse}
           onInput={(event) => {
             formHandler.setFieldValue('hasHouse', event.currentTarget.checked);
             formHandler.refreshFormField('houseAddress');
@@ -83,7 +88,7 @@ export const ConditionalFormImpl: Component = () => {
         <div>
           <label>House Address</label>
           <br />
-          <input name="houseAddress" onInput={onInput}></input>
+          <input name="houseAddress" value={formData.houseAddress} onInput={onInput}></input>
           <br />
           <small style="color: red;">{formHandler.getFieldError('houseAddress')}</small>
         </div>
@@ -91,6 +96,10 @@ export const ConditionalFormImpl: Component = () => {
       <br />
       <button type="button" onClick={submit} disabled={formHandler.isFormInvalid()}>
         Submit
+      </button>
+      <br />
+      <button type="button" onClick={initializeForm}>
+        Set default form data
       </button>
       <br />
       <pre style="color: red">

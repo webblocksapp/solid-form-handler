@@ -131,6 +131,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
       isInvalid = true;
     }
 
+    setFormData(path, value || '');
     setFormFields(path, (formField) => ({
       ...formField,
       isInvalid,
@@ -152,13 +153,12 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Initializes the default state of the form.
    */
-  const initializeForm = (data: T) => {
-    setFormData(data);
+  const initializeForm = (defaultData?: Partial<T>) => {
+    const data = { ...yupSchema.getDefaultFromShape(), ...defaultFormData, ...defaultData } as T
     defaultFormData && validate();
 
     Object.keys(data).forEach((path) => {
-      const value = data[path] === undefined ? '' : data[path];
-      setFormField(path, value);
+      setFormField(path, data[path] || '');
     });
   };
 
@@ -212,14 +212,16 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Form is initialized before mounted.
    */
-  initializeForm({ ...yupSchema.getDefaultFromShape(), ...defaultFormData } as T);
+  initializeForm();
 
   return {
     formHasChanges,
     getFieldError,
     getFieldValue,
     getFormData,
+    getFormErrors,
     getFormFields,
+    initializeForm,
     isFormInvalid,
     refreshFormField,
     setFieldValue,

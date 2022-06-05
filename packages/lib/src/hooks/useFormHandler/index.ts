@@ -53,25 +53,14 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
    * Validates the whole form data.
    */
   const validate = async (options?: { throwException: boolean }) => {
-    let isInvalid = false;
+    const promises: Promise<void>[] = [];
+    Object.keys(formFields).forEach((path) => {
+      promises.push(validateField(path));
+    });
 
-    try {
-      await yupSchema.validate(formData, { abortEarly: false });
-    } catch (validationErrors) {
-      if (validationErrors instanceof ValidationError) {
-        isInvalid = true;
+    await Promise.all(promises);
 
-        for (let validationError of validationErrors.inner) {
-          const { path, errors } = validationError;
-          if (path === undefined) {
-            continue;
-          }
-          setFormFields(path, (formField) => ({ ...formField, isInvalid: true, errorMessage: errors[0] }));
-        }
-      }
-    }
-
-    if (options?.throwException && isInvalid) {
+    if (options?.throwException && isFormInvalid()) {
       throw new FormErrorsException(getFormErrors());
     }
   };
@@ -153,13 +142,17 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Initializes the default state of the form.
    */
-  const initializeForm = (defaultData?: Partial<T>) => {
-    const data = { ...yupSchema.getDefaultFromShape(), ...defaultFormData, ...defaultData } as T
-    defaultFormData && validate();
+  const initializeForm = async (defaultData?: Partial<T>) => {
+    const data = { ...yupSchema.getDefaultFromShape(), ...defaultFormData, ...defaultData } as T;
+    const promises: Promise<void>[] = [];
 
     Object.keys(data).forEach((path) => {
-      setFormField(path, data[path] || '');
+      promises.push(setFormField(path, data[path] || ''));
     });
+
+    await Promise.all(promises);
+
+    (defaultFormData || defaultData) && validate();
   };
 
   /**

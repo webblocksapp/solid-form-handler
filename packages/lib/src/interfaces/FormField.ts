@@ -3,6 +3,7 @@ export type FormField = {
   isInvalid: boolean;
   field: Object;
   initialValue: any;
+  value: any;
   touched: boolean;
   dirty: boolean;
 };

@@ -31,15 +31,20 @@ export const ConditionalFormImpl: Component = () => {
     formHandler.setFieldValue(name, value);
   };
 
-  const initializeForm = () => {
-    formHandler.initializeForm({name: 'John', age: 22, hasHouse: true, houseAddress: 'Street 123 #45'})
-  }
+  const fillForm = () => {
+    formHandler.fillForm({ name: 'John', age: 22, hasHouse: true, houseAddress: 'Street 123 #45' });
+  };
+
+  const resetForm = () => {
+    formHandler.resetForm();
+  };
 
   const submit = async () => {
     try {
       setError('');
       await formHandler.validateForm();
       alert(`Data submitted \n ${JSON.stringify(formHandler.getFormData())}`);
+      formHandler.resetForm();
     } catch (error) {
       if (error instanceof FormErrorsException) {
         setError(
@@ -98,8 +103,12 @@ export const ConditionalFormImpl: Component = () => {
         Submit
       </button>
       <br />
-      <button type="button" onClick={initializeForm}>
-        Set default form data
+      <button type="button" onClick={fillForm}>
+        Fill default form data
+      </button>
+      <br />
+      <button type="button" onClick={resetForm}>
+        Reset form
       </button>
       <br />
       <pre style="color: red">

@@ -67,7 +67,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
 
   const getFieldValue = (path: string = '') => {
     if (!path) return '';
-    return formData[path] || '';
+    return parseValue(formData[path]);
   };
 
   /**
@@ -107,10 +107,11 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Sets the default state of a field.
    * By default the field is initialized as invalid.
-   * Use this method on any FormField mounted component lifecycle.
    */
   const setFormField = async (path: string = '', value: any, field?: HTMLElement) => {
     if (!path) return;
+
+    setFormData(path, parseValue(value));
 
     let isInvalid = false;
 
@@ -120,16 +121,26 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
       isInvalid = true;
     }
 
-    setFormData(path, value || '');
     setFormFields(path, (formField) => ({
       ...formField,
       isInvalid,
       errorMessage: '',
       field: field ?? formField?.field,
-      initialValue: value || '',
+      initialValue: parseValue(value),
       touched: false,
       dirty: false,
     }));
+  };
+
+  /**
+   * Parses the value according to the scenario
+   */
+  const parseValue = (value: any) => {
+    if (value === undefined) {
+      return '';
+    } else {
+      return value;
+    }
   };
 
   /**
@@ -140,19 +151,19 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   };
 
   /**
-   * Initializes the default state of the form.
+   * Fills the default state of the form.
    */
-  const initializeForm = async (defaultData?: Partial<T>) => {
+  const fillForm = async (defaultData?: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
     const data = { ...yupSchema.getDefaultFromShape(), ...defaultFormData, ...defaultData } as T;
     const promises: Promise<void>[] = [];
 
     Object.keys(data).forEach((path) => {
-      promises.push(setFormField(path, data[path] || ''));
+      promises.push(setFormField(path, parseValue(data[path])));
     });
 
     await Promise.all(promises);
 
-    (defaultFormData || defaultData) && validate();
+    options?.validate && validate();
   };
 
   /**
@@ -203,20 +214,32 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   };
 
   /**
-   * Form is initialized before mounted.
+   * Resets the form data
    */
-  initializeForm();
+  const resetForm = () => {
+    fillForm(yupSchema.getDefaultFromShape() as T, { validate: false });
+  };
+
+  /**
+   * Form is filled before mounted.
+   */
+  if (defaultFormData) {
+    fillForm();
+  } else {
+    fillForm(undefined, { validate: false });
+  }
 
   return {
+    fillForm,
     formHasChanges,
     getFieldError,
     getFieldValue,
     getFormData,
     getFormErrors,
     getFormFields,
-    initializeForm,
     isFormInvalid,
     refreshFormField,
+    resetForm,
     setFieldValue,
     setFormField,
     validate,

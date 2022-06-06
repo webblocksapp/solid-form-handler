@@ -1,12 +1,11 @@
 import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
-import { FormErrorsException, flattenObject, get } from '@utils';
+import { FormErrorsException, flattenObject, get, removeBrackets } from '@utils';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError } from 'yup';
 
 export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) => {
   const [formData, setFormData] = createStore<CommonObject>({});
   const [formFields, setFormFields] = createStore<{ [x: string]: FormField }>({});
-  let form: HTMLElement | undefined;
 
   /**
    * Sets an specific field value of the form data according to the given path.
@@ -31,7 +30,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
    * at formData store.
    */
   const buildFormDataPath = (path: string) => {
-    return path.replace(/\[/g, '').replace(/\]/g, '').split('.') as [];
+    return removeBrackets(path).split('.') as [];
   };
 
   /**
@@ -76,7 +75,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
 
   const getFieldValue = (path: string = '') => {
     if (!path) return '';
-    return parseValue(formData[path]);
+    return parseValue(get(formData, path));
   };
 
   /**
@@ -162,17 +161,13 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
   /**
    * Fills the default state of the form.
    */
-  const fillForm = async (defaultData: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
+  const fillForm = (defaultData: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
     const data = { ...defaultData } as T;
-    const promises: Promise<void>[] = [];
-
     setFormData(data);
 
     Object.keys(flattenObject(data)).forEach((path) => {
-      promises.push(setFormField(path, parseValue(get(data, path))));
+      setFormField(path, parseValue(get(data, path)));
     });
-
-    await Promise.all(promises);
 
     options?.validate && validate();
   };
@@ -249,7 +244,6 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
     resetForm,
     setFieldValue,
     setFormField,
-    validate,
     validateField,
     validateForm,
   };

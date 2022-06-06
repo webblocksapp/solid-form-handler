@@ -6,6 +6,10 @@ import * as yup from 'yup';
 type Schema = {
   name: string;
   age: number;
+  contact: {
+    email: string;
+    phone: string;
+  };
   hasHouse: boolean;
   houseAddress?: string;
 };
@@ -13,6 +17,10 @@ type Schema = {
 const schema: yup.SchemaOf<Schema> = yup.object().shape({
   name: yup.string().required(),
   age: yup.number().required().typeError('Age is required'),
+  contact: yup.object().shape({
+    email: yup.string().required().email(),
+    phone: yup.string().required(),
+  }),
   hasHouse: yup
     .boolean()
     .required()
@@ -21,7 +29,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
   houseAddress: yup.string().optional().when('hasHouse', { is: true, then: yup.string().required() }),
 });
 
-export const ConditionalFormImpl: Component = () => {
+export const ComplexFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema>(schema);
   const formData = formHandler.getFormData();
   const [error, setError] = createSignal('');
@@ -32,7 +40,13 @@ export const ConditionalFormImpl: Component = () => {
   };
 
   const fillForm = () => {
-    formHandler.fillForm({ name: 'John', age: 22, hasHouse: true, houseAddress: 'Street 123 #45' });
+    formHandler.fillForm({
+      name: 'John',
+      age: 22,
+      hasHouse: true,
+      houseAddress: 'Street 123 #45',
+      contact: { email: 'test@mail.com', phone: '311 454 43 23' },
+    });
   };
 
   const resetForm = () => {
@@ -60,7 +74,7 @@ export const ConditionalFormImpl: Component = () => {
 
   return (
     <form>
-      <h3>Conditional Form Implementation</h3>
+      <h3>Complex Form Implementation</h3>
       <div>
         <label>Name</label>
         <br />
@@ -75,6 +89,24 @@ export const ConditionalFormImpl: Component = () => {
         <br />
         <small style="color: red;">{formHandler.getFieldError('age')}</small>
       </div>
+      <br />
+      <fieldset>
+        <legend>Contact</legend>
+        <div>
+          <label>Email</label>
+          <br />
+          <input name="contact.email" onInput={onInput} value={formData.contact.email}></input>
+          <br />
+          <small style="color: red;">{formHandler.getFieldError('contact.email')}</small>
+        </div>
+        <div>
+          <label>Phone</label>
+          <br />
+          <input name="contact.phone" onInput={onInput} value={formData.contact.phone}></input>
+          <br />
+          <small style="color: red;">{formHandler.getFieldError('contact.phone')}</small>
+        </div>
+      </fieldset>
       <div style="display: flex; align-items: center; margin-top: 17px;">
         <label>Has house</label>
         <input

@@ -1,4 +1,4 @@
-import { CheckboxImpl, FormImpl, SelectImpl, TextInputImpl, ConditionalFormImpl } from '@implementations';
+import { CheckboxImpl, FormImpl, SelectImpl, TextInputImpl, ComplexFormImpl } from '@implementations';
 import { RouteDefinition } from 'solid-app-router';
 
 export const mainRoutes: RouteDefinition[] = [
@@ -19,7 +19,7 @@ export const mainRoutes: RouteDefinition[] = [
     component: TextInputImpl,
   },
   {
-    path: 'conditional-form-impl',
-    component: ConditionalFormImpl,
+    path: 'complex-form-impl',
+    component: ComplexFormImpl,
   },
 ];

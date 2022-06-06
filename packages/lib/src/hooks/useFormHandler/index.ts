@@ -1,11 +1,12 @@
 import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
-import { FormErrorsException } from '@utils';
+import { FormErrorsException, flattenObject, get } from '@utils';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError } from 'yup';
 
-export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, defaultFormData?: Partial<T>) => {
+export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) => {
   const [formData, setFormData] = createStore<CommonObject>({});
   const [formFields, setFormFields] = createStore<{ [x: string]: FormField }>({});
+  let form: HTMLElement | undefined;
 
   /**
    * Sets an specific field value of the form data according to the given path.
@@ -19,10 +20,18 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
       return;
     }
 
-    setFormData(path, value);
+    setFormData(...buildFormDataPath(path), value);
     options?.touch && touchField(path);
     options?.dirty && dirtyField(path);
     options?.validate && (await validateField(path));
+  };
+
+  /**
+   * Converts the field path into an array for getting or setting a value
+   * at formData store.
+   */
+  const buildFormDataPath = (path: string) => {
+    return path.replace(/\[/g, '').replace(/\]/g, '').split('.') as [];
   };
 
   /**
@@ -111,7 +120,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   const setFormField = async (path: string = '', value: any, field?: HTMLElement) => {
     if (!path) return;
 
-    setFormData(path, parseValue(value));
+    setFormData(...buildFormDataPath(path), parseValue(value));
 
     let isInvalid = false;
 
@@ -153,12 +162,14 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Fills the default state of the form.
    */
-  const fillForm = async (defaultData?: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
-    const data = { ...yupSchema.getDefaultFromShape(), ...defaultFormData, ...defaultData } as T;
+  const fillForm = async (defaultData: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
+    const data = { ...defaultData } as T;
     const promises: Promise<void>[] = [];
 
-    Object.keys(data).forEach((path) => {
-      promises.push(setFormField(path, parseValue(data[path])));
+    setFormData(data);
+
+    Object.keys(flattenObject(data)).forEach((path) => {
+      promises.push(setFormField(path, parseValue(get(data, path))));
     });
 
     await Promise.all(promises);
@@ -223,11 +234,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>, d
   /**
    * Form is filled before mounted.
    */
-  if (defaultFormData) {
-    fillForm();
-  } else {
-    fillForm(undefined, { validate: false });
-  }
+  fillForm(yupSchema.getDefaultFromShape() as T, { validate: false });
 
   return {
     fillForm,

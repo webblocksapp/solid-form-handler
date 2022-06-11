@@ -1,7 +1,7 @@
 import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
 import { FormErrorsException, flattenObject, get, removeBrackets } from '@utils';
 import { createStore } from 'solid-js/store';
-import { SchemaOf, ValidationError } from 'yup';
+import { SchemaOf, ValidationError, reach } from 'yup';
 
 export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) => {
   const [formData, setFormData] = createStore<CommonObject>({});
@@ -37,6 +37,8 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
    * Validates a single field of the form.
    */
   const validateField = async (path: string) => {
+    if (!isFieldFromSchema(path)) return;
+
     try {
       await yupSchema.validateAt(path, formData);
       setFormFields(path, (formField) => ({ ...formField, isInvalid: false, errorMessage: '' }));
@@ -117,7 +119,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
    * By default the field is initialized as invalid.
    */
   const setFormField = async (path: string = '', value: any, field?: HTMLElement) => {
-    if (!path) return;
+    if (!path || !isFieldFromSchema(path)) return;
 
     setFormData(...buildFormDataPath(path), parseValue(value));
 
@@ -138,6 +140,21 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
       touched: false,
       dirty: false,
     }));
+  };
+
+  /**
+   * Checks if the field is part of the given yup schema.
+   * Fields that are not part of the schema are considered as metadata
+   * and doesn't require validation. e.g. id, timestamp, foreignId, etc...
+   */
+  const isFieldFromSchema = (path: string) => {
+    let isFromSchema = true;
+    try {
+      reach(yupSchema, path);
+    } catch (_) {
+      isFromSchema = false;
+    }
+    return isFromSchema;
   };
 
   /**

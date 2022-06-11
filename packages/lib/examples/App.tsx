@@ -21,6 +21,9 @@ export const App: Component = () => {
         <div>
           <Link href="complex-form-impl">complex-form-impl</Link>
         </div>
+        <div>
+          <Link href="fieldsets-form-impl">fieldsets-form-impl</Link>
+        </div>
       </div>
       <div>{useRoutes(mainRoutes)}</div>
     </div>

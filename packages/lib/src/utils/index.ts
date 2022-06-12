@@ -1,4 +1,4 @@
 export * from './FormErrorsException';
 export * from './flattenObject';
 export * from './get';
-export * from './removeBrackets';
+export * from './formatObjectPath';

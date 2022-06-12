@@ -1,7 +1,7 @@
 export type FormField = {
   errorMessage: string;
   isInvalid: boolean;
-  field: Object;
+  field: HTMLElement;
   initialValue: any;
   value: any;
   touched: boolean;

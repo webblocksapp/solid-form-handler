@@ -4,7 +4,7 @@ import {
   SelectImpl,
   TextInputImpl,
   ComplexFormImpl,
-  FieldSetsFormImpl,
+  FieldsetsFormImpl,
 } from '@implementations';
 
 import { RouteDefinition } from 'solid-app-router';
@@ -32,6 +32,6 @@ export const mainRoutes: RouteDefinition[] = [
   },
   {
     path: 'fieldsets-form-impl',
-    component: FieldSetsFormImpl,
+    component: FieldsetsFormImpl,
   },
 ];

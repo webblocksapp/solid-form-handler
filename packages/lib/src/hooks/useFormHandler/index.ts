@@ -1,10 +1,10 @@
-import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
-import { FormErrorsException, flattenObject, get, removeBrackets } from '@utils';
+import { FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
+import { FormErrorsException, flattenObject, get, formatObjectPath } from '@utils';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
-export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) => {
-  const [formData, setFormData] = createStore<CommonObject>({});
+export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
+  const [formData, setFormData] = createStore<{ data: T }>({ data: {} as T });
   const [formFields, setFormFields] = createStore<{ [x: string]: FormField }>({});
 
   /**
@@ -30,7 +30,14 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
    * at formData store.
    */
   const buildFormDataPath = (path: string) => {
-    return removeBrackets(path).split('.') as [];
+    return formatObjectPath(getFormDataPath(path)).split('.') as [];
+  };
+
+  /**
+   * Gets the form data path from the store.
+   */
+  const getFormDataPath = (path: string) => {
+    return `data.${path}`;
   };
 
   /**
@@ -40,7 +47,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
     if (!isFieldFromSchema(path)) return;
 
     try {
-      await yupSchema.validateAt(path, formData);
+      await yupSchema.validateAt(path, formData.data);
       setFormFields(path, (formField) => ({ ...formField, isInvalid: false, errorMessage: '' }));
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -77,14 +84,14 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
 
   const getFieldValue = (path: string = '') => {
     if (!path) return '';
-    return parseValue(get(formData, path));
+    return parseValue(get(formData, getFormDataPath(path)));
   };
 
   /**
    * Gets the form data object.
    */
-  const getFormData = () => {
-    return formData as T;
+  const getFormData = (): T => {
+    return formData.data;
   };
 
   /**
@@ -172,15 +179,15 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
    * Refresh the form field initial state
    */
   const refreshFormField = (path: string) => {
-    setFormField(path, formData[path]);
+    setFormField(path, get(formData, getFormDataPath(path)));
   };
 
   /**
    * Fills the default state of the form.
    */
-  const fillForm = (defaultData: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
-    const data = { ...defaultData } as T;
-    setFormData(data);
+  const fillForm = (data: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
+    if (data === undefined) return;
+    setFormData('data', data as T);
 
     Object.keys(flattenObject(data)).forEach((path) => {
       setFormField(path, parseValue(get(data, path)));
@@ -215,7 +222,7 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
    */
   const dirtyField = (path: string) => {
     setFormFields(path, (field) => {
-      if (JSON.stringify(formData[path]) !== JSON.stringify(field.initialValue)) {
+      if (JSON.stringify(get(formData, getFormDataPath(path))) !== JSON.stringify(field.initialValue)) {
         return { ...field, dirty: true };
       }
 
@@ -240,13 +247,13 @@ export const useFormHandler = <T extends CommonObject>(yupSchema: SchemaOf<T>) =
    * Resets the form data
    */
   const resetForm = () => {
-    fillForm(yupSchema.getDefaultFromShape() as T, { validate: false });
+    fillForm(yupSchema.getDefault() as T, { validate: false });
   };
 
   /**
    * Form is filled before mounted.
    */
-  fillForm(yupSchema.getDefaultFromShape() as T, { validate: false });
+  fillForm(yupSchema.getDefault() as T, { validate: false });
 
   return {
     fillForm,

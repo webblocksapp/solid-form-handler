@@ -31,6 +31,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
 
 export const ComplexFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema>(schema);
+  const formData = formHandler.getFormData();
   const [error, setError] = createSignal('');
 
   const onInput = (event: Event) => {
@@ -77,14 +78,14 @@ export const ComplexFormImpl: Component = () => {
       <div>
         <label>Name</label>
         <br />
-        <input name="name" onInput={onInput} value={formHandler.getFieldValue('name')}></input>
+        <input name="name" onInput={onInput} value={formData.name}></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('name')}</small>
       </div>
       <div>
         <label>Age</label>
         <br />
-        <input name="age" onInput={onInput} value={formHandler.getFieldValue('age')}></input>
+        <input name="age" onInput={onInput} value={formData.age}></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('age')}</small>
       </div>
@@ -94,14 +95,14 @@ export const ComplexFormImpl: Component = () => {
         <div>
           <label>Email</label>
           <br />
-          <input name="contact.email" onInput={onInput} value={formHandler.getFieldValue('contact.email')}></input>
+          <input name="contact.email" onInput={onInput} value={formData.contact.email}></input>
           <br />
           <small style="color: red;">{formHandler.getFieldError('contact.email')}</small>
         </div>
         <div>
           <label>Phone</label>
           <br />
-          <input name="contact.phone" onInput={onInput} value={formHandler.getFieldValue('contact.phone')}></input>
+          <input name="contact.phone" onInput={onInput} value={formData.contact.phone}></input>
           <br />
           <small style="color: red;">{formHandler.getFieldError('contact.phone')}</small>
         </div>
@@ -111,7 +112,7 @@ export const ComplexFormImpl: Component = () => {
         <input
           type="checkbox"
           name="hasHouse"
-          checked={formHandler.getFieldValue('hasHouse')}
+          checked={formData.hasHouse}
           onInput={(event) => {
             formHandler.setFieldValue('hasHouse', event.currentTarget.checked);
             formHandler.refreshFormField('houseAddress');
@@ -120,11 +121,11 @@ export const ComplexFormImpl: Component = () => {
         <br />
         <small style="color: red;">{formHandler.getFieldError('hasHouse')}</small>
       </div>
-      {formHandler.getFieldValue('hasHouse') && (
+      {formData.hasHouse && (
         <div>
           <label>House Address</label>
           <br />
-          <input name="houseAddress" value={formHandler.getFieldValue('houseAddress')} onInput={onInput}></input>
+          <input name="houseAddress" value={formData.houseAddress} onInput={onInput}></input>
           <br />
           <small style="color: red;">{formHandler.getFieldError('houseAddress')}</small>
         </div>

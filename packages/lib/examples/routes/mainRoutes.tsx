@@ -12,26 +12,26 @@ import { RouteDefinition } from 'solid-app-router';
 export const mainRoutes: RouteDefinition[] = [
   {
     path: 'checkbox-impl',
-    component: CheckboxImpl,
+    element: <CheckboxImpl />,
   },
   {
     path: 'form-impl',
-    component: FormImpl,
+    element: <FormImpl />,
   },
   {
     path: 'select-impl',
-    component: SelectImpl,
+    element: <SelectImpl />,
   },
   {
     path: 'text-input-impl',
-    component: TextInputImpl,
+    element: <TextInputImpl />,
   },
   {
     path: 'complex-form-impl',
-    component: ComplexFormImpl,
+    element: <ComplexFormImpl />,
   },
   {
     path: 'fieldsets-form-impl',
-    component: FieldsetsFormImpl,
+    element: <FieldsetsFormImpl />,
   },
 ];

@@ -7,12 +7,12 @@ type Schema = {
   age: number;
 };
 
-const schema: yup.SchemaOf<Schema[]> = yup.array().of(
-  yup.object().shape({
-    name: yup.string().required(),
-    age: yup.number().required().typeError('Age is required'),
-  })
-);
+const objSchema = yup.object({
+  name: yup.string().required(),
+  age: yup.number().required(),
+});
+
+const schema: yup.SchemaOf<Schema[]> = yup.array(objSchema).default([objSchema.getDefault()]).min(1);
 
 export const FieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(schema);
@@ -56,9 +56,12 @@ export const FieldsetsFormImpl: Component = () => {
         )}
       </For>
 
-      <button onClick={fillForm} type="button">
+      <button onClick={fillForm} disabled={formHandler.isFormInvalid()} type="button">
         Fill form
       </button>
+      <pre style="color: red">
+        <code>{JSON.stringify(formHandler.getFormErrors(), null, 4)}</code>
+      </pre>
     </form>
   );
 };

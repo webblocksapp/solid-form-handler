@@ -14,7 +14,7 @@ type Schema = {
   houseAddress?: string;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object().shape({
+const schema: yup.SchemaOf<Schema> = yup.object({
   name: yup.string().required(),
   age: yup.number().required().typeError('Age is required'),
   contact: yup.object().shape({

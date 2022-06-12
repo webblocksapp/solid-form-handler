@@ -1,8 +1,10 @@
+import { formatObjectPath } from '@utils';
+
 /**
  * Gets the value from a nested object path.
  */
 export const get = (data: any, path: string): any => {
-  path = path.replace(/\[/g, '').replace(/\]/g, '');
+  path = formatObjectPath(path);
   const [key, ...rest] = path.split('.');
   const value = data[key];
 

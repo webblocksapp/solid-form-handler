@@ -30,14 +30,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * at formData store.
    */
   const buildFormDataPath = (path: string) => {
-    return formatObjectPath(getFormDataPath(path)).split('.') as [];
-  };
-
-  /**
-   * Gets the form data path from the store.
-   */
-  const getFormDataPath = (path: string) => {
-    return `data.${path}`;
+    return formatObjectPath(`data.${path}`).split('.') as [];
   };
 
   /**
@@ -84,7 +77,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
 
   const getFieldValue = (path: string = '') => {
     if (!path) return '';
-    return parseValue(get(formData, getFormDataPath(path)));
+    return parseValue(get(formData.data, path));
   };
 
   /**
@@ -133,8 +126,9 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     let isInvalid = false;
 
     try {
-      await yupSchema.validateAt(path, formData);
+      await yupSchema.validateAt(path, formData.data);
     } catch (_) {
+      console.log(_, formData);
       isInvalid = true;
     }
 
@@ -179,21 +173,19 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Refresh the form field initial state
    */
   const refreshFormField = (path: string) => {
-    setFormField(path, get(formData, getFormDataPath(path)));
+    setFormField(path, get(formData.data, path));
   };
 
   /**
    * Fills the default state of the form.
    */
-  const fillForm = (data: Partial<T>, options: { validate?: boolean } = { validate: true }) => {
+  const fillForm = (data: Partial<T>) => {
     if (data === undefined) return;
     setFormData('data', data as T);
 
     Object.keys(flattenObject(data)).forEach((path) => {
       setFormField(path, parseValue(get(data, path)));
     });
-
-    options?.validate && validate();
   };
 
   /**
@@ -222,7 +214,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const dirtyField = (path: string) => {
     setFormFields(path, (field) => {
-      if (JSON.stringify(get(formData, getFormDataPath(path))) !== JSON.stringify(field.initialValue)) {
+      if (JSON.stringify(get(formData.data, path)) !== JSON.stringify(field.initialValue)) {
         return { ...field, dirty: true };
       }
 
@@ -247,13 +239,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Resets the form data
    */
   const resetForm = () => {
-    fillForm(yupSchema.getDefault() as T, { validate: false });
+    fillForm(yupSchema.getDefault() as T);
   };
 
   /**
    * Form is filled before mounted.
    */
-  fillForm(yupSchema.getDefault() as T, { validate: false });
+  fillForm(yupSchema.getDefault() as T);
 
   return {
     fillForm,

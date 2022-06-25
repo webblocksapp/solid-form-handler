@@ -1,5 +1,5 @@
 import { FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
-import { FormErrorsException, flattenObject, get, formatObjectPath } from '@utils';
+import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault } from '@utils';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
@@ -128,7 +128,6 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     try {
       await yupSchema.validateAt(path, formData.data);
     } catch (_) {
-      console.log(_, formData);
       isInvalid = true;
     }
 
@@ -177,7 +176,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Fills the default state of the form.
+   * Fills the state of the form.
    */
   const fillForm = (data: Partial<T>) => {
     if (data === undefined) return;
@@ -239,13 +238,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Resets the form data
    */
   const resetForm = () => {
-    fillForm(yupSchema.getDefault() as T);
+    fillForm(buildDefault(yupSchema) as T);
   };
 
   /**
    * Form is filled before mounted.
    */
-  fillForm(yupSchema.getDefault() as T);
+  fillForm(buildDefault(yupSchema) as T);
 
   return {
     fillForm,

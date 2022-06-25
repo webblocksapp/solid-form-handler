@@ -10,7 +10,7 @@ type Schema = {
 const schema: yup.SchemaOf<Schema[]> = yup.array().of(
   yup.object().shape({
     name: yup.string().required(),
-    age: yup.number().required().typeError('Age is required'),
+    age: yup.number().required().typeError('Invalid age value'),
     contacts: yup.array(yup.object({ name: yup.string(), age: yup.string() })),
   })
 );

@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import { flattenObject, set, get } from '@utils';
 
 /**
- * Builds a default object using a yup schema
+ * Builds a default object from a yup schema
  */
 export const buildDefault = (schema: yup.AnySchema, path?: string, object?: any) => {
   let obj = object;
@@ -10,13 +10,17 @@ export const buildDefault = (schema: yup.AnySchema, path?: string, object?: any)
   const targetPath = path.replace(/\.$/, '');
 
   if (schema instanceof yup.ArraySchema) {
-    obj = obj ? set(obj, targetPath, []) : [];
-    /**
-     * When the schema is an array, it reach the 0 index of the array for getting
-     * the inner yup schema (it can be an object, array or a primitive schema).
-     */
-    const reachedSchema = yup.reach(schema, '0') as yup.AnySchema;
-    obj = buildDefault(reachedSchema, `${path}0`, obj);
+    if (schema.getDefault()) {
+      set(obj, targetPath, schema.getDefault());
+    } else {
+      obj = obj ? set(obj, targetPath, []) : [];
+      /**
+       * When the schema is an array without a default value, it reach the 0 index of the array for getting
+       * the inner yup schema (it can be an object, array or a primitive schema).
+       */
+      const reachedSchema = yup.reach(schema, '0') as yup.AnySchema;
+      obj = buildDefault(reachedSchema, `${path}0`, obj);
+    }
   } else if (schema instanceof yup.ObjectSchema) {
     obj = obj ? set(obj, targetPath, {}) : {};
     /**

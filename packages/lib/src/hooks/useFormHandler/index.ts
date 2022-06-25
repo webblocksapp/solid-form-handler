@@ -1,7 +1,6 @@
-import { FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
+import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
 import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault } from '@utils';
-import { createEffect } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import { createStore, reconcile } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
 export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
@@ -123,14 +122,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     if (!path || !isFieldFromSchema(path)) return;
 
     setFormData(...buildFormDataPath(path), parseValue(value));
-
-    let isInvalid = false;
-
-    try {
-      await yupSchema.validateAt(path, formData.data);
-    } catch (_) {
-      isInvalid = true;
-    }
+    const isInvalid = await isFormFieldInvalid(path);
 
     setFormFields(path, (formField) => ({
       ...formField,
@@ -141,6 +133,47 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       touched: false,
       dirty: false,
     }));
+  };
+
+  /**
+   * Generates the whole form fields object metadata
+   */
+  const generateFormFields = async () => {
+    const obj: CommonObject = {};
+    const flattenedObject = flattenObject(formData.data);
+    const promises: Promise<boolean>[] = [];
+    Object.keys(flattenedObject).forEach((path) => {
+      promises.push(isFormFieldInvalid(path));
+    });
+
+    const validationFlags = await Promise.all(promises);
+
+    Object.keys(flattenedObject).forEach((path, i) => {
+      obj[path] = {
+        isInvalid: validationFlags[i],
+        errorMessage: '',
+        initialValue: parseValue(get(formData.data, path)),
+        touched: false,
+        dirty: false,
+      };
+    });
+
+    setFormFields(reconcile(obj));
+  };
+
+  /**
+   * Returns a boolean value to check if the field is valid or invalid
+   */
+  const isFormFieldInvalid = async (path: string) => {
+    let isInvalid = false;
+
+    try {
+      await yupSchema.validateAt(path, formData.data);
+    } catch (_) {
+      isInvalid = true;
+    }
+
+    return isInvalid;
   };
 
   /**
@@ -180,15 +213,12 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Fills the state of the form.
    */
   const fillForm = (data: Partial<T>) => {
-    if (data === undefined) return;
-    setFormData('data', data as T);
-  };
-
-  createEffect(() => {
-    Object.keys(flattenObject(formData.data)).forEach((path) => {
-      setFormField(path, parseValue(get(formData.data, path)));
+    setTimeout(() => {
+      if (data === undefined) return;
+      setFormData('data', data as T);
+      generateFormFields();
     });
-  });
+  };
 
   /**
    * Checks on all the fields if there is an invalidated field.
@@ -249,7 +279,29 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   fillForm(buildDefault(yupSchema) as T);
 
+  /**
+   * Adds a fieldset.
+   * Use path for adding a fieldset inside a nested array from an object.
+   */
+  const addFieldset = <K>(options?: { data?: Partial<K>; path?: string }) => {
+    const builtPath = buildFormDataPath(options?.path || String((formData.data as unknown as Array<any>).length));
+    const defaultData = Array.isArray(buildDefault(yupSchema)) ? buildDefault(yupSchema)[0] : buildDefault(yupSchema);
+    setFormData(...builtPath, options?.data || defaultData);
+    generateFormFields();
+  };
+
+  /**
+   * Remove fieldset
+   * Use path for removing a fieldset inside a nested array from an object.
+   */
+  const removeFieldset = (index: number, path?: string) => {
+    const builtPath = path ? buildFormDataPath(path) : (['data'] as unknown as []);
+    setFormData(...builtPath, (items) => (items as any).filter((_: any, i: number) => i !== index));
+    generateFormFields();
+  };
+
   return {
+    addFieldset,
     fillForm,
     formHasChanges,
     getFieldError,
@@ -259,6 +311,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     getFormFields,
     isFormInvalid,
     refreshFormField,
+    removeFieldset,
     resetForm,
     setFieldValue,
     setFormField,

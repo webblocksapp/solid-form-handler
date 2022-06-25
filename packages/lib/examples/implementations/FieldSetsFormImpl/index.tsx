@@ -22,7 +22,9 @@ export const FieldsetsFormImpl: Component = () => {
     formHandler.setFieldValue(name, value);
   };
 
-  const submit = async () => {};
+  const submit = async () => {
+    alert(JSON.stringify(formHandler.getFormData()));
+  };
 
   const fillForm = () => {
     formHandler.fillForm([
@@ -31,6 +33,14 @@ export const FieldsetsFormImpl: Component = () => {
         age: 22,
       },
     ]);
+  };
+
+  const addFieldset = () => {
+    formHandler.addFieldset();
+  };
+
+  const addFieldsetWithData = () => {
+    formHandler.addFieldset<Schema>({ data: { name: 'Mary', age: 17 } });
   };
 
   onMount(() => {
@@ -55,6 +65,7 @@ export const FieldsetsFormImpl: Component = () => {
               <br />
               <small style="color: red;">{formHandler.getFieldError(`${i()}.age`)}</small>
             </div>
+            <button onClick={() => formHandler.removeFieldset(i())}>X</button>
           </fieldset>
         )}
       </For>
@@ -62,11 +73,13 @@ export const FieldsetsFormImpl: Component = () => {
       <button onClick={submit} disabled={formHandler.isFormInvalid()} type="button">
         Submit
       </button>
-      <br />
+      <button onClick={addFieldset} type="button">
+        Add
+      </button>
+      <button onClick={addFieldsetWithData} type="button">
+        Add with data
+      </button>
       <span>Errors</span>
-      <pre style="color: red">
-        <code>{JSON.stringify(formHandler.getFormErrors(), null, 2)}</code>
-      </pre>
       <pre style="color: red">
         <code>{JSON.stringify(formHandler.getFormFields(), null, 2)}</code>
       </pre>

@@ -11,7 +11,6 @@ const schema: yup.SchemaOf<Schema[]> = yup.array().of(
   yup.object().shape({
     name: yup.string().required(),
     age: yup.number().required().typeError('Invalid age value'),
-    contacts: yup.array(yup.object({ name: yup.string(), age: yup.string() })),
   })
 );
 
@@ -60,13 +59,16 @@ export const FieldsetsFormImpl: Component = () => {
         )}
       </For>
 
-      <button onClick={fillForm} disabled={formHandler.isFormInvalid()} type="button">
-        Fill form
+      <button onClick={submit} disabled={formHandler.isFormInvalid()} type="button">
+        Submit
       </button>
       <br />
       <span>Errors</span>
       <pre style="color: red">
         <code>{JSON.stringify(formHandler.getFormErrors(), null, 2)}</code>
+      </pre>
+      <pre style="color: red">
+        <code>{JSON.stringify(formHandler.getFormFields(), null, 2)}</code>
       </pre>
     </form>
   );

@@ -1,5 +1,6 @@
 import { FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
 import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault } from '@utils';
+import { createEffect } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
@@ -181,11 +182,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const fillForm = (data: Partial<T>) => {
     if (data === undefined) return;
     setFormData('data', data as T);
-
-    Object.keys(flattenObject(data)).forEach((path) => {
-      setFormField(path, parseValue(get(data, path)));
-    });
   };
+
+  createEffect(() => {
+    Object.keys(flattenObject(formData.data)).forEach((path) => {
+      setFormField(path, parseValue(get(formData.data, path)));
+    });
+  });
 
   /**
    * Checks on all the fields if there is an invalidated field.

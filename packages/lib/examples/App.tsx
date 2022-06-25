@@ -1,6 +1,13 @@
-import { Link, useRoutes } from 'solid-app-router';
+import { Link, Route, Routes } from 'solid-app-router';
 import { Component } from 'solid-js';
-import { mainRoutes } from '@routes';
+import {
+  CheckboxImpl,
+  FormImpl,
+  SelectImpl,
+  TextInputImpl,
+  ComplexFormImpl,
+  FieldsetsFormImpl,
+} from '@implementations';
 
 export const App: Component = () => {
   return (
@@ -25,7 +32,14 @@ export const App: Component = () => {
           <Link href="fieldsets-form-impl">fieldsets-form-impl</Link>
         </div>
       </div>
-      <div>{useRoutes(mainRoutes)}</div>
+      <Routes>
+        <Route path="/checkbox-impl" element={<CheckboxImpl />} />
+        <Route path="/select-impl" element={<SelectImpl />} />
+        <Route path="/text-input-impl" element={<TextInputImpl />} />
+        <Route path="/form-impl" element={<FormImpl />} />
+        <Route path="/complex-form-impl" element={<ComplexFormImpl />} />
+        <Route path="/fieldsets-form-impl" element={<FieldsetsFormImpl />} />
+      </Routes>
     </div>
   );
 };

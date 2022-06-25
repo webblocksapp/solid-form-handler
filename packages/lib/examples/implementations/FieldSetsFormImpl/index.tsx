@@ -1,5 +1,5 @@
 import { useFormHandler } from '@hooks';
-import { Component, createSignal, onMount, For } from 'solid-js';
+import { Component, onMount, For } from 'solid-js';
 import * as yup from 'yup';
 
 type Schema = {
@@ -7,16 +7,16 @@ type Schema = {
   age: number;
 };
 
-const objSchema = yup.object({
-  name: yup.string().required(),
-  age: yup.number().required(),
-});
-
-const schema: yup.SchemaOf<Schema[]> = yup.array(objSchema).default([objSchema.getDefault()]).min(1);
+const schema: yup.SchemaOf<Schema[]> = yup.array().of(
+  yup.object().shape({
+    name: yup.string().required(),
+    age: yup.number().required().typeError('Age is required'),
+    contacts: yup.array(yup.object({ name: yup.string(), age: yup.string() })),
+  })
+);
 
 export const FieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(schema);
-  const [error, setError] = createSignal('');
 
   const onInput = (event: Event) => {
     const { name, value } = event.currentTarget as HTMLInputElement;
@@ -46,11 +46,15 @@ export const FieldsetsFormImpl: Component = () => {
             <legend>Record {i() + 1}</legend>
             <div style="margin-bottom: 10px">
               <label>Name</label>
-              <input value={fieldset.name} name={`${i()}.name`}></input>
+              <input value={fieldset.name} name={`${i()}.name`} onInput={onInput}></input>
+              <br />
+              <small style="color: red;">{formHandler.getFieldError(`${i()}.name`)}</small>
             </div>
             <div style="margin-bottom: 10px">
               <label>Age</label>
-              <input value={fieldset.age} name={`${i()}.age`}></input>
+              <input value={fieldset.age} name={`${i()}.age`} onInput={onInput}></input>
+              <br />
+              <small style="color: red;">{formHandler.getFieldError(`${i()}.age`)}</small>
             </div>
           </fieldset>
         )}
@@ -59,8 +63,10 @@ export const FieldsetsFormImpl: Component = () => {
       <button onClick={fillForm} disabled={formHandler.isFormInvalid()} type="button">
         Fill form
       </button>
+      <br />
+      <span>Errors</span>
       <pre style="color: red">
-        <code>{JSON.stringify(formHandler.getFormErrors(), null, 4)}</code>
+        <code>{JSON.stringify(formHandler.getFormErrors(), null, 2)}</code>
       </pre>
     </form>
   );

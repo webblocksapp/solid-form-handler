@@ -1,18 +1,14 @@
 import { formatObjectPath } from '@utils';
 
-/**
- * Sets the value to a nested object path.
- */
-export const set = <T>(object: T, data: any, path: string): T => {
+export const set = (object: any, path: string, value: any) => {
+  let obj = object;
   const arrPath = formatObjectPath(path).split('.');
-  const lastKey = arrPath[arrPath.length - 1];
-  let currentObj: any = object;
 
-  arrPath.forEach((key) => {
-    if (typeof currentObj[key] === 'object' && key !== lastKey) {
-      currentObj = currentObj[key];
+  arrPath.forEach((key, i) => {
+    if (i === arrPath.length - 1) {
+      obj[key] = value;
     } else {
-      currentObj[key] = data;
+      obj = obj[key];
     }
   });
 

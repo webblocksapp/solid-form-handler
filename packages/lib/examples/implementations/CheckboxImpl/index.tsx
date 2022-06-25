@@ -24,7 +24,7 @@ export const CheckboxImpl: Component = () => {
             id="policy"
             name="policy"
             onchange={({ currentTarget: { name, checked } }) => formHandler.setFieldValue(name, checked)}
-          ></input>
+          />
           <label for="policy">Accept terms and conditions</label>
         </div>
         <small style="color: red">{formHandler.getFieldError('policy')}</small>

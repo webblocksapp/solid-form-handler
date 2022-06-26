@@ -79,8 +79,13 @@ export const FieldsetsFormImpl: Component = () => {
       <button onClick={addFieldsetWithData} type="button">
         Add with data
       </button>
-      <span>Errors</span>
-      <pre style="color: red">
+      <button onClick={fillForm} type="button">
+        Fill form
+      </button>
+      <button onClick={() => formHandler.resetForm()} type="button">
+        Reset form
+      </button>
+      <pre>
         <code>{JSON.stringify(formHandler.getFormFields(), null, 2)}</code>
       </pre>
     </form>

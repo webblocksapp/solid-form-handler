@@ -1,10 +1,10 @@
-import { CommonObject, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
-import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault } from '@utils';
+import { CommonObject, Flatten, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
+import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault, reorderArray } from '@utils';
 import { createStore, reconcile } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
 export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
-  const [formData, setFormData] = createStore<{ data: T }>({ data: {} as T });
+  const [formData, setFormData] = createStore<{ data: T }>({ data: buildDefault(yupSchema) as T });
   const [formFields, setFormFields] = createStore<{ [x: string]: FormField }>({});
 
   /**
@@ -275,16 +275,11 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Form is filled before mounted.
-   */
-  fillForm(buildDefault(yupSchema) as T);
-
-  /**
    * Adds a fieldset.
    * Use path for adding a fieldset inside a nested array from an object.
    */
   const addFieldset = <K>(options?: { data?: Partial<K>; path?: string }) => {
-    const builtPath = buildFormDataPath(options?.path || String((formData.data as unknown as Array<any>).length));
+    const builtPath = buildFormDataPath(options?.path || String((formData.data as unknown as Flatten<T>[]).length));
     const defaultData = Array.isArray(buildDefault(yupSchema)) ? buildDefault(yupSchema)[0] : buildDefault(yupSchema);
     setFormData(...builtPath, options?.data || defaultData);
     generateFormFields();
@@ -300,6 +295,20 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     generateFormFields();
   };
 
+  /**
+   * Moves the fieldset position inside the formData array.
+   */
+  const moveFieldset = (oldIndex?: number, newIndex?: number) => {
+    if (oldIndex === undefined || newIndex === undefined) return;
+    setFormData('data', reorderArray(formData.data as unknown as Flatten<T>[], oldIndex, newIndex) as unknown as T);
+    generateFormFields();
+  };
+
+  /**
+   * Generates the form fields metadata before the component is mounted.
+   */
+  generateFormFields();
+
   return {
     addFieldset,
     fillForm,
@@ -310,6 +319,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     getFormErrors,
     getFormFields,
     isFormInvalid,
+    moveFieldset,
     refreshFormField,
     removeFieldset,
     resetForm,

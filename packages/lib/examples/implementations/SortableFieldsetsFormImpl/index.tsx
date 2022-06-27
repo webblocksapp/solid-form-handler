@@ -1,5 +1,5 @@
 import { useFormHandler } from '@hooks';
-import { Component, onMount, For } from 'solid-js';
+import { Component, onMount, For, createSignal } from 'solid-js';
 import * as yup from 'yup';
 
 type Schema = {
@@ -14,8 +14,10 @@ const schema: yup.SchemaOf<Schema[]> = yup.array().of(
   })
 );
 
-export const FieldsetsFormImpl: Component = () => {
+export const SortableFieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(schema);
+  const [startIndex, setStartIndex] = createSignal<number>();
+  const [endIndex, setEndIndex] = createSignal<number>();
 
   const onInput = (event: Event) => {
     const { name, value } = event.currentTarget as HTMLInputElement;
@@ -31,6 +33,10 @@ export const FieldsetsFormImpl: Component = () => {
       {
         name: 'John',
         age: 22,
+      },
+      {
+        name: 'Mary',
+        age: 10,
       },
     ]);
   };
@@ -49,10 +55,21 @@ export const FieldsetsFormImpl: Component = () => {
 
   return (
     <form>
-      <h5>Fieldsets</h5>
+      <h5>Sortable fieldsets</h5>
       <For each={formHandler.getFormData()}>
         {(fieldset, i) => (
-          <fieldset>
+          <fieldset
+            draggable={true}
+            ondragstart={() => {
+              setStartIndex(i());
+            }}
+            onDragOver={() => {
+              setEndIndex(i());
+            }}
+            onDragEnd={() => {
+              formHandler.moveFieldset(startIndex(), endIndex());
+            }}
+          >
             <legend>Record {i() + 1}</legend>
             <div style="margin-bottom: 10px">
               <label>Name</label>

@@ -5,12 +5,15 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "paths": {
+      "@components": ["src/components"],
       "@layouts": ["src/layouts"],
       "@routes": ["src/routes"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types"]
   },
   "include": ["src"]
 }

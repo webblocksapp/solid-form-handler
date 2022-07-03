@@ -1,0 +1,28 @@
+.tree-menu .nav-link {
+  color: rgb(var(--nav-link));
+}
+
+.tree-menu .nav-link:hover {
+  color: rgb(var(--bs-dark));
+}
+
+.tree-menu span.nav-link {
+  cursor: default;
+}
+
+.tree-menu span.nav-link:hover {
+  color: rgb(var(--nav-link));
+}
+
+.tree-menu .section-item {
+  font-size: 20px;
+  color: rgb(var(--bs-primary-rgb));
+  font-weight: bolder;
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 17px;
+  margin-top: 17px;
+}
+
+.tree-menu span.section-item:hover {
+  color: rgb(var(--bs-primary-rgb));
+}

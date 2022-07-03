@@ -1,8 +1,20 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'highlight.js/styles/github.css';
 
+@font-face {
+  font-family: Gordita;
+  src: url(assets/fonts/gordita-regular.woff);
+}
+
+:root {
+  --bs-primary-rgb: 77, 133, 193;
+  --sidebar-bg: #f3f4f6;
+  --nav-link: 107, 114, 128;
+}
+
 html,
 body,
 #root {
   height: 100%;
+  font-family: Gordita;
 }

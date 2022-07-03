@@ -11,7 +11,9 @@
     "jsxImportSource": "solid-js",
     "paths": {
       "@components": ["src/components"],
+      "@constants": ["src/constants"],
       "@implementations": ["src/implementations"],
+      "@interfaces": ["src/interfaces"],
       "@layouts": ["src/layouts"],
       "@pages": ["src/pages"],
       "@routes": ["src/routes"],

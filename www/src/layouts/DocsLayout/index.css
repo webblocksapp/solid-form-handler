@@ -1,0 +1,15 @@
+.docs-layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.docs-layout .main {
+  display: grid;
+  grid-template-rows: 1fr;
+  background-image: linear-gradient(to left, #fff, #fff 50%, rgba(243, 244, 246) 10%);
+}
+
+.docs-layout .main > div {
+  display: grid;
+  grid-template-columns: 2fr 5fr;
+}

@@ -4,7 +4,7 @@ import './index.css';
 
 export const ExamplesLayout: Component = () => {
   return (
-    <div class="container-md">
+    <div class="container-fluid">
       <Outlet />
     </div>
   );

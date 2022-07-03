@@ -3,6 +3,10 @@ import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault
 import { createStore, reconcile } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
+/**
+ * Creates a reactive formHandler object that simplifies forms manipulation.
+ * It uses as parameter a yup schema.
+ */
 export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const [formData, setFormData] = createStore<{ data: T }>({ data: buildDefault(yupSchema) as T });
   const [formFields, setFormFields] = createStore<{ [x: string]: FormField }>({});

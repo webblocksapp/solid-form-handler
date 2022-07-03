@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
+    "outDir": "dist",
+    "removeComments": false,
     "strict": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -14,7 +16,7 @@
       "@utils": ["src/utils"],
       "@implementations": ["examples/implementations"]
     },
-    "typeRoots": ["./node_modules/@types"]
+    "plugins": [{ "transform": "ts-transform-paths" }]
   },
   "include": ["src", "examples"]
 }

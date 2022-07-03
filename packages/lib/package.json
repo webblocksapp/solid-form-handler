@@ -11,7 +11,7 @@
     "url": "https://github.com/webblocksapp/solidjs-form-handler"
   },
   "scripts": {
-    "build": "vite build --config=vite.prod.ts",
+    "build": "vite build --config=vite.prod.ts && tsc-alias",
     "start": "vite --config=vite.dev.ts",
     "link": "npm run build && npm link",
     "test": "jest --coverage"
@@ -38,8 +38,10 @@
     "solid-testing-library": "^0.3.0",
     "ts-jest": "^28.0.2",
     "ts-node": "^10.7.0",
+    "tsc-alias": "^1.6.11",
     "typescript": "^4.6.4",
     "vite": "^2.9.9",
+    "vite-plugin-dts": "^1.2.0",
     "vite-plugin-solid": "^2.2.6",
     "vite-tsconfig-paths": "^3.4.1",
     "yup": "^0.32.11"

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
+    "module": "es2022",
     "strict": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -10,10 +11,14 @@
     "jsxImportSource": "solid-js",
     "paths": {
       "@components": ["src/components"],
+      "@implementations": ["src/implementations"],
       "@layouts": ["src/layouts"],
-      "@routes": ["src/routes"]
+      "@pages": ["src/pages"],
+      "@routes": ["src/routes"],
+      "@utils": ["src/utils"],
+      "solidjs-form-handler": ["../packages/lib/dist"]
     },
-    "typeRoots": ["./node_modules/@types"]
+    "types": ["vite/client", "node"]
   },
   "include": ["src"]
 }

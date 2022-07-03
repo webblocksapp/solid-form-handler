@@ -3462,6 +3462,11 @@ solid-js@^1.4.0:
   resolved "https://registry.npmjs.org/solid-js/-/solid-js-1.4.4.tgz"
   integrity sha512-nf/cbRzMuhb5UjbRDNfSJPqHKzUxNb9YgCQwijPUbdA3koQ/hWrz/lj0ter3lvThgxinvGPtXofDGy9bsKrXqA==
 
+solid-mdx@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/solid-mdx/-/solid-mdx-0.0.6.tgz#03f658303724862e330c0150b271631c18578cf8"
+  integrity sha512-SDr+iOqxvB7ktdjrwgKLCLkJK43J+TQjoYmesHxmZHXtn6W+a5NRqWgBcybsSP0noHa2co1plSjuPYU4bdtklQ==
+
 solid-refresh@^0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/solid-refresh/-/solid-refresh-0.4.1.tgz#0681ffd633d9ef4de35bb1f5ef0722c865079f2a"

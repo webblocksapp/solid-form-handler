@@ -2,6 +2,22 @@
   color: rgb(var(--nav-link));
 }
 
+.tree-menu .nav-link.active {
+  color: rgb(var(--bs-dark));
+  position: relative;
+}
+
+.tree-menu .nav-link.active::before {
+  position: absolute;
+  top: 0px;
+  left: -17px;
+  content: '';
+  width: 3px;
+  height: 100%;
+  background-color: rgb(var(--bs-primary-rgb));
+  display: block;
+}
+
 .tree-menu .nav-link:hover {
   color: rgb(var(--bs-dark));
 }

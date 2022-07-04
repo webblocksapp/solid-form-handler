@@ -1,9 +1,24 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'highlight.js/styles/github.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
 @font-face {
   font-family: Gordita;
   src: url(assets/fonts/gordita-regular.woff);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Gordita;
+  src: url(assets/fonts/gordita-bold.woff);
+  font-weight: bolder;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Gordita;
+  src: url(assets/fonts/gordita-regular-italic.woff);
+  font-style: italic;
 }
 
 :root {

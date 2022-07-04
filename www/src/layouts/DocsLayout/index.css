@@ -11,5 +11,11 @@
 
 .docs-layout .main > div {
   display: grid;
-  grid-template-columns: 2fr 5fr;
+  grid-template-columns: 2fr 7fr;
+  grid-template-rows: 1fr;
+}
+
+.docs-layout .main > div > div:nth-child(2) {
+  display: grid;
+  grid-template-rows: 1fr;
 }

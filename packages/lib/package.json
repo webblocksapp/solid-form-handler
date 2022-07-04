@@ -11,9 +11,11 @@
     "url": "https://github.com/webblocksapp/solid-form-handler"
   },
   "scripts": {
-    "build": "vite build --config=vite.prod.ts && tsc-alias",
+    "build": "vite build --config=vite.prod.ts && tsc-alias && yarn copy",
+    "copy": "cp package.json dist",
+    "link-lib": "yarn build && cd dist && yarn link",
+    "unlink-lib": "cd dist && yarn unlink",
     "start": "vite --config=vite.dev.ts",
-    "link": "yarn build && yarn link",
     "test": "jest --coverage"
   },
   "peerDependencies": {

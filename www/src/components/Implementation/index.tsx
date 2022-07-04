@@ -8,7 +8,7 @@ export interface ImplementationProps {
 }
 
 export const Implementation: Component<ImplementationProps> = (props) => {
-  props = mergeProps({ language: 'typescript' }, props);
+  props = mergeProps({ language: 'tsx' }, props);
   const [tabIndex, setTabIndex] = createSignal<number>(0);
 
   return (

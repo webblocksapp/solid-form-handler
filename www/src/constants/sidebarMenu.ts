@@ -13,8 +13,8 @@ export const SIDEBAR_MENU: TreeMenu[] = [
     text: 'Implementation',
     section: true,
     children: [
-      { text: 'Validation schema', route: 'validation-schema' },
-      { text: 'Form validation', route: 'form-validation' },
+      { text: 'Validation Schema', route: 'validation-schema' },
+      { text: 'Form Validation', route: 'form-validation' },
     ],
   },
 ];

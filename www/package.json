@@ -18,7 +18,8 @@
     "bootstrap-icons": "^1.8.3",
     "highlight.js": "^11.5.1",
     "solid-app-router": "^0.3.2",
-    "solid-js": "^1.4.0"
+    "solid-js": "^1.4.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",

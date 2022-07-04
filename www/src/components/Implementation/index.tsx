@@ -1,5 +1,5 @@
 import { Code } from '@components';
-import { Component, createSignal, onMount, Switch, Match, JSXElement, mergeProps } from 'solid-js';
+import { Component, createSignal, Switch, Match, JSXElement, mergeProps } from 'solid-js';
 
 export interface ImplementationProps {
   code?: string | Promise<string | undefined>;
@@ -10,11 +10,6 @@ export interface ImplementationProps {
 export const Implementation: Component<ImplementationProps> = (props) => {
   props = mergeProps({ language: 'typescript' }, props);
   const [tabIndex, setTabIndex] = createSignal<number>(0);
-  const [code, setCode] = createSignal<string>();
-
-  onMount(async () => {
-    setCode(await props.code);
-  });
 
   return (
     <>
@@ -34,7 +29,7 @@ export const Implementation: Component<ImplementationProps> = (props) => {
         <Switch>
           <Match when={tabIndex() === 0}>{props.children}</Match>
           <Match when={tabIndex() === 1}>
-            <Code language={props.language}>{code()}</Code>
+            <Code language={props.language} content={props.code} />
           </Match>
         </Switch>
       </div>

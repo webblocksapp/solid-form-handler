@@ -29,7 +29,7 @@ export const Navbar: Component = () => (
               </NavLink>
             </li>
             <li class="nav-item">
-              <NavLink class="nav-link" href="docs">
+              <NavLink class="nav-link" href="docs/introduction">
                 Docs
               </NavLink>
             </li>

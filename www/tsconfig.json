@@ -17,6 +17,7 @@
       "@layouts": ["src/layouts"],
       "@pages": ["src/pages"],
       "@routes": ["src/routes"],
+      "@schemas": ["src/schemas"],
       "@utils": ["src/utils"],
       "solidjs-form-handler": ["../packages/lib/dist"]
     },

@@ -182,6 +182,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
+   * Retrieves a boolean flag for the given field path if the field contains an error.
+   */
+  const fieldHasError = (path: string) => {
+    return Boolean(getFieldError(path));
+  };
+
+  /**
    * Checks if the field is part of the given yup schema.
    * Fields that are not part of the schema are considered as metadata
    * and doesn't require validation. e.g. id, timestamp, foreignId, etc...
@@ -323,6 +330,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     getFormData,
     getFormErrors,
     getFormState,
+    fieldHasError,
     isFormInvalid,
     moveFieldset,
     refreshFormField,

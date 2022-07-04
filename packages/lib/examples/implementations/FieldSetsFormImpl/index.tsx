@@ -87,7 +87,7 @@ export const FieldsetsFormImpl: Component = () => {
         Reset form
       </button>
       <pre>
-        <code>{JSON.stringify(formHandler.getFormFields(), null, 2)}</code>
+        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
       </pre>
     </form>
   );

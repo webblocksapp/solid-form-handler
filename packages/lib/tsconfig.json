@@ -16,7 +16,6 @@
       "@utils": ["src/utils"],
       "@implementations": ["examples/implementations"]
     },
-    "plugins": [{ "transform": "ts-transform-paths" }]
-  },
-  "include": ["src", "examples"]
+    "types": ["vite/client", "node"]
+  }
 }

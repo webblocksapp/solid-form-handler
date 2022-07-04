@@ -1,5 +1,5 @@
 {
-  "name": "@webblocksapp/solidjs-form-handler",
+  "name": "solid-form-handler",
   "description": "A SolidJS library for simplifying form validations.",
   "version": "1.0.0",
   "license": "MIT",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webblocksapp/solidjs-form-handler"
+    "url": "https://github.com/webblocksapp/solid-form-handler"
   },
   "scripts": {
     "build": "vite build --config=vite.prod.ts && tsc-alias",
     "start": "vite --config=vite.dev.ts",
-    "link": "npm run build && npm link",
+    "link": "yarn build && yarn link",
     "test": "jest --coverage"
   },
   "peerDependencies": {

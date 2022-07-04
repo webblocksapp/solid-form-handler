@@ -18,8 +18,7 @@
       "@pages": ["src/pages"],
       "@routes": ["src/routes"],
       "@schemas": ["src/schemas"],
-      "@utils": ["src/utils"],
-      "solidjs-form-handler": ["../packages/lib/dist"]
+      "@utils": ["src/utils"]
     },
     "types": ["vite/client", "node"]
   },

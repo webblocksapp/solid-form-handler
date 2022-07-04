@@ -8,7 +8,7 @@ export const Navbar: Component = () => (
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
       <div class="container-md">
         <NavLink class="navbar-brand" href="/">
-          solidjs-form-handler
+          solid-form-handler
         </NavLink>
         <button
           class="navbar-toggler"

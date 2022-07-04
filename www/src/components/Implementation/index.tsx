@@ -25,11 +25,13 @@ export const Implementation: Component<ImplementationProps> = (props) => {
           </a>
         </li>
       </ul>
-      <div class="border border-top-0 p-2">
+      <div class="border border-top-0">
         <Switch>
-          <Match when={tabIndex() === 0}>{props.children}</Match>
+          <Match when={tabIndex() === 0}>
+            <div class="p-2">{props.children}</div>
+          </Match>
           <Match when={tabIndex() === 1}>
-            <Code language={props.language} content={props.code} />
+            <Code class="m-0 bg-light p-3" language={props.language} content={props.code} />
           </Match>
         </Switch>
       </div>

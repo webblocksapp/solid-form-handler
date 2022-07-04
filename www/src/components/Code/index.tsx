@@ -29,7 +29,7 @@ export const Code: Component<CodeProps> = (props) => {
 
   return (
     <pre {...rest}>
-      <code ref={codeRef} />
+      <code style={{ 'white-space': 'break-spaces' }} ref={codeRef} />
     </pre>
   );
 };

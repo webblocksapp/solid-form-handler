@@ -1,16 +1,17 @@
 {
-  "name": "solidjs-form-handler",
-  "description": "A SolidJS library for simplifying form validations.",
+  "name": "solid-form-handler",
+  "description": "A SolidJS library for simplifying form building and validations.",
   "version": "1.0.0",
   "author": {
     "name": "Mauricio Rivera"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webblocksapp/solidjs-form-handler"
+    "url": "https://github.com/webblocksapp/solid-form-handler"
   },
   "scripts": {
-    "start": "vite --config=vite.dev.ts"
+    "start": "vite --config=vite.dev.ts",
+    "link-lib": "yarn link solid-form-handler"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.5",

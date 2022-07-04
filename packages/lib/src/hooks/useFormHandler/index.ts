@@ -9,7 +9,7 @@ import { SchemaOf, ValidationError, reach } from 'yup';
  */
 export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const [formData, setFormData] = createStore<{ data: T }>({ data: buildDefault(yupSchema) as T });
-  const [formFields, setFormFields] = createStore<{ [x: string]: FormField }>({});
+  const [formState, setFormState] = createStore<{ [x: string]: FormField }>({});
 
   /**
    * Sets an specific field value of the form data according to the given path.
@@ -45,11 +45,11 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
 
     try {
       await yupSchema.validateAt(path, formData.data);
-      setFormFields(path, (formField) => ({ ...formField, isInvalid: false, errorMessage: '' }));
+      setFormState(path, (fieldState) => ({ ...fieldState, isInvalid: false, errorMessage: '' }));
     } catch (error) {
       if (error instanceof ValidationError) {
         const message = error.message;
-        setFormFields(path, (formField) => ({ ...formField, isInvalid: true, errorMessage: message }));
+        setFormState(path, (fieldState) => ({ ...fieldState, isInvalid: true, errorMessage: message }));
       } else {
         console.error(error);
       }
@@ -68,7 +68,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const validate = async (options?: { throwException: boolean }) => {
     const promises: Promise<void>[] = [];
-    Object.keys(formFields).forEach((path) => {
+    Object.keys(formState).forEach((path) => {
       promises.push(validateField(path));
     });
 
@@ -92,17 +92,17 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Gets the form fields object.
+   * Gets the form state object.
    */
-  const getFormFields = () => {
-    return formFields;
+  const getFormState = () => {
+    return formState;
   };
 
   /**
-   * Extracts the error message from the formField according to the given path.
+   * Extracts the error message from the fieldState according to the given path.
    */
   const getFieldError = (path: string = ''): string => {
-    return formFields[path]?.errorMessage || '';
+    return formState[path]?.errorMessage || '';
   };
 
   /**
@@ -111,8 +111,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const getFormErrors = () => {
     const errors: ValidationResult[] = [];
 
-    for (let path in formFields) {
-      if (formFields[path].errorMessage) errors.push({ path, errorMessage: formFields[path].errorMessage });
+    for (let path in formState) {
+      if (formState[path].errorMessage) errors.push({ path, errorMessage: formState[path].errorMessage });
     }
 
     return errors;
@@ -126,13 +126,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     if (!path || !isFieldFromSchema(path)) return;
 
     setFormData(...buildFormDataPath(path), parseValue(value));
-    const isInvalid = await isFormFieldInvalid(path);
+    const isInvalid = await checkIsFieldInvalid(path);
 
-    setFormFields(path, (formField) => ({
-      ...formField,
+    setFormState(path, (fieldState) => ({
+      ...fieldState,
       isInvalid,
       errorMessage: '',
-      field: field ?? formField?.field,
+      field: field ?? fieldState?.field,
       initialValue: parseValue(value),
       touched: false,
       dirty: false,
@@ -140,14 +140,14 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Generates the whole form fields object metadata
+   * Generates the whole form state object metadata
    */
-  const generateFormFields = async () => {
+  const generateFormState = async () => {
     const obj: CommonObject = {};
     const flattenedObject = flattenObject(formData.data);
     const promises: Promise<boolean>[] = [];
     Object.keys(flattenedObject).forEach((path) => {
-      promises.push(isFormFieldInvalid(path));
+      promises.push(checkIsFieldInvalid(path));
     });
 
     const validationFlags = await Promise.all(promises);
@@ -162,13 +162,14 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       };
     });
 
-    setFormFields(reconcile(obj));
+    setFormState(reconcile(obj));
   };
 
   /**
-   * Returns a boolean value to check if the field is valid or invalid
+   * Check if the field is valid or invalid by
+   * running yup schema validateAt method and returns a boolean flag.
    */
-  const isFormFieldInvalid = async (path: string) => {
+  const checkIsFieldInvalid = async (path: string) => {
     let isInvalid = false;
 
     try {
@@ -220,7 +221,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     setTimeout(() => {
       if (data === undefined) return;
       setFormData('data', data as T);
-      generateFormFields();
+      generateFormState();
     });
   };
 
@@ -229,8 +230,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * If yes the form is invalid.
    */
   const isFormInvalid = () => {
-    for (let key in formFields) {
-      if (formFields[key].isInvalid) {
+    for (let key in formState) {
+      if (formState[key].isInvalid) {
         return true;
       }
     }
@@ -242,19 +243,19 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Marks a field as touched when the user interacted with it.
    */
   const touchField = (path: string) => {
-    setFormFields(path, (field) => ({ ...field, touched: true }));
+    setFormState(path, (fieldState) => ({ ...fieldState, touched: true }));
   };
 
   /**
    * Marks a field as dirty if initial value is different from current value.
    */
   const dirtyField = (path: string) => {
-    setFormFields(path, (field) => {
-      if (JSON.stringify(get(formData.data, path)) !== JSON.stringify(field.initialValue)) {
-        return { ...field, dirty: true };
+    setFormState(path, (fieldState) => {
+      if (JSON.stringify(get(formData.data, path)) !== JSON.stringify(fieldState.initialValue)) {
+        return { ...fieldState, dirty: true };
       }
 
-      return { ...field, dirty: false };
+      return { ...fieldState, dirty: false };
     });
   };
 
@@ -262,8 +263,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Checks if the form has changes when is found a dirty field.
    */
   const formHasChanges = () => {
-    for (let key in formFields) {
-      if (formFields[key].dirty) {
+    for (let key in formState) {
+      if (formState[key].dirty) {
         return true;
       }
     }
@@ -286,7 +287,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     const builtPath = buildFormDataPath(options?.path || String((formData.data as unknown as Flatten<T>[]).length));
     const defaultData = Array.isArray(buildDefault(yupSchema)) ? buildDefault(yupSchema)[0] : buildDefault(yupSchema);
     setFormData(...builtPath, options?.data || defaultData);
-    generateFormFields();
+    generateFormState();
   };
 
   /**
@@ -296,7 +297,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const removeFieldset = (index: number, path?: string) => {
     const builtPath = path ? buildFormDataPath(path) : (['data'] as unknown as []);
     setFormData(...builtPath, (items) => (items as any).filter((_: any, i: number) => i !== index));
-    generateFormFields();
+    generateFormState();
   };
 
   /**
@@ -305,13 +306,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const moveFieldset = (oldIndex?: number, newIndex?: number) => {
     if (oldIndex === undefined || newIndex === undefined) return;
     setFormData('data', reorderArray(formData.data as unknown as Flatten<T>[], oldIndex, newIndex) as unknown as T);
-    generateFormFields();
+    generateFormState();
   };
 
   /**
-   * Generates the form fields metadata before the component is mounted.
+   * Generates the form state metadata before the component is mounted.
    */
-  generateFormFields();
+  generateFormState();
 
   return {
     addFieldset,
@@ -321,7 +322,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     getFieldValue,
     getFormData,
     getFormErrors,
-    getFormFields,
+    getFormState,
     isFormInvalid,
     moveFieldset,
     refreshFormField,

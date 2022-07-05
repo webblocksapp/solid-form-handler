@@ -31,7 +31,7 @@ export const Implementation: Component<ImplementationProps> = (props) => {
             <div class="p-2">{props.children}</div>
           </Match>
           <Match when={tabIndex() === 1}>
-            <Code class="m-0 bg-light p-3" language={props.language} content={props.code} />
+            <Code class="m-0 border-0" language={props.language} content={props.code} />
           </Match>
         </Switch>
       </div>

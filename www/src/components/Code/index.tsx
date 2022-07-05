@@ -1,38 +1,59 @@
-import { Component, createEffect, createSignal, JSX, JSXElement, mergeProps, onMount, splitProps } from 'solid-js';
-import { useCodeHighlightContext } from '../CodeHighlightProvider';
+import {
+  Component,
+  createEffect,
+  createSignal,
+  JSXElement,
+  mergeProps,
+  onMount,
+} from 'solid-js';
+import { useCodeHighlightContext } from '@components';
+import './index.css';
 
-export interface CodeProps extends JSX.HTMLAttributes<HTMLPreElement> {
+export interface CodeProps {
   language?: string;
   children?: JSXElement;
   content?: string | Promise<string | undefined>;
+  class?: string;
 }
 
 export const Code: Component<CodeProps> = (props) => {
   const [code, setCode] = createSignal<string>();
-  const { highlighter } = useCodeHighlightContext();
-  let [local, rest] = splitProps(props, ['children', 'language', 'content']);
-  rest = mergeProps({ class: 'border p-2 bg-light my-3' }, rest);
-  let codeRef: HTMLElement | undefined;
+  const { highlighter, loading } = useCodeHighlightContext();
+  let codeRef: HTMLDivElement | undefined;
+  props = mergeProps({ class: 'my-3' }, props);
 
   const setInnerHTML = async () => {
-    if (codeRef && highlighter()) {
+    if (codeRef && highlighter) {
       codeRef.innerHTML =
-        highlighter()?.codeToHtml(code() || (local.children as string) || '', {
-          lang: local.language || 'tsx',
+        highlighter()?.codeToHtml(code() || (props.children as string) || '', {
+          lang: props.language || 'tsx',
         }) || '';
     }
   };
 
-  createEffect(() => local.content && setInnerHTML());
+  createEffect(() => (props.content || loading()) && setInnerHTML());
 
   onMount(async () => {
-    local.content && setCode(await local.content);
-    local.children && setInnerHTML();
+    props.content && setCode(await props.content);
+    props.children && setInnerHTML();
   });
 
   return (
-    <pre {...rest}>
-      <code style={{ 'white-space': 'break-spaces' }} ref={codeRef} />
-    </pre>
+    <div>
+      {loading() && (
+        <div
+          style={{ 'min-height': '120px' }}
+          class="my-3 d-flex p-3 flex-column justify-content-center align-items-center border bg-light"
+        >
+          Loading code snippet...
+          <div class="mt-2 spinner-border text-secondary" />
+        </div>
+      )}
+      <div
+        class={`code-snippet border ${props.class}`}
+        classList={{ 'd-none': loading() }}
+        ref={codeRef}
+      ></div>
+    </div>
   );
 };

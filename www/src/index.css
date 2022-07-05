@@ -31,4 +31,5 @@ body,
 #root {
   height: 100%;
   font-family: Gordita;
+  overflow-x: hidden;
 }

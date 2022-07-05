@@ -7,11 +7,11 @@ export const Setup: Component = () => (
     <h2 class="mb-4 border-bottom">Setup</h2>
     <p class="mb-5">
       <b>npm installation:</b>
-      <Code>&gt; npm i solid-form-handler yup</Code>
+      <Code language="bash">&gt; npm i solid-form-handler yup</Code>
     </p>
     <p>
       <b>yarn installation:</b>
-      <Code>&gt; yarn add solid-form-handler yup</Code>
+      <Code language="bash">&gt; yarn add solid-form-handler yup</Code>
     </p>
   </DocsContentLayout>
 );

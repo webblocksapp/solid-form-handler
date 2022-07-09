@@ -324,10 +324,10 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   return {
     addFieldset,
     fillForm,
+    formData: getFormData,
     formHasChanges,
     getFieldError,
     getFieldValue,
-    getFormData,
     getFormErrors,
     getFormState,
     fieldHasError,

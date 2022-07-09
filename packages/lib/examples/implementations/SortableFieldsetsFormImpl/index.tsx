@@ -18,6 +18,7 @@ export const SortableFieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(schema);
   const [startIndex, setStartIndex] = createSignal<number>();
   const [endIndex, setEndIndex] = createSignal<number>();
+  const { formData } = formHandler;
 
   const onInput = (event: Event) => {
     const { name, value } = event.currentTarget as HTMLInputElement;
@@ -25,7 +26,7 @@ export const SortableFieldsetsFormImpl: Component = () => {
   };
 
   const submit = async () => {
-    alert(JSON.stringify(formHandler.getFormData()));
+    alert(JSON.stringify(formData()));
   };
 
   const fillForm = () => {
@@ -56,7 +57,7 @@ export const SortableFieldsetsFormImpl: Component = () => {
   return (
     <form>
       <h5>Sortable fieldsets</h5>
-      <For each={formHandler.getFormData()}>
+      <For each={formData()}>
         {(fieldset, i) => (
           <fieldset
             draggable={true}
@@ -104,7 +105,7 @@ export const SortableFieldsetsFormImpl: Component = () => {
         Reset form
       </button>
       <pre>
-        <code>{JSON.stringify(formHandler.getFormFields(), null, 2)}</code>
+        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
       </pre>
     </form>
   );

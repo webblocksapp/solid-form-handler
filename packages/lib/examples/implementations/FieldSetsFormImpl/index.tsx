@@ -16,6 +16,7 @@ const schema: yup.SchemaOf<Schema[]> = yup.array().of(
 
 export const FieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(schema);
+  const { formData } = formHandler;
 
   const onInput = (event: Event) => {
     const { name, value } = event.currentTarget as HTMLInputElement;
@@ -23,7 +24,7 @@ export const FieldsetsFormImpl: Component = () => {
   };
 
   const submit = async () => {
-    alert(JSON.stringify(formHandler.getFormData()));
+    alert(JSON.stringify(formData()));
   };
 
   const fillForm = () => {
@@ -50,7 +51,7 @@ export const FieldsetsFormImpl: Component = () => {
   return (
     <form>
       <h5>Fieldsets</h5>
-      <For each={formHandler.getFormData()}>
+      <For each={formData()}>
         {(fieldset, i) => (
           <fieldset>
             <legend>Record {i() + 1}</legend>

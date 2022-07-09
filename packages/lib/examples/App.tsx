@@ -8,6 +8,7 @@ import {
   ComplexFormImpl,
   FieldsetsFormImpl,
   SortableFieldsetsFormImpl,
+  StoreImpl,
 } from '@implementations';
 
 export const App: Component = () => {
@@ -35,6 +36,9 @@ export const App: Component = () => {
         <div>
           <Link href="sortable-fieldsets-form-impl">sortable-fieldsets-form-impl</Link>
         </div>
+        <div>
+          <Link href="store-impl">store-impl</Link>
+        </div>
       </div>
       <Routes>
         <Route path="/checkbox-impl" element={<CheckboxImpl />} />
@@ -44,6 +48,7 @@ export const App: Component = () => {
         <Route path="/complex-form-impl" element={<ComplexFormImpl />} />
         <Route path="/fieldsets-form-impl" element={<FieldsetsFormImpl />} />
         <Route path="/sortable-fieldsets-form-impl" element={<SortableFieldsetsFormImpl />} />
+        <Route path="/store-impl" element={<StoreImpl />} />
       </Routes>
     </div>
   );

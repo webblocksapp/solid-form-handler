@@ -16,6 +16,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
 export const FormImpl: Component = () => {
   const formHandler = useFormHandler(schema);
   const [error, setError] = createSignal('');
+  const { formData } = formHandler;
 
   const onInput = (event: Event) => {
     const { name, value } = event.currentTarget as HTMLInputElement;
@@ -26,7 +27,7 @@ export const FormImpl: Component = () => {
     try {
       setError('');
       await formHandler.validateForm();
-      alert(`Data submitted \n ${JSON.stringify(formHandler.getFormData())}`);
+      alert(`Data submitted \n ${JSON.stringify(formData())}`);
     } catch (error) {
       if (error instanceof FormErrorsException) {
         setError(

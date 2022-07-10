@@ -1,6 +1,6 @@
 import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationResult } from '@interfaces';
 import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault, reorderArray, set } from '@utils';
-import { createStore, reconcile } from 'solid-js/store';
+import { createStore } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
 /**
@@ -170,7 +170,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       set(state, path, { ...buildFieldState(path) });
     });
 
-    setFormState('data', reconcile(state));
+    setFormState('data', state);
 
     if (validateFields) {
       Object.keys(flattenedObject).forEach((path) => {

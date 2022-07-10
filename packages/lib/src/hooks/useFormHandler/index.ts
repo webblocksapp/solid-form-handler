@@ -134,7 +134,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const getFormErrors = () => {
     const errors: ValidationResult[] = [];
 
-    for (let path in formState) {
+    for (let path in flattenObject(formData.data)) {
       getFieldError(path) && errors.push({ path, errorMessage: getFieldError(path) });
     }
 

@@ -377,7 +377,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Moves the fieldset position inside the formData array.
+   * Moves the fieldset position inside the formData store.
    */
   const moveFieldset = (oldIndex?: number, newIndex?: number, basePath?: string) => {
     if (oldIndex === undefined || newIndex === undefined) return;
@@ -385,7 +385,18 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       basePath,
       reorderArray(get<Flatten<T>[]>(formData, basePath ? `data.${basePath}` : 'data'), oldIndex, newIndex)
     );
-    generateFormState();
+    moveFieldsetState(oldIndex, newIndex, basePath);
+  };
+
+  /**
+   * Moves the fieldset state position inside the formState store
+   */
+  const moveFieldsetState = (oldIndex?: number, newIndex?: number, basePath?: string) => {
+    if (oldIndex === undefined || newIndex === undefined) return;
+    setFieldState(
+      basePath,
+      reorderArray(get<FormState[]>(formState, basePath ? `data.${basePath}` : 'data'), oldIndex, newIndex)
+    );
   };
 
   /**

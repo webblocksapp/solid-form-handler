@@ -1,11 +1,9 @@
 import { Component } from 'solid-js';
 import { NavLink } from 'solid-app-router';
-import './index.css';
 
 export const Navbar: Component = () => (
   <>
-    <div class="navbar"></div>
-    <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+    <nav class="sticky-top navbar navbar-dark bg-dark navbar-expand-lg">
       <div class="container-md">
         <NavLink class="navbar-brand" href="/">
           solid-form-handler
@@ -22,7 +20,10 @@ export const Navbar: Component = () => (
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <ul
+            class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
+            style="--bs-scroll-height: 100px;"
+          >
             <li class="nav-item">
               <NavLink class="nav-link" aria-current="page" href="home">
                 Home

@@ -6,7 +6,8 @@ export const Introduction: Component = () => (
   <DocsContentLayout next="/docs/setup">
     <h2 class="mb-4 border-bottom">Introduction</h2>
     <p>
-      <b>solid-form-handler</b> is a lightweight library that uses the built-in granular reactivity of{' '}
+      <b>solid-form-handler</b> is a lightweight library that uses the built-in
+      granular reactivity of{' '}
       <i>
         <a href={SOLID_JS_URL} target="blank">
           SolidJS
@@ -34,8 +35,11 @@ export const Introduction: Component = () => (
         to ease form schema definition.
       </li>
       <li>Full reactivity during form input, validation and submission.</li>
-      <li>Simple manipulation of fieldsets (array of fields or dynamic forms).</li>
+      <li>
+        Simple manipulation of fieldsets (array of fields or dynamic forms).
+      </li>
       <li>Simple validation of complex data structures.</li>
+      <li>Very intuitive apis</li>
     </ul>
   </DocsContentLayout>
 );

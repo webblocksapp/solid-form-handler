@@ -15,6 +15,7 @@ export const SIDEBAR_MENU: TreeMenu[] = [
     children: [
       { text: 'Validation Schema', route: 'validation-schema' },
       { text: 'Form Validation', route: 'form-validation' },
+      { text: 'Dynamic Form', route: 'dynamic-form' },
     ],
   },
 ];

@@ -20,8 +20,8 @@ const userSchema: yup.SchemaOf<User> = yup.object({
 
 export const UserForm: Component = () => {
   const formHandler = useFormHandler(userSchema);
-  const formData = formHandler.getFormData();
   const [error, setError] = createSignal<string>('');
+  const { formData } = formHandler;
 
   const submit = async (event: Event) => {
     event.preventDefault();
@@ -29,7 +29,7 @@ export const UserForm: Component = () => {
     try {
       setError('');
       await formHandler.validateForm();
-      alert('Data sent with success: ' + JSON.stringify(formData));
+      alert('Data sent with success: ' + JSON.stringify(formData()));
       formHandler.resetForm();
     } catch (error) {
       if (error instanceof FormErrorsException) {
@@ -91,6 +91,12 @@ export const UserForm: Component = () => {
         </div>
         <div class="mb-3 w-100">
           <button class="btn btn-primary me-2">Submit</button>
+          <button
+            class="btn btn-primary me-2"
+            disabled={formHandler.isFormInvalid()}
+          >
+            Submit
+          </button>
           <button class="btn btn-primary me-2" onClick={fill} type="button">
             Fill
           </button>
@@ -103,7 +109,7 @@ export const UserForm: Component = () => {
         <b>Form data:</b>
       </p>
       <pre class="mt-3 border bg-light p-3">
-        <code>{JSON.stringify(formData, null, 2)}</code>
+        <code>{JSON.stringify(formData(), null, 2)}</code>
       </pre>
       {error() && (
         <>

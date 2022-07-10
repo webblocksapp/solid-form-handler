@@ -1,6 +1,12 @@
 import { HomeLayout, MainLayout, DocsLayout } from '@layouts';
 import { RouteDefinition } from 'solid-app-router';
-import { Introduction, Setup, ValidationSchema, FormValidation } from '@pages';
+import {
+  Introduction,
+  Setup,
+  ValidationSchema,
+  FormValidation,
+  DynamicForm,
+} from '@pages';
 
 export const mainRoutes: RouteDefinition[] = [
   {
@@ -25,6 +31,7 @@ export const mainRoutes: RouteDefinition[] = [
           { path: 'setup', component: Setup },
           { path: 'validation-schema', component: ValidationSchema },
           { path: 'form-validation', component: FormValidation },
+          { path: 'dynamic-form', component: DynamicForm },
         ],
       },
       {

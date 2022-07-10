@@ -1,9 +1,8 @@
-export type FormField = {
+export type FieldState = {
   errorMessage: string;
   isInvalid: boolean;
-  field: HTMLElement;
+  field?: HTMLElement;
   initialValue: any;
-  value: any;
   touched: boolean;
   dirty: boolean;
 };

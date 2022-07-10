@@ -146,6 +146,9 @@ export const ComplexFormImpl: Component = () => {
       <pre style="color: red">
         <code>{error()}</code>
       </pre>
+      <pre>
+        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+      </pre>
     </form>
   );
 };

@@ -3,7 +3,7 @@ import { formatObjectPath } from '@utils';
 /**
  * Gets the value from a nested object path.
  */
-export const get = (data: any, path: string): any => {
+export const get = <T>(data: any, path: string): T => {
   path = formatObjectPath(path);
   const [key, ...rest] = path.split('.');
 

@@ -1,5 +1,5 @@
-import { CommonObject, Flatten, FormField, SetFieldValueOptions, ValidationResult } from '@interfaces';
-import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault, reorderArray } from '@utils';
+import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationResult } from '@interfaces';
+import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault, reorderArray, set } from '@utils';
 import { createStore, reconcile } from 'solid-js/store';
 import { SchemaOf, ValidationError, reach } from 'yup';
 
@@ -9,10 +9,22 @@ import { SchemaOf, ValidationError, reach } from 'yup';
  */
 export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const [formData, setFormData] = createStore<{ data: T }>({ data: buildDefault(yupSchema) as T });
-  const [formState, setFormState] = createStore<{ [x: string]: FormField }>({});
+  const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
+    data: buildDefault(yupSchema),
+  });
 
   /**
-   * Sets an specific field value of the form data according to the given path.
+   * Sets the field value inside the form data store.
+   */
+  const setFieldData = <T>(path: string = '', value: T) => {
+    path = path ? `data.${path}` : 'data';
+    setFormData(...(formatObjectPath(path).split('.') as []), value);
+  };
+
+  /**
+   * Sets the field value inside the formData store,
+   * updates the field state at formState store and
+   * validates the field.
    */
   const setFieldValue = async (
     path: string = '',
@@ -23,18 +35,18 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       return;
     }
 
-    setFormData(...buildFormDataPath(path), value);
+    setFieldData(path, value);
     options?.touch && touchField(path);
     options?.dirty && dirtyField(path);
     options?.validate && (await validateField(path));
   };
 
   /**
-   * Converts the field path into an array for getting or setting a value
-   * at formData store.
+   * Sets the field state inside the formState store.
    */
-  const buildFormDataPath = (path: string) => {
-    return formatObjectPath(`data.${path}`).split('.') as [];
+  const setFieldState = <T>(path: string = '', value: T) => {
+    path = path ? `data.${path}` : 'data';
+    setFormState(...(formatObjectPath(path).split('.') as []), value);
   };
 
   /**
@@ -45,11 +57,19 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
 
     try {
       await yupSchema.validateAt(path, formData.data);
-      setFormState(path, (fieldState) => ({ ...fieldState, isInvalid: false, errorMessage: '' }));
+      setFieldState(path, (fieldState: FieldState) => ({
+        ...fieldState,
+        isInvalid: false,
+        errorMessage: '',
+      }));
     } catch (error) {
       if (error instanceof ValidationError) {
         const message = error.message;
-        setFormState(path, (fieldState) => ({ ...fieldState, isInvalid: true, errorMessage: message }));
+        setFieldState(path, (fieldState: FieldState) => ({
+          ...fieldState,
+          isInvalid: true,
+          errorMessage: message,
+        }));
       } else {
         console.error(error);
       }
@@ -68,7 +88,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const validate = async (options?: { throwException: boolean }) => {
     const promises: Promise<void>[] = [];
-    Object.keys(formState).forEach((path) => {
+    Object.keys(flattenObject(formData.data)).forEach((path) => {
       promises.push(validateField(path));
     });
 
@@ -79,6 +99,9 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     }
   };
 
+  /**
+   * Gets the field value from formData store.
+   */
   const getFieldValue = (path: string = '') => {
     if (!path) return '';
     return parseValue(get(formData.data, path));
@@ -95,14 +118,14 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Gets the form state object.
    */
   const getFormState = () => {
-    return formState;
+    return formState.data;
   };
 
   /**
    * Extracts the error message from the fieldState according to the given path.
    */
   const getFieldError = (path: string = ''): string => {
-    return formState[path]?.errorMessage || '';
+    return getFieldState(path)?.errorMessage || '';
   };
 
   /**
@@ -112,57 +135,74 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     const errors: ValidationResult[] = [];
 
     for (let path in formState) {
-      if (formState[path].errorMessage) errors.push({ path, errorMessage: formState[path].errorMessage });
+      getFieldError(path) && errors.push({ path, errorMessage: getFieldError(path) });
     }
 
     return errors;
   };
 
   /**
-   * Sets the default state of a field.
+   * Sets the default state of a form field.
    * By default the field is initialized as invalid.
+   * You can pass an HTMLElement captured from the DOM.
    */
   const setFormField = async (path: string = '', value: any, field?: HTMLElement) => {
     if (!path || !isFieldFromSchema(path)) return;
 
-    setFormData(...buildFormDataPath(path), parseValue(value));
+    setFieldData(path, parseValue(value));
     const isInvalid = await checkIsFieldInvalid(path);
 
-    setFormState(path, (fieldState) => ({
-      ...fieldState,
-      isInvalid,
-      errorMessage: '',
+    setFieldState(path, (fieldState: FieldState) => ({
+      ...buildFieldState(path),
       field: field ?? fieldState?.field,
-      initialValue: parseValue(value),
-      touched: false,
-      dirty: false,
+      isInvalid,
     }));
   };
 
   /**
    * Generates the whole form state object metadata
    */
-  const generateFormState = async () => {
-    const obj: CommonObject = {};
+  const generateFormState = (validateFields: boolean = false) => {
     const flattenedObject = flattenObject(formData.data);
-    const promises: Promise<boolean>[] = [];
+    const state = Array.isArray(formData.data) ? [] : {};
+
     Object.keys(flattenedObject).forEach((path) => {
-      promises.push(checkIsFieldInvalid(path));
+      set(state, path, { ...buildFieldState(path) });
     });
 
-    const validationFlags = await Promise.all(promises);
+    setFormState('data', reconcile(state));
 
-    Object.keys(flattenedObject).forEach((path, i) => {
-      obj[path] = {
-        isInvalid: validationFlags[i],
-        errorMessage: '',
-        initialValue: parseValue(get(formData.data, path)),
-        touched: false,
-        dirty: false,
-      };
+    if (validateFields) {
+      Object.keys(flattenedObject).forEach((path) => {
+        setFieldIsInvalidState(path);
+      });
+    }
+  };
+
+  /**
+   * Initializes a default or existing state of a field.
+   */
+  const buildFieldState = (path: string) => {
+    return {
+      isInvalid: getFieldState(path)?.isInvalid || true,
+      errorMessage: getFieldState(path)?.errorMessage || '',
+      initialValue: parseValue(get(formData.data, path)),
+      touched: getFieldState(path)?.touched || false,
+      dirty: getFieldState(path)?.dirty || false,
+    };
+  };
+
+  /**
+   * Updates only the isInvalid state of a field
+   * by triggering a yup validation.
+   */
+  const setFieldIsInvalidState = (path: string) => {
+    checkIsFieldInvalid(path).then((isInvalid) => {
+      setFieldState(path, (fieldState: FieldState) => ({
+        ...fieldState,
+        isInvalid,
+      }));
     });
-
-    setFormState(reconcile(obj));
   };
 
   /**
@@ -228,8 +268,15 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     setTimeout(() => {
       if (data === undefined) return;
       setFormData('data', data as T);
-      generateFormState();
+      generateFormState(data ? true : false);
     });
+  };
+
+  /**
+   * Returns the state of an specific form field
+   */
+  const getFieldState = (path: string) => {
+    return get<FieldState>(formState.data, path);
   };
 
   /**
@@ -237,8 +284,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * If yes the form is invalid.
    */
   const isFormInvalid = () => {
-    for (let key in formState) {
-      if (formState[key].isInvalid) {
+    for (let key in flattenObject(formData.data)) {
+      if (getFieldState(key)?.isInvalid) {
         return true;
       }
     }
@@ -250,14 +297,14 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Marks a field as touched when the user interacted with it.
    */
   const touchField = (path: string) => {
-    setFormState(path, (fieldState) => ({ ...fieldState, touched: true }));
+    setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
   };
 
   /**
    * Marks a field as dirty if initial value is different from current value.
    */
   const dirtyField = (path: string) => {
-    setFormState(path, (fieldState) => {
+    setFieldState(path, (fieldState: FieldState) => {
       if (JSON.stringify(get(formData.data, path)) !== JSON.stringify(fieldState.initialValue)) {
         return { ...fieldState, dirty: true };
       }
@@ -270,8 +317,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Checks if the form has changes when is found a dirty field.
    */
   const formHasChanges = () => {
-    for (let key in formState) {
-      if (formState[key].dirty) {
+    for (let key in flattenObject(formState.data)) {
+      if (getFieldState(key).dirty) {
         return true;
       }
     }
@@ -283,36 +330,61 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Resets the form data
    */
   const resetForm = () => {
-    fillForm(buildDefault(yupSchema) as T);
+    setFormData('data', buildDefault(yupSchema) as T);
+    generateFormState();
   };
 
   /**
    * Adds a fieldset.
    * Use path for adding a fieldset inside a nested array from an object.
    */
-  const addFieldset = <K>(options?: { data?: Partial<K>; path?: string }) => {
-    const builtPath = buildFormDataPath(options?.path || String((formData.data as unknown as Flatten<T>[]).length));
-    const defaultData = Array.isArray(buildDefault(yupSchema)) ? buildDefault(yupSchema)[0] : buildDefault(yupSchema);
-    setFormData(...builtPath, options?.data || defaultData);
-    generateFormState();
+  const addFieldset = <K>(options?: { data?: Partial<K>; basePath?: string }) => {
+    const builtPath = options?.basePath || String(get<Flatten<T>[]>(formData, 'data').length);
+    let defaultData = Array.isArray(buildDefault(yupSchema)) ? buildDefault(yupSchema)[0] : buildDefault(yupSchema);
+    defaultData = options?.data || defaultData;
+    setFieldData(builtPath, parseValue(defaultData));
+    addFieldsetState(builtPath, defaultData, options?.data ? true : false);
+  };
+
+  /**
+   * Initializes the fieldset state at formState store.
+   */
+  const addFieldsetState = (basePath: string, defaultData: any, validateFields: boolean = false) => {
+    const flattenedObject = flattenObject(defaultData);
+    setFieldState(basePath, {});
+    Object.keys(flattenedObject).forEach((key) => {
+      const path = `${basePath}.${key}`;
+      setFieldState(path, { ...buildFieldState(path), initialValue: flattenedObject[key] });
+      validateFields && setFieldIsInvalidState(path);
+    });
   };
 
   /**
    * Remove fieldset
    * Use path for removing a fieldset inside a nested array from an object.
    */
-  const removeFieldset = (index: number, path?: string) => {
-    const builtPath = path ? buildFormDataPath(path) : (['data'] as unknown as []);
-    setFormData(...builtPath, (items) => (items as any).filter((_: any, i: number) => i !== index));
-    generateFormState();
+  const removeFieldset = (index: number, basePath?: string) => {
+    setFieldData(basePath, (items: Flatten<T>[]) => items.filter((_, i) => i !== index));
+    removeFieldsetState(index, basePath);
+  };
+
+  /**
+   * Remove fieldset state
+   * Use path for removing a fieldset inside a nested array from an object.
+   */
+  const removeFieldsetState = (index: number, basePath?: string) => {
+    setFieldState(basePath, (items: FormState[]) => items.filter((_, i) => i !== index));
   };
 
   /**
    * Moves the fieldset position inside the formData array.
    */
-  const moveFieldset = (oldIndex?: number, newIndex?: number) => {
+  const moveFieldset = (oldIndex?: number, newIndex?: number, basePath?: string) => {
     if (oldIndex === undefined || newIndex === undefined) return;
-    setFormData('data', reorderArray(formData.data as unknown as Flatten<T>[], oldIndex, newIndex) as unknown as T);
+    setFieldData(
+      basePath,
+      reorderArray(get<Flatten<T>[]>(formData, basePath ? `data.${basePath}` : 'data'), oldIndex, newIndex)
+    );
     generateFormState();
   };
 
@@ -335,6 +407,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     moveFieldset,
     refreshFormField,
     removeFieldset,
+    removeFieldsetState,
     resetForm,
     setFieldValue,
     setFormField,

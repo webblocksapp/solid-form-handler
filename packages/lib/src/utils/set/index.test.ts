@@ -20,4 +20,8 @@ describe('set', () => {
   it('CASE-5', () => {
     expect(set({}, 'data.name', 'Laura')).toMatchObject({ data: { name: 'Laura' } });
   });
+
+  it('CASE-6', () => {
+    expect(set([], '0.name', { isValid: false })).toMatchObject([{ name: { isValid: false } }]);
+  });
 });

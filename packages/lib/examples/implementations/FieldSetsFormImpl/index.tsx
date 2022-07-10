@@ -67,7 +67,9 @@ export const FieldsetsFormImpl: Component = () => {
               <br />
               <small style="color: red;">{formHandler.getFieldError(`${i()}.age`)}</small>
             </div>
-            <button onClick={() => formHandler.removeFieldset(i())}>X</button>
+            <button type="button" onClick={() => formHandler.removeFieldset(i())}>
+              X
+            </button>
           </fieldset>
         )}
       </For>

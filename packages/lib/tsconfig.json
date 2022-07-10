@@ -16,6 +16,6 @@
       "@utils": ["src/utils"],
       "@implementations": ["examples/implementations"]
     },
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node", "@types/jest"]
   }
 }

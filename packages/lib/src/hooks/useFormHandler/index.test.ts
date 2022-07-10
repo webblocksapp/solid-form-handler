@@ -44,7 +44,7 @@ describe('useFormHandler', () => {
 
   it('is form invalid', async () => {
     const formHandler = useFormHandler(schema);
-    await formHandler.validate();
+    await formHandler.validateForm();
     expect(formHandler.isFormInvalid()).toBe(true);
   });
 
@@ -52,7 +52,7 @@ describe('useFormHandler', () => {
     const formHandler = useFormHandler(schema);
     formHandler.setFieldValue('name', 'George');
     formHandler.setFieldValue('age', 60);
-    await formHandler.validate();
+    await formHandler.validateForm();
     expect(formHandler.isFormInvalid()).toBe(false);
   });
 
@@ -60,7 +60,7 @@ describe('useFormHandler', () => {
     const formHandler = useFormHandler(schema);
     formHandler.setFieldValue('name', 'George');
     formHandler.setFieldValue('age', 60);
-    expect(formHandler.getFormData()).toMatchObject({ name: 'George', age: 60 });
+    expect(formHandler.formData()).toMatchObject({ name: 'George', age: 60 });
   });
 
   it('Form has changes', async () => {
@@ -71,8 +71,8 @@ describe('useFormHandler', () => {
 
   it("Form doesn't have changes", async () => {
     const formHandler = useFormHandler(schema);
-    formHandler.initFormField('name', 'George');
-    formHandler.initFormField('age', 60);
+    formHandler.setFormField('name', 'George');
+    formHandler.setFormField('age', 60);
     formHandler.setFieldValue('name', 'George');
     formHandler.setFieldValue('age', 60);
     expect(formHandler.formHasChanges()).toBe(false);

@@ -106,6 +106,10 @@ export const ComplexFormImpl: Component = () => {
           <br />
           <small style="color: red;">{formHandler.getFieldError('contact.phone')}</small>
         </div>
+        <br />
+        <small style="color: red">{formHandler.getFieldError('contact')}</small>
+        <br />
+        <small>{formHandler.isFieldInvalid('contact') ? 'Invalid' : 'Valid'}</small>
       </fieldset>
       <div style="display: flex; align-items: center; margin-top: 17px;">
         <label>Has house</label>

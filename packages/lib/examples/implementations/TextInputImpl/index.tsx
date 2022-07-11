@@ -26,7 +26,7 @@ export const TextInputImpl: Component = () => {
           oninput={({ currentTarget: { name, value } }) => formHandler.setFieldValue(name, value)}
           onblur={({ currentTarget: { name } }) => formHandler.validateField(name)}
         ></input>
-        {formHandler.fieldHasError('name') && (
+        {formHandler.isFieldInvalid('name') && (
           <>
             <br />
             <small style="color: red">{formHandler.getFieldError('name')}</small>

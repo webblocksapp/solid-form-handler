@@ -30,7 +30,7 @@ export const SelectImpl: Component = () => {
           <option value="2">Argentina</option>
           <option value="3">Venezuela</option>
         </select>
-        {formHandler.fieldHasError('country') && (
+        {formHandler.isFieldInvalid('country') && (
           <>
             <br />
             <small style="color: red">{formHandler.getFieldError('country')}</small>

@@ -124,8 +124,28 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Extracts the error message from the fieldState according to the given path.
    */
-  const getFieldError = (path: string = ''): string => {
-    return getFieldState(path)?.errorMessage || '';
+  const getFieldError = (path: string): string => {
+    return findErrorMessages(path).join(', ').replace(/,$/, '').replace(/^,/, '');
+  };
+
+  /**
+   * Finds the error message if the field is a nested object or a primitive
+   */
+  const findErrorMessages = (path: string, errorMessages: string[] = []) => {
+    const fieldState = getFieldState(path);
+    if (fieldState === undefined) return errorMessages;
+
+    const errorMessage = fieldState.errorMessage;
+
+    if (errorMessage === undefined) {
+      Object.keys(fieldState).forEach((key) => {
+        errorMessages = findErrorMessages(`${path}.${key}`, errorMessages);
+      });
+    } else {
+      errorMessages.push(errorMessage);
+    }
+
+    return errorMessages;
   };
 
   /**
@@ -150,12 +170,11 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     if (!path || !isFieldFromSchema(path)) return;
 
     setFieldData(path, parseValue(value));
-    const isInvalid = await checkIsFieldInvalid(path);
+    await validateField(path);
 
     setFieldState(path, (fieldState: FieldState) => ({
       ...buildFieldState(path),
       field: field ?? fieldState?.field,
-      isInvalid,
     }));
   };
 
@@ -174,7 +193,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
 
     if (validateFields) {
       Object.keys(flattenedObject).forEach((path) => {
-        setFieldIsInvalidState(path);
+        validateField(path);
       });
     }
   };
@@ -193,39 +212,30 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Updates only the isInvalid state of a field
-   * by triggering a yup validation.
+   * Retrieves a boolean flag for the given field path if the field is invalid.
    */
-  const setFieldIsInvalidState = (path: string) => {
-    checkIsFieldInvalid(path).then((isInvalid) => {
-      setFieldState(path, (fieldState: FieldState) => ({
-        ...fieldState,
-        isInvalid,
-      }));
-    });
+  const isFieldInvalid = (path: string) => {
+    return findInvalidFlags(path).includes(true);
   };
 
   /**
-   * Check if the field is valid or invalid by
-   * running yup schema validateAt method and returns a boolean flag.
+   * Finds the invalid flag if the field is a nested object or a primitive
    */
-  const checkIsFieldInvalid = async (path: string) => {
-    let isInvalid = false;
+  const findInvalidFlags = (path: string, invalidFlags: boolean[] = []) => {
+    const fieldState = getFieldState(path);
+    if (fieldState === undefined) return invalidFlags;
 
-    try {
-      await yupSchema.validateAt(path, formData.data);
-    } catch (_) {
-      isInvalid = true;
+    const isInvalid = fieldState.isInvalid;
+
+    if (isInvalid === undefined) {
+      Object.keys(fieldState).forEach((key) => {
+        invalidFlags = findInvalidFlags(`${path}.${key}`, invalidFlags);
+      });
+    } else {
+      invalidFlags.push(isInvalid);
     }
 
-    return isInvalid;
-  };
-
-  /**
-   * Retrieves a boolean flag for the given field path if the field contains an error.
-   */
-  const fieldHasError = (path: string) => {
-    return Boolean(getFieldError(path));
+    return invalidFlags;
   };
 
   /**
@@ -276,7 +286,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Returns the state of an specific form field
    */
   const getFieldState = (path: string) => {
-    return get<FieldState>(formState.data, path);
+    return get<FieldState | undefined>(formState.data, path);
   };
 
   /**
@@ -304,6 +314,10 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Marks a field as dirty if initial value is different from current value.
    */
   const dirtyField = (path: string) => {
+    const fieldState = getFieldState(path);
+
+    if (fieldState === undefined) return;
+
     setFieldState(path, (fieldState: FieldState) => {
       if (JSON.stringify(get(formData.data, path)) !== JSON.stringify(fieldState.initialValue)) {
         return { ...fieldState, dirty: true };
@@ -318,7 +332,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const formHasChanges = () => {
     for (let key in flattenObject(formState.data)) {
-      if (getFieldState(key).dirty) {
+      const fieldState = getFieldState(key);
+      if (fieldState && fieldState.dirty) {
         return true;
       }
     }
@@ -355,7 +370,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     Object.keys(flattenedObject).forEach((key) => {
       const path = `${basePath}.${key}`;
       setFieldState(path, { ...buildFieldState(path), initialValue: flattenedObject[key] });
-      validateFields && setFieldIsInvalidState(path);
+      validateFields && validateField(path);
     });
   };
 
@@ -413,7 +428,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     getFieldValue,
     getFormErrors,
     getFormState,
-    fieldHasError,
+    isFieldInvalid,
     isFormInvalid,
     moveFieldset,
     refreshFormField,
@@ -426,8 +441,9 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     _: {
       addFieldsetState,
       buildFieldState,
-      checkIsFieldInvalid,
       dirtyField,
+      findInvalidFlags,
+      findErrorMessages,
       generateFormState,
       getFieldState,
       isFieldFromSchema,
@@ -435,7 +451,6 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       parseValue,
       removeFieldsetState,
       setFieldData,
-      setFieldIsInvalidState,
       setFieldState,
       touchField,
       validate,

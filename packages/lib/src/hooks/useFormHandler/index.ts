@@ -331,7 +331,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Checks if the form has changes when is found a dirty field.
    */
   const formHasChanges = () => {
-    for (let key in flattenObject(formState.data)) {
+    for (let key in flattenObject(formData.data)) {
       const fieldState = getFieldState(key);
       if (fieldState && fieldState.dirty) {
         return true;

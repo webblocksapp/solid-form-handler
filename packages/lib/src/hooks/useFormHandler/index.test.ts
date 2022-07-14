@@ -44,8 +44,11 @@ describe('useFormHandler', () => {
 
   it('is form invalid', async () => {
     const formHandler = useFormHandler(schema);
-    await formHandler.validateForm();
-    expect(formHandler.isFormInvalid()).toBe(true);
+    try {
+      await formHandler.validateForm();
+    } catch (_) {
+      expect(formHandler.isFormInvalid()).toBe(true);
+    }
   });
 
   it('is form valid', async () => {
@@ -71,10 +74,10 @@ describe('useFormHandler', () => {
 
   it("Form doesn't have changes", async () => {
     const formHandler = useFormHandler(schema);
-    formHandler.setFormField('name', 'George');
-    formHandler.setFormField('age', 60);
-    formHandler.setFieldValue('name', 'George');
-    formHandler.setFieldValue('age', 60);
+    await formHandler.setFormField('name', 'George');
+    await formHandler.setFormField('age', 60);
+    await formHandler.setFieldValue('name', 'George');
+    await formHandler.setFieldValue('age', 60);
     expect(formHandler.formHasChanges()).toBe(false);
   });
 });

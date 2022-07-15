@@ -181,17 +181,17 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Generates the whole form state object metadata
    */
-  const generateFormState = (validateFields: boolean = false) => {
+  const generateFormState = (options?: { validateFields?: boolean; reset?: boolean }) => {
     const flattenedObject = flattenObject(formData.data);
     const state = Array.isArray(formData.data) ? [] : {};
 
     Object.keys(flattenedObject).forEach((path) => {
-      set(state, path, { ...buildFieldState(path) });
+      set(state, path, { ...buildFieldState(path, options?.reset) });
     });
 
     setFormState('data', state);
 
-    if (validateFields) {
+    if (options?.validateFields) {
       Object.keys(flattenedObject).forEach((path) => {
         validateField(path);
       });
@@ -201,13 +201,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Initializes a default or existing state of a field.
    */
-  const buildFieldState = (path: string) => {
+  const buildFieldState = (path: string, reset: boolean = false) => {
     return {
-      isInvalid: getFieldState(path)?.isInvalid || true,
-      errorMessage: getFieldState(path)?.errorMessage || '',
+      isInvalid: reset ? true : getFieldState(path)?.isInvalid || true,
+      errorMessage: reset ? '' : getFieldState(path)?.errorMessage || '',
       initialValue: parseValue(get(formData.data, path)),
-      touched: getFieldState(path)?.touched || false,
-      dirty: getFieldState(path)?.dirty || false,
+      touched: reset ? false : getFieldState(path)?.touched || false,
+      dirty: reset ? false : getFieldState(path)?.dirty || false,
     };
   };
 
@@ -280,7 +280,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     setTimeout(() => {
       if (data === undefined) return;
       setFormData('data', data as T);
-      generateFormState(data ? true : false);
+      generateFormState({ validateFields: data ? true : false });
     });
   };
 
@@ -348,7 +348,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const resetForm = () => {
     setFormData('data', buildDefault(yupSchema) as T);
-    generateFormState();
+    generateFormState({ reset: true });
   };
 
   /**

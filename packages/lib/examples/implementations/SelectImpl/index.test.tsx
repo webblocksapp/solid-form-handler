@@ -1,5 +1,5 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
-import { SelectImpl } from './index';
+import { SelectImpl } from '@implementations';
 
 describe('Select use case', () => {
   it('must render error message on select when value is empty', async () => {

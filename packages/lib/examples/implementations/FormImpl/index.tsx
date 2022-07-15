@@ -47,24 +47,24 @@ export const FormImpl: Component = () => {
       <div>
         <label>Name</label>
         <br />
-        <input name="name" onInput={onInput}></input>
+        <input data-testid="name" name="name" onInput={onInput}></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('name')}</small>
       </div>
       <div>
         <label>Age</label>
         <br />
-        <input name="age" onInput={onInput}></input>
+        <input data-testid="age" name="age" onInput={onInput}></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('age')}</small>
       </div>
       <br />
-      <button type="button" onClick={submit}>
+      <button data-testid="submit" type="button" onClick={submit}>
         Submit
       </button>
       <br />
       <pre style="color: red">
-        <code>{error()}</code>
+        <code data-testid="error">{error()}</code>
       </pre>
     </form>
   );

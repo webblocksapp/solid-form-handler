@@ -267,8 +267,10 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Refresh the form field initial state
    */
-  const refreshFormField = (path: string) => {
-    setFormField(path, get(formData.data, path));
+  const refreshFormField = async (path: string) => {
+    const fieldState = getFieldState(path);
+    await setFormField(path, get(formData.data, path));
+    fieldState?.touched === false && setFieldState(path, { ...fieldState, errorMessage: '' });
   };
 
   /**

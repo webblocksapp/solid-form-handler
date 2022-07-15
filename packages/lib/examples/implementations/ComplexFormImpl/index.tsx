@@ -95,21 +95,31 @@ export const ComplexFormImpl: Component = () => {
         <div>
           <label>Email</label>
           <br />
-          <input name="contact.email" onInput={onInput} value={formData().contact.email}></input>
+          <input
+            data-testid="contact.email"
+            name="contact.email"
+            onInput={onInput}
+            value={formData().contact.email}
+          ></input>
           <br />
           <small style="color: red;">{formHandler.getFieldError('contact.email')}</small>
         </div>
         <div>
           <label>Phone</label>
           <br />
-          <input name="contact.phone" onInput={onInput} value={formData().contact.phone}></input>
+          <input
+            data-testid="contact.phone"
+            name="contact.phone"
+            onInput={onInput}
+            value={formData().contact.phone}
+          ></input>
           <br />
           <small style="color: red;">{formHandler.getFieldError('contact.phone')}</small>
         </div>
         <br />
         <small style="color: red">{formHandler.getFieldError('contact')}</small>
         <br />
-        <small>{formHandler.isFieldInvalid('contact') ? 'Invalid' : 'Valid'}</small>
+        <small data-testId="contact-status">{formHandler.isFieldInvalid('contact') ? 'Invalid' : 'Valid'}</small>
       </fieldset>
       <div style="display: flex; align-items: center; margin-top: 17px;">
         <label>Has house</label>
@@ -135,18 +145,19 @@ export const ComplexFormImpl: Component = () => {
         </div>
       )}
       <br />
-      <button type="button" onClick={submit} disabled={formHandler.isFormInvalid()}>
+      <button data-testid="submit" type="button" onClick={submit} disabled={formHandler.isFormInvalid()}>
         Submit
       </button>
       <br />
-      <button type="button" onClick={fillForm}>
+      <button data-testid="fill" type="button" onClick={fillForm}>
         Fill default form data
       </button>
       <br />
-      <button type="button" onClick={resetForm}>
+      <button data-testid="reset" type="button" onClick={resetForm}>
         Reset form
       </button>
       <br />
+      <small data-testId="form-status">{formHandler.isFormInvalid() ? 'Invalid' : 'Valid'}</small>
       <pre style="color: red">
         <code>{error()}</code>
       </pre>

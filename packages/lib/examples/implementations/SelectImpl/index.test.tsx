@@ -14,7 +14,7 @@ describe('Select use case', () => {
     render(() => <SelectImpl />);
     fireEvent.blur(screen.getByTestId('test-select'), { target: { value: '' } });
     await waitFor(() => {
-      expect(screen.getByText('country is a required field')).toBeDefined();
+      expect(screen.getByText('Country is required')).toBeDefined();
     });
   });
 });

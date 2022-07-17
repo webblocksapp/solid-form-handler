@@ -1,49 +1,34 @@
 import { useFormHandler } from '@hooks';
-import * as yup from 'yup';
-import { SchemaOf } from 'yup';
-
-type TestSchema = {
-  name: string;
-  age: number;
-};
-
-const schema: SchemaOf<TestSchema> = yup.object().shape({
-  name: yup.string().required(),
-  age: yup.number().required(),
-});
+import { personSchema, contactSchema } from './mocks';
 
 describe('useFormHandler', () => {
   it('formHandler object must be defined', () => {
-    const formHandler = useFormHandler(schema);
+    const formHandler = useFormHandler(personSchema);
     expect(formHandler).toBeDefined();
   });
 
   it('If field path is no provided, the returned value is an empty string', () => {
-    const formHandler = useFormHandler(schema);
+    const formHandler = useFormHandler(personSchema);
     formHandler.setFieldValue('', 'George');
     expect(formHandler.getFieldValue('name')).toBe('');
   });
 
-  it('Required name value, must be valid - with no error message', () => {
-    const formHandler = useFormHandler(schema);
-    formHandler.setFieldValue('name', 'George');
+  it('Required name value, must be valid', async () => {
+    const formHandler = useFormHandler(personSchema);
+    await formHandler.setFieldValue('name', 'George');
     expect(formHandler.getFieldError('name')).toBe('');
+    expect(formHandler.isFieldInvalid('name')).toBe(false);
   });
 
-  it('Required name value, must be invalid - with required error message', async () => {
-    const formHandler = useFormHandler(schema);
+  it('Required name value, must be invalid', async () => {
+    const formHandler = useFormHandler(personSchema);
     await formHandler.setFieldValue('name', '');
     expect(formHandler.getFieldError('name')).toBe('name is a required field');
-  });
-
-  it('validateField fails with an unknown error if no existing path is provided', async () => {
-    const formHandler = useFormHandler(schema);
-    await formHandler.validateField('x');
-    expect(formHandler.getFieldError('x')).toBe('');
+    expect(formHandler.isFieldInvalid('name')).toBe(true);
   });
 
   it('is form invalid', async () => {
-    const formHandler = useFormHandler(schema);
+    const formHandler = useFormHandler(personSchema);
     try {
       await formHandler.validateForm();
     } catch (_) {
@@ -52,7 +37,7 @@ describe('useFormHandler', () => {
   });
 
   it('is form valid', async () => {
-    const formHandler = useFormHandler(schema);
+    const formHandler = useFormHandler(personSchema);
     formHandler.setFieldValue('name', 'George');
     formHandler.setFieldValue('age', 60);
     await formHandler.validateForm();
@@ -60,24 +45,101 @@ describe('useFormHandler', () => {
   });
 
   it('Form data matches the set data', async () => {
-    const formHandler = useFormHandler(schema);
+    const formHandler = useFormHandler(personSchema);
     formHandler.setFieldValue('name', 'George');
     formHandler.setFieldValue('age', 60);
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 60 });
   });
 
   it('Form has changes', async () => {
-    const formHandler = useFormHandler(schema);
+    const formHandler = useFormHandler(personSchema);
     formHandler.setFieldValue('name', 'George');
     expect(formHandler.formHasChanges()).toBe(true);
   });
 
   it("Form doesn't have changes", async () => {
-    const formHandler = useFormHandler(schema);
-    await formHandler.setFormField('name', 'George');
-    await formHandler.setFormField('age', 60);
+    const formHandler = useFormHandler(personSchema);
+    await formHandler.fillForm({ name: 'George' });
     await formHandler.setFieldValue('name', 'George');
-    await formHandler.setFieldValue('age', 60);
     expect(formHandler.formHasChanges()).toBe(false);
+  });
+
+  it('form is filled', async () => {
+    const formHandler = useFormHandler(personSchema);
+    await formHandler.fillForm({ name: 'George', age: 60 });
+    expect(formHandler.formData()).toMatchObject({ name: 'George', age: 60 });
+  });
+
+  it('form state match object when form is filled', async () => {
+    const formHandler = useFormHandler(personSchema);
+    await formHandler.fillForm({ name: 'George', age: 60 });
+    expect(formHandler.getFormState()).toMatchObject({
+      name: {
+        __state: true,
+        isInvalid: false,
+        errorMessage: '',
+        initialValue: 'George',
+        touched: false,
+        dirty: false,
+      },
+      age: {
+        __state: true,
+        isInvalid: false,
+        errorMessage: '',
+        initialValue: 60,
+        touched: false,
+        dirty: false,
+      },
+    });
+  });
+
+  it('Schema with nested objects: form state match object when form is filled', async () => {
+    const formHandler = useFormHandler(contactSchema);
+    await formHandler.fillForm({ contact: { name: 'John', age: 28 } });
+    expect(formHandler.getFormState()).toMatchObject({
+      contact: {
+        name: {
+          __state: true,
+          isInvalid: false,
+          errorMessage: '',
+          initialValue: 'John',
+          touched: false,
+          dirty: false,
+        },
+        age: {
+          __state: true,
+          isInvalid: false,
+          errorMessage: '',
+          initialValue: 28,
+          touched: false,
+          dirty: false,
+        },
+      },
+    });
+  });
+
+  it('Schema with nested objects: form state match object when field value is set', async () => {
+    const formHandler = useFormHandler(contactSchema);
+    await formHandler.setFieldValue('contact', { name: 'John', age: 28 });
+    expect(formHandler.getFormState()).toMatchObject({
+      contact: {
+        name: {
+          __state: true,
+          isInvalid: false,
+          errorMessage: '',
+          initialValue: '',
+          touched: true,
+          dirty: true,
+        },
+        age: {
+          __state: true,
+          isInvalid: false,
+          errorMessage: '',
+          initialValue: '',
+          touched: true,
+          dirty: true,
+        },
+      },
+    });
   });
 });

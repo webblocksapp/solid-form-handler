@@ -31,14 +31,30 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     value: any,
     options: SetFieldValueOptions = { touch: true, dirty: true, validate: true }
   ) => {
-    if (!path) {
+    const fieldState = getFieldState(path);
+
+    if (!path || fieldState === undefined) {
       return;
     }
 
-    setFieldData(path, value);
-    options?.touch && touchField(path);
-    options?.dirty && dirtyField(path);
-    options?.validate && (await validateField(path));
+    /**
+     * fieldState.__state is undefined when it's a nested object.
+     */
+    if (fieldState.__state === undefined) {
+      const data = get(formData.data, path);
+      const promises: Promise<void>[] = [];
+      Object.keys(flattenObject(data)).forEach((key) => {
+        const finalPath = `${path}.${key}`;
+        promises.push(setFieldValue(finalPath, get(value, key), options));
+      });
+      await Promise.all(promises);
+    } else {
+      setFieldData(path, value);
+      options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
+      options?.touch && touchField(path);
+      options?.dirty && dirtyField(path);
+      options?.validate && (await validateField(path));
+    }
   };
 
   /**
@@ -149,6 +165,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
+   * Returns a boolean flag to check if the field has an error text.
+   */
+  const fieldHasError = (path: string) => {
+    return Boolean(getFieldError(path));
+  };
+
+  /**
    * Gets all the form fields errors
    */
   const getFormErrors = () => {
@@ -162,26 +185,9 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Sets the default state of a form field.
-   * By default the field is initialized as invalid.
-   * You can pass an HTMLElement captured from the DOM.
-   */
-  const setFormField = async (path: string = '', value: any, field?: HTMLElement) => {
-    if (!path || !isFieldFromSchema(path)) return;
-
-    setFieldData(path, parseValue(value));
-    await validateField(path);
-
-    setFieldState(path, (fieldState: FieldState) => ({
-      ...buildFieldState(path),
-      field: field ?? fieldState?.field,
-    }));
-  };
-
-  /**
    * Generates the whole form state object metadata
    */
-  const generateFormState = (options?: { validateFields?: boolean; reset?: boolean }) => {
+  const generateFormState = async (options?: { validateFields?: boolean; reset?: boolean }) => {
     const flattenedObject = flattenObject(formData.data);
     const state = Array.isArray(formData.data) ? [] : {};
 
@@ -192,9 +198,12 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     setFormState('data', state);
 
     if (options?.validateFields) {
+      const promises: Promise<void>[] = [];
       Object.keys(flattenedObject).forEach((path) => {
-        validateField(path);
+        promises.push(validateField(path));
       });
+
+      await Promise.all(promises);
     }
   };
 
@@ -203,6 +212,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const buildFieldState = (path: string, reset: boolean = false) => {
     return {
+      __state: true,
       isInvalid: reset ? true : getFieldState(path)?.isInvalid || true,
       errorMessage: reset ? '' : getFieldState(path)?.errorMessage || '',
       initialValue: parseValue(get(formData.data, path)),
@@ -269,18 +279,21 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const refreshFormField = async (path: string) => {
     const fieldState = getFieldState(path);
-    await setFormField(path, get(formData.data, path));
+    await setFieldValue(path, get(formData.data, path), { validate: true });
     fieldState?.touched === false && setFieldState(path, { ...fieldState, errorMessage: '' });
   };
 
   /**
    * Fills the state of the form.
    */
-  const fillForm = (data: Partial<T>) => {
-    setTimeout(() => {
-      if (data === undefined) return;
-      setFormData('data', data as T);
-      generateFormState({ validateFields: data ? true : false });
+  const fillForm = async (data: Partial<T>): Promise<void> => {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        if (data === undefined) return;
+        setFormData('data', data as T);
+        await generateFormState({ validateFields: data ? true : false });
+        resolve(undefined);
+      });
     });
   };
 
@@ -303,6 +316,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     }
 
     return false;
+  };
+
+  /**
+   * Stores the html element at form state
+   */
+  const fieldHtmlElement = (path: string, htmlElement: HTMLElement) => {
+    setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, htmlElement }));
   };
 
   /**
@@ -424,6 +444,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   return {
     addFieldset,
     fillForm,
+    fieldHasError,
     formData: getFormData,
     formHasChanges,
     getFieldError,
@@ -437,7 +458,6 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     removeFieldset,
     resetForm,
     setFieldValue,
-    setFormField,
     validateField,
     validateForm,
     _: {

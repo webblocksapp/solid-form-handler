@@ -53,7 +53,7 @@ export const FieldsetsFormImpl: Component = () => {
       <h5>Fieldsets</h5>
       <For each={formData()}>
         {(fieldset, i) => (
-          <fieldset>
+          <fieldset data-testid="fieldset">
             <legend>Record {i() + 1}</legend>
             <div style="margin-bottom: 10px">
               <label>Name</label>
@@ -67,7 +67,7 @@ export const FieldsetsFormImpl: Component = () => {
               <br />
               <small style="color: red;">{formHandler.getFieldError(`${i()}.age`)}</small>
             </div>
-            <button type="button" onClick={() => formHandler.removeFieldset(i())}>
+            <button data-testid={`remove-${i()}`} type="button" onClick={() => formHandler.removeFieldset(i())}>
               X
             </button>
           </fieldset>
@@ -77,7 +77,7 @@ export const FieldsetsFormImpl: Component = () => {
       <button onClick={submit} disabled={formHandler.isFormInvalid()} type="button">
         Submit
       </button>
-      <button onClick={addFieldset} type="button">
+      <button data-testid="add" onClick={addFieldset} type="button">
         Add
       </button>
       <button onClick={addFieldsetWithData} type="button">

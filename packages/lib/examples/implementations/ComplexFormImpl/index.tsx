@@ -124,6 +124,7 @@ export const ComplexFormImpl: Component = () => {
       <div style="display: flex; align-items: center; margin-top: 17px;">
         <label>Has house</label>
         <input
+          data-testid="hasHouse"
           type="checkbox"
           name="hasHouse"
           checked={formData().hasHouse}
@@ -139,9 +140,16 @@ export const ComplexFormImpl: Component = () => {
         <div>
           <label>House Address</label>
           <br />
-          <input name="houseAddress" value={formData().houseAddress} onInput={onInput}></input>
+          <input
+            data-testid="houseAddress"
+            name="houseAddress"
+            value={formData().houseAddress}
+            onInput={onInput}
+          ></input>
           <br />
-          <small style="color: red;">{formHandler.getFieldError('houseAddress')}</small>
+          <small style="color: red;" data-testid="houseAddress-error">
+            {formHandler.getFieldError('houseAddress')}
+          </small>
         </div>
       )}
       <br />

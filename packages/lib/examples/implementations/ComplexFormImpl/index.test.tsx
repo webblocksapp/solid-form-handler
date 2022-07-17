@@ -30,4 +30,24 @@ describe('Complex Form implementation', () => {
       expect(screen.getByTestId('contact-status').innerHTML).toBe('Invalid');
     });
   });
+
+  it("error message should not appear on conditional validation when the field hasn't been touched", async () => {
+    render(() => <ComplexFormImpl />);
+    fireEvent.input(screen.getByTestId('hasHouse'), { target: { checked: true } });
+    await waitFor(() => {
+      expect(screen.getByTestId('houseAddress-error').innerHTML).toBe('');
+    });
+  });
+
+  it('error message should appear on conditional validation when the field has been touched', async () => {
+    render(() => <ComplexFormImpl />);
+    fireEvent.input(screen.getByTestId('hasHouse'), { target: { checked: true } });
+    fireEvent.input(screen.getByTestId('houseAddress'), { target: { value: 'Street 123' } });
+    fireEvent.input(screen.getByTestId('houseAddress'), { target: { value: '' } });
+    fireEvent.input(screen.getByTestId('hasHouse'), { target: { checked: false } });
+    fireEvent.input(screen.getByTestId('hasHouse'), { target: { checked: true } });
+    await waitFor(() => {
+      expect(screen.getByTestId('houseAddress-error').innerHTML).toBe('houseAddress is a required field');
+    });
+  });
 });

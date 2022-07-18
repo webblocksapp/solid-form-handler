@@ -35,6 +35,11 @@ export const Navbar: Component = () => (
               </NavLink>
             </li>
             <li class="nav-item">
+              <NavLink class="nav-link" href="api">
+                API
+              </NavLink>
+            </li>
+            <li class="nav-item">
               <NavLink class="nav-link" href="examples">
                 Examples
               </NavLink>

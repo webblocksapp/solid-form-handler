@@ -23,7 +23,7 @@ export const CodeHighlightProvider: Component<CodeHighlightProviderProps> = (
   props
 ) => {
   const [highlighter, setHighlighter] = createSignal<shiki.Highlighter>();
-  const [loading, setLoading] = createSignal<boolean>(false);
+  const [loading, setLoading] = createSignal<boolean>(true);
 
   onMount(async () => {
     setLoading(true);

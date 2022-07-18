@@ -13,7 +13,7 @@ export const Introduction: Component = () => (
           SolidJS
         </a>
       </i>{' '}
-      for writing and validating forms with the help of{' '}
+      for writing and validating forms with the help of the{' '}
       <i>
         <a href={YUP_URL} target="blank">
           Yup object schema validator

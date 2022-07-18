@@ -1,6 +1,12 @@
-const implementations = import.meta.glob('../../implementations/**/*.tsx', { as: 'raw' });
+const implementations = import.meta.glob('../../implementations/**/*.tsx', {
+  as: 'raw',
+});
 const schemas = import.meta.glob('../../schemas/*.ts', { as: 'raw' });
-const modules = { ...implementations, ...schemas };
+const apis = import.meta.glob('../../apis/**/*.ts', { as: 'raw' });
+const codeSnippets = import.meta.glob('../../code-snippets/**/*.(ts|tsx)', {
+  as: 'raw',
+});
+const modules = { ...implementations, ...schemas, ...apis, ...codeSnippets };
 
 export const getRaw = async (path: string) => {
   for (let key in modules) {

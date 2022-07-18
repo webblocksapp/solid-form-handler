@@ -18,11 +18,17 @@ export const TreeMenu: Component<TreeMenuProps> = (props) => {
           <>
             <li class="nav-item">
               {item.route ? (
-                <NavLink class="px-0 nav-link" classList={{ 'section-item': item.section }} href={item.route}>
+                <NavLink
+                  class={`px-0 nav-link ${item.section && 'section-item'}`}
+                  href={item.route}
+                >
                   {item.text}
                 </NavLink>
               ) : (
-                <span class="px-0 nav-link" classList={{ 'section-item': item.section }}>
+                <span
+                  class="px-0 nav-link"
+                  classList={{ 'section-item': item.section }}
+                >
                   {item.text}
                 </span>
               )}

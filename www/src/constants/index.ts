@@ -1,2 +1,2 @@
-export * from './sidebarMenu';
+export * from './sidebarMenus';
 export * from './urls';

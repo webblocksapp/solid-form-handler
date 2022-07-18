@@ -23,11 +23,25 @@ export const Code: Component<CodeProps> = (props) => {
   props = mergeProps({ class: 'my-3' }, props);
 
   const setInnerHTML = async () => {
-    if (codeRef && highlighter) {
+    if (codeRef && loading() === false) {
+      console.log(code());
+
       codeRef.innerHTML =
-        highlighter()?.codeToHtml(code() || (props.children as string) || '', {
-          lang: props.language || 'tsx',
-        }) || '';
+        highlighter()?.codeToHtml(
+          formatCode(code() as string) || (props.children as string) || '',
+          {
+            lang: props.language || 'tsx',
+          }
+        ) || '';
+    }
+  };
+
+  const formatCode = (code: string) => {
+    if (code.match('//@ts-nocheck')) {
+      code = code.replace('//@ts-nocheck', '');
+      return code.substring(code.indexOf('\n') + 1);
+    } else {
+      return code;
     }
   };
 

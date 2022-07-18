@@ -5,7 +5,7 @@ import { Code } from '@components';
 
 export const RefreshFormField: Component = () => (
   <DocsContentLayout>
-    <h2 class="mb-4 border-bottom">Title</h2>
+    <h2 class="mb-4 border-bottom">refreshFormField</h2>
     <p>content</p>
   </DocsContentLayout>
 );

@@ -5,7 +5,7 @@ import { Code } from '@components';
 
 export const IsFieldInvalid: Component = () => (
   <DocsContentLayout>
-    <h2 class="mb-4 border-bottom">Title</h2>
+    <h2 class="mb-4 border-bottom">isFieldInvalid</h2>
     <p>content</p>
   </DocsContentLayout>
 );

@@ -5,7 +5,7 @@ import { Code } from '@components';
 
 export const GetFormState: Component = () => (
   <DocsContentLayout>
-    <h2 class="mb-4 border-bottom">Title</h2>
+    <h2 class="mb-4 border-bottom">getFormState</h2>
     <p>content</p>
   </DocsContentLayout>
 );

@@ -1,0 +1,2 @@
+//@ts-nocheck
+formHandler.resetForm();

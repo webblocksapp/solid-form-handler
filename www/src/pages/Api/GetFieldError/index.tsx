@@ -7,5 +7,6 @@ export const GetFieldError: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">getFieldError</h2>
     <p>content</p>
+    <Code content={getRaw('getFieldErrorApi')} />
   </DocsContentLayout>
 );

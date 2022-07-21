@@ -6,6 +6,14 @@ import { Code } from '@components';
 export const ResetForm: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">resetForm</h2>
-    <p>content</p>
+    <p>
+      This method resets the form to its initial state leaving empty the whole
+      form data.
+    </p>
+    <Code content={getRaw('resetFormApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('resetForm1')} />
   </DocsContentLayout>
 );

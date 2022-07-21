@@ -7,5 +7,6 @@ export const GetFormState: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">getFormState</h2>
     <p>content</p>
+    <Code content={getRaw('getFormStateApi')} />
   </DocsContentLayout>
 );

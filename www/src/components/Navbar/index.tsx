@@ -35,7 +35,7 @@ export const Navbar: Component = () => (
               </NavLink>
             </li>
             <li class="nav-item">
-              <NavLink class="nav-link" href="api">
+              <NavLink class="nav-link" href="api/use-form-handler">
                 API
               </NavLink>
             </li>

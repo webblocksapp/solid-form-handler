@@ -7,5 +7,6 @@ export const RemoveFieldset: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">removeFieldset</h2>
     <p>content</p>
+    <Code content={getRaw('removeFieldsetApi')} />
   </DocsContentLayout>
 );

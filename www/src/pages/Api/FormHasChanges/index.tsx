@@ -7,5 +7,6 @@ export const FormHasChanges: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">formHasChanges</h2>
     <p>content</p>
+    <Code content={getRaw('formHasChangesApi')} />
   </DocsContentLayout>
 );

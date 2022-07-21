@@ -7,5 +7,6 @@ export const GetFieldValue: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">getFieldValue</h2>
     <p>content</p>
+    <Code content={getRaw('getFieldValueApi')} />
   </DocsContentLayout>
 );

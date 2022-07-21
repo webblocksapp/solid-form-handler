@@ -28,7 +28,7 @@ export const API_MENU: TreeMenu[] = [
     children: [
       { text: 'fillForm', route: 'fill-form' },
       { text: 'resetForm', route: 'reset-form' },
-      { text: 'getFormData', route: 'get-form-data' },
+      { text: 'formData', route: 'form-data' },
       { text: 'getFormErrors', route: 'get-form-errors' },
       { text: 'isFormInvalid', route: 'is-form-invalid' },
       { text: 'getFormState', route: 'get-form-state' },

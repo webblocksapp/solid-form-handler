@@ -7,5 +7,6 @@ export const MoveFieldset: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">moveFieldset</h2>
     <p>content</p>
+    <Code content={getRaw('moveFieldsetApi')} />
   </DocsContentLayout>
 );

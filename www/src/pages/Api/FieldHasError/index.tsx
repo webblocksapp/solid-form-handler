@@ -7,5 +7,6 @@ export const FieldHasError: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">fieldHasError</h2>
     <p>content</p>
+    <Code content={getRaw('fieldHasErrorApi')} />
   </DocsContentLayout>
 );

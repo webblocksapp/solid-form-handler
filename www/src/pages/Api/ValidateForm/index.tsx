@@ -7,5 +7,6 @@ export const ValidateForm: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">validateForm</h2>
     <p>content</p>
+    <Code content={getRaw('validateFormApi')} />
   </DocsContentLayout>
 );

@@ -7,5 +7,6 @@ export const AddFieldset: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">addFieldset</h2>
     <p>content</p>
+    <Code content={getRaw('addFieldsetApi')} />
   </DocsContentLayout>
 );

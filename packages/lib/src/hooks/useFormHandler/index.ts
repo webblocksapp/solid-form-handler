@@ -27,13 +27,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * validates the field.
    */
   const setFieldValue = async (
-    path: string = '',
+    path: string,
     value: any,
     options: SetFieldValueOptions = { touch: true, dirty: true, validate: true }
   ) => {
     const fieldState = getFieldState(path);
 
-    if (!path || fieldState === undefined) {
+    if (fieldState === undefined) {
       return;
     }
 

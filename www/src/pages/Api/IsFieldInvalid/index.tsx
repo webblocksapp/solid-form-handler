@@ -6,7 +6,10 @@ import { Code } from '@components';
 export const IsFieldInvalid: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">isFieldInvalid</h2>
-    <p>content</p>
+    <p>
+      This method returns a boolean flag, true if the field is invalid. This
+      information is get from the form state.
+    </p>
     <Code content={getRaw('isFieldInvalidApi')} />
   </DocsContentLayout>
 );

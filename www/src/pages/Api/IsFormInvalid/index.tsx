@@ -6,7 +6,10 @@ import { Code } from '@components';
 export const IsFormInvalid: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">isFormInvalid</h2>
-    <p>content</p>
+    <p>
+      This method retrieves a boolean flag. It’s true if the form contains
+      invalid fields and false when all the fields are valid.
+    </p>
     <Code content={getRaw('isFormInvalidApi')} />
   </DocsContentLayout>
 );

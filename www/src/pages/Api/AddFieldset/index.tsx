@@ -6,7 +6,10 @@ import { Code } from '@components';
 export const AddFieldset: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">addFieldset</h2>
-    <p>content</p>
+    <p>
+      Method for manipulating dynamic forms. It adds a subset of fields when the
+      form is an array of fieldsets.
+    </p>
     <Code content={getRaw('addFieldsetApi')} />
   </DocsContentLayout>
 );

@@ -6,7 +6,10 @@ import { Code } from '@components';
 export const GetFieldError: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">getFieldError</h2>
-    <p>content</p>
+    <p>
+      This method returns an string with the field error message. This
+      information is get from the form state.
+    </p>
     <Code content={getRaw('getFieldErrorApi')} />
   </DocsContentLayout>
 );

@@ -1,2 +1,2 @@
 //@ts-nocheck
-function fieldHasError(path: string): boolean;
+function formHasChanges(): boolean;

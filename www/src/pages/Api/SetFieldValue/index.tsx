@@ -6,7 +6,7 @@ import { Code } from '@components';
 export const SetFieldValue: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">setFieldValue</h2>
-    <p>content</p>
+    <p>This method sets and validates the value of a form field.</p>
     <Code content={getRaw('setFieldValueApi')} />
   </DocsContentLayout>
 );

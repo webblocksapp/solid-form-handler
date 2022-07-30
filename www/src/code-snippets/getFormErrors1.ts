@@ -5,7 +5,7 @@ console.log(formHandler.getFormErrors());
 /**
  * -- Output: --
  * [
- *   { path: 'name', errorMessage: 'name is required' }
+ *   { path: 'name', errorMessage: 'name is required' },
  *   { path: 'age', errorMessage: 'age is required' }
  * ]
  */

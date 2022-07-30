@@ -11,5 +11,12 @@ export const IsFormInvalid: Component = () => (
       invalid fields and false when all the fields are valid.
     </p>
     <Code content={getRaw('isFormInvalidApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <p>
+      Form will be invalid if it doesn't satisfy the Yup schema constraints:
+    </p>
+    <Code content={getRaw('isFormInvalid1')} />
   </DocsContentLayout>
 );

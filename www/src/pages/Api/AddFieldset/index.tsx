@@ -11,5 +11,9 @@ export const AddFieldset: Component = () => (
       form is an array of fieldsets.
     </p>
     <Code content={getRaw('addFieldsetApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('addFieldset1')} />
   </DocsContentLayout>
 );

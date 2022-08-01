@@ -11,5 +11,9 @@ export const RefreshFormField: Component = () => (
       conditional validations.
     </p>
     <Code content={getRaw('refreshFormFieldApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('refreshFormField1')} />
   </DocsContentLayout>
 );

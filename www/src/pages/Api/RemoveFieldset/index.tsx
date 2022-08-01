@@ -11,5 +11,9 @@ export const RemoveFieldset: Component = () => (
       from the array of fieldsets.
     </p>
     <Code content={getRaw('removeFieldsetApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('removeFieldset1')} />
   </DocsContentLayout>
 );

@@ -11,5 +11,9 @@ export const MoveFieldset: Component = () => (
       the array of fieldsets.
     </p>
     <Code content={getRaw('moveFieldsetApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('moveFieldset1')} />
   </DocsContentLayout>
 );

@@ -11,5 +11,9 @@ export const GetFieldError: Component = () => (
       information is get from the form state.
     </p>
     <Code content={getRaw('getFieldErrorApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('getFieldError1')} />
   </DocsContentLayout>
 );

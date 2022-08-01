@@ -11,5 +11,20 @@ export const ValidateForm: Component = () => (
       throws an error with the invalid fields error messages.
     </p>
     <Code content={getRaw('validateFormApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('validateForm1')} />
+    <p>
+      <code>FormErrorsException</code> is an array composed by:
+    </p>
+    <ul>
+      <li>
+        <code>path:</code> field's name.
+      </li>
+      <li>
+        <code>errorMessage:</code> field's validation error message.
+      </li>
+    </ul>
   </DocsContentLayout>
 );

@@ -11,5 +11,9 @@ export const GetFieldValue: Component = () => (
       from the formData() reactive object.
     </p>
     <Code content={getRaw('getFieldValueApi')} />
+    <p>
+      <b>Implementation:</b>
+    </p>
+    <Code content={getRaw('getFieldValue1')} />
   </DocsContentLayout>
 );

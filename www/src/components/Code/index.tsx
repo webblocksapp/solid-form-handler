@@ -2,33 +2,37 @@ import {
   Component,
   createEffect,
   createSignal,
-  JSXElement,
   mergeProps,
   onMount,
+  JSX,
+  splitProps,
 } from 'solid-js';
 import { useCodeHighlightContext } from '@components';
 import './index.css';
 
-export interface CodeProps {
+export interface CodeProps extends JSX.HTMLAttributes<HTMLDivElement> {
   language?: string;
-  children?: JSXElement;
   content?: string | Promise<string | undefined>;
-  class?: string;
+  codeClass?: string;
 }
 
 export const Code: Component<CodeProps> = (props) => {
   const [code, setCode] = createSignal<string>();
   const { highlighter, loading } = useCodeHighlightContext();
   let codeRef: HTMLDivElement | undefined;
-  props = mergeProps({ class: 'my-3' }, props);
+  const [local, rest] = splitProps(mergeProps({ codeClass: 'my-3' }, props), [
+    'language',
+    'content',
+    'codeClass',
+  ]);
 
   const setInnerHTML = async () => {
     if (codeRef && loading() === false) {
       codeRef.innerHTML =
         highlighter()?.codeToHtml(
-          formatCode(code() as string) || (props.children as string) || '',
+          formatCode(code() as string) || (rest.children as string) || '',
           {
-            lang: props.language || 'tsx',
+            lang: local.language || 'tsx',
           }
         ) || '';
     }
@@ -47,12 +51,12 @@ export const Code: Component<CodeProps> = (props) => {
   createEffect(() => loading() !== undefined && setInnerHTML());
 
   onMount(async () => {
-    props.content && setCode(await props.content);
-    props.children && setInnerHTML();
+    local.content && setCode(await local.content);
+    rest.children && setInnerHTML();
   });
 
   return (
-    <div>
+    <div {...rest}>
       {loading() && (
         <div
           style={{ 'min-height': '120px' }}
@@ -63,7 +67,7 @@ export const Code: Component<CodeProps> = (props) => {
         </div>
       )}
       <div
-        class={`code-snippet border ${props.class}`}
+        class={`code-snippet border ${local.codeClass}`}
         classList={{ 'd-none': loading() }}
         ref={codeRef}
       ></div>

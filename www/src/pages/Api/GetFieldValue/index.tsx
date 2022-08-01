@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const GetFieldValue: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/api/get-field-error" next="/api/refresh-form-field">
     <h2 class="mb-4 border-bottom">getFieldValue</h2>
     <p>
       This method obtains the current value of a field. The value is obtained

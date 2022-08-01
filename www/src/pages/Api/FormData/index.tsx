@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const FormData: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/api/reset-form" next="/api/get-form-errors">
     <h2 class="mb-4 border-bottom">formData</h2>
     <p>
       This method is a SolidJS reactive function with the current form data.

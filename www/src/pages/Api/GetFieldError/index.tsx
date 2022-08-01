@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const GetFieldError: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/api/field-has-error" next="/api/get-field-value">
     <h2 class="mb-4 border-bottom">getFieldError</h2>
     <p>
       This method returns an string with the field error message. This

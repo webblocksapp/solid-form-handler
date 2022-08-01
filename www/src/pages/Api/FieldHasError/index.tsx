@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const FieldHasError: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/api/is-field-invalid" next="/api/get-field-error">
     <h2 class="mb-4 border-bottom">fieldHasError</h2>
     <p>
       This method returns a boolean flag, <code>true</code> if the field has an

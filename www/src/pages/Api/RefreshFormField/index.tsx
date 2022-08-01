@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const RefreshFormField: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/api/get-field-value" next="/api/form-has-changes">
     <h2 class="mb-4 border-bottom">refreshFormField</h2>
     <p>
       This method refresh the form field initial state. Very useful for

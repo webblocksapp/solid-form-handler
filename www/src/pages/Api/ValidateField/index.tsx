@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const ValidateField: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/api/form-has-changes" next="/api/validate-form">
     <h2 class="mb-4 border-bottom">validateField</h2>
     <p>
       This method validates a single field. It updates the form state by adding

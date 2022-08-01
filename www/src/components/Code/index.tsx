@@ -24,8 +24,6 @@ export const Code: Component<CodeProps> = (props) => {
 
   const setInnerHTML = async () => {
     if (codeRef && loading() === false) {
-      console.log(code());
-
       codeRef.innerHTML =
         highlighter()?.codeToHtml(
           formatCode(code() as string) || (props.children as string) || '',
@@ -37,6 +35,7 @@ export const Code: Component<CodeProps> = (props) => {
   };
 
   const formatCode = (code: string) => {
+    if (code === undefined) return;
     if (code.match('//@ts-nocheck')) {
       code = code.replace('//@ts-nocheck', '');
       return code.substring(code.indexOf('\n') + 1);
@@ -45,7 +44,7 @@ export const Code: Component<CodeProps> = (props) => {
     }
   };
 
-  createEffect(() => (props.content || loading()) && setInnerHTML());
+  createEffect(() => loading() !== undefined && setInnerHTML());
 
   onMount(async () => {
     props.content && setCode(await props.content);

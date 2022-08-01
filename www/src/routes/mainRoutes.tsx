@@ -25,8 +25,13 @@ import {
   SetFieldValue,
   ValidateField,
   ValidateForm,
+  ValidatingTextInput,
+  ValidatingSelect,
+  ValidatingMultiSelect,
+  ValidatingCheckboxes,
+  ValidatingRadios,
 } from '@pages';
-import { DOCS_MENU, API_MENU } from '@constants';
+import { DOCS_MENU, API_MENU, EXAMPLES_MENU } from '@constants';
 
 export const mainRoutes: RouteDefinition[] = [
   {
@@ -84,7 +89,15 @@ export const mainRoutes: RouteDefinition[] = [
       {
         path: 'examples',
         component: DocsLayout,
-        data: () => ({ headerText: 'Examples' }),
+        data: () => ({ headerText: 'Examples', menu: EXAMPLES_MENU }),
+        children: [
+          { path: '', component: ValidatingTextInput },
+          { path: 'validating-text-input', component: ValidatingTextInput },
+          { path: 'validating-select', component: ValidatingSelect },
+          { path: 'validating-multi-select', component: ValidatingMultiSelect },
+          { path: 'validating-checkboxes', component: ValidatingCheckboxes },
+          { path: 'validating-radios', component: ValidatingRadios },
+        ],
       },
     ],
   },

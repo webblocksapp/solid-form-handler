@@ -47,3 +47,17 @@ export const API_MENU: TreeMenu[] = [
     ],
   },
 ];
+
+export const EXAMPLES_MENU: TreeMenu[] = [
+  {
+    text: 'Validations',
+    section: true,
+    children: [
+      { text: 'Validating Text Input', route: 'validating-text-input' },
+      { text: 'Validating Select', route: 'validating-select' },
+      { text: 'Validating Multi Select', route: 'validating-multi-select' },
+      { text: 'Validating Checkboxes', route: 'validating-checkboxes' },
+      { text: 'Validating Radios', route: 'validating-radios' },
+    ],
+  },
+];

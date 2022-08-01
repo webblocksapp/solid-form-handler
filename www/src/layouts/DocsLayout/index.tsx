@@ -11,7 +11,6 @@ export interface DocsLayoutProps {
 
 export const DocsLayout: Component<DocsLayoutProps> = (props) => {
   const { headerText, menu } = useRouteData<DocsLayoutProps>();
-
   return (
     <div class="docs-layout container-fluid px-0">
       <div class="border-bottom bg-primary">

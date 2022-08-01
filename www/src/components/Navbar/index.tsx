@@ -40,7 +40,7 @@ export const Navbar: Component = () => (
               </NavLink>
             </li>
             <li class="nav-item">
-              <NavLink class="nav-link" href="examples">
+              <NavLink class="nav-link" href="examples/validating-text-input">
                 Examples
               </NavLink>
             </li>

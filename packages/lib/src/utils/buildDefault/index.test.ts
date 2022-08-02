@@ -49,4 +49,13 @@ describe('buildDefault', () => {
       houseAddress: '',
     });
   });
+
+  it('CASE-6', () => {
+    const schema = yup.object({
+      favoriteFoods: yup.array(yup.number().required()).min(2),
+    });
+    expect(buildDefault(schema)).toMatchObject({
+      favoriteFoods: [],
+    });
+  });
 });

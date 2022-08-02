@@ -1,7 +1,7 @@
 import { flattenObject } from '@utils';
 
 describe('flattenObject', () => {
-  it('Must flatten the given object', () => {
+  it('CASE-1', () => {
     const flattenedObject = flattenObject({ name: 'John', age: 28 });
     expect(flattenedObject).toMatchObject({
       name: 'John',
@@ -9,7 +9,7 @@ describe('flattenObject', () => {
     });
   });
 
-  it('Must flatten the given array', () => {
+  it('CASE-2', () => {
     const flattenedObject = flattenObject([
       { name: 'John', age: 28 },
       { name: 'Laura', age: 32 },
@@ -23,7 +23,7 @@ describe('flattenObject', () => {
     });
   });
 
-  it('Must flatten the given nested object', () => {
+  it('CASE-3', () => {
     const flattenedObject = flattenObject({
       name: 'John',
       contact: { email: 'john@test.com', phone: 7272232 },
@@ -41,6 +41,16 @@ describe('flattenObject', () => {
       'guests.0.age': 22,
       'guests.1.name': 'Lara',
       'guests.1.age': 26,
+    });
+  });
+
+  it('CASE-4', () => {
+    const flattenedObject = flattenObject({
+      favoriteFoods: [],
+    });
+
+    expect(flattenedObject).toMatchObject({
+      favoriteFoods: [],
     });
   });
 });

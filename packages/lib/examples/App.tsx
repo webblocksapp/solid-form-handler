@@ -2,6 +2,7 @@ import { Link, Route, Routes } from 'solid-app-router';
 import { Component } from 'solid-js';
 import {
   CheckboxImpl,
+  CheckboxesImpl,
   FormImpl,
   SelectImpl,
   TextInputImpl,
@@ -17,6 +18,9 @@ export const App: Component = () => {
       <div>
         <div>
           <Link href="checkbox-impl">checkbox-impl</Link>
+        </div>
+        <div>
+          <Link href="checkboxes-impl">checkboxes-impl</Link>
         </div>
         <div>
           <Link href="select-impl">select-impl</Link>
@@ -42,6 +46,7 @@ export const App: Component = () => {
       </div>
       <Routes>
         <Route path="/checkbox-impl" element={<CheckboxImpl />} />
+        <Route path="/checkboxes-impl" element={<CheckboxesImpl />} />
         <Route path="/select-impl" element={<SelectImpl />} />
         <Route path="/text-input-impl" element={<TextInputImpl />} />
         <Route path="/form-impl" element={<FormImpl />} />

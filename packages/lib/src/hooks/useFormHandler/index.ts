@@ -153,15 +153,12 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const findErrorMessages = (path: string, errorMessages: string[] = []) => {
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return errorMessages;
-
-    const errorMessage = fieldState.errorMessage;
-
-    if (errorMessage === undefined) {
+    if (fieldState.__state === undefined) {
       Object.keys(fieldState).forEach((key) => {
         errorMessages = findErrorMessages(`${path}.${key}`, errorMessages);
       });
     } else {
-      errorMessages.push(errorMessage);
+      errorMessages.push(fieldState.errorMessage);
     }
 
     return errorMessages;
@@ -195,6 +192,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     const state = Array.isArray(formData.data) ? [] : {};
 
     Object.keys(flattenedObject).forEach((path) => {
+      path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
       set(state, path, { ...buildFieldState(path, options?.reset) });
     });
 
@@ -203,11 +201,28 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     if (options?.validateFields) {
       const promises: Promise<void>[] = [];
       Object.keys(flattenedObject).forEach((path) => {
+        path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
         promises.push(validateField(path));
       });
 
       await Promise.all(promises);
     }
+  };
+
+  /**
+   * Checks if the field value is an array of primitives
+   */
+  const valueIsArrayOfPrimitives = (path: string) => {
+    return Array.isArray(getFieldValue(prevPath(path))) && getFieldValue(path) !== 'object';
+  };
+
+  /**
+   * Gets field previous path
+   */
+  const prevPath = (path: string) => {
+    const prevPathArr = path.split('.');
+    prevPathArr.pop();
+    return prevPathArr.join('.');
   };
 
   /**
@@ -237,15 +252,12 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   const findInvalidFlags = (path: string, invalidFlags: boolean[] = []) => {
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return invalidFlags;
-
-    const isInvalid = fieldState.isInvalid;
-
-    if (isInvalid === undefined) {
+    if (fieldState.__state === undefined) {
       Object.keys(fieldState).forEach((key) => {
         invalidFlags = findInvalidFlags(`${path}.${key}`, invalidFlags);
       });
     } else {
-      invalidFlags.push(isInvalid);
+      invalidFlags.push(fieldState.isInvalid);
     }
 
     return invalidFlags;

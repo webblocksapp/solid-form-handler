@@ -64,7 +64,7 @@ export const CheckboxesForm: Component = () => {
                 name="favoriteFoods"
                 checked={formHandler
                   .getFieldValue('favoriteFoods')
-                  .includes(favoriteFood.value)}
+                  .some((item: any) => item == favoriteFood.value)}
                 onChange={({ currentTarget: { name, checked, value } }) => {
                   if (checked) {
                     formHandler.setFieldValue(name, [

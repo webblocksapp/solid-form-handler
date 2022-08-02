@@ -54,7 +54,7 @@ export const CheckboxesImpl: Component = () => {
                 type="checkbox"
                 value={favoriteFood.value}
                 name="favoriteFoods"
-                checked={formHandler.getFieldValue('favoriteFoods').includes(favoriteFood.value)}
+                checked={formHandler.getFieldValue('favoriteFoods').some((item: any) => item == favoriteFood.value)}
                 onChange={({ currentTarget: { name, checked, value } }) => {
                   if (checked) {
                     formHandler.setFieldValue(name, [...formHandler.getFieldValue('favoriteFoods'), value]);

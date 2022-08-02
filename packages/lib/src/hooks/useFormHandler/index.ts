@@ -93,16 +93,17 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Validates the whole form data throwing an error exception
+   * Validates the whole form data. It receives as options:
+   * catchError: throws an error exception if form is invalid.
    */
-  const validateForm = async () => {
-    await validate({ throwException: true });
+  const validateForm = async (options?: { catchError: boolean }) => {
+    return validate({ throwException: options?.catchError });
   };
 
   /**
    * Validates the whole form data.
    */
-  const validate = async (options?: { throwException: boolean }) => {
+  const validate = async (options?: { throwException?: boolean }) => {
     const promises: Promise<void>[] = [];
     Object.keys(flattenObject(formData.data)).forEach((path) => {
       promises.push(validateField(path));
@@ -113,6 +114,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     if (options?.throwException && isFormInvalid()) {
       throw new FormErrorsException(getFormErrors());
     }
+
+    return !isFormInvalid();
   };
 
   /**

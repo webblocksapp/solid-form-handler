@@ -28,7 +28,7 @@ export const UserForm: Component = () => {
 
     try {
       setError('');
-      await formHandler.validateForm();
+      await formHandler.validateForm({ catchError: true });
       alert('Data sent with success: ' + JSON.stringify(formData()));
       formHandler.resetForm();
     } catch (error) {

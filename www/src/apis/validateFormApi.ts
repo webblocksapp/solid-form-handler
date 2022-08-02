@@ -1,2 +1,2 @@
 //@ts-nocheck
-function validateForm(): Promise<void>;
+function validateForm(options?: { catchError: boolean }): Promise<boolean>;

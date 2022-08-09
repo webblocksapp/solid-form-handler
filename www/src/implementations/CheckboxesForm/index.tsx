@@ -47,7 +47,7 @@ export const CheckboxesForm: Component = () => {
     <form autocomplete="off" onSubmit={submit}>
       <div class="mb-3">
         <For each={favoriteFoods}>
-          {(favoriteFood) => (
+          {(favoriteFood, i) => (
             <div
               class="form-check"
               classList={{
@@ -56,6 +56,7 @@ export const CheckboxesForm: Component = () => {
             >
               <input
                 class="form-check-input"
+                id={`favoriteFoods-${i()}`}
                 type="checkbox"
                 value={favoriteFood.value}
                 classList={{
@@ -81,7 +82,9 @@ export const CheckboxesForm: Component = () => {
                   }
                 }}
               />
-              <label class="form-check-label">{favoriteFood.label}</label>
+              <label for={`favoriteFoods-${i()}`} class="form-check-label">
+                {favoriteFood.label}
+              </label>
             </div>
           )}
         </For>

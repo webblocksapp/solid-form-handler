@@ -1,6 +1,9 @@
-const implementations = import.meta.glob('../../implementations/**/*.tsx', {
-  as: 'raw',
-});
+const implementations = import.meta.glob(
+  '../../implementations/**/*.(ts|tsx)',
+  {
+    as: 'raw',
+  }
+);
 const schemas = import.meta.glob('../../schemas/*.ts', { as: 'raw' });
 const apis = import.meta.glob('../../apis/**/*.ts', { as: 'raw' });
 const codeSnippets = import.meta.glob('../../code-snippets/**/*.(ts|tsx)', {

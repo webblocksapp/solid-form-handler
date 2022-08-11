@@ -1,27 +1,7 @@
 import { Component, createSignal, For } from 'solid-js';
 import { useFormHandler, FormErrorsException } from 'solid-form-handler';
-import * as yup from 'yup';
-
-/**
- * Entity type definition
- */
-type Product = {
-  name: string;
-  quantity: number;
-};
-
-/**
- * Schema definition through entity
- */
-const productSchema: yup.SchemaOf<Product[]> = yup.array(
-  yup.object({
-    name: yup.string().required('Required field'),
-    quantity: yup
-      .number()
-      .required('Quantity is required')
-      .typeError('Write a valid quantity'),
-  })
-);
+import { Product } from './types';
+import { productSchema } from './schema';
 
 export const ProductsForm: Component = () => {
   const formHandler = useFormHandler<Product[]>(productSchema);

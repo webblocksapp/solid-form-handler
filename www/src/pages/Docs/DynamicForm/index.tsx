@@ -13,7 +13,13 @@ export const DynamicForm: Component = () => (
       and execute validations easily.
     </p>
 
-    <Implementation code={getRaw('ProductsForm')}>
+    <Implementation
+      codeTabs={[
+        { name: 'ProductsForm.tsx', code: getRaw('ProductsForm/index.tsx') },
+        { name: 'schema.ts', code: getRaw('ProductsForm/schema.ts') },
+        { name: 'types.ts', code: getRaw('ProductsForm/types.ts') },
+      ]}
+    >
       <ProductsForm />
     </Implementation>
   </DocsContentLayout>

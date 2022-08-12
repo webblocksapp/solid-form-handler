@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const UseFormHandler: Component = () => (
-  <DocsContentLayout prev="/api/set-field-value" next="/api/field-has-error">
+  <DocsContentLayout next="/api/fill-form">
     <h2 class="mb-4 border-bottom">useFormHandler</h2>
     <p>
       <code>useFormHandler</code> is a custom hook for managing forms with ease.

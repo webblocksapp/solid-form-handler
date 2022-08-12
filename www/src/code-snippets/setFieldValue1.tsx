@@ -2,7 +2,7 @@
 <input
   name="name"
   placeholder="Write your name"
-  oninput={({ currentTarget: { name, value } }) =>
+  onInput={({ currentTarget: { name, value } }) =>
     formHandler.setFieldValue(name, value)
   }
 ></input>;

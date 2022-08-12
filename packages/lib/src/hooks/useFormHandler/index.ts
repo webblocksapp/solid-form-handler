@@ -473,6 +473,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
     removeFieldset,
     resetForm,
     setFieldValue,
+    touchField,
     validateField,
     validateForm,
     _: {
@@ -489,7 +490,6 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       removeFieldsetState,
       setFieldData,
       setFieldState,
-      touchField,
       validate,
     },
   };

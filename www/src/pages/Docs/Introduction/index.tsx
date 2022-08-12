@@ -39,7 +39,16 @@ export const Introduction: Component = () => (
         Simple manipulation of fieldsets (array of fields or dynamic forms).
       </li>
       <li>Simple validation of complex data structures.</li>
-      <li>Very intuitive apis</li>
+      <li>Very intuitive apis.</li>
+      <li>
+        It can be used with any CSS framework like <i>Bootstrap</i>,{' '}
+        <i>Tailwind CSS</i>, <i>Semantic UI</i>, etc...
+      </li>
     </ul>
+    <p>
+      The implementations and examples shown on this website will be using{' '}
+      <i>Bootstrap 5</i>, however you can adapt them under your css framework of
+      preference or custom design system.
+    </p>
   </DocsContentLayout>
 );

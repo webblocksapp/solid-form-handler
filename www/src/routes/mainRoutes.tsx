@@ -23,6 +23,7 @@ import {
   RemoveFieldset,
   ResetForm,
   SetFieldValue,
+  Validations,
   ValidateField,
   ValidateForm,
   ValidatingTextInput,
@@ -30,6 +31,7 @@ import {
   ValidatingMultiSelect,
   ValidatingCheckboxes,
   ValidatingRadios,
+  TouchField,
 } from '@pages';
 import { DOCS_MENU, API_MENU, EXAMPLES_MENU } from '@constants';
 
@@ -57,6 +59,7 @@ export const mainRoutes: RouteDefinition[] = [
           { path: 'validation-schema', component: ValidationSchema },
           { path: 'form-validation', component: FormValidation },
           { path: 'dynamic-form', component: DynamicForm },
+          { path: 'validations', component: Validations },
           { path: 'validating-text-input', component: ValidatingTextInput },
           { path: 'validating-select', component: ValidatingSelect },
           { path: 'validating-multi-select', component: ValidatingMultiSelect },
@@ -88,6 +91,7 @@ export const mainRoutes: RouteDefinition[] = [
           { path: 'reset-form', component: ResetForm },
           { path: 'set-field-value', component: SetFieldValue },
           { path: 'validate-field', component: ValidateField },
+          { path: 'touch-field', component: TouchField },
           { path: 'validate-form', component: ValidateForm },
         ],
       },

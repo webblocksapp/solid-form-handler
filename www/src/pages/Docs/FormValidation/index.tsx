@@ -8,11 +8,18 @@ export const FormValidation: Component = () => (
   <DocsContentLayout>
     <h2 class="mb-4 border-bottom">Form Validation</h2>
     <p>
-      Form validation will depend on how well you have defined the Yup schema. Once settled, the form handler will
-      receive it for controlling the defined data validations.{' '}
+      Form validation will depend on how well you have defined the Yup schema.
+      Once settled, the form handler will receive it for controlling the defined
+      data validations.{' '}
     </p>
     <p>The following example shows a basic usage:</p>
-    <Implementation code={getRaw('UserForm')}>
+    <Implementation
+      codeTabs={[
+        { name: 'UserForm.tsx', code: getRaw('UserForm/index.tsx') },
+        { name: 'schema.ts', code: getRaw('UserForm/schema.ts') },
+        { name: 'types.ts', code: getRaw('UserForm/types.ts') },
+      ]}
+    >
       <UserForm />
     </Implementation>
   </DocsContentLayout>

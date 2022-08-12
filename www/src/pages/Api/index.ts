@@ -14,6 +14,7 @@ export * from './RefreshFormField';
 export * from './RemoveFieldset';
 export * from './ResetForm';
 export * from './SetFieldValue';
+export * from './TouchField';
 export * from './UseFormHandler';
 export * from './ValidateField';
 export * from './ValidateForm';

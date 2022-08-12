@@ -43,9 +43,10 @@ export const SingleTextInputForm: Component = () => {
           onInput={({ currentTarget: { name, value } }) =>
             formHandler.setFieldValue(name, value)
           }
-          onBlur={({ currentTarget: { name } }) =>
-            formHandler.validateField(name)
-          }
+          onBlur={({ currentTarget: { name } }) => {
+            formHandler.validateField(name);
+            formHandler.touchField(name);
+          }}
         />
         {formHandler.fieldHasError('email') && (
           <div class="invalid-feedback">
@@ -62,6 +63,18 @@ export const SingleTextInputForm: Component = () => {
           Fill
         </button>
       </div>
+      <p>
+        <b>Form data:</b>
+      </p>
+      <pre class="mt-3 border bg-light p-3">
+        <code>{JSON.stringify(formData(), null, 2)}</code>
+      </pre>
+      <p>
+        <b>Form state:</b>
+      </p>
+      <pre class="mt-3 border bg-light p-3">
+        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+      </pre>
     </form>
   );
 };

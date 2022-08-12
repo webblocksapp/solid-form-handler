@@ -20,6 +20,7 @@ export const DOCS_MENU: TreeMenu[] = [
   },
   {
     text: 'Validations',
+    route: 'validations',
     section: true,
     children: [
       { text: 'Validating Text Input', route: 'validating-text-input' },
@@ -51,6 +52,7 @@ export const API_MENU: TreeMenu[] = [
       { text: 'refreshFormField', route: 'refresh-form-field' },
       { text: 'formHasChanges', route: 'form-has-changes' },
       { text: 'validateField', route: 'validate-field' },
+      { text: 'touchField', route: 'touch-field' },
       { text: 'validateForm', route: 'validate-form' },
       { text: 'addFieldset', route: 'add-fieldset' },
       { text: 'moveFieldset', route: 'move-fieldset' },

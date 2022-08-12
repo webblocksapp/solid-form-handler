@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const FillForm: Component = () => (
-  <DocsContentLayout next="/api/reset-form">
+  <DocsContentLayout prev="/api/use-form-handler" next="/api/reset-form">
     <h2 class="mb-4 border-bottom">fillForm</h2>
     <p>This method allows to pre-load data inside a form.</p>
     <Code content={getRaw('fillFormApi')} />

@@ -16,7 +16,7 @@ export const Validations: Component = () => {
       <p>
         For styling form components during validations, will be used Bootstrap
         5. Remember that you can adapt the given implementations to your CSS
-        framework of preference.
+        framework of preference or any UI library.
       </p>
     </DocsContentLayout>
   );

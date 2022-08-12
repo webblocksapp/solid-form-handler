@@ -50,9 +50,10 @@ export const SingleSelectForm: Component = () => {
           onInput={({ currentTarget: { name, value } }) =>
             formHandler.setFieldValue(name, value)
           }
-          onBlur={({ currentTarget: { name } }) =>
-            formHandler.validateField(name)
-          }
+          onBlur={({ currentTarget: { name } }) => {
+            formHandler.validateField(name);
+            formHandler.touchField(name);
+          }}
         >
           <For each={countries}>
             {(country) => (

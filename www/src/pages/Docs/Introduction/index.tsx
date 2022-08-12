@@ -42,7 +42,7 @@ export const Introduction: Component = () => (
       <li>Very intuitive apis.</li>
       <li>
         It can be used with any CSS framework like <i>Bootstrap</i>,{' '}
-        <i>Tailwind CSS</i>, <i>Semantic UI</i>, etc...
+        <i>Tailwind CSS</i>, <i>Semantic UI</i>, etc... or any UI library.
       </li>
     </ul>
     <p>

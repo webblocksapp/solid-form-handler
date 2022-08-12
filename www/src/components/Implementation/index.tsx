@@ -1,21 +1,17 @@
-import { Code } from '@components';
+import { Code, CodeTabs } from '@components';
 import {
   Component,
   createSignal,
   JSXElement,
   mergeProps,
-  For,
   Switch,
   Match,
 } from 'solid-js';
+import { CodeTab } from '@interfaces';
 
 export interface ImplementationProps {
-  code?: string | Promise<string | undefined>;
-  codeTabs?: Array<{
-    name: string;
-    code: string | Promise<string | undefined>;
-    language?: string;
-  }>;
+  code?: string;
+  codeTabs?: CodeTab[];
   children?: JSXElement;
   language?: string;
 }
@@ -23,7 +19,6 @@ export interface ImplementationProps {
 export const Implementation: Component<ImplementationProps> = (props) => {
   props = mergeProps({ language: 'tsx' }, props);
   const [tabIndex, setTabIndex] = createSignal<number>(0);
-  const [codeTabIndex, setCodeTabIndex] = createSignal<number>(0);
 
   return (
     <>
@@ -78,37 +73,11 @@ export const Implementation: Component<ImplementationProps> = (props) => {
                 'd-block': tabIndex() === 1,
               }}
             >
-              <ul class="nav nav-tabs d-flex justify-content-end ps-2 pe-2 pt-2">
-                <For each={props.codeTabs}>
-                  {(codeTab, index) => (
-                    <li class="nav-item">
-                      <a
-                        class="nav-link"
-                        href="#"
-                        classList={{ active: codeTabIndex() === index() }}
-                        onClick={() => setCodeTabIndex(index())}
-                      >
-                        {codeTab.name}
-                      </a>
-                    </li>
-                  )}
-                </For>
-              </ul>
-              <div>
-                <For each={props.codeTabs}>
-                  {(codeTab, index) => (
-                    <Code
-                      codeClass="m-0 border-0"
-                      classList={{
-                        'd-none': codeTabIndex() !== index(),
-                        'd-block': codeTabIndex() === index(),
-                      }}
-                      language={codeTab.language || 'tsx'}
-                      content={codeTab.code}
-                    />
-                  )}
-                </For>
-              </div>
+              <CodeTabs
+                class="m-0"
+                tabs={props.codeTabs || []}
+                border={false}
+              />
             </div>
           </Match>
         </Switch>

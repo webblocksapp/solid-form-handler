@@ -11,10 +11,12 @@ const codeSnippets = import.meta.glob('../../code-snippets/**/*.(ts|tsx)', {
 });
 const modules = { ...implementations, ...schemas, ...apis, ...codeSnippets };
 
-export const getRaw = async (path: string) => {
+export const getRaw = (path: string) => {
   for (let key in modules) {
     if (key.match(path)) {
-      return modules[key] as unknown as Promise<string>;
+      return modules[key] as unknown as string;
     }
   }
+
+  return '';
 };

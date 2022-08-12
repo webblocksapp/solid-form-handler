@@ -12,7 +12,7 @@ import './index.css';
 
 export interface CodeProps extends JSX.HTMLAttributes<HTMLDivElement> {
   language?: string;
-  content?: string | Promise<string | undefined>;
+  content?: string;
   codeClass?: string;
 }
 
@@ -51,7 +51,7 @@ export const Code: Component<CodeProps> = (props) => {
   createEffect(() => loading() !== undefined && setInnerHTML());
 
   onMount(async () => {
-    local.content && setCode(await local.content);
+    local.content && setCode(local.content);
     rest.children && setInnerHTML();
   });
 
@@ -60,7 +60,7 @@ export const Code: Component<CodeProps> = (props) => {
       {loading() && (
         <div
           style={{ 'min-height': '120px' }}
-          class="my-3 d-flex p-3 flex-column justify-content-center align-items-center border bg-light"
+          class="code-loading my-3 d-flex p-3 flex-column justify-content-center align-items-center border bg-light"
         >
           Loading code snippet...
           <div class="mt-2 spinner-border text-secondary" />

@@ -5,13 +5,13 @@ import { Component } from 'solid-js';
 export const Setup: Component = () => (
   <DocsContentLayout prev="/docs/introduction" next="/docs/validation-schema">
     <h2 class="mb-4 border-bottom">Setup</h2>
-    <p class="mb-5">
+    <div class="mb-5">
       <b>npm installation:</b>
       <Code language="bash">&gt; npm i solid-form-handler yup</Code>
-    </p>
-    <p>
+    </div>
+    <div>
       <b>yarn installation:</b>
       <Code language="bash">&gt; yarn add solid-form-handler yup</Code>
-    </p>
+    </div>
   </DocsContentLayout>
 );

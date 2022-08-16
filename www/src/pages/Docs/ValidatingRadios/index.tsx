@@ -5,13 +5,13 @@ import { getRaw } from '@utils';
 import { RadiosForm } from '@implementations';
 
 export const ValidatingRadios: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/docs/validating-multi-select">
     <h2 class="mb-4 border-bottom">Validating Radios</h2>
     <p>
       Radios offer multiple options but the value checked is a{' '}
-      <code>string</code> or <code>number</code>
-      datatype. By using the <code>onChange</code> event, the checked value is
-      stored on the form handler.
+      <code>string</code> or <code>number</code> datatype. By using the{' '}
+      <code>onChange</code> event, the checked value is stored on the form
+      handler.
     </p>
     <p>
       For filling the default field value, it's added the logic for mark as

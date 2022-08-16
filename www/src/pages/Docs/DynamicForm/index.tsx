@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { Implementation } from '@components';
 
 export const DynamicForm: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/docs/form-validation" next="/docs/validations">
     <h2 class="mb-4 border-bottom">Dynamic Form</h2>
     <p>
       Adding, sorting, and removing fieldsets is simplified with the formHandler

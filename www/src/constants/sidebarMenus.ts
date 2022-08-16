@@ -30,6 +30,18 @@ export const DOCS_MENU: TreeMenu[] = [
       { text: 'Validating Radios', route: 'validating-radios' },
     ],
   },
+  {
+    text: 'Components',
+    route: 'components',
+    section: true,
+    children: [
+      { text: 'TextInput', route: 'text-input' },
+      { text: 'Select', route: 'select' },
+      { text: 'Checkboxes', route: 'checkboxes' },
+      { text: 'MultiSelect', route: 'multi-select' },
+      { text: 'Radios', route: 'radios' },
+    ],
+  },
 ];
 
 export const API_MENU: TreeMenu[] = [

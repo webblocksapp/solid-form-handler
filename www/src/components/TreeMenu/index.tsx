@@ -1,7 +1,7 @@
 import { Component, For } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { TreeMenu as TreeMenuType } from '@interfaces';
-import { NavLink } from 'solid-app-router';
+import { NavLink } from '@solidjs/router';
 import './index.css';
 
 export interface TreeMenuProps {

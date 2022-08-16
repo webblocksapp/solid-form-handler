@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { NavLink } from 'solid-app-router';
+import { NavLink } from '@solidjs/router';
 
 export const Navbar: Component = () => (
   <>

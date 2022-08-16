@@ -5,7 +5,10 @@ import { getRaw } from '@utils';
 import { SingleSelectForm } from '@implementations';
 
 export const ValidatingSelect: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout
+    prev="/docs/validating-text-input"
+    next="/docs/validating-checkboxes"
+  >
     <h2 class="mb-4 border-bottom">Validating Select</h2>
     <p>
       Native HTML select elements can have the same treatment as native HTML

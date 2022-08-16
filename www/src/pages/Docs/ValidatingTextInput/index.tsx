@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { SingleTextInputForm } from '@implementations';
 
 export const ValidatingTextInput: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="/docs/validations" next="/docs/validating-select">
     <h2 class="mb-4 border-bottom">Validating Text Input</h2>
     <p>
       Form text inputs are the easiest native HTML UI elements to validate with

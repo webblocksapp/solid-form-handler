@@ -5,7 +5,10 @@ import { getRaw } from '@utils';
 import { CheckboxesForm } from '@implementations';
 
 export const ValidatingCheckboxes: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout
+    prev="/docs/validating-select"
+    next="/docs/validating-multi-select"
+  >
     <h2 class="mb-4 border-bottom">Validating Checkboxes</h2>
     <p>
       Checkboxes must be treated as an array of primitives. When checking a

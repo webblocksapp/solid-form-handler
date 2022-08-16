@@ -1,5 +1,5 @@
 import { HomeLayout, MainLayout, DocsLayout } from '@layouts';
-import { RouteDefinition } from 'solid-app-router';
+import { RouteDefinition } from '@solidjs/router';
 import {
   Introduction,
   Setup,
@@ -32,6 +32,12 @@ import {
   ValidatingCheckboxes,
   ValidatingRadios,
   TouchField,
+  Components,
+  TextInput,
+  Select,
+  Checkboxes,
+  MultiSelect,
+  Radios,
 } from '@pages';
 import { DOCS_MENU, API_MENU, EXAMPLES_MENU } from '@constants';
 
@@ -65,6 +71,12 @@ export const mainRoutes: RouteDefinition[] = [
           { path: 'validating-multi-select', component: ValidatingMultiSelect },
           { path: 'validating-checkboxes', component: ValidatingCheckboxes },
           { path: 'validating-radios', component: ValidatingRadios },
+          { path: 'components', component: Components },
+          { path: 'text-input', component: TextInput },
+          { path: 'select', component: Select },
+          { path: 'checkboxes', component: Checkboxes },
+          { path: 'multi-select', component: MultiSelect },
+          { path: 'radios', component: Radios },
         ],
       },
       {

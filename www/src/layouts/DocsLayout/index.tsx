@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { Outlet, useRouteData } from 'solid-app-router';
+import { Outlet, useRouteData } from '@solidjs/router';
 import { Sidebar, TreeMenu } from '@components';
 import { TreeMenu as TreeMenuType } from '@interfaces';
 import './index.css';

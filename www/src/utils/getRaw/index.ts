@@ -9,7 +9,14 @@ const apis = import.meta.glob('../../apis/**/*.ts', { as: 'raw' });
 const codeSnippets = import.meta.glob('../../code-snippets/**/*.(ts|tsx)', {
   as: 'raw',
 });
-const modules = { ...implementations, ...schemas, ...apis, ...codeSnippets };
+const components = import.meta.glob('../../components/**/*.tsx', { as: 'raw' });
+const modules = {
+  ...implementations,
+  ...schemas,
+  ...apis,
+  ...codeSnippets,
+  ...components,
+};
 
 export const getRaw = (path: string) => {
   for (let key in modules) {

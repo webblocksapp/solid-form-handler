@@ -7,11 +7,11 @@ type SelectableOption = {
   label: string;
 };
 
-type RadiosSchema = {
+type Schema = {
   ageRange: string;
 };
 
-const radiosSchema: yup.SchemaOf<RadiosSchema> = yup.object({
+const schema: yup.SchemaOf<Schema> = yup.object({
   ageRange: yup.string().required(),
 });
 
@@ -22,8 +22,8 @@ const ageRanges: SelectableOption[] = [
   { value: '56-70', label: 'From 56 to 70' },
 ];
 
-export const RadiosForm: Component = () => {
-  const formHandler = useFormHandler<RadiosSchema>(radiosSchema);
+export const Form: Component = () => {
+  const formHandler = useFormHandler<Schema>(schema);
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

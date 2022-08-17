@@ -7,11 +7,11 @@ type SelectableOption = {
   label: string;
 };
 
-type CheckboxesSchema = {
+type Schema = {
   favoriteFoods: number[];
 };
 
-const checkboxesSchema: yup.SchemaOf<CheckboxesSchema> = yup.object({
+const schema: yup.SchemaOf<Schema> = yup.object({
   favoriteFoods: yup.array(yup.number().required()).min(2),
 });
 
@@ -23,8 +23,8 @@ const favoriteFoods: SelectableOption[] = [
   { value: 5, label: 'Sushi' },
 ];
 
-export const CheckboxesForm: Component = () => {
-  const formHandler = useFormHandler<CheckboxesSchema>(checkboxesSchema);
+export const Form: Component = () => {
+  const formHandler = useFormHandler<Schema>(schema);
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

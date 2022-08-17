@@ -2,11 +2,11 @@ import { Component, For } from 'solid-js';
 import { useFormHandler } from 'solid-form-handler';
 import * as yup from 'yup';
 
-type SingleSelectSchema = {
+type Schema = {
   country: number;
 };
 
-const singleSelectSchema: yup.SchemaOf<SingleSelectSchema> = yup.object({
+const schema: yup.SchemaOf<Schema> = yup.object({
   country: yup.number().required().typeError('country is required'),
 });
 
@@ -17,8 +17,8 @@ const countries = [
   { value: 3, label: 'Venezuela' },
 ];
 
-export const SingleSelectForm: Component = () => {
-  const formHandler = useFormHandler(singleSelectSchema);
+export const Form: Component = () => {
+  const formHandler = useFormHandler(schema);
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

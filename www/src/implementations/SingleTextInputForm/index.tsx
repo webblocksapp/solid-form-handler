@@ -2,16 +2,16 @@ import { Component } from 'solid-js';
 import { useFormHandler } from 'solid-form-handler';
 import * as yup from 'yup';
 
-type SingleTextInputSchema = {
+type Schema = {
   email: string;
 };
 
-const singleTextInputSchema: yup.SchemaOf<SingleTextInputSchema> = yup.object({
+const schema: yup.SchemaOf<Schema> = yup.object({
   email: yup.string().email().required(),
 });
 
-export const SingleTextInputForm: Component = () => {
-  const formHandler = useFormHandler(singleTextInputSchema);
+export const Form: Component = () => {
+  const formHandler = useFormHandler(schema);
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

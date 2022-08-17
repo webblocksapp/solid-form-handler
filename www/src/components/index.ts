@@ -4,6 +4,7 @@ export * from './CodeHighlightProvider';
 export * from './CodeTabs';
 export * from './Implementation';
 export * from './Navbar';
+export * from './Radios';
 export * from './Select';
 export * from './Sidebar';
 export * from './TextInput';

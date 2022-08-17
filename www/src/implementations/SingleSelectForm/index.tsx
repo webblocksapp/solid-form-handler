@@ -59,7 +59,7 @@ export const SingleSelectForm: Component = () => {
             {(country) => (
               <option
                 value={country.value}
-                selected={formData().country == country.value}
+                selected={formHandler.getFieldValue('country') == country.value}
               >
                 {country.label}
               </option>

@@ -27,15 +27,13 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * validates the field.
    */
   const setFieldValue = async (
-    path: string,
+    path: string = '',
     value: any,
     options: SetFieldValueOptions = { touch: true, dirty: true, validate: true }
   ) => {
     const fieldState = getFieldState(path);
 
-    if (fieldState === undefined) {
-      return;
-    }
+    if (fieldState === undefined) return;
 
     /**
      * fieldState.__state is undefined when it's a nested object.
@@ -68,7 +66,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Validates a single field of the form.
    */
-  const validateField = async (path: string) => {
+  const validateField = async (path: string = '') => {
     if (!isFieldFromSchema(path)) return;
 
     try {
@@ -122,8 +120,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Gets the field value from formData store.
    */
   const getFieldValue = (path: string = '') => {
-    if (!path) return '';
-    return parseValue(get(formData.data, path));
+    return path && parseValue(get(formData.data, path));
   };
 
   /**
@@ -143,8 +140,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Extracts the error message from the fieldState according to the given path.
    */
-  const getFieldError = (path: string): string => {
-    return findErrorMessages(path).join(', ').replace(/,$/, '').replace(/^,/, '');
+  const getFieldError = (path: string = ''): string => {
+    return path && findErrorMessages(path).join(', ').replace(/,$/, '').replace(/^,/, '');
   };
 
   /**
@@ -167,7 +164,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Returns a boolean flag to check if the field has an error text.
    */
-  const fieldHasError = (path: string) => {
+  const fieldHasError = (path: string = '') => {
     return Boolean(getFieldError(path));
   };
 
@@ -343,8 +340,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   /**
    * Marks a field as touched when the user interacted with it.
    */
-  const touchField = (path: string) => {
-    setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
+  const touchField = (path: string = '') => {
+    path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
   };
 
   /**

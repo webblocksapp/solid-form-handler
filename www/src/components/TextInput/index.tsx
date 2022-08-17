@@ -23,17 +23,14 @@ export interface TextInputProps
 
 export const TextInput: Component<TextInputProps> = (props) => {
   const onInput: TextInputProps['onInput'] = (event) => {
-    formHandler &&
-      formHandler.setFieldValue(props.name, event.currentTarget.value);
-    props.onInput && props.onInput(event);
+    props?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
+    props?.onInput?.(event);
   };
 
   const onBlur: TextInputProps['onBlur'] = (event) => {
-    if (formHandler) {
-      formHandler.validateField(props.name);
-      formHandler.touchField(props.name);
-    }
-    props.onBlur && props.onBlur(event);
+    props?.formHandler?.validateField?.(props.name);
+    props?.formHandler?.touchField?.(props.name);
+    props?.onBlur?.(event);
   };
 
   return (
@@ -43,16 +40,18 @@ export const TextInput: Component<TextInputProps> = (props) => {
         {...props}
         classList={{
           ...props.classList,
-          'is-invalid': props.error || formHandler.fieldHasError(props.name),
+          'is-invalid':
+            props.error || props?.formHandler?.fieldHasError?.(props.name),
           'form-control': true,
         }}
-        value={props.value || formHandler.getFieldValue(props.name)}
+        value={props.value || props?.formHandler?.getFieldValue?.(props.name)}
         onInput={onInput}
         onBlur={onBlur}
       />
-      {(props.error || formHandler.fieldHasError(props.name)) && (
+      {(props.error || props?.formHandler?.fieldHasError?.(props.name)) && (
         <div class="invalid-feedback">
-          {props.errorMessage || formHandler.getFieldError(props.name)}
+          {props.errorMessage ||
+            props?.formHandler?.getFieldError?.(props.name)}
         </div>
       )}
     </>

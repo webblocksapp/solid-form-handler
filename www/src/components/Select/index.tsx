@@ -1,4 +1,4 @@
-import { Component, JSX, For } from 'solid-js';
+import { Component, JSX, For, splitProps } from 'solid-js';
 import { FormHandler } from 'solid-form-handler';
 
 export interface SelectProps
@@ -23,39 +23,49 @@ export interface SelectProps
 }
 
 export const Select: Component<SelectProps> = (props) => {
+  const [local, rest] = splitProps(props, [
+    'error',
+    'errorMessage',
+    'formHandler',
+    'label',
+    'options',
+    'onInput',
+    'onBlur',
+  ]);
+
   const onInput: SelectProps['onInput'] = (event) => {
-    props?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
-    props?.onInput?.(event);
+    local?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
+    local?.onInput?.(event);
   };
 
   const onBlur: SelectProps['onBlur'] = (event) => {
-    props?.formHandler?.validateField?.(props.name);
-    props?.formHandler?.touchField?.(props.name);
-    props.onBlur?.(event);
+    local?.formHandler?.validateField?.(props.name);
+    local?.formHandler?.touchField?.(props.name);
+    local?.onBlur?.(event);
   };
 
   return (
     <>
-      {props.label && <label class="form-label">{props.label}</label>}
+      {local.label && <label class="form-label">{local.label}</label>}
       <select
-        {...props}
+        {...rest}
         classList={{
           ...props.classList,
           'is-invalid':
-            props.error || props?.formHandler?.fieldHasError?.(props.name),
+            local.error || local?.formHandler?.fieldHasError?.(props.name),
           'form-select': true,
         }}
-        value={props.value || props?.formHandler?.getFieldValue?.(props.name)}
+        value={props.value || local?.formHandler?.getFieldValue?.(props.name)}
         onInput={onInput}
         onBlur={onBlur}
       >
-        <For each={props.options}>
+        <For each={local.options}>
           {(option) => (
             <option
               value={option.value}
               selected={
                 props.value == option.value ||
-                props?.formHandler?.getFieldValue?.(props.name) == option.value
+                local?.formHandler?.getFieldValue?.(props.name) == option.value
               }
             >
               {option.label}
@@ -63,10 +73,10 @@ export const Select: Component<SelectProps> = (props) => {
           )}
         </For>
       </select>
-      {(props.error || props?.formHandler?.fieldHasError?.(props.name)) && (
+      {(local.error || local?.formHandler?.fieldHasError?.(props.name)) && (
         <div class="invalid-feedback">
-          {props.errorMessage ||
-            props?.formHandler?.getFieldError?.(props.name)}
+          {local.errorMessage ||
+            local?.formHandler?.getFieldError?.(props.name)}
         </div>
       )}
     </>

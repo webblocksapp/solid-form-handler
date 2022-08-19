@@ -1,4 +1,4 @@
-import { Component, JSX } from 'solid-js';
+import { Component, JSX, splitProps } from 'solid-js';
 import { FormHandler } from 'solid-form-handler';
 
 export interface TextInputProps
@@ -22,36 +22,45 @@ export interface TextInputProps
 }
 
 export const TextInput: Component<TextInputProps> = (props) => {
+  const [local, rest] = splitProps(props, [
+    'error',
+    'errorMessage',
+    'formHandler',
+    'label',
+    'onInput',
+    'onBlur',
+  ]);
+
   const onInput: TextInputProps['onInput'] = (event) => {
-    props?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
-    props?.onInput?.(event);
+    local?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
+    local?.onInput?.(event);
   };
 
   const onBlur: TextInputProps['onBlur'] = (event) => {
-    props?.formHandler?.validateField?.(props.name);
-    props?.formHandler?.touchField?.(props.name);
-    props?.onBlur?.(event);
+    local?.formHandler?.validateField?.(props.name);
+    local?.formHandler?.touchField?.(props.name);
+    local?.onBlur?.(event);
   };
 
   return (
     <>
-      {props.label && <label class="form-label">{props.label}</label>}
+      {local.label && <label class="form-label">{local.label}</label>}
       <input
-        {...props}
+        {...rest}
         classList={{
           ...props.classList,
           'is-invalid':
-            props.error || props?.formHandler?.fieldHasError?.(props.name),
+            local.error || local?.formHandler?.fieldHasError?.(props.name),
           'form-control': true,
         }}
-        value={props.value || props?.formHandler?.getFieldValue?.(props.name)}
+        value={props.value || local?.formHandler?.getFieldValue?.(props.name)}
         onInput={onInput}
         onBlur={onBlur}
       />
-      {(props.error || props?.formHandler?.fieldHasError?.(props.name)) && (
+      {(local.error || local?.formHandler?.fieldHasError?.(props.name)) && (
         <div class="invalid-feedback">
-          {props.errorMessage ||
-            props?.formHandler?.getFieldError?.(props.name)}
+          {local.errorMessage ||
+            local?.formHandler?.getFieldError?.(props.name)}
         </div>
       )}
     </>

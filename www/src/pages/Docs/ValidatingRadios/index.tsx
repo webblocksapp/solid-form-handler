@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { RadiosForm } from '@implementations';
 
 export const ValidatingRadios: Component = () => (
-  <DocsContentLayout prev="/docs/validating-multi-select">
+  <DocsContentLayout prev="/docs/validating-checkboxes" next="/docs/components">
     <h2 class="mb-4 border-bottom">Validating Radios</h2>
     <p>
       Radios offer multiple options but the value checked is a{' '}

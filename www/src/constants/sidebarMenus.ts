@@ -25,6 +25,7 @@ export const DOCS_MENU: TreeMenu[] = [
     children: [
       { text: 'Validating Text Input', route: 'validating-text-input' },
       { text: 'Validating Select', route: 'validating-select' },
+      { text: 'Validating Checkbox', route: 'validating-single-checkbox' },
       { text: 'Validating Checkboxes', route: 'validating-checkboxes' },
       { text: 'Validating Radios', route: 'validating-radios' },
     ],

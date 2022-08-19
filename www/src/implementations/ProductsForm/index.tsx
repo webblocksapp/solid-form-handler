@@ -1,26 +1,19 @@
-import { Component, createSignal, For } from 'solid-js';
-import { useFormHandler, FormErrorsException } from 'solid-form-handler';
+import { Component, For } from 'solid-js';
+import { useFormHandler } from 'solid-form-handler';
 import { Product } from './types';
 import { productSchema } from './schema';
 
 export const ProductsForm: Component = () => {
   const formHandler = useFormHandler<Product[]>(productSchema);
-  const [error, setError] = createSignal<string>('');
   const { formData } = formHandler;
   const limit = 3;
 
   const submit = async (event: Event) => {
     event.preventDefault();
 
-    try {
-      setError('');
-      await formHandler.validateForm({ catchError: true });
+    if (await formHandler.validateForm()) {
       alert('Data sent with success: ' + JSON.stringify(formData()));
       formHandler.resetForm();
-    } catch (error) {
-      if (error instanceof FormErrorsException) {
-        setError(JSON.stringify(error, null, 2));
-      }
     }
   };
 
@@ -135,16 +128,6 @@ export const ProductsForm: Component = () => {
       <pre class="mt-3 border bg-light p-3">
         <code>{JSON.stringify(formData(), null, 2)}</code>
       </pre>
-      {error() && (
-        <>
-          <p class="mt-5">
-            <b>Errors on submit:</b>
-          </p>
-          <pre class="mt-3 border bg-light p-3">
-            <code class="text-danger">{error()}</code>
-          </pre>
-        </>
-      )}
     </>
   );
 };

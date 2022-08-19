@@ -6,8 +6,8 @@ import { CheckboxesForm } from '@implementations';
 
 export const ValidatingCheckboxes: Component = () => (
   <DocsContentLayout
-    prev="/docs/validating-select"
-    next="/docs/validating-multi-select"
+    prev="/docs/validating-single-checkbox"
+    next="/docs/validating-radios"
   >
     <h2 class="mb-4 border-bottom">Validating Checkboxes</h2>
     <p>

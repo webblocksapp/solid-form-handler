@@ -1,3 +1,4 @@
+export { Form as CheckboxForm } from './CheckboxForm';
 export { Form as CheckboxesForm } from './CheckboxesForm';
 export * from './ProductsForm';
 export { Form as RadiosForm } from './RadiosForm';

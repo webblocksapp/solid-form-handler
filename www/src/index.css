@@ -27,9 +27,12 @@
 }
 
 html,
-body,
-#root {
+body {
   height: 100%;
+  scroll-behavior: initial !important;
+}
+
+#root {
   font-family: Gordita;
   overflow-x: hidden;
 }

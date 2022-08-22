@@ -5,9 +5,6 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   plugins: [solidPlugin({ babel: { presets: ['solid'] } }), tsconfigPaths({ root: __dirname }), dts()],
-  esbuild: {
-    minify: true,
-  },
   build: {
     lib: {
       entry: 'src/index.ts',

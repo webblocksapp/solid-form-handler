@@ -94,8 +94,8 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Validates the whole form data. It receives as options:
    * catchError: throws an error exception if form is invalid.
    */
-  const validateForm = async (options?: { catchError: boolean }) => {
-    return validate({ throwException: options?.catchError });
+  const validateForm = async () => {
+    await validate({ throwException: true });
   };
 
   /**

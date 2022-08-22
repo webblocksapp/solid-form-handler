@@ -26,7 +26,7 @@ export const FormImpl: Component = () => {
   const submit = async () => {
     try {
       setError('');
-      await formHandler.validateForm({ catchError: true });
+      await formHandler.validateForm();
       alert(`Data submitted \n ${JSON.stringify(formData())}`);
     } catch (error) {
       if (error instanceof FormErrorsException) {

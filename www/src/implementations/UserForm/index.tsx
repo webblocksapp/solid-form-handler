@@ -8,10 +8,12 @@ export const UserForm: Component = () => {
 
   const submit = async (event: Event) => {
     event.preventDefault();
-
-    if (await formHandler.validateForm()) {
+    try {
+      await formHandler.validateForm();
       alert('Data sent with success: ' + JSON.stringify(formData()));
       formHandler.resetForm();
+    } catch (error) {
+      console.error(error);
     }
   };
 

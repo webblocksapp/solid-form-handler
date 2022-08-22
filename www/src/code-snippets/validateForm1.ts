@@ -1,4 +1,22 @@
 //@ts-nocheck
-if (await formHandler.validateForm()) {
-  //Form data is valid, data can be sent to the backend.
+
+try {
+  await formHandler.validateForm();
+} catch (error) {
+  if (error instanceof FormErrorsException) {
+    console.log(error);
+    /**
+     * -- Output: --
+     * [
+     *  {
+     *    path: 'name',
+     *    errorMessage: 'name is a required field'
+     *  },
+     *  {
+     *    path: 'age',
+     *    errorMessage: 'age is a required field'
+     *  },
+     * ]
+     */
+  }
 }

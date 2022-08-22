@@ -56,7 +56,7 @@ export const ComplexFormImpl: Component = () => {
   const submit = async () => {
     try {
       setError('');
-      await formHandler.validateForm({ catchError: true });
+      await formHandler.validateForm();
       alert(`Data submitted \n ${JSON.stringify(formData())}`);
       formHandler.resetForm();
     } catch (error) {

@@ -16,6 +16,7 @@ export interface CheckboxProps
   label?: string;
   boolean?: boolean;
   value?: string | number;
+  display?: 'switch' | 'checkbox';
 }
 
 export const Checkbox: Component<CheckboxProps> = (props) => {
@@ -28,6 +29,8 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     'formHandler',
     'label',
     'boolean',
+    'onChange',
+    'display',
   ]);
 
   const onChange: CheckboxProps['onChange'] = (event) => {
@@ -35,10 +38,10 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
       rest.name,
       local.boolean ? event.currentTarget.checked : event.currentTarget.value
     );
-    if (typeof props.onChange === 'function') {
-      props.onChange(event);
+    if (typeof local.onChange === 'function') {
+      local.onChange(event);
     } else {
-      props?.onChange?.[0](props?.onChange?.[1], event);
+      local?.onChange?.[0](local?.onChange?.[1], event);
     }
   };
 
@@ -62,6 +65,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
         classList={{
           'is-invalid':
             local?.error || local?.formHandler?.fieldHasError?.(rest.name),
+          'form-switch': local.display === 'switch',
         }}
       >
         <input

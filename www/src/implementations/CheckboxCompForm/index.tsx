@@ -60,6 +60,7 @@ export const Form: Component = () => {
           label="Accept terms"
           name="acceptTerms"
           formHandler={formHandler}
+          display="switch"
         />
       </div>
       <div class="mb-3">

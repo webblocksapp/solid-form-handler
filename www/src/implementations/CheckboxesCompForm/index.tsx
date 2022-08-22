@@ -62,6 +62,7 @@ export const Form: Component = () => {
           label="JS Frameworks"
           name="jsFrameworks"
           formHandler={formHandler}
+          display="switch"
           options={[
             { value: 'solidjs', label: 'SolidJS' },
             { value: 'angular', label: 'Angular' },

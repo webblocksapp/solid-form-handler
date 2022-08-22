@@ -17,24 +17,26 @@ export const Select: Component<SelectProps> = (props) => {
     'formHandler',
     'label',
     'options',
+    'onInput',
+    'onBlur',
   ]);
 
   const onInput: SelectProps['onInput'] = (event) => {
     local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
-    if (typeof props.onInput === 'function') {
-      props.onInput(event);
+    if (typeof local.onInput === 'function') {
+      local.onInput(event);
     } else {
-      props?.onInput?.[0](props?.onInput?.[1], event);
+      local?.onInput?.[0](local?.onInput?.[1], event);
     }
   };
 
   const onBlur: SelectProps['onBlur'] = (event) => {
     local?.formHandler?.validateField?.(rest.name);
     local?.formHandler?.touchField?.(rest.name);
-    if (typeof props.onBlur === 'function') {
-      props.onBlur(event);
+    if (typeof local.onBlur === 'function') {
+      local.onBlur(event);
     } else {
-      props?.onBlur?.[0](props?.onBlur?.[1], event);
+      local?.onBlur?.[0](local?.onBlur?.[1], event);
     }
   };
 

@@ -10,6 +10,7 @@ export interface CheckboxesProps {
   id?: string;
   label?: string;
   name?: string;
+  display?: 'switch' | 'checkbox';
   options?: { value: string | number; label: string }[];
   onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
   value?: Array<string | number>;
@@ -65,6 +66,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
             value={option.value}
             onChange={onChange}
             checked={checked(option.value)}
+            display={props.display}
           />
         )}
       </For>

@@ -25,14 +25,15 @@ export const Radio: Component<RadioProps> = (props) => {
     'errorMessage',
     'formHandler',
     'label',
+    'onChange',
   ]);
 
   const onChange: RadioProps['onChange'] = (event) => {
     local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
-    if (typeof props.onChange === 'function') {
-      props.onChange(event);
+    if (typeof local.onChange === 'function') {
+      local.onChange(event);
     } else {
-      props?.onChange?.[0](props?.onChange?.[1], event);
+      local?.onChange?.[0](local?.onChange?.[1], event);
     }
   };
 

@@ -19,6 +19,7 @@ export const Radios: Component<RadiosProps> = (props) => {
   const [id, setId] = createSignal<string>();
 
   const onChange: RadiosProps['onChange'] = (event) => {
+    console.log(event.currentTarget.value);
     props?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
     if (typeof props.onChange === 'function') {
       props.onChange(event);

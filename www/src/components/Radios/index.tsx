@@ -11,12 +11,7 @@ export interface RadiosProps {
   label?: string;
   name?: string;
   options?: { value: string | number; label: string }[];
-  onChange?: (
-    event: Event & {
-      currentTarget: HTMLInputElement;
-      target: Element;
-    }
-  ) => void;
+  onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
   value?: string | number;
 }
 
@@ -25,7 +20,11 @@ export const Radios: Component<RadiosProps> = (props) => {
 
   const onChange: RadiosProps['onChange'] = (event) => {
     props?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
-    props?.onChange?.(event);
+    if (typeof props.onChange === 'function') {
+      props.onChange(event);
+    } else {
+      props?.onChange?.[0](props?.onChange?.[1], event);
+    }
   };
 
   createEffect(() => setId(props.id || props.name));

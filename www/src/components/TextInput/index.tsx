@@ -7,18 +7,6 @@ export interface TextInputProps
   errorMessage?: string;
   formHandler?: FormHandler;
   label?: string;
-  onInput?: (
-    event: InputEvent & {
-      currentTarget: HTMLInputElement;
-      target: Element;
-    }
-  ) => void;
-  onBlur?: (
-    event: FocusEvent & {
-      currentTarget: HTMLInputElement;
-      target: Element;
-    }
-  ) => void;
 }
 
 export const TextInput: Component<TextInputProps> = (props) => {
@@ -27,19 +15,25 @@ export const TextInput: Component<TextInputProps> = (props) => {
     'errorMessage',
     'formHandler',
     'label',
-    'onInput',
-    'onBlur',
   ]);
 
   const onInput: TextInputProps['onInput'] = (event) => {
     local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
-    local?.onInput?.(event);
+    if (typeof props.onInput === 'function') {
+      props.onInput(event);
+    } else {
+      props?.onInput?.[0](props?.onInput?.[1], event);
+    }
   };
 
   const onBlur: TextInputProps['onBlur'] = (event) => {
     local?.formHandler?.validateField?.(rest.name);
     local?.formHandler?.touchField?.(rest.name);
-    local?.onBlur?.(event);
+    if (typeof props.onBlur === 'function') {
+      props.onBlur(event);
+    } else {
+      props?.onBlur?.[0](props?.onBlur?.[1], event);
+    }
   };
 
   return (

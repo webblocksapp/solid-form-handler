@@ -12,6 +12,7 @@ export const Radios: Component = () => (
       codeTabs={[
         { name: 'Form.tsx', code: getRaw('RadiosCompForm') },
         { name: 'Radios.tsx', code: getRaw('components/Radios') },
+        { name: 'Radio.tsx', code: getRaw('components/Radio') },
       ]}
     >
       <RadiosCompForm />

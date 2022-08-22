@@ -11,12 +11,7 @@ export interface CheckboxesProps {
   label?: string;
   name?: string;
   options?: { value: string | number; label: string }[];
-  onChange?: (
-    event: Event & {
-      currentTarget: HTMLInputElement;
-      target: Element;
-    }
-  ) => void;
+  onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
   value?: Array<string | number>;
 }
 
@@ -37,7 +32,11 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
           ?.filter?.((item: any) => event.currentTarget.value != item)
       );
     }
-    props?.onChange?.(event);
+    if (typeof props.onChange === 'function') {
+      props.onChange(event);
+    } else {
+      props?.onChange?.[0](props?.onChange?.[1], event);
+    }
   };
 
   const checked = (value: string | number) => {

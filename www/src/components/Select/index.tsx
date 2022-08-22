@@ -8,18 +8,6 @@ export interface SelectProps
   formHandler?: FormHandler;
   label?: string;
   options?: { value: string | number; label: string }[];
-  onInput?: (
-    event: InputEvent & {
-      currentTarget: HTMLSelectElement;
-      target: Element;
-    }
-  ) => void;
-  onBlur?: (
-    event: FocusEvent & {
-      currentTarget: HTMLSelectElement;
-      target: Element;
-    }
-  ) => void;
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -29,19 +17,25 @@ export const Select: Component<SelectProps> = (props) => {
     'formHandler',
     'label',
     'options',
-    'onInput',
-    'onBlur',
   ]);
 
   const onInput: SelectProps['onInput'] = (event) => {
     local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
-    local?.onInput?.(event);
+    if (typeof props.onInput === 'function') {
+      props.onInput(event);
+    } else {
+      props?.onInput?.[0](props?.onInput?.[1], event);
+    }
   };
 
   const onBlur: SelectProps['onBlur'] = (event) => {
     local?.formHandler?.validateField?.(rest.name);
     local?.formHandler?.touchField?.(rest.name);
-    local?.onBlur?.(event);
+    if (typeof props.onBlur === 'function') {
+      props.onBlur(event);
+    } else {
+      props?.onBlur?.[0](props?.onBlur?.[1], event);
+    }
   };
 
   return (

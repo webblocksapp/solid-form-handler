@@ -16,12 +16,6 @@ export interface CheckboxProps
   label?: string;
   boolean?: boolean;
   value?: string | number;
-  onChange?: (
-    event: Event & {
-      currentTarget: HTMLInputElement;
-      target: Element;
-    }
-  ) => void;
 }
 
 export const Checkbox: Component<CheckboxProps> = (props) => {
@@ -34,7 +28,6 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     'formHandler',
     'label',
     'boolean',
-    'onChange',
   ]);
 
   const onChange: CheckboxProps['onChange'] = (event) => {
@@ -42,7 +35,11 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
       rest.name,
       local.boolean ? event.currentTarget.checked : event.currentTarget.value
     );
-    local?.onChange?.(event);
+    if (typeof props.onChange === 'function') {
+      props.onChange(event);
+    } else {
+      props?.onChange?.[0](props?.onChange?.[1], event);
+    }
   };
 
   const checked = () => {

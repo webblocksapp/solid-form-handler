@@ -14,12 +14,6 @@ export interface RadioProps extends JSX.InputHTMLAttributes<HTMLInputElement> {
   formHandler?: FormHandler;
   label?: string;
   value?: string | number;
-  onChange?: (
-    event: Event & {
-      currentTarget: HTMLInputElement;
-      target: Element;
-    }
-  ) => void;
 }
 
 export const Radio: Component<RadioProps> = (props) => {
@@ -31,12 +25,15 @@ export const Radio: Component<RadioProps> = (props) => {
     'errorMessage',
     'formHandler',
     'label',
-    'onChange',
   ]);
 
   const onChange: RadioProps['onChange'] = (event) => {
     local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
-    local?.onChange?.(event);
+    if (typeof props.onChange === 'function') {
+      props.onChange(event);
+    } else {
+      props?.onChange?.[0](props?.onChange?.[1], event);
+    }
   };
 
   const checked = () => {

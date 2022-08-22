@@ -1,3 +1,4 @@
+export { Form as CheckboxCompForm } from './CheckboxCompForm';
 export { Form as CheckboxForm } from './CheckboxForm';
 export { Form as CheckboxesForm } from './CheckboxesForm';
 export * from './ProductsForm';

@@ -1,5 +1,6 @@
 import { Component, createEffect, createSignal, For, JSX } from 'solid-js';
 import { FormHandler } from 'solid-form-handler';
+import { Checkbox } from '@components';
 
 export interface CheckboxesProps {
   classList?: JSX.CustomAttributes<HTMLDivElement>['classList'];
@@ -29,7 +30,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
         event.currentTarget.value,
       ]);
     } else {
-      formHandler.setFieldValue(
+      props?.formHandler?.setFieldValue?.(
         props.name,
         props?.formHandler
           ?.getFieldValue?.(props.name)
@@ -55,31 +56,17 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
       {props.label && <label class="form-label">{props.label}</label>}
       <For each={props.options}>
         {(option, i) => (
-          <div
-            class="form-check"
-            classList={{
-              'is-invalid':
-                props.error || props?.formHandler?.fieldHasError?.(props.name),
-            }}
-          >
-            <input
-              class="form-check-input"
-              id={`${id()}-${i()}`}
-              type="checkbox"
-              value={option.value}
-              classList={{
-                'is-invalid':
-                  props.error ||
-                  props?.formHandler?.fieldHasError?.(props.name),
-              }}
-              name={props.name}
-              checked={checked(option.value)}
-              onChange={onChange}
-            />
-            <label for={`${id()}-${i()}`} class="form-check-label">
-              {option.label}
-            </label>
-          </div>
+          <Checkbox
+            id={`${id()}-${i()}`}
+            error={
+              props.error || props.formHandler?.fieldHasError?.(props.name)
+            }
+            boolean={false}
+            label={option.label}
+            value={option.value}
+            onChange={onChange}
+            checked={checked(option.value)}
+          />
         )}
       </For>
       {(props.error || props?.formHandler?.fieldHasError?.(props.name)) && (

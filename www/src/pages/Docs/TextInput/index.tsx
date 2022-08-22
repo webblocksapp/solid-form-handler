@@ -29,7 +29,7 @@ export const TextInput: Component = () => (
     </p>
     <p>
       As a result, we will have a shorter implementation at{' '}
-      <code>Form.tsx</code> by only passing the field <code>name</code> and the{' '}
+      <code>Form.tsx</code> by only passing the <code>name</code> and the{' '}
       <code>formHandler</code> object to the <code>&lt;TextInput /&gt;</code>{' '}
       component for handling form data validations.
     </p>

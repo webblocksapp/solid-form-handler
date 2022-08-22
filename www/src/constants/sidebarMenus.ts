@@ -37,6 +37,7 @@ export const DOCS_MENU: TreeMenu[] = [
     children: [
       { text: 'TextInput', route: 'text-input' },
       { text: 'Select', route: 'select' },
+      { text: 'Checkbox', route: 'single-checkbox' },
       { text: 'Checkboxes', route: 'checkboxes' },
       { text: 'Radios', route: 'radios' },
     ],

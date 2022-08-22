@@ -1,5 +1,6 @@
 import { Component, createEffect, createSignal, For, JSX } from 'solid-js';
 import { FormHandler } from 'solid-form-handler';
+import { Radio } from '@components';
 
 export interface RadiosProps {
   classList?: JSX.CustomAttributes<HTMLDivElement>['classList'];
@@ -34,35 +35,20 @@ export const Radios: Component<RadiosProps> = (props) => {
       {props.label && <label class="form-label">{props.label}</label>}
       <For each={props.options}>
         {(option, i) => (
-          <div
-            classList={{
-              ...props.classList,
-              'is-invalid':
-                props.error || props?.formHandler?.fieldHasError?.(props.name),
-              'form-check': true,
-            }}
-          >
-            <input
-              class="form-check-input"
-              id={id() && `${id()}-${i()}`}
-              type="radio"
-              value={option.value}
-              classList={{
-                'is-invalid':
-                  props.error ||
-                  props?.formHandler?.fieldHasError?.(props.name),
-              }}
-              name={props.name}
-              checked={
-                props.value == option.value ||
-                props?.formHandler?.getFieldValue?.(props.name) == option.value
-              }
-              onChange={onChange}
-            />
-            <label for={id() && `${id()}-${i()}`} class="form-check-label">
-              {option.label}
-            </label>
-          </div>
+          <Radio
+            id={`${id()}-${i()}`}
+            name={props.name}
+            label={option.label}
+            value={option.value}
+            onChange={onChange}
+            error={
+              props.error || props.formHandler?.fieldHasError?.(props.name)
+            }
+            checked={
+              option.value == props.value ||
+              option.value == props?.formHandler?.getFieldValue(props.name)
+            }
+          />
         )}
       </For>
       {(props.error || props?.formHandler?.fieldHasError?.(props.name)) && (

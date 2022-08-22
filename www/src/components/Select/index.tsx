@@ -34,13 +34,13 @@ export const Select: Component<SelectProps> = (props) => {
   ]);
 
   const onInput: SelectProps['onInput'] = (event) => {
-    local?.formHandler?.setFieldValue?.(props.name, event.currentTarget.value);
+    local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
     local?.onInput?.(event);
   };
 
   const onBlur: SelectProps['onBlur'] = (event) => {
-    local?.formHandler?.validateField?.(props.name);
-    local?.formHandler?.touchField?.(props.name);
+    local?.formHandler?.validateField?.(rest.name);
+    local?.formHandler?.touchField?.(rest.name);
     local?.onBlur?.(event);
   };
 
@@ -50,12 +50,12 @@ export const Select: Component<SelectProps> = (props) => {
       <select
         {...rest}
         classList={{
-          ...props.classList,
+          ...rest.classList,
           'is-invalid':
-            local.error || local?.formHandler?.fieldHasError?.(props.name),
+            local.error || local?.formHandler?.fieldHasError?.(rest.name),
           'form-select': true,
         }}
-        value={props.value || local?.formHandler?.getFieldValue?.(props.name)}
+        value={rest.value || local?.formHandler?.getFieldValue?.(rest.name)}
         onInput={onInput}
         onBlur={onBlur}
       >
@@ -64,8 +64,8 @@ export const Select: Component<SelectProps> = (props) => {
             <option
               value={option.value}
               selected={
-                props.value == option.value ||
-                local?.formHandler?.getFieldValue?.(props.name) == option.value
+                rest.value == option.value ||
+                local?.formHandler?.getFieldValue?.(rest.name) == option.value
               }
             >
               {option.label}
@@ -73,10 +73,9 @@ export const Select: Component<SelectProps> = (props) => {
           )}
         </For>
       </select>
-      {(local.error || local?.formHandler?.fieldHasError?.(props.name)) && (
+      {(local.error || local?.formHandler?.fieldHasError?.(rest.name)) && (
         <div class="invalid-feedback">
-          {local.errorMessage ||
-            local?.formHandler?.getFieldError?.(props.name)}
+          {local.errorMessage || local?.formHandler?.getFieldError?.(rest.name)}
         </div>
       )}
     </>

@@ -1,3 +1,4 @@
+export * from './Checkbox';
 export * from './Checkboxes';
 export * from './Components';
 export * from './DynamicForm';

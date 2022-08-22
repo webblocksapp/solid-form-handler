@@ -35,6 +35,7 @@ import {
   Components,
   TextInput,
   Select,
+  Checkbox,
   Checkboxes,
   Radios,
 } from '@pages';
@@ -73,6 +74,7 @@ export const mainRoutes: RouteDefinition[] = [
           { path: 'components', component: Components },
           { path: 'text-input', component: TextInput },
           { path: 'select', component: Select },
+          { path: 'single-checkbox', component: Checkbox },
           { path: 'checkboxes', component: Checkboxes },
           { path: 'radios', component: Radios },
         ],

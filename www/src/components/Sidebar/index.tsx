@@ -5,8 +5,8 @@ export interface SidebarProps extends JSX.HTMLAttributes<HTMLDivElement> {
   children: JSXElement;
 }
 
-export const Sidebar: Component<SidebarProps> = (props) => {
-  props = mergeProps({ class: 'p-4' }, props);
+export const Sidebar: Component<SidebarProps> = ({ classList, ...props }) => {
+  props = mergeProps({ classList: { sidebar: true, ...classList } }, props);
 
-  return <div {...props} class={`sidebar ${props.class}`} />;
+  return <div {...props} />;
 };

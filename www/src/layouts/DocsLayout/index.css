@@ -1,12 +1,17 @@
 .docs-layout {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 80px 1fr;
 }
 
 .docs-layout .main {
   display: grid;
   grid-template-rows: 1fr;
-  background-image: linear-gradient(to left, #fff, #fff 50%, rgba(243, 244, 246) 10%);
+  background-image: linear-gradient(
+    to left,
+    #fff,
+    #fff 50%,
+    rgba(243, 244, 246) 10%
+  );
 }
 
 .docs-layout .main > div {
@@ -18,4 +23,11 @@
 .docs-layout .main > div > div:nth-child(2) {
   display: grid;
   grid-template-rows: 1fr;
+}
+
+.docs-layout .sidebar {
+  position: sticky;
+  top: 56px;
+  overflow: auto;
+  height: calc(100vh - 136px);
 }

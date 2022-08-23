@@ -22,9 +22,11 @@ export const DocsLayout: Component<DocsLayoutProps> = (props) => {
       </div>
       <div class="main">
         <div class="container-lg">
-          <Sidebar class="py-4 pe-4">
-            <TreeMenu menu={menu} />
-          </Sidebar>
+          <div>
+            <Sidebar>
+              <TreeMenu menu={menu} />
+            </Sidebar>
+          </div>
           <div class="bg-white p-4 ps-5 pt-5">
             <Outlet />
           </div>

@@ -3,7 +3,6 @@ import {
   createEffect,
   createSignal,
   JSX,
-  mergeProps,
   splitProps,
 } from 'solid-js';
 import { FormHandler } from 'solid-form-handler';
@@ -20,7 +19,6 @@ export interface CheckboxProps
 }
 
 export const Checkbox: Component<CheckboxProps> = (props) => {
-  props = mergeProps(props, { boolean: true });
   const [id, setId] = createSignal<string>();
   const [errorMessage, setErrorMessage] = createSignal<string>();
   const [local, rest] = splitProps(props, [

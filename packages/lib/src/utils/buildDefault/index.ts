@@ -40,7 +40,9 @@ export const buildDefault = (schema: yup.AnySchema, path?: string, object?: any)
      * prevTargetPath key1.key2 for assigning an empty array.
      */
     const prevTargetPath = targetPath.split('.').slice(0, -1).join('.');
-    obj = Array.isArray(get(obj, prevTargetPath)) ? set(obj, prevTargetPath, []) : set(obj, targetPath, '');
+    obj = Array.isArray(get(obj, prevTargetPath))
+      ? set(obj, prevTargetPath, schema.getDefault() ?? [])
+      : set(obj, targetPath, schema.getDefault() ?? '');
   }
 
   return obj;

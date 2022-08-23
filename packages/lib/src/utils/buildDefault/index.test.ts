@@ -45,7 +45,7 @@ describe('buildDefault', () => {
       name: '',
       age: '',
       contact: { email: '', phone: '' },
-      hasHouse: '',
+      hasHouse: false,
       houseAddress: '',
     });
   });

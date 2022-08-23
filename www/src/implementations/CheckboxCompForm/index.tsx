@@ -6,6 +6,7 @@ import { Checkbox } from '@components';
 type Schema = {
   acceptPolicy: boolean;
   acceptTerms: boolean;
+  accountStatus: 'active' | 'inactive';
 };
 
 const schema: yup.SchemaOf<Schema> = yup.object({
@@ -14,10 +15,12 @@ const schema: yup.SchemaOf<Schema> = yup.object({
     .oneOf([true], 'Accept policy is required')
     .required()
     .typeError('Accept policy is required'),
-  acceptTerms: yup
-    .boolean()
+  acceptTerms: yup.boolean().required().default(false),
+  accountStatus: yup
+    .mixed()
+    .oneOf(['active', 'inactive'])
     .required()
-    .transform((value) => Boolean(value)),
+    .default('inactive'),
 });
 
 export const Form: Component = () => {
@@ -59,6 +62,20 @@ export const Form: Component = () => {
         <Checkbox
           label="Accept terms"
           name="acceptTerms"
+          formHandler={formHandler}
+          display="switch"
+        />
+      </div>
+      <div class="mb-3">
+        <Checkbox
+          label={
+            formData().accountStatus === 'active'
+              ? 'Account active'
+              : 'Account inactive'
+          }
+          value="active"
+          uncheckedValue="inactive"
+          name="accountStatus"
           formHandler={formHandler}
           display="switch"
         />

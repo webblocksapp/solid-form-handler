@@ -11,21 +11,21 @@ export const TextInput: Component = () => (
       You can take a look at the component definition <code>TextInput.tsx</code>{' '}
       which is inside the code tab. Here will extend the{' '}
       <code>TextInputProps</code> from the <code>HTMLInputElement</code> to
-      avoid redefining all the props of a vanilla HTML input (open closed
-      principle). If you will use a <i>SolidJS</i> UI library that provides a
-      predefined <code>TextInput</code> component, the same approach can be done
-      by extending the <code>TextInputProps</code> from the{' '}
+      avoid redefining all the props of a vanilla HTML input. If you will use a{' '}
+      <i>SolidJS</i> UI library that provides a predefined{' '}
+      <code>TextInput</code> component, the same approach can be done by
+      extending the <code>TextInputProps</code> from the{' '}
       <code>UILibraryTextInputProps</code> interface.
     </p>
     <p>
       At <code>TextInputProps</code> the <code>formHandler</code> is defined as
-      an optional prop to preserve the original nature of a text input (open
-      closed principle) which is not dependent on a <code>formHandler</code>{' '}
-      prop. The <code>onInput</code> and <code>onBlur</code> events were
-      extended by the methods <code>onInput</code> and <code>onBlur</code> which
-      are defined inside the component. Those methods implement the{' '}
-      <code>formHandler</code> keeping the <code>onInput</code> and{' '}
-      <code>onBlur</code> props execution when they are defined.
+      an optional prop to preserve the original nature of a text input which is
+      not dependent on a <code>formHandler</code> prop. The <code>onInput</code>{' '}
+      and <code>onBlur</code> events were extended by the methods{' '}
+      <code>onInput</code> and <code>onBlur</code> which are defined inside the
+      component. Those methods implement the <code>formHandler</code> keeping
+      the <code>onInput</code> and <code>onBlur</code> props execution when they
+      are defined.
     </p>
     <p>
       As a result, we will have a shorter implementation at{' '}

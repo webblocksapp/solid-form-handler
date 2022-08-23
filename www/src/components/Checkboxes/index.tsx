@@ -61,7 +61,6 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
             error={
               props.error || props.formHandler?.fieldHasError?.(props.name)
             }
-            boolean={false}
             label={option.label}
             value={option.value}
             onChange={onChange}

@@ -14,8 +14,8 @@ export interface CheckboxProps
   errorMessage?: string;
   formHandler?: FormHandler;
   label?: string;
-  boolean?: boolean;
   value?: string | number;
+  uncheckedValue?: string | number;
   display?: 'switch' | 'checkbox';
 }
 
@@ -28,15 +28,16 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     'errorMessage',
     'formHandler',
     'label',
-    'boolean',
     'onChange',
+    'value',
     'display',
+    'uncheckedValue',
   ]);
 
   const onChange: CheckboxProps['onChange'] = (event) => {
     local?.formHandler?.setFieldValue?.(
       rest.name,
-      local.boolean ? event.currentTarget.checked : event.currentTarget.value
+      getValue(event.currentTarget.checked)
     );
     if (typeof local.onChange === 'function') {
       local.onChange(event);
@@ -45,10 +46,17 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     }
   };
 
+  const getValue = (checked: boolean) => {
+    if (local.value === undefined) return checked;
+    if (checked) return local.value;
+    return local.uncheckedValue || '';
+  };
+
   const checked = () => {
     if (rest.checked) return rest.checked;
-    if (local.boolean) return local?.formHandler?.getFieldValue?.(rest.name);
-    return local?.formHandler?.getFieldValue?.(rest.name) == rest.value;
+    if (local.value === undefined)
+      return local?.formHandler?.getFieldValue?.(rest.name);
+    return local?.formHandler?.getFieldValue?.(rest.name) == local.value;
   };
 
   createEffect(() => setId(rest.id || rest.name));
@@ -80,6 +88,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
           }}
           checked={checked()}
           onChange={onChange}
+          value={local.value}
         />
         {local.label && (
           <label for={id()} class="form-check-label">

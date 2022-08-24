@@ -4,7 +4,8 @@ export const resizeObserver = (element?: HTMLElement) => {
   const api = {
     observe: <T extends keyof ResizeObserverEntry>(
       prop: keyof ResizeObserverEntry,
-      callback: (value: ResizeObserverEntry[T]) => void
+      callback: (value: ResizeObserverEntry[T]) => void,
+      options?: ResizeObserverOptions
     ) => {
       observer = new ResizeObserver((entries) => {
         for (const entry of entries) {
@@ -15,7 +16,7 @@ export const resizeObserver = (element?: HTMLElement) => {
         }
       });
 
-      element && observer.observe(element);
+      element && observer.observe(element, options);
       return api;
     },
     unobserve: () => {

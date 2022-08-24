@@ -29,5 +29,7 @@
   position: sticky;
   top: 56px;
   overflow: auto;
-  height: calc(100vh - 136px);
+  height: calc(100vh - 56px);
+  padding-left: 20px;
+  margin-left: -20px;
 }

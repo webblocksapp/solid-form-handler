@@ -17,16 +17,24 @@ export const Components: Component = () => (
     </p>
     <ul>
       <li>
-        <NavLink href="/docs/text-input">TextInput</NavLink>
+        <NavLink noScroll href="/docs/text-input">
+          TextInput
+        </NavLink>
       </li>
       <li>
-        <NavLink href="/docs/select">Select</NavLink>
+        <NavLink noScroll href="/docs/select">
+          Select
+        </NavLink>
       </li>
       <li>
-        <NavLink href="/docs/checkboxes">Checkboxes</NavLink>
+        <NavLink noScroll href="/docs/checkboxes">
+          Checkboxes
+        </NavLink>
       </li>
       <li>
-        <NavLink href="/docs/radios">Radios</NavLink>
+        <NavLink noScroll href="/docs/radios">
+          Radios
+        </NavLink>
       </li>
     </ul>
   </DocsContentLayout>

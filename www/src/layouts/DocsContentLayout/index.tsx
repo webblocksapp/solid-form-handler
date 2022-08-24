@@ -18,7 +18,7 @@ export const DocsContentLayout: Component<DocsContentLayoutProps> = (props) => {
         {props.prev && (
           <button
             class="btn bg-primary text-white"
-            onClick={() => navigate(props.prev as string)}
+            onClick={() => navigate(props.prev as string, { scroll: false })}
           >
             <i class="bi bi-chevron-left"></i> Back
           </button>
@@ -27,7 +27,7 @@ export const DocsContentLayout: Component<DocsContentLayoutProps> = (props) => {
         {props.next && (
           <button
             class="btn bg-primary text-white ms-3"
-            onClick={() => navigate(props.next as string)}
+            onClick={() => navigate(props.next as string, { scroll: false })}
           >
             Next <i class="bi bi-chevron-right"></i>
           </button>

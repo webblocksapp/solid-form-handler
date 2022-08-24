@@ -1,8 +1,7 @@
-import { Component, createSignal, onMount, onCleanup } from 'solid-js';
-import { Outlet, useRouteData } from '@solidjs/router';
+import { Component, createEffect } from 'solid-js';
+import { Outlet, useRouteData, useLocation } from '@solidjs/router';
 import { Sidebar, TreeMenu } from '@components';
-import { TreeMenu as TreeMenuType, ResizeObserver } from '@interfaces';
-import { resizeObserver } from '@utils';
+import { TreeMenu as TreeMenuType } from '@interfaces';
 import './index.css';
 
 export interface DocsLayoutProps {
@@ -10,23 +9,15 @@ export interface DocsLayoutProps {
   menu?: TreeMenuType[];
 }
 
+const DOCS_SCROLL_TOP_OFFSET = 80;
+
 export const DocsLayout: Component<DocsLayoutProps> = (props) => {
   const { headerText, menu } = useRouteData<DocsLayoutProps>();
-  const [scrollTopOffset, setScrollTopOffset] = createSignal<number>();
-  let contentRef: HTMLDivElement | undefined;
-  let contentResizeObserver: ResizeObserver | undefined;
+  const location = useLocation();
 
-  onMount(() => {
-    contentResizeObserver = resizeObserver(contentRef).observe('target', () => {
-      setScrollTopOffset(
-        contentRef && contentRef.getBoundingClientRect().y + window.scrollY - 56
-      );
-    });
-  });
-
-  onCleanup(() => {
-    contentResizeObserver?.unobserve();
-  });
+  createEffect(
+    () => location.pathname && window.scrollTo({ top: DOCS_SCROLL_TOP_OFFSET })
+  );
 
   return (
     <div class="docs-layout container-fluid px-0">
@@ -41,10 +32,10 @@ export const DocsLayout: Component<DocsLayoutProps> = (props) => {
         <div class="container-lg">
           <div>
             <Sidebar classList={{ offset: true }}>
-              <TreeMenu menu={menu} scrollTopOffset={scrollTopOffset()} />
+              <TreeMenu menu={menu} noScroll={true} />
             </Sidebar>
           </div>
-          <div ref={contentRef} class="bg-white p-4 ps-5 pt-5">
+          <div class="bg-white p-4 ps-5 pt-5">
             <Outlet />
           </div>
         </div>

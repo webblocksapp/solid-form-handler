@@ -29,7 +29,10 @@ export const Checkbox: Component = () => (
       be treated as a <code>boolean</code> or a <code>string | number</code>{' '}
       primitive, for this reason, was added the <code>boolean</code> prop in
       case we need the desired type of value. The <code>boolean</code> prop will
-      make more sense at the <Link href="/docs/checkboxes">Checkboxes</Link>{' '}
+      make more sense at the{' '}
+      <Link noScroll href="/docs/checkboxes">
+        Checkboxes
+      </Link>{' '}
       component.
     </p>
     <p>

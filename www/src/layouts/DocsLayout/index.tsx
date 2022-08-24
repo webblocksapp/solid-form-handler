@@ -1,4 +1,4 @@
-import { Component, createEffect } from 'solid-js';
+import { Component, createRenderEffect } from 'solid-js';
 import { Outlet, useRouteData, useLocation } from '@solidjs/router';
 import { Sidebar, TreeMenu } from '@components';
 import { TreeMenu as TreeMenuType } from '@interfaces';
@@ -15,7 +15,7 @@ export const DocsLayout: Component<DocsLayoutProps> = (props) => {
   const { headerText, menu } = useRouteData<DocsLayoutProps>();
   const location = useLocation();
 
-  createEffect(
+  createRenderEffect(
     () => location.pathname && window.scrollTo({ top: DOCS_SCROLL_TOP_OFFSET })
   );
 

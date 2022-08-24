@@ -1,5 +1,14 @@
-import { Component, JSX, For, splitProps } from 'solid-js';
+import {
+  Component,
+  JSX,
+  For,
+  splitProps,
+  createSignal,
+  createEffect,
+} from 'solid-js';
 import { FormHandler } from 'solid-form-handler';
+
+type SelectableOption = { value: string | number; label: string };
 
 export interface SelectProps
   extends JSX.SelectHTMLAttributes<HTMLSelectElement> {
@@ -7,10 +16,12 @@ export interface SelectProps
   errorMessage?: string;
   formHandler?: FormHandler;
   label?: string;
-  options?: { value: string | number; label: string }[];
+  placeholder?: string;
+  options?: SelectableOption[];
 }
 
 export const Select: Component<SelectProps> = (props) => {
+  const [options, setOptions] = createSignal<SelectableOption[]>([]);
   const [local, rest] = splitProps(props, [
     'error',
     'errorMessage',
@@ -40,6 +51,13 @@ export const Select: Component<SelectProps> = (props) => {
     }
   };
 
+  createEffect(() => {
+    setOptions(() => [
+      ...(props.placeholder ? [{ value: '', label: props.placeholder }] : []),
+      ...(props.options || []),
+    ]);
+  });
+
   return (
     <>
       {local.label && <label class="form-label">{local.label}</label>}
@@ -55,7 +73,7 @@ export const Select: Component<SelectProps> = (props) => {
         onInput={onInput}
         onBlur={onBlur}
       >
-        <For each={local.options}>
+        <For each={options()}>
           {(option) => (
             <option
               value={option.value}

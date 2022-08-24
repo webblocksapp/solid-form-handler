@@ -1,6 +1,7 @@
 import { Component } from 'solid-js';
 import { useFormHandler } from 'solid-form-handler';
 import { userSchema } from './schema';
+import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 
 export const UserForm: Component = () => {
   const formHandler = useFormHandler(userSchema);
@@ -18,7 +19,14 @@ export const UserForm: Component = () => {
   };
 
   const fill = () => {
-    formHandler.fillForm({ name: 'John', email: 'john@mail.com' });
+    formHandler.fillForm({
+      name: 'John',
+      email: 'john@mail.com',
+      country: 2,
+      favoriteFoods: [3, 4],
+      gender: 'female',
+      subscribed: true,
+    });
   };
 
   const reset = () => {
@@ -29,44 +37,56 @@ export const UserForm: Component = () => {
     <>
       <form autocomplete="off" onSubmit={submit}>
         <div class="mb-3">
-          <label class="form-label">Name</label>
-          <input
-            class="form-control"
-            classList={{ 'is-invalid': formHandler.fieldHasError('name') }}
-            name="name"
-            value={formHandler.getFieldValue('name')}
-            onInput={({ currentTarget: { name, value } }) =>
-              formHandler.setFieldValue(name, value)
-            }
-            onBlur={({ currentTarget: { name, value } }) =>
-              formHandler.setFieldValue(name, value)
-            }
-          />
-          {formHandler.fieldHasError('name') && (
-            <div class="invalid-feedback">
-              {formHandler.getFieldError('name')}
-            </div>
-          )}
+          <TextInput label="Name" name="name" formHandler={formHandler} />
         </div>
         <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input
-            class="form-control"
-            classList={{ 'is-invalid': formHandler.fieldHasError('email') }}
-            name="email"
-            value={formHandler.getFieldValue('email')}
-            onInput={({ currentTarget: { name, value } }) =>
-              formHandler.setFieldValue(name, value)
-            }
-            onBlur={({ currentTarget: { name, value } }) =>
-              formHandler.setFieldValue(name, value)
-            }
+          <TextInput label="Email" name="email" formHandler={formHandler} />
+        </div>
+        <div class="mb-3">
+          <Select
+            label="Country"
+            name="country"
+            placeholder="Select a country"
+            options={[
+              { value: 1, label: 'France' },
+              { value: 2, label: 'Spain' },
+              { value: 3, label: 'Canada' },
+            ]}
+            formHandler={formHandler}
           />
-          {formHandler.fieldHasError('email') && (
-            <div class="invalid-feedback">
-              {formHandler.getFieldError('email')}
-            </div>
-          )}
+        </div>
+        <div class="mb-3">
+          <Checkboxes
+            label="Favorite foods"
+            name="favoriteFoods"
+            formHandler={formHandler}
+            options={[
+              { value: 1, label: 'Pizza' },
+              { value: 2, label: 'Hamburger' },
+              { value: 3, label: 'Spaghetti' },
+              { value: 4, label: 'Hot Dog' },
+            ]}
+          />
+        </div>
+        <div class="mb-3">
+          <Radios
+            label="Gender"
+            name="gender"
+            formHandler={formHandler}
+            options={[
+              { value: 'male', label: 'Male' },
+              { value: 'female', label: 'Female' },
+              { value: 'other', label: 'Other' },
+            ]}
+          />
+        </div>
+        <div class="mb-3">
+          <Checkbox
+            display="switch"
+            label="Subscribe to newsletter"
+            name="subscribed"
+            formHandler={formHandler}
+          />
         </div>
         <div class="mb-3 w-100">
           <button class="btn btn-primary me-2">Submit</button>

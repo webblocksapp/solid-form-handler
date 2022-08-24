@@ -44,8 +44,8 @@ export const Form: Component = () => {
         <Select
           label="Country"
           name="country"
+          placeholder="Select a country"
           options={[
-            { value: '', label: 'Select a country' },
             { value: 1, label: 'Colombia' },
             { value: 2, label: 'Argentina' },
             { value: 3, label: 'Venezuela' },
@@ -57,8 +57,8 @@ export const Form: Component = () => {
         <Select
           label="Animal"
           name="animal"
+          placeholder="Select an animal"
           options={[
-            { value: '', label: 'Select an animal' },
             { value: 1, label: 'Dog' },
             { value: 2, label: 'Cat' },
             { value: 3, label: 'Fish' },
@@ -70,8 +70,8 @@ export const Form: Component = () => {
         <Select
           label="Javascript Framework"
           name="jsFramework"
+          placeholder="Select a js framework"
           options={[
-            { value: '', label: 'Select a js framework' },
             { value: 'solidjs', label: 'SolidJS' },
             { value: 'angular', label: 'Angular' },
             { value: 'reactjs', label: 'ReactJS' },

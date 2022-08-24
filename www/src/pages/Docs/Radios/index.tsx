@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { RadiosCompForm } from '@implementations';
 
 export const Radios: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="../checkboxes" next="../form-validation">
     <h2 class="mb-4 border-bottom">Radios</h2>
     <p>
       You can take a look at the component definition <code>Radios.tsx</code>{' '}

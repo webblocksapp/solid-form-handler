@@ -24,7 +24,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
     if (typeof local.onInput === 'function') {
       local.onInput(event);
     } else {
-      local?.onInput?.[0](local?.onInput?.[1], event);
+      local.onInput?.[0](local.onInput?.[1], event);
     }
   };
 
@@ -34,7 +34,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
     if (typeof local.onBlur === 'function') {
       local.onBlur(event);
     } else {
-      local?.onBlur?.[0](local?.onBlur?.[1], event);
+      local.onBlur?.[0](local.onBlur?.[1], event);
     }
   };
 

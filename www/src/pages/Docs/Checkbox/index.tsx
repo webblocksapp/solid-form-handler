@@ -3,10 +3,9 @@ import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { getRaw } from '@utils';
 import { CheckboxCompForm } from '@implementations';
-import { Link } from '@solidjs/router';
 
 export const Checkbox: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="../select" next="../checkboxes">
     <h2 class="mb-4 border-bottom">Checkbox</h2>
     <p>
       You can take a look at the component definition <code>Checkbox.tsx</code>{' '}
@@ -27,13 +26,7 @@ export const Checkbox: Component = () => (
       implements the <code>formHandler</code> and also preserves the{' '}
       <code>onChange</code> prop execution when it's defined. Checkbox value can
       be treated as a <code>boolean</code> or a <code>string | number</code>{' '}
-      primitive, for this reason, was added the <code>boolean</code> prop in
-      case we need the desired type of value. The <code>boolean</code> prop will
-      make more sense at the{' '}
-      <Link noScroll href="/docs/checkboxes">
-        Checkboxes
-      </Link>{' '}
-      component.
+      primitive.
     </p>
     <p>
       As a result, we will have a shorter implementation at{' '}

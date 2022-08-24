@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { Component } from 'solid-js';
 
 export const ValidationSchema: Component = () => (
-  <DocsContentLayout prev="/docs/setup" next="/docs/form-validation">
+  <DocsContentLayout prev="../setup" next="../validations">
     <h2 class="mb-4 border-bottom">Validation Schema</h2>
     <p>
       To start using <b>solid-form-handler</b>, it's very important you are

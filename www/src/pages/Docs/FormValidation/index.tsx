@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { UserForm } from '@implementations';
 
 export const FormValidation: Component = () => (
-  <DocsContentLayout prev="/docs/validation-schema" next="/docs/dynamic-form">
+  <DocsContentLayout prev="../validation-schema" next="../dynamic-form">
     <h2 class="mb-4 border-bottom">Form Validation</h2>
     <p>
       Form validation will depend on how well you have defined the Yup schema.

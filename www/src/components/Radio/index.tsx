@@ -33,7 +33,7 @@ export const Radio: Component<RadioProps> = (props) => {
     if (typeof local.onChange === 'function') {
       local.onChange(event);
     } else {
-      local?.onChange?.[0](local?.onChange?.[1], event);
+      local.onChange?.[0](local.onChange?.[1], event);
     }
   };
 

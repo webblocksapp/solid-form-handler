@@ -24,7 +24,10 @@ export const TreeMenu: Component<TreeMenuProps> = (props) => {
                   href={item.route}
                   noScroll={props.noScroll}
                 >
-                  {item.text}
+                  {item.text}{' '}
+                  {item.section && (
+                    <i class="fa fa-link" aria-hidden="true"></i>
+                  )}
                 </NavLink>
               ) : (
                 <span

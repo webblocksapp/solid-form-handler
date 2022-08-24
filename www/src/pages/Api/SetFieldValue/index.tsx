@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const SetFieldValue: Component = () => (
-  <DocsContentLayout prev="/api/get-form-state" next="/api/is-field-invalid">
+  <DocsContentLayout prev="../get-form-state" next="../is-field-invalid">
     <h2 class="mb-4 border-bottom">setFieldValue</h2>
     <p>This method sets and validates the value of a form field.</p>
     <Code content={getRaw('setFieldValueApi')} />

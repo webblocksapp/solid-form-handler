@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const ValidateForm: Component = () => (
-  <DocsContentLayout prev="/api/validate-field" next="/api/add-fieldset">
+  <DocsContentLayout prev="../touch-field" next="../add-fieldset">
     <h2 class="mb-4 border-bottom">validateForm</h2>
     <p>This method validates all the form fields.</p>
     <Code content={getRaw('validateFormApi')} />

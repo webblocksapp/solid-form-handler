@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const IsFormInvalid: Component = () => (
-  <DocsContentLayout prev="/api/get-form-errors" next="/api/get-form-state">
+  <DocsContentLayout prev="../get-form-errors" next="../get-form-state">
     <h2 class="mb-4 border-bottom">isFormInvalid</h2>
     <p>
       This method retrieves a boolean flag. It’s true if the form contains

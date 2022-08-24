@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const GetFormState: Component = () => (
-  <DocsContentLayout prev="/api/is-form-invalid" next="/api/set-field-value">
+  <DocsContentLayout prev="../is-form-invalid" next="../set-field-value">
     <h2 class="mb-4 border-bottom">getFormState</h2>
     <p>
       This method returns an object which shows the user's interactions with the

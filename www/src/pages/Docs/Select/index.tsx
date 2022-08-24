@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { SelectCompForm } from '@implementations';
 
 export const Select: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="../text-input" next="../single-checkbox">
     <h2 class="mb-4 border-bottom">Select</h2>
     <p>
       You can take a look at the component definition <code>Select.tsx</code>{' '}

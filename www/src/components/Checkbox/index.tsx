@@ -40,7 +40,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     if (typeof local.onChange === 'function') {
       local.onChange(event);
     } else {
-      local?.onChange?.[0](local?.onChange?.[1], event);
+      local.onChange?.[0](local.onChange?.[1], event);
     }
   };
 
@@ -70,7 +70,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
         class="form-check"
         classList={{
           'is-invalid':
-            local?.error || local?.formHandler?.fieldHasError?.(rest.name),
+            local.error || local?.formHandler?.fieldHasError?.(rest.name),
           'form-switch': local.display === 'switch',
         }}
       >

@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { CheckboxesCompForm } from '@implementations';
 
 export const Checkboxes: Component = () => (
-  <DocsContentLayout>
+  <DocsContentLayout prev="../single-checkbox" next="../radios">
     <h2 class="mb-4 border-bottom">Checkboxes</h2>
     <p>
       You can take a look at the component definition{' '}

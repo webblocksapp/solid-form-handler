@@ -3,11 +3,12 @@ import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { getRaw } from '@utils';
 import { CheckboxesForm } from '@implementations';
+import { Link } from '@solidjs/router';
 
 export const ValidatingCheckboxes: Component = () => (
   <DocsContentLayout
-    prev="/docs/validating-single-checkbox"
-    next="/docs/validating-radios"
+    prev="../validating-single-checkbox"
+    next="../validating-radios"
   >
     <h2 class="mb-4 border-bottom">Validating Checkboxes</h2>
     <p>
@@ -20,6 +21,14 @@ export const ValidatingCheckboxes: Component = () => (
       For filling the default field value, it's added the logic for mark as{' '}
       checked if the current checkbox value exists inside the form handler field
       value.
+    </p>
+    <p>
+      For doing checkboxes validation more legible, this logic can be abstracted
+      into a{' '}
+      <Link noScroll href="/docs/checkboxes">
+        Checkboxes.tsx
+      </Link>{' '}
+      component.
     </p>
     <Implementation code={getRaw('CheckboxesForm')}>
       <CheckboxesForm />

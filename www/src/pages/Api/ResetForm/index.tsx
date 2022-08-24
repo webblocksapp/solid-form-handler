@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const ResetForm: Component = () => (
-  <DocsContentLayout prev="/api/fill-form" next="/api/form-data">
+  <DocsContentLayout prev="../fill-form" next="../form-data">
     <h2 class="mb-4 border-bottom">resetForm</h2>
     <p>
       This method resets the form to its initial state leaving empty the whole

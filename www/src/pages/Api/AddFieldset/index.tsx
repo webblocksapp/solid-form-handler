@@ -4,7 +4,7 @@ import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const AddFieldset: Component = () => (
-  <DocsContentLayout prev="/api/validate-form" next="/api/move-fieldset">
+  <DocsContentLayout prev="../validate-form" next="../move-fieldset">
     <h2 class="mb-4 border-bottom">addFieldset</h2>
     <p>
       Method for manipulating dynamic forms. It adds a subset of fields when the

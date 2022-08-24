@@ -7,15 +7,7 @@ export const DOCS_MENU: TreeMenu[] = [
     children: [
       { text: 'Introduction', route: 'introduction' },
       { text: 'Setup', route: 'setup' },
-    ],
-  },
-  {
-    text: 'Implementation',
-    section: true,
-    children: [
       { text: 'Validation Schema', route: 'validation-schema' },
-      { text: 'Form Validation', route: 'form-validation' },
-      { text: 'Dynamic Form', route: 'dynamic-form' },
     ],
   },
   {
@@ -40,6 +32,14 @@ export const DOCS_MENU: TreeMenu[] = [
       { text: 'Checkbox', route: 'single-checkbox' },
       { text: 'Checkboxes', route: 'checkboxes' },
       { text: 'Radios', route: 'radios' },
+    ],
+  },
+  {
+    text: 'Implementation',
+    section: true,
+    children: [
+      { text: 'Form Validation', route: 'form-validation' },
+      { text: 'Dynamic Form', route: 'dynamic-form' },
     ],
   },
 ];

@@ -23,7 +23,7 @@ export const Radios: Component<RadiosProps> = (props) => {
     if (typeof props.onChange === 'function') {
       props.onChange(event);
     } else {
-      props?.onChange?.[0](props?.onChange?.[1], event);
+      props.onChange?.[0](props.onChange?.[1], event);
     }
   };
 

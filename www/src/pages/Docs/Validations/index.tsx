@@ -3,10 +3,7 @@ import { Component } from 'solid-js';
 
 export const Validations: Component = () => {
   return (
-    <DocsContentLayout
-      prev="/docs/dynamic-form"
-      next="/docs/validating-text-input"
-    >
+    <DocsContentLayout prev="../dynamic-form" next="../validating-text-input">
       <h2 class="mb-4 border-bottom">Validations</h2>
       <p>
         Each HTML form component must be threatened in a different way to

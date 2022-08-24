@@ -3,7 +3,7 @@ import { SOLID_JS_URL, YUP_URL } from '@constants';
 import { DocsContentLayout } from '@layouts';
 
 export const Introduction: Component = () => (
-  <DocsContentLayout next="/docs/setup">
+  <DocsContentLayout next="../setup">
     <h2 class="mb-4 border-bottom">Introduction</h2>
     <p>
       <b>solid-form-handler</b> is a lightweight library that uses the built-in

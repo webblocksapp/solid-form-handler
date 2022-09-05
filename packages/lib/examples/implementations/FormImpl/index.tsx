@@ -1,6 +1,7 @@
 import { useFormHandler } from '@hooks';
 import { FormErrorsException } from '@utils';
 import { Component, createSignal } from 'solid-js';
+import { yupSchema } from '@utils';
 import * as yup from 'yup';
 
 type Schema = {
@@ -14,7 +15,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
 });
 
 export const FormImpl: Component = () => {
-  const formHandler = useFormHandler(schema);
+  const formHandler = useFormHandler(yupSchema(schema));
   const [error, setError] = createSignal('');
   const { formData } = formHandler;
 

@@ -1,16 +1,15 @@
-import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationResult } from '@interfaces';
-import { FormErrorsException, flattenObject, get, formatObjectPath, buildDefault, reorderArray, set } from '@utils';
+import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema } from '@interfaces';
+import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationResult } from '@utils';
 import { createStore } from 'solid-js/store';
-import { SchemaOf, ValidationError, reach } from 'yup';
 
 /**
  * Creates a reactive formHandler object that simplifies forms manipulation.
- * It uses as parameter a yup schema.
+ * It uses as parameter a validation schema.
  */
-export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
-  const [formData, setFormData] = createStore<{ data: T }>({ data: buildDefault(yupSchema) as T });
+export const useFormHandler = <T>(validationSchema: ValidationSchema<T>) => {
+  const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
-    data: buildDefault(yupSchema),
+    data: validationSchema.buildDefault(),
   });
 
   /**
@@ -67,22 +66,22 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Validates a single field of the form.
    */
   const validateField = async (path: string = '') => {
-    if (!isFieldFromSchema(path)) return;
+    if (!validationSchema.isFieldFromSchema(path)) return;
 
     try {
-      await yupSchema.validateAt(path, formData.data);
+      await validationSchema.validateAt(path, formData.data);
       setFieldState(path, (fieldState: FieldState) => ({
         ...fieldState,
         isInvalid: false,
         errorMessage: '',
       }));
     } catch (error) {
-      if (error instanceof ValidationError) {
-        const message = error.message;
+      if (error instanceof ValidationResult) {
+        const errorMessage = error.errorMessage;
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
           isInvalid: true,
-          errorMessage: message,
+          errorMessage,
         }));
       } else {
         console.error(error);
@@ -261,21 +260,6 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
   };
 
   /**
-   * Checks if the field is part of the given yup schema.
-   * Fields that are not part of the schema are considered as metadata
-   * and doesn't require validation. e.g. id, timestamp, foreignId, etc...
-   */
-  const isFieldFromSchema = (path: string) => {
-    let isFromSchema = true;
-    try {
-      reach(yupSchema, path);
-    } catch (_) {
-      isFromSchema = false;
-    }
-    return isFromSchema;
-  };
-
-  /**
    * Parses the value according to the scenario
    */
   const parseValue = (value: any) => {
@@ -379,7 +363,7 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    * Resets the form data
    */
   const resetForm = () => {
-    setFormData('data', buildDefault(yupSchema) as T);
+    setFormData('data', validationSchema.buildDefault());
     generateFormState({ reset: true });
   };
 
@@ -389,7 +373,9 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
    */
   const addFieldset = <K>(options?: { data?: Partial<K>; basePath?: string }) => {
     const builtPath = options?.basePath || String(get<Flatten<T>[]>(formData, 'data').length);
-    let defaultData = Array.isArray(buildDefault(yupSchema)) ? buildDefault(yupSchema)[0] : buildDefault(yupSchema);
+    let defaultData = Array.isArray(validationSchema.buildDefault())
+      ? validationSchema.buildDefault()[0]
+      : validationSchema.buildDefault();
     defaultData = options?.data || defaultData;
     setFieldData(builtPath, parseValue(defaultData));
     addFieldsetState(builtPath, defaultData, options?.data ? true : false);
@@ -481,7 +467,6 @@ export const useFormHandler = <T>(yupSchema: SchemaOf<T>) => {
       findErrorMessages,
       generateFormState,
       getFieldState,
-      isFieldFromSchema,
       moveFieldsetState,
       parseValue,
       removeFieldsetState,

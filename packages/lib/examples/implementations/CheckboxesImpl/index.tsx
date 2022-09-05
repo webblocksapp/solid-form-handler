@@ -1,5 +1,6 @@
 import { Component, For } from 'solid-js';
 import { useFormHandler } from '@hooks';
+import { yupSchema } from '@utils';
 import * as yup from 'yup';
 
 type SelectableOption = {
@@ -24,14 +25,16 @@ const favoriteFoods: SelectableOption[] = [
 ];
 
 export const CheckboxesImpl: Component = () => {
-  const formHandler = useFormHandler<CheckboxesSchema>(checkboxesSchema);
+  const formHandler = useFormHandler<CheckboxesSchema>(yupSchema(checkboxesSchema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
     event.preventDefault();
-    if (await formHandler.validateForm()) {
+    try {
       alert('Data sent with success: ' + JSON.stringify(formData()));
       formHandler.resetForm();
+    } catch (error) {
+      console.error(error);
     }
   };
 

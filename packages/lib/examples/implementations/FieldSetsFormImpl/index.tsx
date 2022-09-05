@@ -1,5 +1,6 @@
 import { useFormHandler } from '@hooks';
 import { Component, onMount, For } from 'solid-js';
+import { yupSchema } from '@utils';
 import * as yup from 'yup';
 
 type Schema = {
@@ -15,7 +16,7 @@ const schema: yup.SchemaOf<Schema[]> = yup.array().of(
 );
 
 export const FieldsetsFormImpl: Component = () => {
-  const formHandler = useFormHandler<Schema[]>(schema);
+  const formHandler = useFormHandler<Schema[]>(yupSchema(schema));
   const { formData } = formHandler;
 
   const onInput = (event: Event) => {

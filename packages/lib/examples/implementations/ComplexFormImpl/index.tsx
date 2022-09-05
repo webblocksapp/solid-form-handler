@@ -1,5 +1,5 @@
 import { useFormHandler } from '@hooks';
-import { FormErrorsException } from '@utils';
+import { yupSchema, FormErrorsException } from '@utils';
 import { Component, createSignal } from 'solid-js';
 import * as yup from 'yup';
 
@@ -11,7 +11,7 @@ type Schema = {
     phone: string;
   };
   hasHouse: boolean;
-  houseAddress?: string;
+  houseAddress: string | undefined;
 };
 
 const schema: yup.SchemaOf<Schema> = yup.object({
@@ -30,7 +30,7 @@ const schema: yup.SchemaOf<Schema> = yup.object({
 });
 
 export const ComplexFormImpl: Component = () => {
-  const formHandler = useFormHandler<Schema>(schema);
+  const formHandler = useFormHandler<Schema>(yupSchema(schema));
   const [error, setError] = createSignal('');
   const { formData } = formHandler;
 

@@ -1,5 +1,6 @@
 import { Component } from 'solid-js';
 import { useFormHandler } from '@hooks';
+import { yupSchema } from '@utils';
 import * as yup from 'yup';
 
 type Schema = {
@@ -11,7 +12,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
 });
 
 export const TextInputImpl: Component = () => {
-  const formHandler = useFormHandler(schema);
+  const formHandler = useFormHandler(yupSchema(schema));
 
   return (
     <>

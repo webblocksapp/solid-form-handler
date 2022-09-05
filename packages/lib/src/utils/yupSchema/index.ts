@@ -37,6 +37,9 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
     }
   };
 
+  /**
+   * Builds a default object from a yup schema
+   */
   const buildDefault = (_schema: yup.AnySchema = schema, path?: string, object?: any): T => {
     let obj = object;
     path = path ? `${path}.` : '';

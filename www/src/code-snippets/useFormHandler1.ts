@@ -1,4 +1,4 @@
 //@ts-nocheck
-import { useFormHandler } from 'solid-form-handler';
+import { useFormHandler, yupSchema } from 'solid-form-handler';
 
-const formHandler = useFormHandler(userSchema);
+const formHandler = useFormHandler(yupSchema(userSchema));

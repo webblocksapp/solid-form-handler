@@ -1,10 +1,10 @@
 import { Component } from 'solid-js';
-import { useFormHandler } from 'solid-form-handler';
+import { useFormHandler, yupSchema } from 'solid-form-handler';
 import { userSchema } from './schema';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 
 export const UserForm: Component = () => {
-  const formHandler = useFormHandler(userSchema);
+  const formHandler = useFormHandler(yupSchema(userSchema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

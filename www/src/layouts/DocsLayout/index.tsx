@@ -31,7 +31,7 @@ export const DocsLayout: Component<DocsLayoutProps> = (props) => {
       <div class="main">
         <div class="container-lg">
           <div>
-            <Sidebar classList={{ offset: true }}>
+            <Sidebar>
               <TreeMenu menu={menu} noScroll={true} />
             </Sidebar>
           </div>

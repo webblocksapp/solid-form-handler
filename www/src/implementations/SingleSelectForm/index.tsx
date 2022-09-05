@@ -1,5 +1,5 @@
 import { Component, For } from 'solid-js';
-import { useFormHandler } from 'solid-form-handler';
+import { useFormHandler, yupSchema } from 'solid-form-handler';
 import * as yup from 'yup';
 
 type Schema = {
@@ -18,7 +18,7 @@ const countries = [
 ];
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler(schema);
+  const formHandler = useFormHandler(yupSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

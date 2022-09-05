@@ -8,7 +8,7 @@ export const UseFormHandler: Component = () => (
     <h2 class="mb-4 border-bottom">useFormHandler</h2>
     <p>
       <code>useFormHandler</code> is a custom hook for managing forms with ease.
-      It takes as required argument a Yup object schema validator.
+      It takes as required argument a validation schema.
     </p>
     <Code content={getRaw('useFormHandlerApi')} />
     <p>

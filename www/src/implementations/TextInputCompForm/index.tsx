@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { useFormHandler } from 'solid-form-handler';
+import { useFormHandler, yupSchema } from 'solid-form-handler';
 import * as yup from 'yup';
 import { TextInput } from '@components';
 
@@ -18,7 +18,7 @@ const schema: yup.SchemaOf<Schema> = yup.object({
 });
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler(schema);
+  const formHandler = useFormHandler(yupSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

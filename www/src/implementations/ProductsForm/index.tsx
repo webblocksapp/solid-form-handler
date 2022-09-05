@@ -1,10 +1,10 @@
 import { Component, For } from 'solid-js';
-import { useFormHandler } from 'solid-form-handler';
+import { useFormHandler, yupSchema } from 'solid-form-handler';
 import { Product } from './types';
 import { productSchema } from './schema';
 
 export const ProductsForm: Component = () => {
-  const formHandler = useFormHandler<Product[]>(productSchema);
+  const formHandler = useFormHandler<Product[]>(yupSchema(productSchema));
   const { formData } = formHandler;
   const limit = 3;
 

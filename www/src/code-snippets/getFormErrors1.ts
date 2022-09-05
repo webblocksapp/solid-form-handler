@@ -1,5 +1,5 @@
 //@ts-nocheck
-const formHandler = useFormHandler(userSchema);
+const formHandler = useFormHandler(yupSchema(userSchema));
 await formHandler.validateForm();
 console.log(formHandler.getFormErrors());
 /**

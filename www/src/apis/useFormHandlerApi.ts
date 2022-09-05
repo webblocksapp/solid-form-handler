@@ -1,2 +1,2 @@
 //@ts-nocheck
-function useFormHandler<T>(yupSchema: SchemaOf<T, never>): FormHandler;
+function useFormHandler<T>(validationSchema: ValidationSchema<T>): FormHandler;

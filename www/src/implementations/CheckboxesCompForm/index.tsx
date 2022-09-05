@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { useFormHandler } from 'solid-form-handler';
+import { useFormHandler, yupSchema } from 'solid-form-handler';
 import * as yup from 'yup';
 import { Checkboxes } from '@components';
 
@@ -16,7 +16,7 @@ const schema: yup.SchemaOf<Schema> = yup.object({
 });
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler<Schema>(schema);
+  const formHandler = useFormHandler<Schema>(yupSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

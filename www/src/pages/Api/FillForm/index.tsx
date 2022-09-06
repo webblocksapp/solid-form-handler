@@ -14,11 +14,9 @@ export const FillForm: Component = () => (
     <p>Having the following schema:</p>
     <Code content={getRaw('schema1')} />
     <p>
-      The form has the fields <code>name</code> and <code>age</code>. It can be
+      The form has the fields <code>name</code> and <code>age</code>, must be
       filled completely:
     </p>
     <Code content={getRaw('fillForm1')} />
-    <p>Or partially:</p>
-    <Code content={getRaw('fillForm2')} />
   </DocsContentLayout>
 );

@@ -2,6 +2,7 @@ import { Component, For } from 'solid-js';
 import { useFormHandler, yupSchema } from 'solid-form-handler';
 import { Product } from './types';
 import { productSchema } from './schema';
+import { TextInput } from '@components';
 
 export const ProductsForm: Component = () => {
   const formHandler = useFormHandler<Product[]>(yupSchema(productSchema));
@@ -41,49 +42,19 @@ export const ProductsForm: Component = () => {
             <fieldset class="border p-2 m-3">
               <legend>Product {i() + 1}</legend>
               <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input
-                  class="form-control"
-                  classList={{
-                    'is-invalid': formHandler.fieldHasError(`${i()}.name`),
-                  }}
+                <TextInput
+                  label="Name"
                   name={`${i()}.name`}
-                  value={formHandler.getFieldValue(`${i()}.name`)}
-                  onInput={({ currentTarget: { name, value } }) =>
-                    formHandler.setFieldValue(name, value)
-                  }
-                  onBlur={({ currentTarget: { name, value } }) =>
-                    formHandler.setFieldValue(name, value)
-                  }
+                  formHandler={formHandler}
                 />
-                {formHandler.fieldHasError(`${i()}.name`) && (
-                  <div class="invalid-feedback">
-                    {formHandler.getFieldError(`${i()}.name`)}
-                  </div>
-                )}
               </div>
               <div class="mb-3">
-                <label class="form-label">Quantity</label>
-                <input
-                  class="form-control"
-                  classList={{
-                    'is-invalid': formHandler.fieldHasError(`${i()}.quantity`),
-                  }}
-                  type="number"
+                <TextInput
+                  label="Quantity"
                   name={`${i()}.quantity`}
-                  value={formHandler.getFieldValue(`${i()}.quantity`)}
-                  onInput={({ currentTarget: { name, value } }) =>
-                    formHandler.setFieldValue(name, value)
-                  }
-                  onBlur={({ currentTarget: { name, value } }) =>
-                    formHandler.setFieldValue(name, value)
-                  }
+                  type="number"
+                  formHandler={formHandler}
                 />
-                {formHandler.fieldHasError(`${i()}.quantity`) && (
-                  <div class="invalid-feedback">
-                    {formHandler.getFieldError(`${i()}.quantity`)}
-                  </div>
-                )}
               </div>
               {formData().length > 1 && (
                 <button

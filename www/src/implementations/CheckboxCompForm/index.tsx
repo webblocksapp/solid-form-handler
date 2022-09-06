@@ -46,6 +46,7 @@ export const Form: Component = () => {
     formHandler.fillForm({
       acceptPolicy: true,
       acceptTerms: false,
+      accountStatus: 'active',
     });
   };
 

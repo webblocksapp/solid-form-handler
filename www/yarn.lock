@@ -1281,6 +1281,11 @@
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
 
+"@types/sortablejs@^1.13.0":
+  version "1.13.0"
+  resolved "https://blackboard.jfrog.io/artifactory/api/npm/fnds-npm/@types/sortablejs/-/sortablejs-1.13.0.tgz#870223438f8f2cd81157b128a4c0261adbcaa946"
+  integrity sha512-C3064MH72iEfeGCYEGCt7FCxXoAXaMPG0QPnstcxvPmbl54erpISu06d++FY37Smja64iWy5L8wOyHHBghWbJQ==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz"
@@ -3698,6 +3703,11 @@ solid-refresh@^0.4.0:
     "@babel/generator" "^7.18.2"
     "@babel/helper-module-imports" "^7.16.7"
     "@babel/types" "^7.18.4"
+
+sortablejs@^1.15.0:
+  version "1.15.0"
+  resolved "https://blackboard.jfrog.io/artifactory/api/npm/fnds-npm/sortablejs/-/sortablejs-1.15.0.tgz#53230b8aa3502bb77a29e2005808ffdb4a5f7e2a"
+  integrity sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w==
 
 source-map-js@^1.0.2:
   version "1.0.2"

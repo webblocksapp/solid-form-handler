@@ -39,32 +39,53 @@ export const ProductsForm: Component = () => {
         </h3>
         <For each={formData()}>
           {(_, i) => (
-            <fieldset class="border p-2 m-3">
-              <legend>Product {i() + 1}</legend>
-              <div class="mb-3">
-                <TextInput
-                  label="Name"
-                  name={`${i()}.name`}
-                  formHandler={formHandler}
-                />
-              </div>
-              <div class="mb-3">
-                <TextInput
-                  label="Quantity"
-                  name={`${i()}.quantity`}
-                  type="number"
-                  formHandler={formHandler}
-                />
-              </div>
+            <fieldset class="border m-3">
               {formData().length > 1 && (
-                <button
-                  class="btn btn-danger"
-                  type="button"
-                  onClick={() => formHandler.removeFieldset(i())}
-                >
-                  Remove
-                </button>
+                <div class="bg-primary p-2 text-white d-flex justify-content-end">
+                  {i() < formData().length - 1 && (
+                    <i
+                      style="cursor: pointer"
+                      class="fa fa-chevron-down"
+                      aria-hidden="true"
+                      onClick={() => formHandler.moveFieldset(i(), i() + 1)}
+                    ></i>
+                  )}
+                  {i() > 0 && (
+                    <i
+                      style="cursor: pointer"
+                      class="fa fa-chevron-up"
+                      aria-hidden="true"
+                      onClick={() => formHandler.moveFieldset(i(), i() - 1)}
+                    ></i>
+                  )}
+                </div>
               )}
+              <div class="p-2">
+                <div class="mb-3">
+                  <TextInput
+                    label="Name"
+                    name={`${i()}.name`}
+                    formHandler={formHandler}
+                  />
+                </div>
+                <div class="mb-3">
+                  <TextInput
+                    label="Quantity"
+                    name={`${i()}.quantity`}
+                    type="number"
+                    formHandler={formHandler}
+                  />
+                </div>
+                {formData().length > 1 && (
+                  <button
+                    class="btn btn-danger"
+                    type="button"
+                    onClick={() => formHandler.removeFieldset(i())}
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
             </fieldset>
           )}
         </For>

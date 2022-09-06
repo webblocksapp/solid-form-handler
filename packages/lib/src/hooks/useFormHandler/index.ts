@@ -6,7 +6,7 @@ import { createStore } from 'solid-js/store';
  * Creates a reactive formHandler object that simplifies forms manipulation.
  * It uses as parameter a validation schema.
  */
-export const useFormHandler = <T>(validationSchema: ValidationSchema<T>) => {
+export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) => {
   const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
     data: validationSchema.buildDefault(),
@@ -282,11 +282,11 @@ export const useFormHandler = <T>(validationSchema: ValidationSchema<T>) => {
   /**
    * Fills the state of the form.
    */
-  const fillForm = async (data: Partial<T>): Promise<void> => {
+  const fillForm = async (data: T): Promise<void> => {
     return new Promise((resolve) => {
       setTimeout(async () => {
         if (data === undefined) return;
-        setFormData('data', data as T);
+        setFormData('data', data);
         await generateFormState({ validateFields: data ? true : false });
         resolve(undefined);
       });

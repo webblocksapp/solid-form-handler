@@ -60,7 +60,7 @@ describe('useFormHandler', () => {
 
   it("Form doesn't have changes", async () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
-    await formHandler.fillForm({ name: 'George' });
+    await formHandler.fillForm({ name: 'George', age: 19 });
     await formHandler.setFieldValue('name', 'George');
     expect(formHandler.formHasChanges()).toBe(false);
   });

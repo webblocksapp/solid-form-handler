@@ -10,3 +10,4 @@ export { Form as SelectCompForm } from './SelectCompForm';
 export { Form as RadiosCompForm } from './RadiosCompForm';
 export { Form as CheckboxesCompForm } from './CheckboxesCompForm';
 export * from './UserForm';
+export * from './PersonForm';

@@ -40,6 +40,7 @@ export const DOCS_MENU: TreeMenu[] = [
     children: [
       { text: 'Form Validation', route: 'form-validation' },
       { text: 'Dynamic Form', route: 'dynamic-form' },
+      { text: 'Nested Form Validation', route: 'nested-form-validation' },
     ],
   },
 ];

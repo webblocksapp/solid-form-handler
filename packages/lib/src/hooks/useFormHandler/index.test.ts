@@ -1,6 +1,6 @@
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
-import { personSchema, contactSchema, personsSchema, Person } from './mocks';
+import { personSchema, contactSchema, personsSchema, Person, referralsSchema } from './mocks';
 
 describe('useFormHandler', () => {
   it('formHandler object must be defined', () => {
@@ -158,12 +158,40 @@ describe('useFormHandler', () => {
     ]);
   });
 
+  it('Fieldsets multiple adds: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset();
+    formHandler.addFieldset();
+    formHandler.addFieldset();
+    expect(formHandler.formData()).toMatchObject([
+      { name: '', age: '' },
+      { name: '', age: '' },
+      { name: '', age: '' },
+      { name: '', age: '' },
+    ]);
+  });
+
   it('Fieldsets add with data: form data matches the expected object', async () => {
     const formHandler = useFormHandler(yupSchema(personsSchema));
     formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
     expect(formHandler.formData()).toMatchObject([
       { name: '', age: '' },
       { name: 'John', age: 18 },
+    ]);
+  });
+
+  it('Fieldsets multiple adds with data: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Mary', age: 23 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Louis', age: 55 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Matt', age: 38 } });
+    expect(formHandler.formData()).toMatchObject([
+      { name: '', age: '' },
+      { name: 'John', age: 18 },
+      { name: 'Mary', age: 23 },
+      { name: 'Louis', age: 55 },
+      { name: 'Matt', age: 38 },
     ]);
   });
 
@@ -174,6 +202,21 @@ describe('useFormHandler', () => {
     expect(formHandler.formData()).toMatchObject([{ name: 'John', age: 18 }]);
   });
 
+  it('Fieldsets multiples remove: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Mary', age: 23 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Louis', age: 55 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Matt', age: 38 } });
+    formHandler.removeFieldset(0);
+    formHandler.removeFieldset(2);
+    expect(formHandler.formData()).toMatchObject([
+      { name: 'John', age: 18 },
+      { name: 'Mary', age: 23 },
+      { name: 'Matt', age: 38 },
+    ]);
+  });
+
   it('Fieldsets sort: form data matches the expected object', async () => {
     const formHandler = useFormHandler(yupSchema(personsSchema));
     formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
@@ -182,5 +225,71 @@ describe('useFormHandler', () => {
       { name: 'John', age: 18 },
       { name: '', age: '' },
     ]);
+  });
+
+  it('Fieldsets multiples sorts: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Mary', age: 23 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Louis', age: 55 } });
+    formHandler.addFieldset<Person>({ data: { name: 'Matt', age: 38 } });
+    formHandler.moveFieldset(1, 0);
+    formHandler.moveFieldset(4, 3);
+    formHandler.moveFieldset(2, 1);
+    expect(formHandler.formData()).toMatchObject([
+      { name: 'John', age: 18 },
+      { name: 'Mary', age: 23 },
+      { name: '', age: '' },
+      { name: 'Matt', age: 38 },
+      { name: 'Louis', age: 55 },
+    ]);
+  });
+
+  it('Nested fieldsets: default form data must be an array of 1 record', () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    expect(formHandler.formData().referrals).toMatchObject([{ name: '', age: '' }]);
+  });
+
+  it('Nested fieldsets add: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    formHandler.addFieldset({ basePath: 'referrals' });
+    expect(formHandler.formData()).toMatchObject({
+      referrals: [
+        { name: '', age: '' },
+        { name: '', age: '' },
+      ],
+    });
+  });
+
+  it('Nested fieldsets add with data: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    formHandler.addFieldset<Person>({ basePath: 'referrals', data: { name: 'John', age: 18 } });
+    expect(formHandler.formData()).toMatchObject({
+      referrals: [
+        { name: '', age: '' },
+        { name: 'John', age: 18 },
+      ],
+    });
+  });
+
+  it('Nested fieldsets remove: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    formHandler.addFieldset<Person>({ basePath: 'referrals', data: { name: 'John', age: 18 } });
+    formHandler.removeFieldset(0, 'referrals');
+    expect(formHandler.formData()).toMatchObject({
+      referrals: [{ name: 'John', age: 18 }],
+    });
+  });
+
+  it('Nested fieldsets sort: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    formHandler.addFieldset<Person>({ basePath: 'referrals', data: { name: 'John', age: 18 } });
+    formHandler.moveFieldset(1, 0, 'referrals');
+    expect(formHandler.formData()).toMatchObject({
+      referrals: [
+        { name: 'John', age: 18 },
+        { name: '', age: '' },
+      ],
+    });
   });
 });

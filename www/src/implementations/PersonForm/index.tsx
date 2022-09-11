@@ -6,7 +6,6 @@ import { TextInput } from '@components';
 
 export const PersonForm: Component = () => {
   const formHandler = useFormHandler<Person>(yupSchema(personSchema));
-
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

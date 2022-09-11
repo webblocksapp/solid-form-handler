@@ -6,6 +6,7 @@ import {
   Checkboxes,
   Components,
   DynamicForm,
+  DynamicNestedForm,
   FieldHasError,
   FillForm,
   FormData,
@@ -79,6 +80,10 @@ export const mainRoutes: RouteDefinition[] = [
           { path: 'form-validation', component: FormValidation },
           { path: 'dynamic-form', component: DynamicForm },
           { path: 'nested-form-validation', component: NestedFormValidation },
+          {
+            path: 'dynamic-nested-form',
+            component: DynamicNestedForm,
+          },
         ],
       },
       {

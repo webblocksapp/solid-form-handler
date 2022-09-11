@@ -2,6 +2,7 @@ export * from './Checkbox';
 export * from './Checkboxes';
 export * from './Components';
 export * from './DynamicForm';
+export * from './DynamicNestedForm';
 export * from './FormValidation';
 export * from './Introduction';
 export * from './NestedFormValidation';

@@ -1,6 +1,6 @@
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
-import { personSchema, contactSchema } from './mocks';
+import { personSchema, contactSchema, personsSchema, Person } from './mocks';
 
 describe('useFormHandler', () => {
   it('formHandler object must be defined', () => {
@@ -142,5 +142,45 @@ describe('useFormHandler', () => {
         },
       },
     });
+  });
+
+  it('Fieldsets: default form data must be an array of 1 record', () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    expect(formHandler.formData()).toMatchObject([{ name: '', age: '' }]);
+  });
+
+  it('Fieldsets add: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset();
+    expect(formHandler.formData()).toMatchObject([
+      { name: '', age: '' },
+      { name: '', age: '' },
+    ]);
+  });
+
+  it('Fieldsets add with data: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
+    expect(formHandler.formData()).toMatchObject([
+      { name: '', age: '' },
+      { name: 'John', age: 18 },
+    ]);
+  });
+
+  it('Fieldsets remove: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
+    formHandler.removeFieldset(0);
+    expect(formHandler.formData()).toMatchObject([{ name: 'John', age: 18 }]);
+  });
+
+  it('Fieldsets sort: form data matches the expected object', async () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset<Person>({ data: { name: 'John', age: 18 } });
+    formHandler.moveFieldset(1, 0);
+    expect(formHandler.formData()).toMatchObject([
+      { name: 'John', age: 18 },
+      { name: '', age: '' },
+    ]);
   });
 });

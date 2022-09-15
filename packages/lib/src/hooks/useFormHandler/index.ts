@@ -15,7 +15,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Sets the field value inside the form data store.
    */
-  const setFieldData = <T>(path: string = '', value: T) => {
+  const setFieldData = (path: string = '', value: any) => {
     path = path ? `data.${path}` : 'data';
     setFormData(...(formatObjectPath(path).split('.') as []), value);
   };
@@ -57,7 +57,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Sets the field state inside the formState store.
    */
-  const setFieldState = <T>(path: string = '', value: T) => {
+  const setFieldState = (path: string = '', value: any) => {
     path = path ? `data.${path}` : 'data';
     setFormState(...(formatObjectPath(path).split('.') as []), value);
   };

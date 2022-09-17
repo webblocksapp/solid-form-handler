@@ -19,11 +19,7 @@ export const ValidatingSelect: Component = () => (
     </p>
     <p>
       For doing select validation more legible, this logic can be abstracted
-      into a{' '}
-      <Link noScroll href="/docs/select">
-        Select.tsx
-      </Link>{' '}
-      component.
+      into a <Link href="/docs/select">Select.tsx</Link> component.
     </p>
     <Implementation code={getRaw('SingleSelectForm')}>
       <SingleSelectForm />

@@ -1,13 +1,17 @@
-import { Component } from 'solid-js';
+import { Component, For, JSX } from 'solid-js';
 import { NavLink } from '@solidjs/router';
+import { Menu } from '@interfaces';
 
-export const Navbar: Component = () => (
+export interface NavbarProps {
+  menu?: Menu[];
+  brand?: JSX.Element;
+}
+
+export const Navbar: Component<NavbarProps> = (props) => (
   <>
     <nav class="sticky-top navbar navbar-dark bg-dark navbar-expand-lg">
       <div class="container-md">
-        <NavLink class="navbar-brand" href="/">
-          solid-form-handler
-        </NavLink>
+        {props.brand}
         <button
           class="navbar-toggler"
           type="button"
@@ -24,26 +28,15 @@ export const Navbar: Component = () => (
             class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
             style="--bs-scroll-height: 100px;"
           >
-            <li class="nav-item">
-              <NavLink class="nav-link" aria-current="page" href="home">
-                Home
-              </NavLink>
-            </li>
-            <li class="nav-item">
-              <NavLink class="nav-link" href="docs/introduction">
-                Docs
-              </NavLink>
-            </li>
-            <li class="nav-item">
-              <NavLink class="nav-link" href="api/use-form-handler">
-                API
-              </NavLink>
-            </li>
-            <li class="nav-item">
-              <NavLink class="nav-link" href="examples/validating-text-input">
-                Examples
-              </NavLink>
-            </li>
+            <For each={props.menu}>
+              {(item) => (
+                <li class="nav-item">
+                  <NavLink class="nav-link" href={item.route as string}>
+                    {item.text}
+                  </NavLink>
+                </li>
+              )}
+            </For>
           </ul>
         </div>
       </div>

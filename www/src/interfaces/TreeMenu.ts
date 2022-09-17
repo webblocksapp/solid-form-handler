@@ -1,6 +1,6 @@
-export type TreeMenu = {
-  text: string;
-  route?: string;
+import { Menu } from '@interfaces';
+
+export type TreeMenu = Menu & {
   children?: TreeMenu[];
   section?: boolean;
 };

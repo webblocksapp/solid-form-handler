@@ -25,11 +25,7 @@ export const ValidatingTextInput: Component = () => (
     </p>
     <p>
       For doing text input validation more legible, this logic can be abstracted
-      into a{' '}
-      <Link noScroll href="/docs/text-input">
-        TextInput.tsx
-      </Link>{' '}
-      component.
+      into a <Link href="/docs/text-input">TextInput.tsx</Link> component.
     </p>
     <Implementation code={getRaw('SingleTextInputForm')}>
       <SingleTextInputForm />

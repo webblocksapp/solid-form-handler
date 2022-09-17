@@ -24,11 +24,7 @@ export const ValidatingCheckboxes: Component = () => (
     </p>
     <p>
       For doing checkboxes validation more legible, this logic can be abstracted
-      into a{' '}
-      <Link noScroll href="/docs/checkboxes">
-        Checkboxes.tsx
-      </Link>{' '}
-      component.
+      into a <Link href="/docs/checkboxes">Checkboxes.tsx</Link> component.
     </p>
     <Implementation code={getRaw('CheckboxesForm')}>
       <CheckboxesForm />

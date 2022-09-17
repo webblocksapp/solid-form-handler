@@ -21,11 +21,7 @@ export const ValidatingRadios: Component = () => (
     </p>
     <p>
       For doing radios validation more legible, this logic can be abstracted
-      into a{' '}
-      <Link noScroll href="/docs/radios">
-        Radios.tsx
-      </Link>{' '}
-      component.
+      into a <Link href="/docs/radios">Radios.tsx</Link> component.
     </p>
     <Implementation code={getRaw('RadiosForm')}>
       <RadiosForm />

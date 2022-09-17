@@ -24,29 +24,19 @@ export const Components: Component = () => (
     </p>
     <ul>
       <li>
-        <NavLink noScroll href="/docs/text-input">
-          TextInput
-        </NavLink>
+        <NavLink href="/docs/text-input">TextInput</NavLink>
       </li>
       <li>
-        <NavLink noScroll href="/docs/select">
-          Select
-        </NavLink>
+        <NavLink href="/docs/select">Select</NavLink>
       </li>
       <li>
-        <NavLink noScroll href="/docs/single-checkbox">
-          Checkbox
-        </NavLink>
+        <NavLink href="/docs/single-checkbox">Checkbox</NavLink>
       </li>
       <li>
-        <NavLink noScroll href="/docs/checkboxes">
-          Checkboxes
-        </NavLink>
+        <NavLink href="/docs/checkboxes">Checkboxes</NavLink>
       </li>
       <li>
-        <NavLink noScroll href="/docs/radios">
-          Radios
-        </NavLink>
+        <NavLink href="/docs/radios">Radios</NavLink>
       </li>
     </ul>
   </DocsContentLayout>

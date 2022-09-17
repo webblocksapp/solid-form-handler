@@ -1,6 +1,5 @@
 .docs-layout {
   display: grid;
-  grid-template-rows: 80px 1fr;
 }
 
 .docs-layout .main {

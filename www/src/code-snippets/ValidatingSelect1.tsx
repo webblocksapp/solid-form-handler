@@ -6,11 +6,12 @@ import { useFormHandler, yupSchema } from 'solid-form-handler';
 const formHandler = useFormHandler(yupSchema(schema));
 
 // ...
+
 <div>
-  <label>Email</label>
-  <input
-    name="email"
-    value={formHandler.getFieldValue('email')}
+  <label>Country</label>
+  <select
+    name="country"
+    value={formHandler.getFieldValue('country')}
     onInput={({ currentTarget: { name, value } }) =>
       //Sets and validates the field value inside the form handler.
       formHandler.setFieldValue(name, value)
@@ -20,8 +21,12 @@ const formHandler = useFormHandler(yupSchema(schema));
       formHandler.validateField(name);
       formHandler.touchField(name);
     }}
-  />
-  {formHandler.fieldHasError('email') && (
-    <small>{formHandler.getFieldError('email')}</small>
+  >
+    <For each={countries}>
+      {(country) => <option value={country.value}>{country.label}</option>}
+    </For>
+  </select>
+  {formHandler.fieldHasError('country') && (
+    <small>{formHandler.getFieldError('country')}</small>
   )}
 </div>;

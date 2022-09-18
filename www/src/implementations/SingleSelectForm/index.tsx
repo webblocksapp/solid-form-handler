@@ -59,12 +59,7 @@ export const Form: Component = () => {
         >
           <For each={countries}>
             {(country) => (
-              <option
-                value={country.value}
-                selected={formHandler.getFieldValue('country') == country.value}
-              >
-                {country.label}
-              </option>
+              <option value={country.value}>{country.label}</option>
             )}
           </For>
         </select>

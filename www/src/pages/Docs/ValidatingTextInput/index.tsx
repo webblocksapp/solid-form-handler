@@ -19,14 +19,13 @@ export const ValidatingTextInput: Component = () => (
       inputting some data, the <code>onBlur</code> event is used to validate the
       field, and also mark it as touched.
     </p>
-    <Code content={getRaw('ValidatingTextInput1')} />
     <p>
-      For filling the default field value is used the <code>getFieldValue</code>{' '}
+      For controlling the field value is used the <code>getFieldValue</code>{' '}
       method, for displaying the error, are used the methods{' '}
       <code>fieldHasError</code> and <code>getFieldError</code>. All of them
       receive the field name as a parameter.
     </p>
-    <Code content={getRaw('ValidatingTextInput2')} />
+    <Code content={getRaw('ValidatingTextInput1')} />
     <p>
       You can check the full implementation in the code tab. For doing text
       input validation more legible, this logic can be abstracted into a{' '}

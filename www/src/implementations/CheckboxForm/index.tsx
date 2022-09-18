@@ -58,6 +58,10 @@ export const Form: Component = () => {
             onChange={({ currentTarget: { name, checked } }) => {
               formHandler.setFieldValue(name, checked);
             }}
+            onBlur={({ currentTarget: { name } }) => {
+              formHandler.validateField(name);
+              formHandler.touchField(name);
+            }}
           />
           <label for="acceptPolicy" class="form-check-label">
             Accept policy.

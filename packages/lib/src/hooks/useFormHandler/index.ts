@@ -287,7 +287,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       setTimeout(async () => {
         if (data === undefined) return;
         setFormData('data', data);
-        await generateFormState({ validateFields: data ? true : false });
+        await generateFormState({ validateFields: true });
         resolve(undefined);
       });
     });

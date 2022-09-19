@@ -11,7 +11,9 @@ import {
   NestedFieldsetsFormImpl,
   SortableFieldsetsFormImpl,
   StoreImpl,
+  CompFormImpl,
 } from '@implementations';
+import './App.css';
 
 export const App: Component = () => {
   return (
@@ -47,6 +49,9 @@ export const App: Component = () => {
         <div>
           <Link href="store-impl">store-impl</Link>
         </div>
+        <div>
+          <Link href="comp-form-impl">comp-form-impl</Link>
+        </div>
       </div>
       <Routes>
         <Route path="/checkbox-impl" element={<CheckboxImpl />} />
@@ -59,6 +64,7 @@ export const App: Component = () => {
         <Route path="/nested-fieldsets-form-impl" element={<NestedFieldsetsFormImpl />} />
         <Route path="/sortable-fieldsets-form-impl" element={<SortableFieldsetsFormImpl />} />
         <Route path="/store-impl" element={<StoreImpl />} />
+        <Route path="/comp-form-impl" element={<CompFormImpl />} />
       </Routes>
     </div>
   );

@@ -1,5 +1,6 @@
 import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema } from '@interfaces';
 import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationResult } from '@utils';
+import { createSignal } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 /**
@@ -11,6 +12,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
     data: validationSchema.buildDefault(),
   });
+  const [formWasReset, setFormWasReset] = createSignal<boolean>(false);
 
   /**
    * Sets the field value inside the form data store.
@@ -25,12 +27,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * updates the field state at formState store and
    * validates the field.
    */
-  const setFieldValue = async (
-    path: string = '',
-    value: any,
-    options: SetFieldValueOptions = { touch: true, dirty: true, validate: true }
-  ) => {
+  const setFieldValue = async (path: string = '', value: any, options?: SetFieldValueOptions) => {
     const fieldState = getFieldState(path);
+    options = { touch: true, dirty: true, validate: true, ...options };
 
     if (fieldState === undefined) return;
 
@@ -365,6 +364,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   const resetForm = () => {
     setFormData('data', validationSchema.buildDefault());
     generateFormState({ reset: true });
+    setFormWasReset(true);
+    setFormWasReset(false);
   };
 
   /**
@@ -450,6 +451,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     fillForm,
     fieldHasError,
     formHasChanges,
+    formWasReset,
     getFieldError,
     getFieldValue,
     formData: getFormData,

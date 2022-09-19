@@ -14,7 +14,8 @@
       "@interfaces": ["src/interfaces"],
       "@hooks": ["src/hooks"],
       "@utils": ["src/utils"],
-      "@implementations": ["examples/implementations"]
+      "@implementations": ["examples/implementations"],
+      "@components": ["examples/components"]
     },
     "types": ["vite/client", "node", "@types/jest"]
   }

@@ -1,5 +1,6 @@
 export * from './CheckboxImpl';
 export * from './CheckboxesImpl';
+export * from './CompFormImpl';
 export * from './ComplexFormImpl';
 export * from './FieldsetsFormImpl';
 export * from './FormImpl';

@@ -1,0 +1,7 @@
+.error {
+  border: 1px solid red;
+}
+
+.invalid-feedback {
+  color: red;
+}

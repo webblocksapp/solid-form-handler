@@ -1,4 +1,4 @@
-import { TextInput, Select } from '@components';
+import { TextInput, Select, Checkbox } from '@components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { Component } from 'solid-js';
@@ -8,12 +8,16 @@ type Schema = {
   name: string;
   age: number;
   country: number;
+  subscribed: boolean;
+  status: 'active' | 'inactive';
 };
 
 const schema: yup.SchemaOf<Schema> = yup.object().shape({
   name: yup.string().required(),
   age: yup.number().required(),
   country: yup.number().required(),
+  subscribed: yup.boolean().required().oneOf([true]),
+  status: yup.mixed().required().oneOf(['active', 'inactive']),
 });
 
 export const CompFormImpl: Component = () => {
@@ -54,6 +58,19 @@ export const CompFormImpl: Component = () => {
             { value: 3, label: 'Argentina' },
           ]}
           formHandler={formHandler}
+        />
+      </div>
+      <div>
+        <Checkbox label="Subscribed" name="subscribed" formHandler={formHandler} />
+      </div>
+      <div>
+        <Checkbox
+          label="Status"
+          name="status"
+          formHandler={formHandler}
+          value="active"
+          uncheckedValue={'inactive'}
+          defaultValue={'active'}
         />
       </div>
       <br />

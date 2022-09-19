@@ -46,7 +46,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   const onChange: CheckboxProps['onChange'] = (event) => {
     //Form handler prop sets and validate the value onInput.
-    local?.formHandler?.setFieldValue?.(rest.name, getValue(event.currentTarget.checked));
+    local.formHandler?.setFieldValue?.(rest.name, getValue(event.currentTarget.checked));
 
     //onInput prop is preserved
     if (typeof local.onChange === 'function') {
@@ -73,8 +73,8 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   const onBlur: CheckboxProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    local?.formHandler?.validateField?.(rest.name);
-    local?.formHandler?.touchField?.(rest.name);
+    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
     if (typeof local.onBlur === 'function') {
@@ -94,9 +94,9 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     if (typeof local.checked === 'boolean') {
       setStore('checked', local.checked);
     } else if (rest.value === undefined) {
-      setStore('checked', local?.formHandler?.getFieldValue?.(rest.name));
+      setStore('checked', local.formHandler?.getFieldValue?.(rest.name));
     } else {
-      setStore('checked', local?.formHandler?.getFieldValue?.(rest.name) == rest.value);
+      setStore('checked', local.formHandler?.getFieldValue?.(rest.name) == rest.value);
     }
   });
 
@@ -104,23 +104,23 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    local?.formHandler?.formWasReset() === true &&
+    local.formHandler?.formWasReset() === true &&
       local.defaultValue !== undefined &&
-      local?.formHandler?.setFieldValue?.(rest.name, local.defaultValue);
+      local.formHandler?.setFieldValue?.(rest.name, local.defaultValue);
   });
 
   /**
    * Updates error message signal according to the given prop or form handler state.
    */
   createEffect(() => {
-    setStore('errorMessage', local.errorMessage || local?.formHandler?.getFieldError?.(rest.name) || '');
+    setStore('errorMessage', local.errorMessage || local.formHandler?.getFieldError?.(rest.name) || '');
   });
 
   /**
    * Updates error flag signal according to the given prop or form handler state.
    */
   createEffect(() => {
-    setStore('error', local.error || local?.formHandler?.fieldHasError?.(rest.name) || false);
+    setStore('error', local.error || local.formHandler?.fieldHasError?.(rest.name) || false);
   });
 
   /**
@@ -135,7 +135,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   onMount(() => {
     local.defaultValue !== undefined &&
-      setTimeout(() => local?.formHandler?.setFieldValue(rest.name, local.defaultValue));
+      setTimeout(() => local.formHandler?.setFieldValue(rest.name, local.defaultValue));
   });
 
   return (

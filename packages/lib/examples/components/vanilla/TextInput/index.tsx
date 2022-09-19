@@ -42,7 +42,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
    */
   const onInput: TextInputProps['onInput'] = (event) => {
     //Form handler prop sets and validate the value onInput.
-    local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
+    local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
       htmlElement: event.currentTarget,
     });
 
@@ -59,8 +59,8 @@ export const TextInput: Component<TextInputProps> = (props) => {
    */
   const onBlur: TextInputProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    local?.formHandler?.validateField?.(rest.name);
-    local?.formHandler?.touchField?.(rest.name);
+    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
     if (typeof local.onBlur === 'function') {
@@ -74,9 +74,9 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    local?.formHandler?.formWasReset() === true &&
+    local.formHandler?.formWasReset() === true &&
       local.value &&
-      local?.formHandler?.setFieldValue?.(rest.name, local.value);
+      local.formHandler?.setFieldValue?.(rest.name, local.value);
   });
 
   /**
@@ -90,14 +90,14 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * Updates error message signal according to the given prop or form handler state.
    */
   createEffect(() => {
-    setStore('errorMessage', local.errorMessage || local?.formHandler?.getFieldError?.(rest.name) || '');
+    setStore('errorMessage', local.errorMessage || local.formHandler?.getFieldError?.(rest.name) || '');
   });
 
   /**
    * Updates error flag signal according to the given prop or form handler state.
    */
   createEffect(() => {
-    setStore('error', local.error || local?.formHandler?.fieldHasError?.(rest.name) || false);
+    setStore('error', local.error || local.formHandler?.fieldHasError?.(rest.name) || false);
   });
 
   /**
@@ -111,7 +111,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.value && setTimeout(() => local?.formHandler?.setFieldValue(rest.name, local.value));
+    local.value && setTimeout(() => local.formHandler?.setFieldValue(rest.name, local.value));
   });
 
   return (

@@ -2,7 +2,7 @@ import { FormHandler } from '@interfaces';
 import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-export interface CheckboxProps extends JSX.InputHTMLAttributes<HTMLInputElement> {
+export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   defaultValue?: string | number | boolean;
   error?: boolean;
   errorMessage?: string;
@@ -18,6 +18,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * - rest: remaining inherited props applied to the original component.
    */
   const [local, rest] = splitProps(props, [
+    'checked',
     'defaultValue',
     'error',
     'errorMessage',
@@ -26,7 +27,6 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     'label',
     'onBlur',
     'onChange',
-    'type',
     'uncheckedValue',
     'classList',
   ]);
@@ -38,6 +38,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     errorMessage: '',
     error: false,
     id: '',
+    checked: false,
   });
 
   /**
@@ -68,18 +69,6 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
   };
 
   /**
-   * Helper method for computing the checked status.
-   * - If checked prop is provided, it's returned (controlled from outside)
-   * - If no value prop is provided, it's returned the boolean flag stored at form handler.
-   * - If value is provided, it's compared with form handler value.
-   */
-  const checked = () => {
-    if (rest.checked) return rest.checked;
-    if (rest.value === undefined) return local?.formHandler?.getFieldValue?.(rest.name);
-    return local?.formHandler?.getFieldValue?.(rest.name) == rest.value;
-  };
-
-  /**
    * Extended onBlur event.
    */
   const onBlur: CheckboxProps['onBlur'] = (event) => {
@@ -94,6 +83,22 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
       local.onBlur?.[0](local.onBlur?.[1], event);
     }
   };
+
+  /**
+   * Computes the checked status.
+   * - If checked prop is provided, it's used (controlled from outside)
+   * - If no value prop is provided, it's used the boolean flag stored at form handler.
+   * - If value is provided, it's compared with form handler value.
+   */
+  createEffect(() => {
+    if (typeof local.checked === 'boolean') {
+      setStore('checked', local.checked);
+    } else if (rest.value === undefined) {
+      setStore('checked', local?.formHandler?.getFieldValue?.(rest.name));
+    } else {
+      setStore('checked', local?.formHandler?.getFieldValue?.(rest.name) == rest.value);
+    }
+  });
 
   /**
    * Updates field value when form reset signal is emitted, only if a default value is given.
@@ -140,7 +145,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
         {...rest}
         type="checkbox"
         classList={{ error: store.error }}
-        checked={checked()}
+        checked={store.checked}
         id={store.id}
         onChange={onChange}
         onBlur={onBlur}

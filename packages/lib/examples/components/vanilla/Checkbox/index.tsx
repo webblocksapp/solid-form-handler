@@ -3,7 +3,6 @@ import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  defaultValue?: string | number | boolean;
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -19,7 +18,6 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   const [local, rest] = splitProps(props, [
     'checked',
-    'defaultValue',
     'error',
     'errorMessage',
     'formHandler',
@@ -47,6 +45,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
   const onChange: CheckboxProps['onChange'] = (event) => {
     //Form handler prop sets and validate the value onInput.
     local.formHandler?.setFieldValue?.(rest.name, getValue(event.currentTarget.checked));
+    setStore('checked', event.currentTarget.checked);
 
     //onInput prop is preserved
     if (typeof local.onChange === 'function') {
@@ -54,18 +53,6 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     } else {
       local.onChange?.[0](local.onChange?.[1], event);
     }
-  };
-
-  /**
-   * Helper method for getting the value when checked.
-   * - If no value prop is provided, checked flag is used as value.
-   * - If value prop is provided, it's used as value
-   * - If value and uncheckedValue prop are provided, uncheckedValue is used when checkbox is not checked.
-   */
-  const getValue = (checked: boolean) => {
-    if (rest.value === undefined) return checked;
-    if (checked) return rest.value;
-    return local.uncheckedValue || '';
   };
 
   /**
@@ -82,6 +69,18 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     } else {
       local.onBlur?.[0](local.onBlur?.[1], event);
     }
+  };
+
+  /**
+   * Helper method for getting the value when checked.
+   * - If no value prop is provided, checked flag is used as value.
+   * - If value prop is provided, it's used as value
+   * - If value and uncheckedValue prop are provided, uncheckedValue is used when checkbox is not checked.
+   */
+  const getValue = (checked?: boolean) => {
+    if (rest.value === undefined) return checked;
+    if (checked) return rest.value;
+    return local.uncheckedValue || '';
   };
 
   /**
@@ -104,9 +103,11 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    local.formHandler?.formWasReset() === true &&
-      local.defaultValue !== undefined &&
-      local.formHandler?.setFieldValue?.(rest.name, local.defaultValue);
+    if (local.formHandler?.formWasReset() === true) {
+      const value = getValue(local.checked);
+      value && local.formHandler?.setFieldValue?.(rest.name, value);
+      setStore('checked', local.checked as boolean);
+    }
   });
 
   /**
@@ -134,8 +135,8 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.defaultValue !== undefined &&
-      setTimeout(() => local.formHandler?.setFieldValue(rest.name, local.defaultValue));
+    const value = getValue(local.checked);
+    value && local.formHandler?.setFieldValue?.(rest.name, value);
   });
 
   return (

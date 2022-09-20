@@ -1,4 +1,4 @@
-import { TextInput, Select, Checkbox, Checkboxes } from '@vanilla-components';
+import { TextInput, Select, Checkbox, Checkboxes, Radio } from '@vanilla-components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { Component } from 'solid-js';
@@ -11,6 +11,7 @@ type Schema = {
   subscribed: boolean;
   status: 'active' | 'inactive';
   favoriteFoods: number[];
+  accountStatus: 'active' | 'inactive';
 };
 
 const schema: yup.SchemaOf<Schema> = yup.object().shape({
@@ -20,6 +21,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
   subscribed: yup.boolean().required().oneOf([true]),
   status: yup.mixed().required().oneOf(['active', 'inactive']),
   favoriteFoods: yup.array(yup.number().required()).min(2),
+  accountStatus: yup.mixed().required().oneOf(['active', 'inactive']),
 });
 
 export const VanillaCompFormImpl: Component = () => {
@@ -70,14 +72,7 @@ export const VanillaCompFormImpl: Component = () => {
       </div>
       <br />
       <div>
-        <Checkbox
-          label="Status"
-          name="status"
-          value="active"
-          uncheckedValue={'inactive'}
-          defaultValue={'active'}
-          formHandler={formHandler}
-        />
+        <Checkbox label="Status" name="status" value="active" uncheckedValue="inactive" formHandler={formHandler} />
       </div>
       <br />
       <div>
@@ -91,6 +86,10 @@ export const VanillaCompFormImpl: Component = () => {
           ]}
           formHandler={formHandler}
         />
+      </div>
+      <br />
+      <div>
+        <Radio label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
       </div>
       <br />
       <button data-testid="submit" type="button" onClick={submit}>

@@ -45,7 +45,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * when it's initialized or reset. No validation is triggered.
    */
   const setFieldDefaultValue = (path: string = '', value: any) => {
-    setFieldData(path, value);
+    setFieldData(path, parseValue(value));
   };
 
   /**

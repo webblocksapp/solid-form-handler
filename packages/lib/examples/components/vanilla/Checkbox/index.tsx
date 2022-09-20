@@ -103,11 +103,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    if (local.formHandler?.formWasReset() === true) {
-      const value = getValue(local.checked);
-      value && local.formHandler?.setFieldValue?.(rest.name, value);
-      setStore('checked', local.checked as boolean);
-    }
+    local.formHandler?.formWasReset() && local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
   });
 
   /**
@@ -135,8 +131,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    const value = getValue(local.checked);
-    value && local.formHandler?.setFieldValue?.(rest.name, value);
+    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
   });
 
   return (

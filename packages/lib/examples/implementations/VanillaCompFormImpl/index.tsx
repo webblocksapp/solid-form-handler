@@ -46,7 +46,7 @@ export const VanillaCompFormImpl: Component = () => {
     <form>
       <h3>Vanilla Form Implementation</h3>
       <div>
-        <TextInput label="Name" name="name" formHandler={formHandler} />
+        <TextInput label="Name" name="name" value="Example name" formHandler={formHandler} />
       </div>
       <br />
       <div>
@@ -89,7 +89,7 @@ export const VanillaCompFormImpl: Component = () => {
       </div>
       <br />
       <div>
-        <Radio label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
+        <Radio checked label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
       </div>
       <br />
       <button data-testid="submit" type="button" onClick={submit}>

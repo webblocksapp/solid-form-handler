@@ -85,9 +85,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    local.formHandler?.formWasReset() === true &&
-      local.value &&
-      local.formHandler?.setFieldValue?.(rest.name, local.value);
+    local.formHandler?.formWasReset() && local.formHandler?.setFieldDefaultValue(rest.name, local.value);
   });
 
   /**
@@ -132,7 +130,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.value && setTimeout(() => local.formHandler?.setFieldValue(rest.name, local.value));
+    setTimeout(() => local.formHandler?.setFieldDefaultValue(rest.name, local.value));
   });
 
   return (

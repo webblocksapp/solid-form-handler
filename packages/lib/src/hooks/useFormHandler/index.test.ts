@@ -39,8 +39,8 @@ describe('useFormHandler', () => {
 
   it('is form valid', async () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
-    formHandler.setFieldValue('name', 'George');
-    formHandler.setFieldValue('age', 60);
+    await formHandler.setFieldValue('name', 'George');
+    await formHandler.setFieldValue('age', 60);
     await formHandler.validateForm();
     expect(formHandler.isFormInvalid()).toBe(false);
   });
@@ -289,6 +289,42 @@ describe('useFormHandler', () => {
       referrals: [
         { name: 'John', age: 18 },
         { name: '', age: '' },
+      ],
+    });
+  });
+
+  it('Default object is built.', () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    expect(formHandler._.buildDefault()).toMatchObject({ name: '', age: '' });
+  });
+
+  it('Default object is built with passed data.', () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    expect(formHandler._.buildDefault({ name: 'John', age: 22 })).toMatchObject({ name: 'John', age: 22 });
+  });
+
+  it('Complex object is built with passed data.', () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    expect(formHandler._.buildDefault({ hostName: 'John', referrals: [{ name: 'Laura' }] })).toMatchObject({
+      hostName: 'John',
+      referrals: [
+        {
+          name: 'Laura',
+          age: '',
+        },
+      ],
+    });
+  });
+
+  it('Complex object is built with passed data and base path.', () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    expect(formHandler._.buildDefault({ name: 'Laura' }, 'referrals.0')).toMatchObject({
+      hostName: '',
+      referrals: [
+        {
+          name: 'Laura',
+          age: '',
+        },
       ],
     });
   });

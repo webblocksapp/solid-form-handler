@@ -8,9 +8,27 @@ import { createStore } from 'solid-js/store';
  * It uses as parameter a validation schema.
  */
 export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) => {
-  const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
+  /**
+   * Builds the default formData state through the given schema.
+   */
+  const buildDefault = (data?: any, basePath?: string) => {
+    const flattenedObject = data ? flattenObject(data) : {};
+    const defaultData = validationSchema.buildDefault();
+
+    Object.keys(flattenedObject).forEach((key) => {
+      const path = basePath ? `${basePath}.${key}` : key;
+      set(defaultData, path, flattenedObject[key]);
+    });
+
+    return defaultData;
+  };
+
+  /**
+   * Form handler main states.
+   */
+  const [formData, setFormData] = createStore<{ data: T }>({ data: buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
-    data: validationSchema.buildDefault(),
+    data: buildDefault(),
   });
   const [formWasReset, setFormWasReset] = createSignal<boolean>(false);
 
@@ -20,6 +38,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   const setFieldData = (path: string = '', value: any) => {
     path = path ? `data.${path}` : 'data';
     setFormData(...(formatObjectPath(path).split('.') as []), value);
+  };
+
+  /**
+   * Sets the default field value which will be used
+   * when it's initialized or reset. No validation is triggered.
+   */
+  const setFieldDefaultValue = (path: string = '', value: any) => {
+    setFieldData(path, value);
   };
 
   /**
@@ -362,7 +388,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Resets the form data
    */
   const resetForm = () => {
-    setFormData('data', validationSchema.buildDefault());
+    setFormData('data', buildDefault());
     generateFormState({ reset: true });
     setFormWasReset(true);
     setFormWasReset(false);
@@ -373,9 +399,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Use path for adding a fieldset inside a nested array from an object.
    */
   const addFieldset = <K>(options?: { data?: K; basePath?: string }) => {
-    let defaultData: Array<any> = options?.basePath
-      ? get(validationSchema.buildDefault(), options.basePath)
-      : validationSchema.buildDefault();
+    let defaultData: Array<any> = options?.basePath ? get(buildDefault(), options.basePath) : buildDefault();
     const length = options?.basePath
       ? get<any[]>(formData.data, options.basePath).length
       : (formData.data as unknown as any[]).length;
@@ -464,11 +488,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     removeFieldset,
     resetForm,
     setFieldValue,
+    setFieldDefaultValue,
     touchField,
     validateField,
     validateForm,
     _: {
       addFieldsetState,
+      buildDefault,
       buildFieldState,
       dirtyField,
       findInvalidFlags,

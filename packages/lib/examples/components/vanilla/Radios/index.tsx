@@ -1,5 +1,5 @@
 import { Component, createEffect, For, JSX, onMount, splitProps } from 'solid-js';
-import { Checkbox } from '@vanilla-components';
+import { Radio } from '@vanilla-components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
 
@@ -110,7 +110,7 @@ export const Radios: Component<RadiosProps> = (props) => {
       {rest.label && <label>{rest.label}</label>}
       <For each={rest.options}>
         {(option, i) => (
-          <Checkbox
+          <Radio
             id={`${rest.name}-${i()}`}
             label={option.label}
             value={option.value}

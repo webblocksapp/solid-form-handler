@@ -92,7 +92,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Value is controlled by the component itself.
    */
   createEffect(() => {
-    setStore('value', props?.formHandler?.getFieldValue?.(rest.name) || '');
+    setStore('value', props?.formHandler?.getFieldValue?.(rest.name) || local.value || '');
   });
 
   /**

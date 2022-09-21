@@ -1,4 +1,4 @@
-import { Component, createEffect, For, JSX, onMount, splitProps } from 'solid-js';
+import { Component, createEffect, createSelector, For, JSX, onMount, splitProps, untrack } from 'solid-js';
 import { Checkbox } from '@vanilla-components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
@@ -31,8 +31,17 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   const [store, setStore] = createStore({
     errorMessage: '',
     error: false,
-    checkedFields: [false],
+    defaultValue: [],
+    value: [],
   });
+
+  /**
+   * Checkbox is checked
+   */
+  const checked = createSelector(
+    () => store.value,
+    (optionValue: string | number, storeValue) => storeValue.some((item) => item == optionValue)
+  );
 
   /**
    * Checkboxes onChange logic.
@@ -40,16 +49,13 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   const onChange: CheckboxesProps['onChange'] = (event) => {
     //If checked, value is pushed inside form handler.
     if (event.currentTarget.checked) {
-      rest.formHandler?.setFieldValue?.(rest.name, [
-        ...rest.formHandler?.getFieldValue?.(rest.name),
-        event.currentTarget.value,
-      ]);
+      rest.formHandler?.setFieldValue?.(rest.name, [...store.value, event.currentTarget.value]);
 
       //If unchecked, value is filtered from form handler.
     } else {
       rest.formHandler?.setFieldValue?.(
         rest.name,
-        rest.formHandler?.getFieldValue?.(rest.name)?.filter?.((item: any) => event.currentTarget.value != item)
+        store.value?.filter?.((item: any) => event.currentTarget.value != item)
       );
     }
 
@@ -81,7 +87,11 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    rest.formHandler?.formWasReset() && rest.formHandler?.setFieldDefaultValue(rest.name, rest.value);
+    rest.formHandler?.formWasReset() &&
+      rest.formHandler?.setFieldDefaultValue(
+        rest.name,
+        untrack(() => store.defaultValue)
+      );
   });
 
   /**
@@ -99,22 +109,20 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   });
 
   /**
-   * Tracks checked status of each field.
+   * Single source of truth for default value and value.
    */
   createEffect(() => {
-    props.options?.forEach((option, index) => {
-      const path: ['checkedFields', number] = ['checkedFields', index];
-      const value = rest.formHandler?.getFieldValue?.(rest.name) || rest.value || [];
-      let checked = value.some?.((item: any) => item == option.value);
-      setStore(...path, checked);
-    });
+    const value: any = rest.value || [];
+    setStore('defaultValue', value);
+    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    setStore('value', rest.formHandler ? rest.formHandler?.getFieldValue?.(rest.name) : value);
   });
 
   /**
    * Initializes the form field default value
    */
   onMount(() => {
-    setTimeout(() => rest.formHandler?.setFieldDefaultValue(rest.name, rest.value));
+    setTimeout(() => rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue));
   });
 
   return (
@@ -130,7 +138,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
             onChange={onChange}
             onBlur={onBlur}
             error={store.error}
-            checked={store.checkedFields[i()]}
+            checked={checked(option.value)}
           />
         )}
       </For>

@@ -41,6 +41,7 @@ export const Select: Component<SelectProps> = (props) => {
     errorMessage: '',
     id: '',
     value: '',
+    defaultValue: '',
   });
 
   /**
@@ -85,14 +86,16 @@ export const Select: Component<SelectProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    local.formHandler?.formWasReset() && local.formHandler?.setFieldDefaultValue(rest.name, local.value);
+    local.formHandler?.formWasReset() && local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
   });
 
   /**
-   * Value is controlled by the component itself.
+   * Single source of truth for default value and value.
    */
   createEffect(() => {
-    setStore('value', props?.formHandler?.getFieldValue?.(rest.name) || local.value || '');
+    setStore('defaultValue', local.value as any);
+    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    setStore('value', local.formHandler ? local.formHandler?.getFieldValue?.(rest.name) : local.value);
   });
 
   /**
@@ -130,7 +133,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    setTimeout(() => local.formHandler?.setFieldDefaultValue(rest.name, local.value));
+    setTimeout(() => local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue));
   });
 
   return (

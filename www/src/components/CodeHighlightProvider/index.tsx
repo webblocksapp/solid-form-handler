@@ -30,7 +30,7 @@ export const CodeHighlightProvider: Component<CodeHighlightProviderProps> = (
     shiki.setCDN('/shiki/');
     setHighlighter(
       await shiki.getHighlighter({
-        theme: 'github-dark-dimmed',
+        theme: 'github-light',
       })
     );
     setLoading(false);

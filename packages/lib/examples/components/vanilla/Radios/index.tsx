@@ -1,4 +1,4 @@
-import { Component, createEffect, For, JSX, onMount, splitProps } from 'solid-js';
+import { Component, createEffect, createSelector, For, JSX, onMount, splitProps } from 'solid-js';
 import { Radio } from '@vanilla-components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
@@ -31,8 +31,14 @@ export const Radios: Component<RadiosProps> = (props) => {
   const [store, setStore] = createStore({
     errorMessage: '',
     error: false,
-    checkedFields: [false],
+    defaultValue: '',
+    value: '',
   });
+
+  /**
+   * Radio is checked
+   */
+  const checked = createSelector(() => store.value);
 
   /**
    * Extended onChange event.
@@ -69,7 +75,7 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    rest.formHandler?.formWasReset() && rest.formHandler?.setFieldDefaultValue(rest.name, rest.value);
+    rest.formHandler?.formWasReset() && rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
   });
 
   /**
@@ -87,22 +93,20 @@ export const Radios: Component<RadiosProps> = (props) => {
   });
 
   /**
-   * Tracks checked status of each field.
+   * Single source of truth for default value and value.
    */
   createEffect(() => {
-    props.options?.forEach((option, index) => {
-      const path: ['checkedFields', number] = ['checkedFields', index];
-      const value = rest.formHandler?.getFieldValue?.(rest.name) || rest.value;
-      let checked = value == option.value;
-      setStore(...path, checked);
-    });
+    const value: any = rest.value;
+    setStore('defaultValue', value);
+    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    setStore('value', rest.formHandler ? rest.formHandler?.getFieldValue?.(rest.name) : value);
   });
 
   /**
    * Initializes the form field default value
    */
   onMount(() => {
-    setTimeout(() => rest.formHandler?.setFieldDefaultValue(rest.name, rest.value));
+    setTimeout(() => rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue));
   });
 
   return (
@@ -118,7 +122,7 @@ export const Radios: Component<RadiosProps> = (props) => {
             onChange={onChange}
             onBlur={onBlur}
             error={store.error}
-            checked={store.checkedFields[i()]}
+            checked={checked(option.value)}
           />
         )}
       </For>

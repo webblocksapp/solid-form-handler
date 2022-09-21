@@ -91,7 +91,7 @@ export const VanillaCompFormImpl: Component = () => {
       </div>
       <br />
       <div>
-        <Radio checked label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
+        <Radio label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
       </div>
       <div>
         <Radios

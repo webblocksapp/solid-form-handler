@@ -1,4 +1,4 @@
-import { TextInput, Select, Checkbox, Checkboxes, Radio } from '@vanilla-components';
+import { TextInput, Select, Checkbox, Checkboxes, Radio, Radios } from '@vanilla-components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { Component } from 'solid-js';
@@ -12,6 +12,7 @@ type Schema = {
   status: 'active' | 'inactive';
   favoriteFoods: number[];
   accountStatus: 'active' | 'inactive';
+  gender: 'male' | 'female' | 'other';
 };
 
 const schema: yup.SchemaOf<Schema> = yup.object().shape({
@@ -22,6 +23,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
   status: yup.mixed().required().oneOf(['active', 'inactive']),
   favoriteFoods: yup.array(yup.number().required()).min(2),
   accountStatus: yup.mixed().required().oneOf(['active', 'inactive']),
+  gender: yup.mixed().required().oneOf(['male', 'female', 'other']),
 });
 
 export const VanillaCompFormImpl: Component = () => {
@@ -90,6 +92,28 @@ export const VanillaCompFormImpl: Component = () => {
       <br />
       <div>
         <Radio checked label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
+      </div>
+      <div>
+        <Radios
+          label="Gender"
+          name="gender"
+          value="female"
+          options={[
+            {
+              value: 'male',
+              label: 'Male',
+            },
+            {
+              value: 'female',
+              label: 'Female',
+            },
+            {
+              value: 'other',
+              label: 'Other',
+            },
+          ]}
+          formHandler={formHandler}
+        />
       </div>
       <br />
       <button data-testid="submit" type="button" onClick={submit}>

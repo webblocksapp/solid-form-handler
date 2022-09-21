@@ -5,7 +5,7 @@ import { createStore } from 'solid-js/store';
 
 type SelectableOption = { value: string | number; label: string };
 
-export interface CheckboxesProps {
+export interface RadiosProps {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -14,10 +14,10 @@ export interface CheckboxesProps {
   name?: string;
   onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
   onBlur?: JSX.DOMAttributes<HTMLInputElement>['onBlur'];
-  value?: Array<string | number>;
+  value?: string | number;
 }
 
-export const Checkboxes: Component<CheckboxesProps> = (props) => {
+export const Radios: Component<RadiosProps> = (props) => {
   /**
    * Props are divided in two groups:
    * - local: newer or extended/computed props.
@@ -35,23 +35,11 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   });
 
   /**
-   * Checkboxes onChange logic.
+   * Extended onChange event.
    */
-  const onChange: CheckboxesProps['onChange'] = (event) => {
-    //If checked, value is pushed inside form handler.
-    if (event.currentTarget.checked) {
-      rest.formHandler?.setFieldValue?.(rest.name, [
-        ...rest.formHandler?.getFieldValue?.(rest.name),
-        event.currentTarget.value,
-      ]);
-
-      //If unchecked, value is filtered from form handler.
-    } else {
-      rest.formHandler?.setFieldValue?.(
-        rest.name,
-        rest.formHandler?.getFieldValue?.(rest.name)?.filter?.((item: any) => event.currentTarget.value != item)
-      );
-    }
+  const onChange: RadiosProps['onChange'] = (event) => {
+    //Form handler prop sets and validate the value onChange.
+    rest.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
 
     //onChange prop is preserved
     if (typeof local.onChange === 'function') {
@@ -64,7 +52,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   /**
    * Checkboxes onBlur event.
    */
-  const onBlur: CheckboxesProps['onBlur'] = (event) => {
+  const onBlur: RadiosProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
     rest.formHandler?.validateField?.(rest.name);
     rest.formHandler?.touchField?.(rest.name);
@@ -104,8 +92,8 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   createEffect(() => {
     props.options?.forEach((option, index) => {
       const path: ['checkedFields', number] = ['checkedFields', index];
-      const value = rest.formHandler?.getFieldValue?.(rest.name) || rest.value || [];
-      let checked = value.some?.((item: any) => item == option.value);
+      const value = rest.formHandler?.getFieldValue?.(rest.name) || rest.value;
+      let checked = value == option.value;
       setStore(...path, checked);
     });
   });

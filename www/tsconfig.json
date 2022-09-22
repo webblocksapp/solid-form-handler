@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "es2022",
+    "module": "esnext",
     "strict": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -20,7 +20,7 @@
       "@schemas": ["src/schemas"],
       "@utils": ["src/utils"]
     },
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node", "@types/jest"]
   },
   "include": ["src"]
 }

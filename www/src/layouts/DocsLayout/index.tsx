@@ -3,6 +3,7 @@ import { Outlet, useRouteData } from '@solidjs/router';
 import { Sidebar, TreeMenu } from '@components';
 import { TreeMenu as TreeMenuType } from '@interfaces';
 import './index.css';
+import { flattenTree } from '@utils';
 
 export interface DocsLayoutProps {
   headerText?: string;
@@ -11,6 +12,9 @@ export interface DocsLayoutProps {
 
 export const DocsLayout: Component<DocsLayoutProps> = () => {
   const { menu } = useRouteData<DocsLayoutProps>();
+  const flattenedMenu = flattenTree(menu);
+
+  console.log(flattenedMenu);
 
   return (
     <div class="docs-layout container-fluid px-0">

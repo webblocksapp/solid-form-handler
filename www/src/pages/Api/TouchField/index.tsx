@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const TouchField: Component = () => (
-  <DocsContentLayout prev="../validate-field" next="../validate-form">
+  <>
     <h2 class="mb-4 border-bottom">touchField</h2>
     <p>
       This method marks the field as touched to determine if the user has
@@ -16,5 +15,5 @@ export const TouchField: Component = () => (
       <b>Implementation:</b>
     </p>
     <Code content={getRaw('touchField1')} />
-  </DocsContentLayout>
+  </>
 );

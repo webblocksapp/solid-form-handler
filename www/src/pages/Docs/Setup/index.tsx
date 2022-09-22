@@ -1,9 +1,8 @@
 import { Code } from '@components';
-import { DocsContentLayout } from '@layouts';
 import { Component } from 'solid-js';
 
 export const Setup: Component = () => (
-  <DocsContentLayout prev="../introduction" next="../validation-schema">
+  <>
     <h2 class="mb-4 border-bottom">Setup</h2>
     <div class="mb-5">
       <b>npm installation:</b>
@@ -13,5 +12,5 @@ export const Setup: Component = () => (
       <b>yarn installation:</b>
       <Code language="bash">&gt; yarn add solid-form-handler yup</Code>
     </div>
-  </DocsContentLayout>
+  </>
 );

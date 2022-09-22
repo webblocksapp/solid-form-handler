@@ -5,7 +5,7 @@ import { getRaw } from '@utils';
 import { PersonForm } from '@implementations';
 
 export const NestedFormValidation: Component = () => (
-  <DocsContentLayout prev="../dynamic-form" next="../dynamic-nested-form">
+  <>
     <h2 class="mb-4 border-bottom">Nested Form Validation</h2>
     <p>Content.</p>
     <Implementation
@@ -17,5 +17,5 @@ export const NestedFormValidation: Component = () => (
     >
       <PersonForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

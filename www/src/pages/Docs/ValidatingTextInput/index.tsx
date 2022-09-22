@@ -1,12 +1,11 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Code, Implementation } from '@components';
 import { getRaw } from '@utils';
 import { SingleTextInputForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingTextInput: Component = () => (
-  <DocsContentLayout prev="../validations" next="../validating-select">
+  <>
     <h2 class="mb-4 border-bottom">Validating Text Input</h2>
     <p>
       Form text inputs are the easiest native HTML UI elements to validate with
@@ -34,5 +33,5 @@ export const ValidatingTextInput: Component = () => (
     <Implementation code={getRaw('SingleTextInputForm')}>
       <SingleTextInputForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

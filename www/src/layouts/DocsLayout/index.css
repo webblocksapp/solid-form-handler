@@ -32,3 +32,9 @@
   padding-left: 20px;
   margin-left: -20px;
 }
+
+.docs-layout .docs-content {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+}

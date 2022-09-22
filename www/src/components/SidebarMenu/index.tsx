@@ -1,21 +1,19 @@
 import { Component, For } from 'solid-js';
-import { createStore } from 'solid-js/store';
-import { TreeMenu as TreeMenuType } from '@interfaces';
+import { MenuItem } from '@interfaces';
 import { NavLink } from '@solidjs/router';
 import './index.css';
 
 export interface TreeMenuProps {
-  menu?: TreeMenuType[];
+  menu?: MenuItem[];
   noScroll?: boolean;
+  onChange?: (data: { index: number; menuItem: MenuItem }) => void;
 }
 
-export const TreeMenu: Component<TreeMenuProps> = (props) => {
-  const [menu] = createStore<TreeMenuType[]>(props.menu || []);
-
+export const SidebarMenu: Component<TreeMenuProps> = (props) => {
   return (
-    <ul class="tree-menu nav flex-column">
-      <For each={menu}>
-        {(item) => (
+    <ul class="sidebar-menu nav flex-column">
+      <For each={props.menu}>
+        {(item, i) => (
           <>
             <li class="nav-item">
               {item.route ? (
@@ -23,6 +21,9 @@ export const TreeMenu: Component<TreeMenuProps> = (props) => {
                   class={`px-0 nav-link ${item.section && 'section-item'}`}
                   href={item.route}
                   noScroll={props.noScroll}
+                  onClick={() =>
+                    props.onChange?.({ index: i(), menuItem: item })
+                  }
                 >
                   {item.text}{' '}
                   {item.section && (
@@ -38,9 +39,6 @@ export const TreeMenu: Component<TreeMenuProps> = (props) => {
                 </span>
               )}
             </li>
-            {item.children && (
-              <TreeMenu menu={item.children} noScroll={props.noScroll} />
-            )}
           </>
         )}
       </For>

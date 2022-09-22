@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const IsFieldInvalid: Component = () => (
-  <DocsContentLayout prev="../set-field-value" next="../field-has-error">
+  <>
     <h2 class="mb-4 border-bottom">isFieldInvalid</h2>
     <p>
       This method returns a boolean flag, <code>true</code> if the field is
@@ -15,5 +14,5 @@ export const IsFieldInvalid: Component = () => (
       <b>Implementation:</b>
     </p>
     <Code content={getRaw('isFieldInvalid1')} />
-  </DocsContentLayout>
+  </>
 );

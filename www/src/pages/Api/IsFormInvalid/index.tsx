@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const IsFormInvalid: Component = () => (
-  <DocsContentLayout prev="../get-form-errors" next="../get-form-state">
+  <>
     <h2 class="mb-4 border-bottom">isFormInvalid</h2>
     <p>
       This method retrieves a boolean flag. It’s true if the form contains
@@ -18,5 +17,5 @@ export const IsFormInvalid: Component = () => (
       Form will be invalid if it doesn't satisfy the Yup schema constraints:
     </p>
     <Code content={getRaw('isFormInvalid1')} />
-  </DocsContentLayout>
+  </>
 );

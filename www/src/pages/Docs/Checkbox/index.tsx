@@ -1,11 +1,10 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { getRaw } from '@utils';
 import { CheckboxCompForm } from '@implementations';
 
 export const Checkbox: Component = () => (
-  <DocsContentLayout prev="../select" next="../checkboxes">
+  <>
     <h2 class="mb-4 border-bottom">Checkbox</h2>
     <p>
       You can take a look at the component definition <code>Checkbox.tsx</code>{' '}
@@ -42,5 +41,5 @@ export const Checkbox: Component = () => (
     >
       <CheckboxCompForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

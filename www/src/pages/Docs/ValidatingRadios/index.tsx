@@ -6,7 +6,7 @@ import { RadiosForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingRadios: Component = () => (
-  <DocsContentLayout prev="../validating-checkboxes" next="../components">
+  <>
     <h2 class="mb-4 border-bottom">Validating Radios</h2>
     <p>
       Radios offer multiple options but the value checked is a{' '}
@@ -26,5 +26,5 @@ export const ValidatingRadios: Component = () => (
     <Implementation code={getRaw('RadiosForm')}>
       <RadiosForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

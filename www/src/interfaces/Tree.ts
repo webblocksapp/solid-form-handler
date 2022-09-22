@@ -1,3 +1,1 @@
-import { Flatten } from '@interfaces';
-
-export type Tree<T> = Array<Flatten<T> & { children?: Tree<T> }>;
+export type Tree<T> = Array<{ children?: Tree<T> } & T>;

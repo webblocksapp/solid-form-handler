@@ -1,3 +1,3 @@
 export * from './hooks';
-export * from './interfaces';
+export { FormHandler } from './interfaces';
 export { FormErrorsException, yupSchema } from './utils';

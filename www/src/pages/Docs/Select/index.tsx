@@ -1,11 +1,10 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { getRaw } from '@utils';
 import { SelectCompForm } from '@implementations';
 
 export const Select: Component = () => (
-  <DocsContentLayout prev="../text-input" next="../single-checkbox">
+  <>
     <h2 class="mb-4 border-bottom">Select</h2>
     <p>
       You can take a look at the component definition <code>Select.tsx</code>{' '}
@@ -42,5 +41,5 @@ export const Select: Component = () => (
     >
       <SelectCompForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const RefreshFormField: Component = () => (
-  <DocsContentLayout prev="../get-field-value" next="../form-has-changes">
+  <>
     <h2 class="mb-4 border-bottom">refreshFormField</h2>
     <p>
       This method refresh the form field initial state. Very useful for
@@ -15,5 +14,5 @@ export const RefreshFormField: Component = () => (
       <b>Implementation:</b>
     </p>
     <Code content={getRaw('refreshFormField1')} />
-  </DocsContentLayout>
+  </>
 );

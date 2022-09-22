@@ -1,9 +1,8 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { NavLink } from '@solidjs/router';
 
 export const Components: Component = () => (
-  <DocsContentLayout prev="../validating-radios" next="../text-input">
+  <>
     <h2 class="mb-4 border-bottom">Components</h2>
     <p>
       For doing code forms more legible and shorter is recommended you abstract
@@ -24,20 +23,20 @@ export const Components: Component = () => (
     </p>
     <ul>
       <li>
-        <NavLink href="/docs/text-input">TextInput</NavLink>
+        <NavLink href="../text-input">TextInput</NavLink>
       </li>
       <li>
-        <NavLink href="/docs/select">Select</NavLink>
+        <NavLink href="../select">Select</NavLink>
       </li>
       <li>
-        <NavLink href="/docs/single-checkbox">Checkbox</NavLink>
+        <NavLink href="../single-checkbox">Checkbox</NavLink>
       </li>
       <li>
-        <NavLink href="/docs/checkboxes">Checkboxes</NavLink>
+        <NavLink href="../checkboxes">Checkboxes</NavLink>
       </li>
       <li>
-        <NavLink href="/docs/radios">Radios</NavLink>
+        <NavLink href="../radios">Radios</NavLink>
       </li>
     </ul>
-  </DocsContentLayout>
+  </>
 );

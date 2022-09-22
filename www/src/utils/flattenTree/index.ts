@@ -5,9 +5,9 @@ import { Tree, Flatten } from '@interfaces';
 import { clone } from '../clone';
 
 export const flattenTree = <T extends Array<Flatten<T>>>(
-  data: Tree<T> = [],
-  flattenedTree: Tree<T> = []
-) => {
+  data: Tree<Flatten<T>> = [],
+  flattenedTree: Tree<Flatten<T>> = []
+): Tree<Flatten<T>> => {
   clone(data).forEach((item) => {
     flattenedTree.push(item);
 

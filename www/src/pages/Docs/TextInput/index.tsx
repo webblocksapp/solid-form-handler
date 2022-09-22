@@ -1,11 +1,10 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { TextInputCompForm } from '@implementations';
 import { getRaw } from '@utils';
 
 export const TextInput: Component = () => (
-  <DocsContentLayout prev="../components" next="../select">
+  <>
     <h2 class="mb-4 border-bottom">TextInput</h2>
     <p>
       You can take a look at the component definition <code>TextInput.tsx</code>{' '}
@@ -41,5 +40,5 @@ export const TextInput: Component = () => (
     >
       <TextInputCompForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

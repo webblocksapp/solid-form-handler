@@ -1,11 +1,10 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { ProductsForm } from '@implementations';
 import { getRaw } from '@utils';
 import { Implementation } from '@components';
 
 export const DynamicForm: Component = () => (
-  <DocsContentLayout prev="../form-validation" next="../nested-form-validation">
+  <>
     <h2 class="mb-4 border-bottom">Dynamic Form</h2>
     <p>
       Adding, sorting, and removing fieldsets is simplified with the formHandler
@@ -22,5 +21,5 @@ export const DynamicForm: Component = () => (
     >
       <ProductsForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

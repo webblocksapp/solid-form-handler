@@ -1,11 +1,10 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { getRaw } from '@utils';
 import { UserForm } from '@implementations';
 
 export const FormValidation: Component = () => (
-  <DocsContentLayout prev="../validation-schema" next="../dynamic-form">
+  <>
     <h2 class="mb-4 border-bottom">Form Validation</h2>
     <p>
       Form validation will depend on how well you have defined the Yup schema.
@@ -22,5 +21,5 @@ export const FormValidation: Component = () => (
     >
       <UserForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

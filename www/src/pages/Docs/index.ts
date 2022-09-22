@@ -9,7 +9,6 @@ export * from './NestedFormValidation';
 export * from './Radios';
 export * from './Select';
 export * from './Setup';
-export * from './Template';
 export * from './TextInput';
 export * from './ValidatingCheckbox';
 export * from './ValidatingCheckboxes';

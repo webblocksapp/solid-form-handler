@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
 import { SOLID_JS_STORES_URL } from '@constants';
-import { DocsContentLayout } from '@layouts';
 import { Link } from '@solidjs/router';
 
 export const Introduction: Component = () => (
-  <DocsContentLayout next="../setup">
+  <>
     <h2 class="mb-4 border-bottom">Introduction</h2>
     <p>
       <b>solidjs-form-handler</b> is a lightweight library for building form
@@ -53,5 +52,5 @@ export const Introduction: Component = () => (
       </li>
       <li>Can be used on any SolidJS UI library or CSS framework.</li>
     </ul>
-  </DocsContentLayout>
+  </>
 );

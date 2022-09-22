@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const GetFormErrors: Component = () => (
-  <DocsContentLayout prev="../form-data" next="../is-form-invalid">
+  <>
     <h2 class="mb-4 border-bottom">getFormErrors</h2>
     <p>This method retrieves each field error message from the form.</p>
     <Code content={getRaw('getFormErrorsApi')} />
@@ -23,5 +22,5 @@ export const GetFormErrors: Component = () => (
         <code>errorMessage:</code> field error.
       </li>
     </ul>
-  </DocsContentLayout>
+  </>
 );

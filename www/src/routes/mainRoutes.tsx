@@ -42,6 +42,7 @@ import {
   ValidationSchema,
 } from '@pages';
 import { DOCS_MENU, API_MENU, EXAMPLES_MENU } from '@constants';
+import { Redirect } from '@components';
 
 export const mainRoutes: RouteDefinition[] = [
   {
@@ -59,9 +60,19 @@ export const mainRoutes: RouteDefinition[] = [
       {
         path: 'docs',
         component: DocsLayout,
-        data: () => ({ headerText: 'Documentation', menu: DOCS_MENU }),
+        data: () => ({
+          headerText: 'Documentation',
+          menu: DOCS_MENU,
+          menuOffset: 1,
+        }),
         children: [
-          { path: '', component: Introduction },
+          {
+            path: '',
+            component: Redirect,
+            data: () => ({
+              href: 'introduction',
+            }),
+          },
           { path: 'introduction', component: Introduction },
           { path: 'setup', component: Setup },
           { path: 'validation-schema', component: ValidationSchema },
@@ -91,7 +102,13 @@ export const mainRoutes: RouteDefinition[] = [
         component: DocsLayout,
         data: () => ({ headerText: 'API', menu: API_MENU }),
         children: [
-          { path: '', component: UseFormHandler },
+          {
+            path: '',
+            component: Redirect,
+            data: () => ({
+              href: 'use-form-handler',
+            }),
+          },
           { path: 'use-form-handler', component: UseFormHandler },
           { path: 'add-fieldset', component: AddFieldset },
           { path: 'field-has-error', component: FieldHasError },

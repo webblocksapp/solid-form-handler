@@ -1,13 +1,13 @@
-.tree-menu .nav-link {
+.sidebar-menu .nav-link {
   color: rgb(var(--nav-link));
 }
 
-.tree-menu .nav-link.active {
+.sidebar-menu .nav-link.active {
   color: rgb(var(--bs-dark));
   position: relative;
 }
 
-.tree-menu .nav-link.active::before {
+.sidebar-menu .nav-link.active::before {
   position: absolute;
   top: 0px;
   left: -17px;
@@ -18,19 +18,19 @@
   display: block;
 }
 
-.tree-menu .nav-link:hover {
+.sidebar-menu .nav-link:hover {
   color: rgb(var(--bs-dark));
 }
 
-.tree-menu span.nav-link {
+.sidebar-menu span.nav-link {
   cursor: default;
 }
 
-.tree-menu span.nav-link:hover {
+.sidebar-menu span.nav-link:hover {
   color: rgb(var(--nav-link));
 }
 
-.tree-menu .section-item {
+.sidebar-menu .section-item {
   font-size: 20px;
   color: rgb(var(--bs-primary-rgb));
   font-weight: bolder;
@@ -39,6 +39,6 @@
   margin-top: 17px;
 }
 
-.tree-menu span.section-item:hover {
+.sidebar-menu span.section-item:hover {
   color: rgb(var(--bs-primary-rgb));
 }

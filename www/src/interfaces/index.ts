@@ -1,5 +1,5 @@
 export * from './CodeTab';
 export * from './Flatten';
-export * from './Menu';
+export * from './MenuItem';
 export * from './Tree';
-export * from './TreeMenu';
+export * from './TreeMenuItem';

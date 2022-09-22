@@ -1,11 +1,10 @@
 import { Code } from '@components';
 import { YUP_URL } from '@constants';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Component } from 'solid-js';
 
 export const ValidationSchema: Component = () => (
-  <DocsContentLayout prev="../setup" next="../validations">
+  <>
     <h2 class="mb-4 border-bottom">Validation Schema</h2>
     <p>
       To start using <b>solid-form-handler</b>, it's very important you are
@@ -41,5 +40,5 @@ export const ValidationSchema: Component = () => (
         required <code>contacts</code> of type <code>Contact[]</code>
       </li>
     </ul>
-  </DocsContentLayout>
+  </>
 );

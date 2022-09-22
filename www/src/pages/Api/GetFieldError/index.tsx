@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const GetFieldError: Component = () => (
-  <DocsContentLayout prev="../field-has-error" next="../get-field-value">
+  <>
     <h2 class="mb-4 border-bottom">getFieldError</h2>
     <p>
       This method returns an string with the field error message. This
@@ -15,5 +14,5 @@ export const GetFieldError: Component = () => (
       <b>Implementation:</b>
     </p>
     <Code content={getRaw('getFieldError1')} />
-  </DocsContentLayout>
+  </>
 );

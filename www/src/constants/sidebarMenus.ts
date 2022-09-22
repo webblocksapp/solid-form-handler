@@ -1,6 +1,6 @@
-import { TreeMenu } from '@interfaces';
+import { TreeMenuItem } from '@interfaces';
 
-export const DOCS_MENU: TreeMenu[] = [
+export const DOCS_MENU: TreeMenuItem[] = [
   {
     text: 'Getting started',
     section: true,
@@ -49,7 +49,7 @@ export const DOCS_MENU: TreeMenu[] = [
   },
 ];
 
-export const API_MENU: TreeMenu[] = [
+export const API_MENU: TreeMenuItem[] = [
   {
     text: 'useFormHandler',
     route: 'use-form-handler',
@@ -78,4 +78,4 @@ export const API_MENU: TreeMenu[] = [
   },
 ];
 
-export const EXAMPLES_MENU: TreeMenu[] = [];
+export const EXAMPLES_MENU: TreeMenuItem[] = [];

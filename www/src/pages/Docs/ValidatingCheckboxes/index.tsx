@@ -1,15 +1,11 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { getRaw } from '@utils';
 import { CheckboxesForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingCheckboxes: Component = () => (
-  <DocsContentLayout
-    prev="../validating-single-checkbox"
-    next="../validating-radios"
-  >
+  <>
     <h2 class="mb-4 border-bottom">Validating Checkboxes</h2>
     <p>
       Checkboxes must be treated as an array of primitives. When checking a
@@ -29,5 +25,5 @@ export const ValidatingCheckboxes: Component = () => (
     <Implementation code={getRaw('CheckboxesForm')}>
       <CheckboxesForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

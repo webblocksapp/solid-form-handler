@@ -1,9 +1,9 @@
 import { Component, For, JSX } from 'solid-js';
 import { NavLink } from '@solidjs/router';
-import { Menu } from '@interfaces';
+import { MenuItem } from '@interfaces';
 
 export interface NavbarProps {
-  menu?: Menu[];
+  menu?: MenuItem[];
   brand?: JSX.Element;
 }
 

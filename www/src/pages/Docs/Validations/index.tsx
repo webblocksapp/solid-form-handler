@@ -1,9 +1,8 @@
-import { DocsContentLayout } from '@layouts';
 import { Component } from 'solid-js';
 
 export const Validations: Component = () => {
   return (
-    <DocsContentLayout prev="../dynamic-form" next="../validating-text-input">
+    <>
       <h2 class="mb-4 border-bottom">Validations</h2>
       <p>
         Each HTML form component must be threatened in a different way to
@@ -17,6 +16,6 @@ export const Validations: Component = () => {
         5. Remember that you can adapt the given implementations to your CSS
         framework or any UI library of preference.
       </p>
-    </DocsContentLayout>
+    </>
   );
 };

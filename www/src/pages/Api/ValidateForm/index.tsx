@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const ValidateForm: Component = () => (
-  <DocsContentLayout prev="../touch-field" next="../add-fieldset">
+  <>
     <h2 class="mb-4 border-bottom">validateForm</h2>
     <p>This method validates all the form fields.</p>
     <Code content={getRaw('validateFormApi')} />
@@ -27,5 +26,5 @@ export const ValidateForm: Component = () => (
         <code>errorMessage:</code> field's validation error message.
       </li>
     </ul>
-  </DocsContentLayout>
+  </>
 );

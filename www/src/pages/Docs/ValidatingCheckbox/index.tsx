@@ -1,15 +1,11 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Code, Implementation } from '@components';
 import { getRaw } from '@utils';
 import { CheckboxForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingCheckbox: Component = () => (
-  <DocsContentLayout
-    prev="../validating-select"
-    next="../validating-checkboxes"
-  >
+  <>
     <h2 class="mb-4 border-bottom">Validating Checkbox</h2>
     <p>
       A single checkbox can be treated as a <code>boolean</code> primitive. So
@@ -38,5 +34,5 @@ export const ValidatingCheckbox: Component = () => (
     <Implementation code={getRaw('CheckboxForm')}>
       <CheckboxForm />
     </Implementation>
-  </DocsContentLayout>
+  </>
 );

@@ -1,10 +1,9 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { getRaw } from '@utils';
 import { Code } from '@components';
 
 export const FormData: Component = () => (
-  <DocsContentLayout prev="../reset-form" next="../get-form-errors">
+  <>
     <h2 class="mb-4 border-bottom">formData</h2>
     <p>
       This method is a SolidJS reactive function with the current form data.
@@ -23,5 +22,5 @@ export const FormData: Component = () => (
     <Code content={getRaw('schema2')} />
     <p>You can access by dot notation to any of the form data values:</p>
     <Code content={getRaw('formData2')} />
-  </DocsContentLayout>
+  </>
 );

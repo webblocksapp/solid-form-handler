@@ -15,7 +15,8 @@
       "@hooks": ["src/hooks"],
       "@utils": ["src/utils"],
       "@implementations": ["examples/implementations"],
-      "@vanilla-components": ["examples/components/vanilla"]
+      "@vanilla-components": ["examples/components/vanilla"],
+      "@bs5-components": ["examples/components/bootstrap5"]
     },
     "types": ["vite/client", "node", "@types/jest"]
   }

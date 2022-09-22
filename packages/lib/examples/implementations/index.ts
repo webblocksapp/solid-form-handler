@@ -1,6 +1,6 @@
+export * from './BsCompFormImpl';
 export * from './CheckboxImpl';
 export * from './CheckboxesImpl';
-export * from './VanillaCompFormImpl';
 export * from './ComplexFormImpl';
 export * from './FieldsetsFormImpl';
 export * from './FormImpl';
@@ -9,3 +9,4 @@ export * from './SelectImpl';
 export * from './SortableFieldsetsFormImpl';
 export * from './StoreImpl';
 export * from './TextInputImpl';
+export * from './VanillaCompFormImpl';

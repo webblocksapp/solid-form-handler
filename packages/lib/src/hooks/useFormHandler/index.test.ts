@@ -171,30 +171,6 @@ describe('useFormHandler', () => {
     ]);
   });
 
-  it('Fieldsets add with data: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
-    formHandler.addFieldset();
-    expect(formHandler.formData()).toMatchObject([
-      { name: '', age: '' },
-      { name: '', age: '' },
-    ]);
-  });
-
-  it('Fieldsets multiple adds with data: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
-    formHandler.addFieldset();
-    formHandler.addFieldset();
-    formHandler.addFieldset();
-    formHandler.addFieldset();
-    expect(formHandler.formData()).toMatchObject([
-      { name: '', age: '' },
-      { name: '', age: '' },
-      { name: '', age: '' },
-      { name: '', age: '' },
-      { name: '', age: '' },
-    ]);
-  });
-
   it('Fieldsets remove: form data matches the expected object', async () => {
     const formHandler = useFormHandler(yupSchema(personsSchema));
     formHandler.addFieldset();
@@ -219,6 +195,7 @@ describe('useFormHandler', () => {
 
   it('Fieldsets sort: form data matches the expected object', async () => {
     const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset();
     formHandler.setFieldDefaultValue('1', { name: 'John', age: 18 });
     formHandler.moveFieldset(1, 0);
     expect(formHandler.formData()).toMatchObject([
@@ -265,21 +242,9 @@ describe('useFormHandler', () => {
     });
   });
 
-  it('Nested fieldsets add with data: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
-    formHandler.addFieldset();
-    formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
-    expect(formHandler.formData()).toMatchObject({
-      referrals: [
-        { name: '', age: '' },
-        { name: 'John', age: 18 },
-      ],
-    });
-  });
-
   it('Nested fieldsets remove: form data matches the expected object', async () => {
     const formHandler = useFormHandler(yupSchema(referralsSchema));
-    formHandler.addFieldset();
+    formHandler.addFieldset({ basePath: 'referrals' });
     formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
     formHandler.removeFieldset(0, 'referrals');
     expect(formHandler.formData()).toMatchObject({
@@ -289,7 +254,7 @@ describe('useFormHandler', () => {
 
   it('Nested fieldsets sort: form data matches the expected object', async () => {
     const formHandler = useFormHandler(yupSchema(referralsSchema));
-    formHandler.addFieldset();
+    formHandler.addFieldset({ basePath: 'referrals' });
     formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
     formHandler.moveFieldset(1, 0, 'referrals');
     expect(formHandler.formData()).toMatchObject({
@@ -297,6 +262,24 @@ describe('useFormHandler', () => {
         { name: 'John', age: 18 },
         { name: '', age: '' },
       ],
+    });
+    expect(formHandler._.getFieldState('referrals.0')).toMatchObject({
+      name: {
+        __state: true,
+        isInvalid: true,
+        errorMessage: '',
+        initialValue: 'John',
+        touched: false,
+        dirty: false,
+      },
+      age: {
+        __state: true,
+        isInvalid: true,
+        errorMessage: '',
+        initialValue: 18,
+        touched: false,
+        dirty: false,
+      },
     });
   });
 
@@ -334,5 +317,58 @@ describe('useFormHandler', () => {
         },
       ],
     });
+  });
+
+  it('buildFieldState without default field value.', () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    formHandler._.buildFieldState('name');
+    expect(formHandler._.getFieldState('name')).toMatchObject({
+      __state: true,
+      isInvalid: true,
+      errorMessage: '',
+      initialValue: '',
+      touched: false,
+      dirty: false,
+    });
+  });
+
+  it('buildFieldState with default field value.', () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    formHandler.setFieldDefaultValue('name', 'Laura');
+    formHandler._.buildFieldState('name');
+    expect(formHandler._.getFieldState('name')).toMatchObject({
+      __state: true,
+      isInvalid: true,
+      errorMessage: '',
+      initialValue: 'Laura',
+      touched: false,
+      dirty: false,
+    });
+  });
+
+  it('buildFieldState with nested field value.', () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    formHandler.setFieldDefaultValue('referrals', [{ name: 'Laura', age: 18 }]);
+    formHandler._.buildFieldState('referrals');
+    expect(formHandler._.getFieldState('referrals')).toMatchObject([
+      {
+        name: {
+          __state: true,
+          isInvalid: true,
+          errorMessage: '',
+          initialValue: 'Laura',
+          touched: false,
+          dirty: false,
+        },
+        age: {
+          __state: true,
+          isInvalid: true,
+          errorMessage: '',
+          initialValue: 18,
+          touched: false,
+          dirty: false,
+        },
+      },
+    ]);
   });
 });

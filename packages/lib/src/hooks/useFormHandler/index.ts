@@ -48,7 +48,19 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   const setFieldDefaultValue = (path: string = '', value: any) => {
     //Avoids to overwrite filled data with default data
     if (formIsFilling() === true) return;
-    setFieldData(path, parseValue(value));
+
+    const fieldState = getFieldState(path);
+    if (fieldState === undefined) return;
+
+    if (fieldState.__state === undefined) {
+      Object.keys(flattenObject(value)).forEach((key) => {
+        const finalPath = `${path}.${key}`;
+        setFieldDefaultValue(finalPath, get(value, key));
+      });
+    } else {
+      setFieldData(path, parseValue(value));
+      setFieldState(path, { ...buildFieldState(path), initialValue: parseValue(value) });
+    }
   };
 
   /**

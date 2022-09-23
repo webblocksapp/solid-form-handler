@@ -138,10 +138,14 @@ export const Select: Component<SelectProps> = (props) => {
 
   return (
     <div classList={local.classList}>
-      {local.label && <label for={store.id}>{local.label}</label>}
+      {local.label && (
+        <label class="form-label" for={store.id}>
+          {local.label}
+        </label>
+      )}
       <select
         {...rest}
-        classList={{ error: store.error }}
+        classList={{ 'is-invalid': store.error, 'form-select': true }}
         id={store.id}
         onInput={onInput}
         onBlur={onBlur}
@@ -149,7 +153,7 @@ export const Select: Component<SelectProps> = (props) => {
       >
         <For each={options()}>{(option) => <option value={option.value}>{option.label}</option>}</For>
       </select>
-      {store.error && <small class="invalid-feedback">{store.errorMessage}</small>}
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
     </div>
   );
 };

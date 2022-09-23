@@ -106,7 +106,6 @@ export const BsCompFormImpl: Component = () => {
         <Radios
           label="Gender"
           name="gender"
-          value="female"
           options={[
             {
               value: 'male',

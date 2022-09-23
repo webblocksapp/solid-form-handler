@@ -111,18 +111,22 @@ export const Radio: Component<RadioProps> = (props) => {
 
   return (
     <div classList={local.classList}>
-      <div>
+      <div classList={{ 'form-check': true, 'is-invalid': store.error }}>
         <input
           {...rest}
-          classList={{ error: store.error }}
+          classList={{ 'form-check-input': true, 'is-invalid': store.error }}
           id={store.id}
           type="radio"
           checked={store.checked}
           onChange={onChange}
         />
-        {local.label && <label for={store.id}>{local.label}</label>}
+        {local.label && (
+          <label class="form-check-label" for={store.id}>
+            {local.label}
+          </label>
+        )}
       </div>
-      {store.error && <small class="invalid-feedback">{store.errorMessage}</small>}
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
     </div>
   );
 };

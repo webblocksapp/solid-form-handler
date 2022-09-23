@@ -1,5 +1,5 @@
 import { Component, createEffect, createSelector, For, JSX, onMount, splitProps } from 'solid-js';
-import { Radio } from '@vanilla-components';
+import { Radio } from '@bs5-components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
 
@@ -112,21 +112,23 @@ export const Radios: Component<RadiosProps> = (props) => {
   return (
     <div>
       {rest.label && <label>{rest.label}</label>}
-      <For each={rest.options}>
-        {(option, i) => (
-          <Radio
-            id={`${rest.name}-${i()}`}
-            label={option.label}
-            value={option.value}
-            name={rest.name}
-            onChange={onChange}
-            onBlur={onBlur}
-            error={store.error}
-            checked={checked(option.value)}
-          />
-        )}
-      </For>
-      {store.error && <small class="invalid-feedback">{store.errorMessage}</small>}
+      <div classList={{ 'is-invalid': store.error }}>
+        <For each={rest.options}>
+          {(option, i) => (
+            <Radio
+              id={`${rest.name}-${i()}`}
+              label={option.label}
+              value={option.value}
+              name={rest.name}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={store.error}
+              checked={checked(option.value)}
+            />
+          )}
+        </For>
+      </div>
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
     </div>
   );
 };

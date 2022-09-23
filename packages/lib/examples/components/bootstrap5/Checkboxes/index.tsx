@@ -1,5 +1,5 @@
 import { Component, createEffect, createSelector, For, JSX, onMount, splitProps, untrack } from 'solid-js';
-import { Checkbox } from '@vanilla-components';
+import { Checkbox } from '@bs5-components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
 
@@ -128,21 +128,23 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   return (
     <div>
       {rest.label && <label>{rest.label}</label>}
-      <For each={rest.options}>
-        {(option, i) => (
-          <Checkbox
-            id={`${rest.name}-${i()}`}
-            label={option.label}
-            value={option.value}
-            name={rest.name}
-            onChange={onChange}
-            onBlur={onBlur}
-            error={store.error}
-            checked={checked(option.value)}
-          />
-        )}
-      </For>
-      {store.error && <small class="invalid-feedback">{store.errorMessage}</small>}
+      <div classList={{ 'is-invalid': store.error }}>
+        <For each={rest.options}>
+          {(option, i) => (
+            <Checkbox
+              id={`${rest.name}-${i()}`}
+              label={option.label}
+              value={option.value}
+              name={rest.name}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={store.error}
+              checked={checked(option.value)}
+            />
+          )}
+        </For>
+      </div>
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
     </div>
   );
 };

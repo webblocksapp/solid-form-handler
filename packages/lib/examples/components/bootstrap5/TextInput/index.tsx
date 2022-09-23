@@ -117,16 +117,20 @@ export const TextInput: Component<TextInputProps> = (props) => {
 
   return (
     <div classList={local.classList}>
-      {local.label && <label for={store.id}>{local.label}</label>}
+      {local.label && (
+        <label class="form-label" for={store.id}>
+          {local.label}
+        </label>
+      )}
       <input
         {...rest}
-        classList={{ error: store.error }}
+        classList={{ 'is-invalid': store.error, 'form-control': true }}
         id={store.id}
         onInput={onInput}
         onBlur={onBlur}
         value={store.value}
       />
-      {store.error && <small class="invalid-feedback">{store.errorMessage}</small>}
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
     </div>
   );
 };

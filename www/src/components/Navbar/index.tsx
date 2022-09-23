@@ -10,7 +10,7 @@ export interface NavbarProps {
 export const Navbar: Component<NavbarProps> = (props) => (
   <>
     <nav class="sticky-top navbar navbar-dark bg-dark navbar-expand-lg">
-      <div class="container-md">
+      <div class="container-xxl">
         {props.brand}
         <button
           class="navbar-toggler"

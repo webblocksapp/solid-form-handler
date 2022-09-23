@@ -67,19 +67,20 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
 
   return (
     <div class="docs-layout container-fluid px-0">
-      <div class="main">
-        <div class="container-lg">
-          <div>
-            <Sidebar>
-              <SidebarMenu
-                onChange={({ index }) => onSidebarMenuChange(index)}
-                menu={sidebarMenu}
-              />
-            </Sidebar>
-          </div>
-          <div class="bg-white p-4 ps-5 pt-5">
-            <div class="docs-content">
-              <div>{<Outlet />}</div>
+      <div class="container-xxl">
+        <div>
+          <Sidebar>
+            <SidebarMenu
+              onChange={({ index }) => onSidebarMenuChange(index)}
+              menu={sidebarMenu}
+            />
+          </Sidebar>
+        </div>
+        <div class="bg-white p-4 ps-5 pe-3 pt-5">
+          <div class="docs-content">
+            <div>{<Outlet />}</div>
+            <div>
+              <div class="ad-block-horizontal mt-5"></div>
               <div class="d-flex justify-content-end mt-3">
                 {index() > (menuOffset || 0) && (
                   <button class="btn bg-primary text-white" onClick={prev}>
@@ -93,6 +94,11 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
                 )}
               </div>
             </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div class="ad-block-vertical"></div>
           </div>
         </div>
       </div>

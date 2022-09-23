@@ -58,12 +58,11 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
 
   onMount(() => {
     const initialIndex = menuOffset || 0;
-    setIndex(
-      sidebarMenu.findIndex(
-        (item) =>
-          item.route && item.route === location.pathname.split('/').pop()
-      ) || initialIndex
+    const foundIndex = sidebarMenu.findIndex(
+      (item) => item.route && item.route === location.pathname.split('/').pop()
     );
+
+    setIndex(foundIndex > -1 ? foundIndex : initialIndex);
   });
 
   return (

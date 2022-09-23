@@ -398,18 +398,18 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Adds a fieldset.
    * Use path for adding a fieldset inside a nested array from an object.
    */
-  const addFieldset = <K>(options?: { data?: K; basePath?: string }) => {
+  const addFieldset = (options?: { basePath?: string }) => {
     let defaultData: Array<any> = options?.basePath ? get(buildDefault(), options.basePath) : buildDefault();
     const length = options?.basePath
       ? get<any[]>(formData.data, options.basePath).length
       : (formData.data as unknown as any[]).length;
     const builtPath = options?.basePath ? `${options?.basePath}.${length}` : `${length}`;
-    const data = options?.data || defaultData[0];
+    const data = defaultData[0];
     setFieldData(builtPath, parseValue(data));
     /**
      * Fieldset is validated if data is passed.
      */
-    addFieldsetState(builtPath, data, options?.data ? true : false);
+    addFieldsetState(builtPath, data);
   };
 
   /**

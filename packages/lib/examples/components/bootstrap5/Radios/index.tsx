@@ -106,7 +106,7 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    setTimeout(() => rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue));
+    rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
   });
 
   return (

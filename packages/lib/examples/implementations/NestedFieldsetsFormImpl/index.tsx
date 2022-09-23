@@ -47,10 +47,6 @@ export const NestedFieldsetsFormImpl: Component = () => {
     formHandler.addFieldset({ basePath: 'nested' });
   };
 
-  const addFieldsetWithData = () => {
-    formHandler.addFieldset<Schema['nested'][0]>({ basePath: 'nested', data: { name: 'Mary', age: 17 } });
-  };
-
   onMount(() => {
     fillForm();
   });
@@ -90,9 +86,6 @@ export const NestedFieldsetsFormImpl: Component = () => {
       </button>
       <button data-testid="add" onClick={addFieldset} type="button">
         Add
-      </button>
-      <button onClick={addFieldsetWithData} type="button">
-        Add with data
       </button>
       <button onClick={fillForm} type="button">
         Fill form

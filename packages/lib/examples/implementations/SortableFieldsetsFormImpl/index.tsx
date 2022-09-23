@@ -47,10 +47,6 @@ export const SortableFieldsetsFormImpl: Component = () => {
     formHandler.addFieldset();
   };
 
-  const addFieldsetWithData = () => {
-    formHandler.addFieldset<Schema>({ data: { name: 'Mary', age: 17 } });
-  };
-
   onMount(() => {
     fillForm();
   });
@@ -95,9 +91,6 @@ export const SortableFieldsetsFormImpl: Component = () => {
       </button>
       <button onClick={addFieldset} type="button">
         Add
-      </button>
-      <button onClick={addFieldsetWithData} type="button">
-        Add with data
       </button>
       <button onClick={fillForm} type="button">
         Fill form

@@ -112,7 +112,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    setTimeout(() => local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue));
+    local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
   });
 
   return (

@@ -3,6 +3,7 @@ export * from './CheckboxImpl';
 export * from './CheckboxesImpl';
 export * from './ComplexFormImpl';
 export * from './FieldsetsFormImpl';
+export * from './FieldsetsFormStress1';
 export * from './FormImpl';
 export * from './NestedFieldsetsFormImpl';
 export * from './SelectImpl';

@@ -31,6 +31,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     data: buildDefault(),
   });
   const [formWasReset, setFormWasReset] = createSignal<boolean>(false);
+  const [formIsFilling, setFormIsFilling] = createSignal<boolean>(false);
 
   /**
    * Sets the field value inside the form data store.
@@ -45,6 +46,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * when it's initialized or reset. No validation is triggered.
    */
   const setFieldDefaultValue = (path: string = '', value: any) => {
+    //Avoids to overwrite filled data with default data
+    if (formIsFilling() === true) return;
     setFieldData(path, parseValue(value));
   };
 
@@ -308,11 +311,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Fills the state of the form.
    */
   const fillForm = async (data: T): Promise<void> => {
+    setFormIsFilling(true);
     return new Promise((resolve) => {
       setTimeout(async () => {
         if (data === undefined) return;
         setFormData('data', data);
         await generateFormState({ validateFields: true });
+        setFormIsFilling(false);
         resolve(undefined);
       });
     });
@@ -430,8 +435,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Use path for removing a fieldset inside a nested array from an object.
    */
   const removeFieldset = (index: number, basePath?: string) => {
-    setFieldData(basePath, (items: Flatten<T>[]) => items.filter((_, i) => i !== index));
     removeFieldsetState(index, basePath);
+    setFieldData(basePath, (items: Flatten<T>[]) => items.filter((_, i) => i !== index));
   };
 
   /**
@@ -475,6 +480,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     fillForm,
     fieldHasError,
     formHasChanges,
+    formIsFilling,
     formWasReset,
     getFieldError,
     getFieldValue,

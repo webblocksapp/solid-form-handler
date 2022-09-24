@@ -2,7 +2,7 @@ import { useFormHandler } from '@hooks';
 import { Component, onMount, For } from 'solid-js';
 import { yupSchema } from '@utils';
 import * as yup from 'yup';
-import { TextInput } from '@vanilla-components';
+import { TextInput } from '@components';
 
 type Schema = {
   name: string;

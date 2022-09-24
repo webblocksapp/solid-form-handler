@@ -12,7 +12,6 @@ import {
   SortableFieldsetsFormImpl,
   StoreImpl,
   VanillaCompFormImpl,
-  BsCompFormImpl,
   FieldsetsFormStress1,
 } from '@implementations';
 import './App.css';
@@ -55,9 +54,6 @@ export const App: Component = () => {
           <Link href="vanilla-comp-form-impl">vanilla-comp-form-impl</Link>
         </div>
         <div>
-          <Link href="bootstrap-comp-form-impl">bootstrap-comp-form-impl</Link>
-        </div>
-        <div>
           <Link href="fieldsets-form-stress-1">fieldsets-form-stress-1</Link>
         </div>
       </div>
@@ -73,7 +69,6 @@ export const App: Component = () => {
         <Route path="sortable-fieldsets-form-impl" element={<SortableFieldsetsFormImpl />} />
         <Route path="store-impl" element={<StoreImpl />} />
         <Route path="vanilla-comp-form-impl" element={<VanillaCompFormImpl />} />
-        <Route path="bootstrap-comp-form-impl" element={<BsCompFormImpl />} />
         <Route path="fieldsets-form-stress-1" element={<FieldsetsFormStress1 />} />
       </Routes>
     </div>

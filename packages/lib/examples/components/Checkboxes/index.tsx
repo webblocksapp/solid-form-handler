@@ -1,11 +1,11 @@
-import { Component, createEffect, createSelector, For, JSX, onMount, splitProps } from 'solid-js';
-import { Radio } from '@bs5-components';
+import { Component, createEffect, createSelector, For, JSX, onMount, splitProps, untrack } from 'solid-js';
+import { Checkbox } from '@components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
 
 type SelectableOption = { value: string | number; label: string };
 
-export interface RadiosProps {
+export interface CheckboxesProps {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -14,10 +14,10 @@ export interface RadiosProps {
   name?: string;
   onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
   onBlur?: JSX.DOMAttributes<HTMLInputElement>['onBlur'];
-  value?: string | number;
+  value?: Array<string | number>;
 }
 
-export const Radios: Component<RadiosProps> = (props) => {
+export const Checkboxes: Component<CheckboxesProps> = (props) => {
   /**
    * Props are divided in two groups:
    * - local: newer or extended/computed props.
@@ -31,21 +31,33 @@ export const Radios: Component<RadiosProps> = (props) => {
   const [store, setStore] = createStore({
     errorMessage: '',
     error: false,
-    defaultValue: '',
-    value: '',
+    defaultValue: [],
+    value: [],
   });
 
   /**
-   * Radio is checked
+   * Checkbox is checked
    */
-  const checked = createSelector(() => store.value);
+  const checked = createSelector(
+    () => store.value,
+    (optionValue: string | number, storeValue) => storeValue.some((item) => item == optionValue)
+  );
 
   /**
-   * Extended onChange event.
+   * Checkboxes onChange logic.
    */
-  const onChange: RadiosProps['onChange'] = (event) => {
-    //Form handler prop sets and validate the value onChange.
-    rest.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
+  const onChange: CheckboxesProps['onChange'] = (event) => {
+    //If checked, value is pushed inside form handler.
+    if (event.currentTarget.checked) {
+      rest.formHandler?.setFieldValue?.(rest.name, [...store.value, event.currentTarget.value]);
+
+      //If unchecked, value is filtered from form handler.
+    } else {
+      rest.formHandler?.setFieldValue?.(
+        rest.name,
+        store.value?.filter?.((item: any) => event.currentTarget.value != item)
+      );
+    }
 
     //onChange prop is preserved
     if (typeof local.onChange === 'function') {
@@ -58,7 +70,7 @@ export const Radios: Component<RadiosProps> = (props) => {
   /**
    * Checkboxes onBlur event.
    */
-  const onBlur: RadiosProps['onBlur'] = (event) => {
+  const onBlur: CheckboxesProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
     rest.formHandler?.validateField?.(rest.name);
     rest.formHandler?.touchField?.(rest.name);
@@ -70,13 +82,6 @@ export const Radios: Component<RadiosProps> = (props) => {
       local.onBlur?.[0](local.onBlur?.[1], event);
     }
   };
-
-  /**
-   * Updates field value when form reset signal is emitted, only if a default value is given.
-   */
-  createEffect(() => {
-    rest.formHandler?.formIsResetting() && rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
-  });
 
   /**
    * Updates error message signal according to the given prop or form handler state.
@@ -96,7 +101,7 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Single source of truth for default value and value.
    */
   createEffect(() => {
-    const value: any = rest.value;
+    const value: any = rest.value || [];
     setStore('defaultValue', value);
     //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
     setStore('value', rest.formHandler ? rest.formHandler?.getFieldValue?.(rest.name) : value);
@@ -115,7 +120,7 @@ export const Radios: Component<RadiosProps> = (props) => {
       <div classList={{ 'is-invalid': store.error }}>
         <For each={rest.options}>
           {(option, i) => (
-            <Radio
+            <Checkbox
               id={`${rest.name}-${i()}`}
               label={option.label}
               value={option.value}

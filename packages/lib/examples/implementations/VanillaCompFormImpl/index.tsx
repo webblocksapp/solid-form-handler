@@ -1,4 +1,4 @@
-import { TextInput, Select, Checkbox, Checkboxes, Radio, Radios } from '@vanilla-components';
+import { TextInput, Select, Checkbox, Checkboxes, Radio, Radios } from '@components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { Component } from 'solid-js';

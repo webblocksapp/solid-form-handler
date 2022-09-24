@@ -1,4 +1,3 @@
-export * from './BsCompFormImpl';
 export * from './CheckboxImpl';
 export * from './CheckboxesImpl';
 export * from './ComplexFormImpl';

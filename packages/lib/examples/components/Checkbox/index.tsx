@@ -129,17 +129,28 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
 
   return (
     <div classList={local.classList}>
-      {local.label && <label for={store.id}>{local.label}</label>}
-      <input
-        {...rest}
-        type="checkbox"
-        classList={{ error: store.error }}
-        checked={store.checked}
-        id={store.id}
-        onChange={onChange}
-        onBlur={onBlur}
-      />
-      {store.error && <small class="invalid-feedback">{store.errorMessage}</small>}
+      <div
+        classList={{
+          'is-invalid': local.error || local?.formHandler?.fieldHasError?.(rest.name),
+          'form-check': true,
+        }}
+      >
+        <input
+          {...rest}
+          type="checkbox"
+          classList={{ 'is-invalid': store.error, 'form-check-input': true }}
+          checked={store.checked}
+          id={store.id}
+          onChange={onChange}
+          onBlur={onBlur}
+        />
+        {local.label && (
+          <label class="form-check-label" for={store.id}>
+            {local.label}
+          </label>
+        )}
+      </div>
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
     </div>
   );
 };

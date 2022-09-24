@@ -2,22 +2,21 @@ import { FormHandler } from '@interfaces';
 import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface RadioProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type' | 'value'> {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
   label?: string;
-  uncheckedValue?: string | number;
+  value: string | number;
 }
 
-export const Checkbox: Component<CheckboxProps> = (props) => {
+export const Radio: Component<RadioProps> = (props) => {
   /**
    * Props are divided in two groups:
    * - local: newer or extended/computed props.
    * - rest: remaining inherited props applied to the original component.
    */
   const [local, rest] = splitProps(props, [
-    'checked',
     'error',
     'errorMessage',
     'formHandler',
@@ -25,8 +24,8 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     'label',
     'onBlur',
     'onChange',
-    'uncheckedValue',
     'classList',
+    'checked',
   ]);
 
   /**
@@ -40,14 +39,13 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
   });
 
   /**
-   * Extended onInput event.
+   * Extended onChange event.
    */
-  const onChange: CheckboxProps['onChange'] = (event) => {
-    //Form handler prop sets and validate the value onInput.
-    local.formHandler?.setFieldValue?.(rest.name, getValue(event.currentTarget.checked));
-    setStore('checked', event.currentTarget.checked);
+  const onChange: RadioProps['onChange'] = (event) => {
+    //Form handler prop sets and validate the value onChange.
+    local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
 
-    //onInput prop is preserved
+    //onChange prop is preserved
     if (typeof local.onChange === 'function') {
       local.onChange(event);
     } else {
@@ -56,54 +54,24 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
   };
 
   /**
-   * Extended onBlur event.
-   */
-  const onBlur: CheckboxProps['onBlur'] = (event) => {
-    //Form handler prop validate and touch the field.
-    local.formHandler?.validateField?.(rest.name);
-    local.formHandler?.touchField?.(rest.name);
-
-    //onBlur prop is preserved
-    if (typeof local.onBlur === 'function') {
-      local.onBlur(event);
-    } else {
-      local.onBlur?.[0](local.onBlur?.[1], event);
-    }
-  };
-
-  /**
-   * Helper method for getting the value when checked.
-   * - If no value prop is provided, checked flag is used as value.
-   * - If value prop is provided, it's used as value
-   * - If value and uncheckedValue prop are provided, uncheckedValue is used when checkbox is not checked.
+   * Returns value when checked.
    */
   const getValue = (checked?: boolean) => {
-    if (rest.value === undefined) return checked;
     if (checked) return rest.value;
-    return local.uncheckedValue || '';
+    return '';
   };
 
   /**
    * Computes the checked status.
    * - If checked prop is provided, it's used (controlled from outside)
-   * - If no value prop is provided, it's used the boolean flag stored at form handler.
    * - If value is provided, it's compared with form handler value.
    */
   createEffect(() => {
     if (typeof local.checked === 'boolean') {
       setStore('checked', local.checked);
-    } else if (rest.value === undefined) {
-      setStore('checked', local.formHandler?.getFieldValue?.(rest.name));
     } else {
       setStore('checked', local.formHandler?.getFieldValue?.(rest.name) == rest.value);
     }
-  });
-
-  /**
-   * Updates field value when form reset signal is emitted, only if a default value is given.
-   */
-  createEffect(() => {
-    local.formHandler?.formIsResetting() && local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
   });
 
   /**
@@ -136,20 +104,14 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
 
   return (
     <div classList={local.classList}>
-      <div
-        classList={{
-          'is-invalid': local.error || local?.formHandler?.fieldHasError?.(rest.name),
-          'form-check': true,
-        }}
-      >
+      <div classList={{ 'form-check': true, 'is-invalid': store.error }}>
         <input
           {...rest}
-          type="checkbox"
-          classList={{ 'is-invalid': store.error, 'form-check-input': true }}
-          checked={store.checked}
+          classList={{ 'form-check-input': true, 'is-invalid': store.error }}
           id={store.id}
+          type="radio"
+          checked={store.checked}
           onChange={onChange}
-          onBlur={onBlur}
         />
         {local.label && (
           <label class="form-check-label" for={store.id}>

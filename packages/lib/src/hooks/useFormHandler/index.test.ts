@@ -80,6 +80,7 @@ describe('useFormHandler', () => {
         isInvalid: false,
         errorMessage: '',
         initialValue: 'George',
+        defaultValue: '',
         touched: false,
         dirty: false,
       },
@@ -88,6 +89,7 @@ describe('useFormHandler', () => {
         isInvalid: false,
         errorMessage: '',
         initialValue: 60,
+        defaultValue: '',
         touched: false,
         dirty: false,
       },
@@ -104,6 +106,7 @@ describe('useFormHandler', () => {
           isInvalid: false,
           errorMessage: '',
           initialValue: 'John',
+          defaultValue: '',
           touched: false,
           dirty: false,
         },
@@ -112,6 +115,7 @@ describe('useFormHandler', () => {
           isInvalid: false,
           errorMessage: '',
           initialValue: 28,
+          defaultValue: '',
           touched: false,
           dirty: false,
         },
@@ -129,6 +133,7 @@ describe('useFormHandler', () => {
           isInvalid: false,
           errorMessage: '',
           initialValue: '',
+          defaultValue: '',
           touched: true,
           dirty: true,
         },
@@ -137,6 +142,7 @@ describe('useFormHandler', () => {
           isInvalid: false,
           errorMessage: '',
           initialValue: '',
+          defaultValue: '',
           touched: true,
           dirty: true,
         },
@@ -269,6 +275,7 @@ describe('useFormHandler', () => {
         isInvalid: true,
         errorMessage: '',
         initialValue: 'John',
+        defaultValue: 'John',
         touched: false,
         dirty: false,
       },
@@ -277,45 +284,10 @@ describe('useFormHandler', () => {
         isInvalid: true,
         errorMessage: '',
         initialValue: 18,
+        defaultValue: 18,
         touched: false,
         dirty: false,
       },
-    });
-  });
-
-  it('Default object is built.', () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
-    expect(formHandler._.buildDefault()).toMatchObject({ name: '', age: '' });
-  });
-
-  it('Default object is built with passed data.', () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
-    expect(formHandler._.buildDefault({ name: 'John', age: 22 })).toMatchObject({ name: 'John', age: 22 });
-  });
-
-  it('Complex object is built with passed data.', () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
-    expect(formHandler._.buildDefault({ hostName: 'John', referrals: [{ name: 'Laura' }] })).toMatchObject({
-      hostName: 'John',
-      referrals: [
-        {
-          name: 'Laura',
-          age: '',
-        },
-      ],
-    });
-  });
-
-  it('Complex object is built with passed data and base path.', () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
-    expect(formHandler._.buildDefault({ name: 'Laura' }, 'referrals.0')).toMatchObject({
-      hostName: '',
-      referrals: [
-        {
-          name: 'Laura',
-          age: '',
-        },
-      ],
     });
   });
 
@@ -327,6 +299,7 @@ describe('useFormHandler', () => {
       isInvalid: true,
       errorMessage: '',
       initialValue: '',
+      defaultValue: '',
       touched: false,
       dirty: false,
     });
@@ -341,6 +314,7 @@ describe('useFormHandler', () => {
       isInvalid: true,
       errorMessage: '',
       initialValue: 'Laura',
+      defaultValue: 'Laura',
       touched: false,
       dirty: false,
     });
@@ -357,6 +331,7 @@ describe('useFormHandler', () => {
           isInvalid: true,
           errorMessage: '',
           initialValue: 'Laura',
+          defaultValue: 'Laura',
           touched: false,
           dirty: false,
         },
@@ -365,10 +340,67 @@ describe('useFormHandler', () => {
           isInvalid: true,
           errorMessage: '',
           initialValue: 18,
+          defaultValue: 18,
           touched: false,
           dirty: false,
         },
       },
     ]);
+  });
+
+  it('Setting field default value predominates after fillForm', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    await formHandler.fillForm({ name: 'George', age: 19 });
+    formHandler.setFieldDefaultValue('name', 'Laura');
+    expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
+    expect(formHandler.getFormState()).toMatchObject({
+      name: {
+        __state: true,
+        isInvalid: false,
+        errorMessage: '',
+        initialValue: 'Laura',
+        defaultValue: 'Laura',
+        touched: false,
+        dirty: false,
+      },
+      age: {
+        __state: true,
+        isInvalid: false,
+        errorMessage: '',
+        initialValue: 19,
+        defaultValue: '',
+        touched: false,
+        dirty: false,
+      },
+    });
+  });
+
+  it('Setting field default value predominates after fillForm from a previous resetForm', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    await formHandler.fillForm({ name: 'George', age: 19 });
+    formHandler.setFieldDefaultValue('name', 'Laura');
+    formHandler.resetForm();
+    await formHandler.fillForm({ name: 'George', age: 19 });
+    expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
+    expect(formHandler.getFormState()).toMatchObject({
+      name: {
+        __state: true,
+        isInvalid: false,
+        errorMessage: '',
+        initialValue: 'George',
+        defaultValue: 'Laura',
+        touched: false,
+        dirty: false,
+      },
+      age: {
+        __state: true,
+        isInvalid: false,
+        errorMessage: '',
+        initialValue: 19,
+        defaultValue: '',
+        touched: false,
+        dirty: false,
+      },
+    });
   });
 });

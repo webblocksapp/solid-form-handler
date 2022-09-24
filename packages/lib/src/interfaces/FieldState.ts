@@ -3,6 +3,7 @@ export type FieldState = {
   errorMessage: string;
   isInvalid: boolean;
   htmlElement?: HTMLElement;
+  defaultValue: any;
   initialValue: any;
   touched: boolean;
   dirty: boolean;

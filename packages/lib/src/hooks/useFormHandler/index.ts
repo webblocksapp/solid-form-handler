@@ -1,4 +1,4 @@
-import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema } from '@interfaces';
+import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema, CommonObject } from '@interfaces';
 import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationResult } from '@utils';
 import { createSignal } from 'solid-js';
 import { createStore } from 'solid-js/store';
@@ -9,28 +9,13 @@ import { createStore } from 'solid-js/store';
  */
 export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) => {
   /**
-   * Builds the default formData state through the given schema.
-   */
-  const buildDefault = (data?: any, basePath?: string) => {
-    const flattenedObject = data ? flattenObject(data) : {};
-    const defaultData = validationSchema.buildDefault();
-
-    Object.keys(flattenedObject).forEach((key) => {
-      const path = basePath ? `${basePath}.${key}` : key;
-      set(defaultData, path, flattenedObject[key]);
-    });
-
-    return defaultData;
-  };
-
-  /**
    * Form handler main states.
    */
-  const [formData, setFormData] = createStore<{ data: T }>({ data: buildDefault() });
+  const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
-    data: buildDefault(),
+    data: validationSchema.buildDefault(),
   });
-  const [formWasReset, setFormWasReset] = createSignal<boolean>(false);
+  const [formIsResetting, setFormIsResetting] = createSignal<boolean>(false);
   const [formIsFilling, setFormIsFilling] = createSignal<boolean>(false);
 
   /**
@@ -52,14 +37,25 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return;
 
+    /**
+     * Recursion is necessary if the field value is not a primitive.
+     */
     if (fieldState.__state === undefined) {
       Object.keys(flattenObject(value)).forEach((key) => {
         const finalPath = `${path}.${key}`;
         setFieldDefaultValue(finalPath, get(value, key));
       });
     } else {
-      setFieldData(path, parseValue(value));
-      setFieldState(path, { ...buildFieldState(path), initialValue: parseValue(value) });
+      /**
+       * If the field currently has data, it's prioritized, otherwise,
+       * default value is set as initial field data.
+       */
+      setFieldData(path, getFieldValue(path) || value);
+      /**
+       * Stores the default value at field state. Which will be used as new
+       * default value when form is reset.
+       */
+      setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
     }
   };
 
@@ -223,13 +219,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Generates the whole form state object metadata
    */
-  const generateFormState = async (options?: { validateFields?: boolean; reset?: boolean }) => {
+  const generateFormState = async (options?: { validateFields?: boolean; reset?: boolean; fill?: boolean }) => {
     const flattenedObject = flattenObject(formData.data);
     const state = Array.isArray(formData.data) ? [] : {};
 
     Object.keys(flattenedObject).forEach((path) => {
+      const fieldState = getFieldState(path);
+      const defaultValue = parseValue(fieldState?.defaultValue);
+      const initialValue = parseValue(options?.fill ? flattenedObject[path] : fieldState?.defaultValue);
       path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
-      set(state, path, { ...buildFieldState(path, options?.reset) });
+      set(state, path, { ...buildFieldState(path, options?.reset), initialValue, defaultValue });
     });
 
     setFormState('data', state);
@@ -269,7 +268,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       __state: true,
       isInvalid: reset ? true : getFieldState(path)?.isInvalid || true,
       errorMessage: reset ? '' : getFieldState(path)?.errorMessage || '',
-      initialValue: parseValue(get(formData.data, path)),
+      defaultValue: parseValue(get(formData.data, path)),
       touched: reset ? false : getFieldState(path)?.touched || false,
       dirty: reset ? false : getFieldState(path)?.dirty || false,
     };
@@ -328,7 +327,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       setTimeout(async () => {
         if (data === undefined) return;
         setFormData('data', data);
-        await generateFormState({ validateFields: true });
+        await generateFormState({ validateFields: true, fill: true });
         setFormIsFilling(false);
         resolve(undefined);
       });
@@ -405,10 +404,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Resets the form data
    */
   const resetForm = () => {
-    setFormData('data', buildDefault());
+    setFormData('data', validationSchema.buildDefault());
     generateFormState({ reset: true });
-    setFormWasReset(true);
-    setFormWasReset(false);
+    setFormIsResetting(true);
+    setFormIsResetting(false);
   };
 
   /**
@@ -416,7 +415,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Use path for adding a fieldset inside a nested array from an object.
    */
   const addFieldset = (options?: { basePath?: string }) => {
-    let defaultData: Array<any> = options?.basePath ? get(buildDefault(), options.basePath) : buildDefault();
+    let defaultData: Array<any> = options?.basePath
+      ? get(validationSchema.buildDefault(), options.basePath)
+      : validationSchema.buildDefault();
     const length = options?.basePath
       ? get<any[]>(formData.data, options.basePath).length
       : (formData.data as unknown as any[]).length;
@@ -437,7 +438,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     setFieldState(basePath, {});
     Object.keys(flattenedObject).forEach((key) => {
       const path = `${basePath}.${key}`;
-      setFieldState(path, { ...buildFieldState(path), initialValue: flattenedObject[key] });
+      setFieldState(path, { ...buildFieldState(path), defaultValue: flattenedObject[key] });
       validateFields && validateField(path);
     });
   };
@@ -493,7 +494,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     fieldHasError,
     formHasChanges,
     formIsFilling,
-    formWasReset,
+    formIsResetting,
     getFieldError,
     getFieldValue,
     formData: getFormData,
@@ -512,7 +513,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     validateForm,
     _: {
       addFieldsetState,
-      buildDefault,
       buildFieldState,
       dirtyField,
       findInvalidFlags,

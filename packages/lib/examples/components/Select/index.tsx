@@ -126,7 +126,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+    store.defaultValue && local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
   });
 
   return (

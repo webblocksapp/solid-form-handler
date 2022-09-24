@@ -1,4 +1,5 @@
-import { Component, JSX, splitProps } from 'solid-js';
+import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import { FormHandler } from 'solid-form-handler';
 
 export interface TextInputProps
@@ -10,17 +11,44 @@ export interface TextInputProps
 }
 
 export const TextInput: Component<TextInputProps> = (props) => {
+  /**
+   * Props are divided in two groups:
+   * - local: newer or extended/computed props.
+   * - rest: remaining inherited props applied to the original component.
+   */
   const [local, rest] = splitProps(props, [
     'error',
     'errorMessage',
     'formHandler',
+    'id',
     'label',
-    'onInput',
     'onBlur',
+    'onInput',
+    'value',
+    'classList',
   ]);
 
+  /**
+   * Derived/computed states from props.
+   */
+  const [store, setStore] = createStore({
+    errorMessage: '',
+    error: false,
+    value: '',
+    defaultValue: '',
+    id: '',
+  });
+
+  /**
+   * Extended onInput event.
+   */
   const onInput: TextInputProps['onInput'] = (event) => {
-    local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
+    //Form handler prop sets and validate the value onInput.
+    local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
+      htmlElement: event.currentTarget,
+    });
+
+    //onInput prop is preserved
     if (typeof local.onInput === 'function') {
       local.onInput(event);
     } else {
@@ -28,9 +56,15 @@ export const TextInput: Component<TextInputProps> = (props) => {
     }
   };
 
+  /**
+   * Extended onBlur event.
+   */
   const onBlur: TextInputProps['onBlur'] = (event) => {
-    local?.formHandler?.validateField?.(rest.name);
-    local?.formHandler?.touchField?.(rest.name);
+    //Form handler prop validate and touch the field.
+    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.touchField?.(rest.name);
+
+    //onBlur prop is preserved
     if (typeof local.onBlur === 'function') {
       local.onBlur(event);
     } else {
@@ -38,26 +72,71 @@ export const TextInput: Component<TextInputProps> = (props) => {
     }
   };
 
+  /**
+   * Single source of truth for default value and value.
+   */
+  createEffect(() => {
+    setStore('defaultValue', local.value as any);
+    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    setStore(
+      'value',
+      local.formHandler
+        ? local.formHandler?.getFieldValue?.(rest.name)
+        : local.value
+    );
+  });
+
+  /**
+   * Updates error message signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'errorMessage',
+      local.errorMessage || local.formHandler?.getFieldError?.(rest.name) || ''
+    );
+  });
+
+  /**
+   * Updates error flag signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'error',
+      local.error || local.formHandler?.fieldHasError?.(rest.name) || false
+    );
+  });
+
+  /**
+   * Initializes the form field unique id.
+   */
+  createEffect(() => {
+    setStore('id', local.id || rest.name || '');
+  });
+
+  /**
+   * Initializes the form field default value if it's defined.
+   */
+  onMount(() => {
+    store.defaultValue &&
+      local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
+
   return (
-    <>
-      {local.label && <label class="form-label">{local.label}</label>}
+    <div classList={local.classList}>
+      {local.label && (
+        <label class="form-label" for={store.id}>
+          {local.label}
+        </label>
+      )}
       <input
         {...rest}
-        classList={{
-          ...rest.classList,
-          'is-invalid':
-            local.error || local?.formHandler?.fieldHasError?.(rest.name),
-          'form-control': true,
-        }}
-        value={rest.value || local?.formHandler?.getFieldValue?.(rest.name)}
+        classList={{ 'is-invalid': store.error, 'form-control': true }}
+        id={store.id}
         onInput={onInput}
         onBlur={onBlur}
+        value={store.value}
       />
-      {(local.error || local?.formHandler?.fieldHasError?.(rest.name)) && (
-        <div class="invalid-feedback">
-          {local.errorMessage || local?.formHandler?.getFieldError?.(rest.name)}
-        </div>
-      )}
-    </>
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
+    </div>
   );
 };

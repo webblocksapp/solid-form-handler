@@ -1,11 +1,13 @@
 import {
   Component,
-  JSX,
-  For,
-  splitProps,
-  createSignal,
   createEffect,
+  createSignal,
+  For,
+  JSX,
+  onMount,
+  splitProps,
 } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import { FormHandler } from 'solid-form-handler';
 
 type SelectableOption = { value: string | number; label: string };
@@ -16,24 +18,56 @@ export interface SelectProps
   errorMessage?: string;
   formHandler?: FormHandler;
   label?: string;
+  options?: Array<SelectableOption>;
   placeholder?: string;
-  options?: SelectableOption[];
 }
 
 export const Select: Component<SelectProps> = (props) => {
-  const [options, setOptions] = createSignal<SelectableOption[]>([]);
+  /**
+   * Props are divided in two groups:
+   * - local: newer or extended/computed props.
+   * - rest: remaining inherited props applied to the original component.
+   */
   const [local, rest] = splitProps(props, [
+    'classList',
     'error',
     'errorMessage',
     'formHandler',
+    'id',
     'label',
-    'options',
-    'onInput',
     'onBlur',
+    'onInput',
+    'options',
+    'placeholder',
+    'value',
   ]);
 
+  /**
+   * Derived/computed states from props.
+   */
+  const [store, setStore] = createStore({
+    error: false,
+    errorMessage: '',
+    id: '',
+    value: '',
+    defaultValue: '',
+  });
+
+  /**
+   * Derived/computed options from props
+   */
+  const [options, setOptions] = createSignal<SelectableOption[]>([]);
+
+  /**
+   * Extended onInput event.
+   */
   const onInput: SelectProps['onInput'] = (event) => {
-    local?.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
+    //Form handler prop sets and validate the value onInput.
+    local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
+      htmlElement: event.currentTarget,
+    });
+
+    //onInput prop is preserved
     if (typeof local.onInput === 'function') {
       local.onInput(event);
     } else {
@@ -41,9 +75,15 @@ export const Select: Component<SelectProps> = (props) => {
     }
   };
 
+  /**
+   * Extended onBlur event.
+   */
   const onBlur: SelectProps['onBlur'] = (event) => {
-    local?.formHandler?.validateField?.(rest.name);
-    local?.formHandler?.touchField?.(rest.name);
+    //Form handler prop validate and touch the field.
+    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.touchField?.(rest.name);
+
+    //onBlur prop is preserved
     if (typeof local.onBlur === 'function') {
       local.onBlur(event);
     } else {
@@ -51,47 +91,85 @@ export const Select: Component<SelectProps> = (props) => {
     }
   };
 
+  /**
+   * Single source of truth for default value and value.
+   */
+  createEffect(() => {
+    setStore('defaultValue', local.value as any);
+    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    setStore(
+      'value',
+      local.formHandler
+        ? local.formHandler?.getFieldValue?.(rest.name)
+        : local.value
+    );
+  });
+
+  /**
+   * Updates error message signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'errorMessage',
+      local.errorMessage || local.formHandler?.getFieldError?.(rest.name) || ''
+    );
+  });
+
+  /**
+   * Updates error flag signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'error',
+      local.error || local.formHandler?.fieldHasError?.(rest.name) || false
+    );
+  });
+
+  /**
+   * Initializes the form field unique id.
+   */
+  createEffect(() => {
+    setStore('id', local.id || rest.name || '');
+  });
+
+  /**
+   * Computes the select options by using the placeholder and options props.
+   */
   createEffect(() => {
     setOptions(() => [
-      ...(props.placeholder ? [{ value: '', label: props.placeholder }] : []),
-      ...(props.options || []),
+      ...(local.placeholder ? [{ value: '', label: local.placeholder }] : []),
+      ...(local.options || []),
     ]);
   });
 
+  /**
+   * Initializes the form field default value
+   */
+  onMount(() => {
+    store.defaultValue &&
+      local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
+
   return (
-    <>
-      {local.label && <label class="form-label">{local.label}</label>}
+    <div classList={local.classList}>
+      {local.label && (
+        <label class="form-label" for={store.id}>
+          {local.label}
+        </label>
+      )}
       <select
         {...rest}
-        classList={{
-          ...rest.classList,
-          'is-invalid':
-            local.error || local?.formHandler?.fieldHasError?.(rest.name),
-          'form-select': true,
-        }}
-        value={rest.value || local?.formHandler?.getFieldValue?.(rest.name)}
+        classList={{ 'is-invalid': store.error, 'form-select': true }}
+        id={store.id}
         onInput={onInput}
         onBlur={onBlur}
+        value={store.value}
       >
         <For each={options()}>
-          {(option) => (
-            <option
-              value={option.value}
-              selected={
-                rest.value == option.value ||
-                local?.formHandler?.getFieldValue?.(rest.name) == option.value
-              }
-            >
-              {option.label}
-            </option>
-          )}
+          {(option) => <option value={option.value}>{option.label}</option>}
         </For>
       </select>
-      {(local.error || local?.formHandler?.fieldHasError?.(rest.name)) && (
-        <div class="invalid-feedback">
-          {local.errorMessage || local?.formHandler?.getFieldError?.(rest.name)}
-        </div>
-      )}
-    </>
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
+    </div>
   );
 };

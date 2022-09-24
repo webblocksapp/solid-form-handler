@@ -99,7 +99,7 @@ export const Radio: Component<RadioProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+    local.checked !== undefined && local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
   });
 
   return (

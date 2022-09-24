@@ -1,42 +1,57 @@
-import {
-  Component,
-  createEffect,
-  createSignal,
-  JSX,
-  splitProps,
-} from 'solid-js';
+import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import { FormHandler } from 'solid-form-handler';
 
 export interface CheckboxProps
-  extends JSX.InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
   label?: string;
-  value?: string | number;
   uncheckedValue?: string | number;
-  display?: 'switch' | 'checkbox';
 }
 
 export const Checkbox: Component<CheckboxProps> = (props) => {
-  const [id, setId] = createSignal<string>();
-  const [errorMessage, setErrorMessage] = createSignal<string>();
+  /**
+   * Props are divided in two groups:
+   * - local: newer or extended/computed props.
+   * - rest: remaining inherited props applied to the original component.
+   */
   const [local, rest] = splitProps(props, [
+    'checked',
     'error',
     'errorMessage',
     'formHandler',
+    'id',
     'label',
+    'onBlur',
     'onChange',
-    'value',
-    'display',
     'uncheckedValue',
+    'classList',
   ]);
 
+  /**
+   * Derived/computed states from props.
+   */
+  const [store, setStore] = createStore({
+    errorMessage: '',
+    error: false,
+    id: '',
+    checked: false,
+  });
+
+  /**
+   * Extended onInput event.
+   */
   const onChange: CheckboxProps['onChange'] = (event) => {
-    local?.formHandler?.setFieldValue?.(
+    //Form handler prop sets and validate the value onInput.
+    local.formHandler?.setFieldValue?.(
       rest.name,
       getValue(event.currentTarget.checked)
     );
+    setStore('checked', event.currentTarget.checked);
+
+    //onInput prop is preserved
     if (typeof local.onChange === 'function') {
       local.onChange(event);
     } else {
@@ -44,58 +59,116 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     }
   };
 
-  const getValue = (checked: boolean) => {
-    if (local.value === undefined) return checked;
-    if (checked) return local.value;
+  /**
+   * Extended onBlur event.
+   */
+  const onBlur: CheckboxProps['onBlur'] = (event) => {
+    //Form handler prop validate and touch the field.
+    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.touchField?.(rest.name);
+
+    //onBlur prop is preserved
+    if (typeof local.onBlur === 'function') {
+      local.onBlur(event);
+    } else {
+      local.onBlur?.[0](local.onBlur?.[1], event);
+    }
+  };
+
+  /**
+   * Helper method for getting the value when checked.
+   * - If no value prop is provided, checked flag is used as value.
+   * - If value prop is provided, it's used as value
+   * - If value and uncheckedValue prop are provided, uncheckedValue is used when checkbox is not checked.
+   */
+  const getValue = (checked?: boolean) => {
+    if (rest.value === undefined) return checked;
+    if (checked) return rest.value;
     return local.uncheckedValue || '';
   };
 
-  const checked = () => {
-    if (rest.checked) return rest.checked;
-    if (local.value === undefined)
-      return local?.formHandler?.getFieldValue?.(rest.name);
-    return local?.formHandler?.getFieldValue?.(rest.name) == local.value;
-  };
+  /**
+   * Computes the checked status.
+   * - If checked prop is provided, it's used (controlled from outside)
+   * - If no value prop is provided, it's used the boolean flag stored at form handler.
+   * - If value is provided, it's compared with form handler value.
+   */
+  createEffect(() => {
+    if (typeof local.checked === 'boolean') {
+      setStore('checked', local.checked);
+    } else if (rest.value === undefined) {
+      setStore('checked', local.formHandler?.getFieldValue?.(rest.name));
+    } else {
+      setStore(
+        'checked',
+        local.formHandler?.getFieldValue?.(rest.name) == rest.value
+      );
+    }
+  });
 
-  createEffect(() => setId(rest.id || rest.name));
-  createEffect(() =>
-    setErrorMessage(
-      local.errorMessage || local?.formHandler?.getFieldError?.(rest.name)
-    )
-  );
+  /**
+   * Updates error message signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'errorMessage',
+      local.errorMessage || local.formHandler?.getFieldError?.(rest.name) || ''
+    );
+  });
+
+  /**
+   * Updates error flag signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'error',
+      local.error || local.formHandler?.fieldHasError?.(rest.name) || false
+    );
+  });
+
+  /**
+   * Initializes the form field unique id.
+   */
+  createEffect(() => {
+    setStore('id', local.id || rest.name || '');
+  });
+
+  /**
+   * Initializes the form field default value
+   */
+  onMount(() => {
+    local.checked &&
+      local.formHandler?.setFieldDefaultValue(
+        rest.name,
+        getValue(local.checked)
+      );
+  });
 
   return (
-    <>
+    <div classList={local.classList}>
       <div
-        class="form-check"
         classList={{
           'is-invalid':
             local.error || local?.formHandler?.fieldHasError?.(rest.name),
-          'form-switch': local.display === 'switch',
+          'form-check': true,
         }}
       >
         <input
           {...rest}
-          id={id()}
           type="checkbox"
-          classList={{
-            ...rest.classList,
-            'form-check-input': true,
-            'is-invalid':
-              local.error || local?.formHandler?.fieldHasError?.(rest.name),
-          }}
-          checked={checked()}
+          classList={{ 'is-invalid': store.error, 'form-check-input': true }}
+          checked={store.checked}
+          id={store.id}
           onChange={onChange}
-          value={local.value}
+          onBlur={onBlur}
         />
         {local.label && (
-          <label for={id()} class="form-check-label">
+          <label class="form-check-label" for={store.id}>
             {local.label}
           </label>
         )}
       </div>
-      {(local.error || local?.formHandler?.fieldHasError?.(rest.name)) &&
-        errorMessage() && <div class="invalid-feedback">{errorMessage()}</div>}
-    </>
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
+    </div>
   );
 };

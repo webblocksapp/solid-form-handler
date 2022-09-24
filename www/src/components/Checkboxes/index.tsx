@@ -1,80 +1,166 @@
-import { Component, createEffect, createSignal, For, JSX } from 'solid-js';
-import { FormHandler } from 'solid-form-handler';
+import {
+  Component,
+  createEffect,
+  createSelector,
+  For,
+  JSX,
+  onMount,
+  splitProps,
+} from 'solid-js';
 import { Checkbox } from '@components';
+import { createStore } from 'solid-js/store';
+import { FormHandler } from 'solid-form-handler';
+
+type SelectableOption = { value: string | number; label: string };
 
 export interface CheckboxesProps {
-  classList?: JSX.CustomAttributes<HTMLDivElement>['classList'];
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
-  id?: string;
   label?: string;
+  options?: Array<SelectableOption>;
   name?: string;
-  display?: 'switch' | 'checkbox';
-  options?: { value: string | number; label: string }[];
   onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
+  onBlur?: JSX.DOMAttributes<HTMLInputElement>['onBlur'];
   value?: Array<string | number>;
 }
 
 export const Checkboxes: Component<CheckboxesProps> = (props) => {
-  const [id, setId] = createSignal<string>();
+  /**
+   * Props are divided in two groups:
+   * - local: newer or extended/computed props.
+   * - rest: remaining props from the interface.
+   */
+  const [local, rest] = splitProps(props, [
+    'error',
+    'errorMessage',
+    'onChange',
+    'onBlur',
+  ]);
 
+  /**
+   * Derived/computed states from props.
+   */
+  const [store, setStore] = createStore({
+    errorMessage: '',
+    error: false,
+    defaultValue: [],
+    value: [],
+  });
+
+  /**
+   * Checkbox is checked
+   */
+  const checked = createSelector(
+    () => store.value,
+    (optionValue: string | number, storeValue) =>
+      storeValue.some((item) => item == optionValue)
+  );
+
+  /**
+   * Checkboxes onChange logic.
+   */
   const onChange: CheckboxesProps['onChange'] = (event) => {
+    //If checked, value is pushed inside form handler.
     if (event.currentTarget.checked) {
-      props?.formHandler?.setFieldValue?.(props.name, [
-        ...props?.formHandler?.getFieldValue?.(props.name),
+      rest.formHandler?.setFieldValue?.(rest.name, [
+        ...store.value,
         event.currentTarget.value,
       ]);
+
+      //If unchecked, value is filtered from form handler.
     } else {
-      props?.formHandler?.setFieldValue?.(
-        props.name,
-        props?.formHandler
-          ?.getFieldValue?.(props.name)
-          ?.filter?.((item: any) => event.currentTarget.value != item)
+      rest.formHandler?.setFieldValue?.(
+        rest.name,
+        store.value?.filter?.((item: any) => event.currentTarget.value != item)
       );
     }
-    if (typeof props.onChange === 'function') {
-      props.onChange(event);
+
+    //onChange prop is preserved
+    if (typeof local.onChange === 'function') {
+      local.onChange(event);
     } else {
-      props.onChange?.[0](props.onChange?.[1], event);
+      local.onChange?.[0](local.onChange?.[1], event);
     }
   };
 
-  const checked = (value: string | number) => {
-    return (
-      props?.value?.some?.((item: any) => item == value) ||
-      props?.formHandler
-        ?.getFieldValue?.(props.name)
-        ?.some?.((item: any) => item == value)
-    );
+  /**
+   * Checkboxes onBlur event.
+   */
+  const onBlur: CheckboxesProps['onBlur'] = (event) => {
+    //Form handler prop validate and touch the field.
+    rest.formHandler?.validateField?.(rest.name);
+    rest.formHandler?.touchField?.(rest.name);
+
+    //onBlur prop is preserved
+    if (typeof local.onBlur === 'function') {
+      local.onBlur(event);
+    } else {
+      local.onBlur?.[0](local.onBlur?.[1], event);
+    }
   };
 
-  createEffect(() => setId(props.id || props.name));
+  /**
+   * Updates error message signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'errorMessage',
+      local.errorMessage || rest.formHandler?.getFieldError?.(rest.name) || ''
+    );
+  });
+
+  /**
+   * Updates error flag signal according to the given prop or form handler state.
+   */
+  createEffect(() => {
+    setStore(
+      'error',
+      local.error || rest.formHandler?.fieldHasError?.(rest.name) || false
+    );
+  });
+
+  /**
+   * Single source of truth for default value and value.
+   */
+  createEffect(() => {
+    const value: any = rest.value || [];
+    setStore('defaultValue', value);
+    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    setStore(
+      'value',
+      rest.formHandler ? rest.formHandler?.getFieldValue?.(rest.name) : value
+    );
+  });
+
+  /**
+   * Initializes the form field default value
+   */
+  onMount(() => {
+    store.defaultValue &&
+      rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
 
   return (
-    <>
-      {props.label && <label class="form-label">{props.label}</label>}
-      <For each={props.options}>
-        {(option, i) => (
-          <Checkbox
-            id={`${id()}-${i()}`}
-            error={
-              props.error || props.formHandler?.fieldHasError?.(props.name)
-            }
-            label={option.label}
-            value={option.value}
-            onChange={onChange}
-            checked={checked(option.value)}
-            display={props.display}
-          />
-        )}
-      </For>
-      {(props.error || props?.formHandler?.fieldHasError?.(props.name)) && (
-        <div class="invalid-feedback">
-          {props.errorMessage ||
-            props?.formHandler?.getFieldError?.(props.name)}
-        </div>
-      )}
-    </>
+    <div>
+      {rest.label && <label>{rest.label}</label>}
+      <div classList={{ 'is-invalid': store.error }}>
+        <For each={rest.options}>
+          {(option, i) => (
+            <Checkbox
+              id={`${rest.name}-${i()}`}
+              label={option.label}
+              value={option.value}
+              name={rest.name}
+              onChange={onChange}
+              onBlur={onBlur}
+              error={store.error}
+              checked={checked(option.value)}
+            />
+          )}
+        </For>
+      </div>
+      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
+    </div>
   );
 };

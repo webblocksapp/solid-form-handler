@@ -1,4 +1,4 @@
-import { Component, createEffect, createSelector, For, JSX, onMount, splitProps, untrack } from 'solid-js';
+import { Component, createEffect, createSelector, For, JSX, onMount, splitProps } from 'solid-js';
 import { Checkbox } from '@components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
@@ -111,7 +111,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+    store.defaultValue && rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
   });
 
   return (

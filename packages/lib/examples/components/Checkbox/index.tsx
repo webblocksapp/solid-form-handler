@@ -124,7 +124,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+    local.checked !== undefined && local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
   });
 
   return (

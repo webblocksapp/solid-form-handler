@@ -87,7 +87,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    * Updates field value when form reset signal is emitted, only if a default value is given.
    */
   createEffect(() => {
-    rest.formHandler?.formWasReset() &&
+    rest.formHandler?.formIsResetting() &&
       rest.formHandler?.setFieldDefaultValue(
         rest.name,
         untrack(() => store.defaultValue)

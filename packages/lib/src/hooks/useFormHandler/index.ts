@@ -63,6 +63,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * validates the field.
    */
   const setFieldValue = async (path: string = '', value: any, options?: SetFieldValueOptions) => {
+    if (!path) return;
+
     const fieldState = getFieldState(path);
     options = { touch: true, dirty: true, validate: true, ...options };
 
@@ -100,7 +102,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Validates a single field of the form.
    */
   const validateField = async (path: string = '') => {
-    if (!validationSchema.isFieldFromSchema(path)) return;
+    if (!validationSchema.isFieldFromSchema(path) || !path) return;
 
     try {
       await validationSchema.validateAt(path, formData.data);

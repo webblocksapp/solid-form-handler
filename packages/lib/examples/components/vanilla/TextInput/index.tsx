@@ -72,13 +72,6 @@ export const TextInput: Component<TextInputProps> = (props) => {
   };
 
   /**
-   * Updates field value when form reset signal is emitted, only if a default value is given.
-   */
-  createEffect(() => {
-    local.formHandler?.formIsResetting() && local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
-  });
-
-  /**
    * Single source of truth for default value and value.
    */
   createEffect(() => {

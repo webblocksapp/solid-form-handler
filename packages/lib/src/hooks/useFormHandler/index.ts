@@ -32,8 +32,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    */
   const setFieldDefaultValue = (path: string = '', value: any) => {
     //Avoids to overwrite filled data with default data
-    if (formIsFilling() === true) return;
-
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return;
 
@@ -50,7 +48,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      setFieldData(path, getFieldValue(path) || value);
+      setFieldData(path, parseValue(getFieldValue(path) || value));
       /**
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
@@ -226,9 +224,21 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     Object.keys(flattenedObject).forEach((path) => {
       const fieldState = getFieldState(path);
       const defaultValue = parseValue(fieldState?.defaultValue);
-      const initialValue = parseValue(options?.fill ? flattenedObject[path] : fieldState?.defaultValue);
+
+      /**
+       * Initial value is very different to default value. It refers first value
+       * the field takes when the form is initialized or filled. It's used to check if
+       * the field is dirty (had a change).
+       */
+      const initialValue = parseValue(options?.fill ? flattenedObject[path] : defaultValue);
+
       path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
       set(state, path, { ...buildFieldState(path, options?.reset), initialValue, defaultValue });
+
+      /**
+       * When form reset, field data is updated with pre-configured default value.
+       */
+      options?.reset && defaultValue && setFieldData(path, defaultValue);
     });
 
     setFormState('data', state);

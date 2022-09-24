@@ -72,13 +72,6 @@ export const Radios: Component<RadiosProps> = (props) => {
   };
 
   /**
-   * Updates field value when form reset signal is emitted, only if a default value is given.
-   */
-  createEffect(() => {
-    rest.formHandler?.formIsResetting() && rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
-  });
-
-  /**
    * Updates error message signal according to the given prop or form handler state.
    */
   createEffect(() => {

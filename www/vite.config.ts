@@ -2,11 +2,15 @@ import { defineConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import dynamicImport from 'vite-plugin-dynamic-import';
+import topLevelAwait from 'vite-plugin-top-level-await';
 
 export default defineConfig({
   plugins: [
     solidPlugin(),
+    dynamicImport(),
     tsconfigPaths({ root: __dirname }),
+    topLevelAwait(),
     viteStaticCopy({
       targets: [
         {

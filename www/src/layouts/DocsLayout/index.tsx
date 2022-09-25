@@ -1,9 +1,10 @@
-import { Component, createSignal, onMount } from 'solid-js';
+import { Component, createEffect, createSignal, onMount } from 'solid-js';
 import {
   Outlet,
   useLocation,
   useNavigate,
   useRouteData,
+  useIsRouting,
 } from '@solidjs/router';
 import { Sidebar, SidebarMenu } from '@components';
 import { TreeMenuItem } from '@interfaces';
@@ -20,6 +21,7 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [index, setIndex] = createSignal<number>(0);
+  const isRouting = useIsRouting();
 
   const { menu, menuOffset } = useRouteData<DocsLayoutProps>();
   const sidebarMenu = flattenTree(menu);
@@ -63,6 +65,10 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
     );
 
     setIndex(foundIndex > -1 ? foundIndex : initialIndex);
+  });
+
+  createEffect(() => {
+    console.log(isRouting());
   });
 
   return (

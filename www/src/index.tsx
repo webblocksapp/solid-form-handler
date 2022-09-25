@@ -1,4 +1,4 @@
-import { render } from 'solid-js/web';
+import { render, Suspense } from 'solid-js/web';
 import { Router } from '@solidjs/router';
 import { App } from './App';
 import './index.css';
@@ -9,7 +9,9 @@ render(
   () => (
     <Router>
       <CodeHighlightProvider>
-        <App />
+        <Suspense>
+          <App />
+        </Suspense>
       </CodeHighlightProvider>
     </Router>
   ),

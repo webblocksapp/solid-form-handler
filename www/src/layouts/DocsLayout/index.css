@@ -11,7 +11,7 @@
 
 .docs-layout > div {
   display: grid;
-  grid-template-columns: 230px 1fr 230px;
+  grid-template-columns: 230px 1fr;
 }
 
 .docs-layout > div > div:nth-child(2) {
@@ -23,13 +23,6 @@
   height: calc(100vh - 56px);
   top: 56px;
   padding: 20px 10px;
-}
-
-.docs-layout .ad-block-vertical {
-  border: 1px solid #dee2e6;
-  width: 100%;
-  max-width: 230px;
-  min-height: 320px;
 }
 
 .docs-layout .ad-block-horizontal {

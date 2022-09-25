@@ -96,11 +96,6 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
             </div>
           </div>
         </div>
-        <div>
-          <div>
-            <div class="ad-block-vertical"></div>
-          </div>
-        </div>
       </div>
     </div>
   );

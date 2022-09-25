@@ -10,19 +10,26 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'node_modules/shiki/themes',
-          dest: 'shiki',
+          src: 'node_modules/shiki/themes/github-light.json',
+          dest: 'shiki/themes',
         },
         {
-          src: 'node_modules/shiki/languages',
-          dest: 'shiki',
+          src: 'node_modules/shiki/languages/tsx.tmLanguage.json',
+          dest: 'shiki/languages',
         },
         {
-          src: 'node_modules/shiki/dist',
-          dest: 'shiki',
+          src: 'node_modules/shiki/languages/typescript.tmLanguage.json',
+          dest: 'shiki/languages',
+        },
+        {
+          src: 'node_modules/shiki/dist/onig.wasm',
+          dest: 'shiki/dist',
         },
       ],
     }),
   ],
   server: { port: 4000 },
+  build: {
+    minify: true,
+  },
 });

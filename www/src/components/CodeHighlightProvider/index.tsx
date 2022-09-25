@@ -31,6 +31,7 @@ export const CodeHighlightProvider: Component<CodeHighlightProviderProps> = (
     setHighlighter(
       await shiki.getHighlighter({
         theme: 'github-light',
+        langs: ['tsx', 'typescript'],
       })
     );
     setLoading(false);

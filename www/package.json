@@ -10,10 +10,12 @@
     "url": "https://github.com/webblocksapp/solid-form-handler"
   },
   "scripts": {
-    "build": "vite build --config=vite.config.ts",
-    "start": "vite --config=vite.config.ts",
+    "build": "vite build",
+    "build:watch": "yarn build --watch",
+    "start": "vite",
     "link-lib": "yarn link solid-form-handler",
-    "serve": "cd dist && npx serve"
+    "unlink-lib": "yarn unlink solid-form-handler",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.5",
@@ -50,7 +52,6 @@
     "vite-plugin-dynamic-import": "^1.2.2",
     "vite-plugin-solid": "^2.2.6",
     "vite-plugin-static-copy": "^0.6.1",
-    "vite-plugin-top-level-await": "^1.1.1",
     "vite-tsconfig-paths": "^3.4.1"
   }
 }

@@ -13,7 +13,7 @@ export default defineConfig({
       fileName: 'index',
     },
     rollupOptions: {
-      external: ['solid-js', 'yup'],
+      external: ['solid-js', 'yup', 'solid-js/store'],
     },
   },
   optimizeDeps: {

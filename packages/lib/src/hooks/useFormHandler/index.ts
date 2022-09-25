@@ -1,5 +1,5 @@
-import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema, CommonObject } from '@interfaces';
-import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationResult } from '@utils';
+import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema } from '@interfaces';
+import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationError } from '@utils';
 import { createSignal } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
@@ -112,8 +112,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
         errorMessage: '',
       }));
     } catch (error) {
-      if (error instanceof ValidationResult) {
-        const errorMessage = error.errorMessage;
+      if (error instanceof ValidationError) {
+        const errorMessage = error.message;
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
           isInvalid: true,
@@ -207,7 +207,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Gets all the form fields errors
    */
   const getFormErrors = () => {
-    const errors: ValidationResult[] = [];
+    const errors: { path: string; errorMessage: string }[] = [];
 
     for (let path in flattenObject(formData.data)) {
       getFieldError(path) && errors.push({ path, errorMessage: getFieldError(path) });

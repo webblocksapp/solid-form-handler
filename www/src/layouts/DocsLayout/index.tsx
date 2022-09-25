@@ -67,10 +67,6 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
     setIndex(foundIndex > -1 ? foundIndex : initialIndex);
   });
 
-  createEffect(() => {
-    console.log(isRouting());
-  });
-
   return (
     <div class="docs-layout container-fluid px-0">
       <div class="container-xxl">

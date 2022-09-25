@@ -1,6 +1,6 @@
 import { ValidationSchema } from '@interfaces';
-import { flattenObject, set, get, ValidationResult } from '@utils';
-import { SchemaOf, ValidationError, reach } from 'yup';
+import { flattenObject, set, get, ValidationError } from '@utils';
+import { SchemaOf, reach, ValidationError as YupValidationError } from 'yup';
 import * as yup from 'yup';
 
 /**
@@ -29,8 +29,8 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
     try {
       await schema.validateAt(path, data);
     } catch (error) {
-      if (error instanceof ValidationError) {
-        throw new ValidationResult(path, error.message);
+      if (error instanceof YupValidationError) {
+        throw new ValidationError(path, error.message);
       } else {
         console.error(error);
       }
@@ -45,7 +45,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
     path = path ? `${path}.` : '';
     const targetPath = path.replace(/\.$/, '');
 
-    if (_schema instanceof yup.ArraySchema) {
+    if (_schema.type === 'array') {
       if (_schema.getDefault()) {
         set(obj, targetPath, _schema.getDefault());
       } else {
@@ -57,7 +57,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
         const reachedSchema = reach(_schema, '0') as yup.AnySchema;
         obj = buildDefault(reachedSchema, `${path}0`, obj);
       }
-    } else if (_schema instanceof yup.ObjectSchema) {
+    } else if (_schema.type === 'object') {
       obj = obj ? set(obj, targetPath, {}) : {};
       /**
        * Iterates every schema key to check if it is an ArraySchema or ObjectSchema.

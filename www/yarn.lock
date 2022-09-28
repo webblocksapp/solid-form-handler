@@ -6133,6 +6133,11 @@ socks@^2.6.2:
     ip "^1.1.5"
     smart-buffer "^4.2.0"
 
+solid-form-handler@^1.0.0-alpha:
+  version "1.0.0-alpha"
+  resolved "https://registry.yarnpkg.com/solid-form-handler/-/solid-form-handler-1.0.0-alpha.tgz#10b699974843ccd4419045798a520471b4c42a80"
+  integrity sha512-52ZWx9tUshpkFJFVru1eundpBm17YxrPQrvWpemc6T5CMf9D1cIIU7wypOWVp91ZjfIA0jd38g4wfy5F3X1XBA==
+
 solid-jest@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/solid-jest/-/solid-jest-0.2.0.tgz#3534a3a36151a3d19ef50fa63623ba79c1e0b25f"

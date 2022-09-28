@@ -1,4 +1,4 @@
-# solidjs-form-handler
+# solid-form-handler
 
 ## Documentation
 
@@ -6,13 +6,13 @@
 
 ## Overview
 
-**solidjs-form-handler** is a lightweight library for building form components and validating forms with them. Under the hood, it works with the built-in granular reactivity of [SolidJS stores](https://www.solidjs.com/docs/latest/api#stores).
+**solid-form-handler** is a lightweight library for building form components and validating forms with them. Under the hood, it works with the built-in granular reactivity of [SolidJS stores](https://www.solidjs.com/docs/latest/api#stores).
 
 It uses as a third-party library the yup object schema for data assertion however other validators will be supported in the future.
 
 As a big difference from other form validation libraries, it won't provide built-in components like **\<Form \/>**, or magic methods/utilities that append the reactivity and error reporting at form field components, because integrating with third-party UI libraries can become tricky or simply doesn't work.
 
-## Advantages of using solidjs-form-handler:
+## Advantages of using solid-form-handler:
 
 - Gives full control of your form components definition.
 - Integrated with yup to ease form schema definition - Other validators will be supported in the future.
@@ -27,7 +27,6 @@ As a big difference from other form validation libraries, it won't provide built
 You can start by creating your own form field [components](https://solid-form-handler.com/docs/components) by using each of the code given on the docs website. The following is a final implementation of them:
 
 ```tsx
-//@ts-nocheck
 import { useFormHandler, yupSchema } from 'solid-form-handler';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 import * as yup from 'yup';

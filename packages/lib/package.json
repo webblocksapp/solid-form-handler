@@ -3,6 +3,11 @@
   "description": "A SolidJS library for simplifying form validations.",
   "version": "1.0.0-alpha",
   "license": "MIT",
+  "keywords": [
+    "SolidJS forms",
+    "Form validation libraries",
+    "Form components"
+  ],
   "author": {
     "name": "Mauricio Rivera"
   },

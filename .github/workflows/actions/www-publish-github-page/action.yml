@@ -1,0 +1,9 @@
+name: Publish github page
+description: Docs github page
+runs:
+  using: composite
+  steps:
+    - name: Publish
+      run: yarn publish
+      shell: bash
+      working-directory: ./www

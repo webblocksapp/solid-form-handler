@@ -1,0 +1,30 @@
+name: Docs www pipeline
+on:
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - www/**
+  push:
+    branches:
+      - master
+    paths:
+      - www/**
+defaults:
+  run:
+    working-directory: packages/lib
+jobs:
+  lib-workflow:
+    runs-on: ubuntu-latest
+    name: Lib workflow
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: ./.github/workflows/actions/setup-node
+      - name: 'Build and test'
+        uses: ./.github/workflows/actions/www-build-and-test
+      - name: 'Publish github page'
+        uses: ./.github/workflows/actions/www-publish-github-page
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}

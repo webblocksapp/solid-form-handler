@@ -1,0 +1,35 @@
+name: Library pipeline
+on:
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - packages/lib/**
+  push:
+    branches:
+      - master
+    paths:
+      - packages/lib/**
+  release:
+    types: [published]
+    branches:
+      - master
+defaults:
+  run:
+    working-directory: packages/lib
+jobs:
+  lib-workflow:
+    runs-on: ubuntu-latest
+    name: Lib workflow
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: ./.github/workflows/actions/setup-node
+      - name: 'Build and test'
+        uses: ./.github/workflows/actions/lib-build-and-test
+      - name: 'Publish to npm'
+        if: github.event_name == 'release'
+        uses: ./.github/workflows/actions/lib-publish-to-npm
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}

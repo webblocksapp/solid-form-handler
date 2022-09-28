@@ -1,0 +1,13 @@
+name: Build and test
+description: Library build and testing
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies and build
+      run: yarn && yarn build
+      shell: bash
+      working-directory: ./packages/lib
+    - name: Tests
+      run: yarn test
+      shell: bash
+      working-directory: ./packages/lib

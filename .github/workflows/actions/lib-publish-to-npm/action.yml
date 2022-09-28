@@ -1,0 +1,11 @@
+name: Publish lib to npm
+description: Publish lib to npm
+runs:
+  using: composite
+  steps:
+    - name: Publish package on NPM
+      run: npm publish
+      shell: bash
+      working-directory: ./packages/lib/dist
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}

@@ -22,20 +22,19 @@ export const Introduction: Component = () => (
       As a big difference from other form validation libraries, it won't provide
       built-in components like <b>&lt;Form /&gt;</b>, or magic methods/utilities
       that append the reactivity and error reporting at form field components,
-      which doesn't work in all cases, specifically if you need to integrate
-      with UI libraries that provide form components.
+      because integrating with third-party UI libraries can become tricky or
+      simply doesn't work.
     </p>
     <p>
-      <b>solidjs-form-handler</b> encourages you as a developer to build/extend{' '}
+      <b>solidjs-form-handler</b> helps you during development to build/extend{' '}
       <Link href="/docs/components">form components</Link> by using the
-      library's reactive APIs. This documentation will have a detailed guide on
-      how to achieve that, so you can adapt lately those examples with any UI
-      library of preference or CSS framework.
+      library's reactive APIs. This documentation contains implementation
+      examples, so you can adapt them lately with any UI library of preference
+      or CSS framework.
     </p>
     <p>
       Advantages of using <b>solidjs-form-handler</b>:
     </p>
-
     <ul>
       <li>Gives full control of your form components definition.</li>
       <li>

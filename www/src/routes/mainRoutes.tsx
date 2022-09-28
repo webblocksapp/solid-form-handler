@@ -9,11 +9,17 @@ export const mainRoutes: RouteDefinition[] = [
     children: [
       {
         path: '',
-        component: lazyImport('layouts/HomeLayout'),
+        component: lazyImport('components/Redirect'),
+        data: () => ({
+          href: 'docs',
+        }),
       },
       {
         path: 'home',
-        component: lazyImport('layouts/HomeLayout'),
+        component: lazyImport('components/Redirect'),
+        data: () => ({
+          href: 'docs',
+        }),
       },
       {
         path: 'docs',
@@ -37,8 +43,8 @@ export const mainRoutes: RouteDefinition[] = [
           },
           { path: 'setup', component: lazyImport('pages/Docs/Setup') },
           {
-            path: 'validation-schema',
-            component: lazyImport('pages/Docs/ValidationSchema'),
+            path: 'quick-start',
+            component: lazyImport('pages/Docs/QuickStart'),
           },
           {
             path: 'validations',

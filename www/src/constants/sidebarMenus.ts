@@ -7,7 +7,7 @@ export const DOCS_MENU: TreeMenuItem[] = [
     children: [
       { text: 'Introduction', route: 'introduction' },
       { text: 'Setup', route: 'setup' },
-      { text: 'Validation Schema', route: 'validation-schema' },
+      { text: 'Quick Start', route: 'quick-start' },
     ],
   },
   {

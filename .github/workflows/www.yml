@@ -14,9 +14,9 @@ defaults:
   run:
     working-directory: packages/lib
 jobs:
-  lib-workflow:
+  www-workflow:
     runs-on: ubuntu-latest
-    name: Lib workflow
+    name: WWW workflow
     steps:
       - name: Checkout
         uses: actions/checkout@v3

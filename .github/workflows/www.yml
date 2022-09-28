@@ -12,7 +12,7 @@ on:
       - www/**
 defaults:
   run:
-    working-directory: packages/lib
+    working-directory: www
 jobs:
   www-workflow:
     runs-on: ubuntu-latest
@@ -25,6 +25,6 @@ jobs:
       - name: 'Build and test'
         uses: ./.github/workflows/actions/www-build-and-test
       - name: 'Publish github page'
-        uses: ./.github/workflows/actions/www-publish-github-page
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          folder: www/dist

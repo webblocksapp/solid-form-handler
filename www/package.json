@@ -1,7 +1,7 @@
 {
   "name": "solid-form-handler",
   "description": "A SolidJS library for simplifying form building and validations.",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
   "author": {
     "name": "Mauricio Rivera"
   },
@@ -14,7 +14,7 @@
     "build:watch": "yarn build --watch",
     "start": "vite",
     "test": "jest",
-    "publish": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist",
     "link-lib": "yarn link solid-form-handler",
     "unlink-lib": "yarn unlink solid-form-handler",
     "preview": "vite preview"

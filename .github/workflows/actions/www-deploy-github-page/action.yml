@@ -1,0 +1,16 @@
+name: Deploy github page
+description: Docs github page
+runs:
+  using: composite
+  steps:
+    - name: 'Git config'
+      run: |
+        git config --global user.email "<>"
+        git config --global user.name "Github Action Bot"
+      shell: bash
+    - name: Deploy
+      run: yarn deploy
+      shell: bash
+      working-directory: ./www
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}

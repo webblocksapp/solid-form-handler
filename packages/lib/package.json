@@ -13,7 +13,7 @@
   "main": "index.es.js",
   "scripts": {
     "build": "vite build --config=vite.prod.ts && tsc-alias && yarn copy",
-    "copy": "cp package.json dist",
+    "copy": "cp package.json dist && cp ../../README.md dist",
     "link-lib": "yarn build && cd dist && yarn link",
     "unlink-lib": "cd dist && yarn unlink",
     "start": "vite --config=vite.dev.ts",

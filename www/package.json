@@ -13,6 +13,7 @@
     "build": "vite build",
     "build:watch": "yarn build --watch",
     "start": "vite",
+    "test": "jest",
     "publish": "gh-pages -d dist",
     "link-lib": "yarn link solid-form-handler",
     "unlink-lib": "yarn unlink solid-form-handler",

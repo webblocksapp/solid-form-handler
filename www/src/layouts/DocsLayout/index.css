@@ -20,8 +20,8 @@
 
 .docs-layout > div > div:nth-child(3) > div {
   position: sticky;
-  height: calc(100vh - 56px);
-  top: 56px;
+  height: calc(100vh - var(--navbar-height));
+  top: var(--navbar-height);
   padding: 20px 10px;
 }
 
@@ -33,9 +33,9 @@
 
 .docs-layout .sidebar {
   position: sticky;
-  top: 56px;
+  top: var(--navbar-height);
   overflow: auto;
-  height: calc(100vh - 56px);
+  height: calc(100vh - var(--navbar-height));
   padding-left: 20px;
   margin-left: -20px;
 }

@@ -1,0 +1,8 @@
+.navbar {
+  height: var(--navbar-height);
+}
+
+.right-menu {
+  font-size: 30px;
+  line-height: 20px;
+}

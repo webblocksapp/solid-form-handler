@@ -10,11 +10,10 @@
     "url": "https://github.com/webblocksapp/solid-form-handler"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && cp .htaccess dist",
     "build:watch": "yarn build --watch",
     "start": "vite",
     "test": "jest",
-    "deploy": "gh-pages -d dist",
     "link-lib": "yarn link solid-form-handler",
     "unlink-lib": "yarn unlink solid-form-handler",
     "preview": "vite preview"
@@ -40,7 +39,6 @@
     "babel-loader": "^8.2.5",
     "babel-preset-solid": "^1.4.0",
     "css-loader": "^6.7.1",
-    "gh-pages": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^29.0.3",
     "jest-environment-jsdom": "^29.0.3",

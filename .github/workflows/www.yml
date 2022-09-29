@@ -22,9 +22,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Node
         uses: ./.github/workflows/actions/setup-node
-      - name: 'Build and test'
+      - name: Build and test
         uses: ./.github/workflows/actions/www-build-and-test
-      - name: 'Publish github page'
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy
+        uses: ./.github/workflows/actions/www-deploy
         with:
-          folder: www/dist
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}

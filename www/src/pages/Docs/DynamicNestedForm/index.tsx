@@ -6,7 +6,7 @@ import { Implementation } from '@components';
 export const DynamicNestedForm: Component = () => (
   <>
     <h2 class="mb-4 border-bottom">Dynamic Form</h2>
-    <p>Content.</p>
+    <p>Content example.</p>
 
     <Implementation
       codeTabs={[

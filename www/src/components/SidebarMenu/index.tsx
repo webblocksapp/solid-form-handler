@@ -1,6 +1,7 @@
 import { Component, For } from 'solid-js';
 import { MenuItem } from '@interfaces';
 import { NavLink } from '@solidjs/router';
+import { useSidebarContext } from '@components';
 import './index.css';
 
 export interface TreeMenuProps {
@@ -10,6 +11,8 @@ export interface TreeMenuProps {
 }
 
 export const SidebarMenu: Component<TreeMenuProps> = (props) => {
+  const sidebar = useSidebarContext();
+
   return (
     <ul class="sidebar-menu nav flex-column">
       <For each={props.menu}>
@@ -21,9 +24,10 @@ export const SidebarMenu: Component<TreeMenuProps> = (props) => {
                   class={`px-0 nav-link ${item.section && 'section-item'}`}
                   href={item.route}
                   noScroll={props.noScroll}
-                  onClick={() =>
-                    props.onChange?.({ index: i(), menuItem: item })
-                  }
+                  onClick={() => {
+                    sidebar?.close?.();
+                    props.onChange?.({ index: i(), menuItem: item });
+                  }}
                 >
                   {item.text}{' '}
                   {item.section && (

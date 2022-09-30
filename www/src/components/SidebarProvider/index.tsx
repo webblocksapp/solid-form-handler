@@ -4,13 +4,14 @@ import {
   createContext,
   createSignal,
   JSX,
-  Setter,
   useContext,
 } from 'solid-js';
 
 const SidebarContext = createContext<{
-  open: Accessor<boolean>;
-  setOpen: Setter<boolean>;
+  active: Accessor<boolean>;
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
 }>();
 export const useSidebarContext = () => useContext(SidebarContext);
 
@@ -19,13 +20,27 @@ export interface SidebarProviderProps {
 }
 
 export const SidebarProvider: Component<SidebarProviderProps> = (props) => {
-  const [open, setOpen] = createSignal(false);
+  const [active, setActive] = createSignal(false);
+
+  const open = () => {
+    setActive(true);
+  };
+
+  const close = () => {
+    setActive(false);
+  };
+
+  const toggle = () => {
+    setActive((prev) => !prev);
+  };
 
   return (
     <SidebarContext.Provider
       value={{
         open,
-        setOpen,
+        close,
+        active,
+        toggle,
       }}
     >
       {props.children}

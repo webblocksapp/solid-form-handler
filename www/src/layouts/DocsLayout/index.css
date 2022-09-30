@@ -82,6 +82,7 @@
   .docs-layout > div {
     display: grid;
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
   }
 
   .docs-layout > div > div:nth-child(1) {

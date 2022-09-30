@@ -82,12 +82,12 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
             <div class="position-relative">
               <button
                 class="toggle-sidebar btn bg-primary text-white"
-                onClick={() => sidebar?.setOpen?.(!sidebar?.open())}
+                onClick={() => sidebar?.toggle?.()}
               >
-                {sidebar?.open() && (
+                {sidebar?.active() && (
                   <i class="fa fa-caret-square-o-left" aria-hidden="true"></i>
                 )}
-                {!sidebar?.open() && (
+                {!sidebar?.active() && (
                   <i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
                 )}
               </button>

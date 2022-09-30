@@ -10,12 +10,10 @@ export const MainLayout: Component = () => {
     <>
       <Navbar
         brand={
-          <>
-            <NavLink class="navbar-brand" href="/">
-              <img src={logo} width={30} class="me-2 mb-1" />
-              <span>solid-form-handler</span>
-            </NavLink>
-          </>
+          <NavLink class="navbar-brand" href="/">
+            <img src={logo} width={30} class="me-2 mb-1" />
+            <span>solid-form-handler</span>
+          </NavLink>
         }
         menu={MAIN_MENU}
         rightMenu={MAIN_RIGHT_MENU}

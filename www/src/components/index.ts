@@ -11,4 +11,5 @@ export * from './Redirect';
 export * from './Select';
 export * from './Sidebar';
 export * from './SidebarMenu';
+export * from './SidebarProvider';
 export * from './TextInput';

@@ -12,63 +12,55 @@ export interface NavbarProps {
 export const Navbar: Component<NavbarProps> = (props) => (
   <nav class="sticky-top navbar navbar-dark bg-dark navbar-expand-lg">
     <div class="container-xxl">
-      <div class="d-flex align-items-center justify-content-between w-100">
-        <div class="d-flex">
-          {props.brand}
-
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarScroll"
-            aria-controls="navbarScroll"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarScroll">
-            <ul
-              class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
-              style="--bs-scroll-height: 100px;"
-            >
-              <For each={props.menu}>
-                {(item) => (
-                  <li class="nav-item">
-                    <NavLink
-                      class="nav-link"
-                      href={item.route as string}
-                      target={item.external ? 'blank' : undefined}
-                    >
-                      {item.text}
-                    </NavLink>
-                  </li>
-                )}
-              </For>
-            </ul>
-          </div>
-        </div>
+      {props.brand}
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarScroll"
+        aria-controls="navbarScroll"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        class="collapse navbar-collapse align-center justify-space-between"
+        id="navbarScroll"
+      >
+        <ul
+          class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
+          style="--bs-scroll-height: 100px;"
+        >
+          <For each={props.menu}>
+            {(item) => (
+              <li class="nav-item">
+                <NavLink class="nav-link" href={item.route as string}>
+                  {item.text}
+                </NavLink>
+              </li>
+            )}
+          </For>
+        </ul>
         <Show when={props.rightMenu}>
-          <div class="right-menu">
-            <ul
-              class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
-              style="--bs-scroll-height: 100px;"
-            >
-              <For each={props.rightMenu}>
-                {(item) => (
-                  <li class="nav-item">
-                    <NavLink
-                      class="nav-link"
-                      href={item.route as string}
-                      target={item.external ? 'blank' : undefined}
-                    >
-                      {item.icon}
-                    </NavLink>
-                  </li>
-                )}
-              </For>
-            </ul>
-          </div>
+          <ul
+            class="navbar-nav right-menu my-2 my-lg-0 navbar-nav-scroll"
+            style="--bs-scroll-height: 100px;"
+          >
+            <For each={props.rightMenu}>
+              {(item) => (
+                <li class="nav-item">
+                  <NavLink
+                    class="nav-link"
+                    href={item.route as string}
+                    target={item.external ? 'blank' : undefined}
+                  >
+                    {item.icon}
+                  </NavLink>
+                </li>
+              )}
+            </For>
+          </ul>
         </Show>
       </div>
     </div>

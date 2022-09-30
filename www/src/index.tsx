@@ -3,15 +3,17 @@ import { Router } from '@solidjs/router';
 import { App } from './App';
 import './index.css';
 import 'bootstrap/dist/js/bootstrap.js';
-import { CodeHighlightProvider } from '@components';
+import { CodeHighlightProvider, SidebarProvider } from '@components';
 
 render(
   () => (
     <Router>
       <CodeHighlightProvider>
-        <Suspense>
-          <App />
-        </Suspense>
+        <SidebarProvider>
+          <Suspense>
+            <App />
+          </Suspense>
+        </SidebarProvider>
       </CodeHighlightProvider>
     </Router>
   ),

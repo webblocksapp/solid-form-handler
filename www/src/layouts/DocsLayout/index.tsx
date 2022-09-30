@@ -1,12 +1,11 @@
-import { Component, createEffect, createSignal, onMount } from 'solid-js';
+import { Component, createSignal, onMount } from 'solid-js';
 import {
   Outlet,
   useLocation,
   useNavigate,
   useRouteData,
-  useIsRouting,
 } from '@solidjs/router';
-import { Sidebar, SidebarMenu } from '@components';
+import { Sidebar, SidebarMenu, useSidebarContext } from '@components';
 import { TreeMenuItem } from '@interfaces';
 import { flattenTree } from '@utils';
 import './index.css';
@@ -21,7 +20,7 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [index, setIndex] = createSignal<number>(0);
-  const isRouting = useIsRouting();
+  const sidebar = useSidebarContext();
 
   const { menu, menuOffset } = useRouteData<DocsLayoutProps>();
   const sidebarMenu = flattenTree(menu);
@@ -78,9 +77,22 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
             />
           </Sidebar>
         </div>
-        <div class="bg-white p-4 ps-5 pe-3 pt-5">
+        <div class="bg-white">
           <div class="docs-content">
-            <div>{<Outlet />}</div>
+            <div class="position-relative">
+              <button
+                class="toggle-sidebar btn bg-primary text-white"
+                onClick={() => sidebar?.setOpen?.(!sidebar?.open())}
+              >
+                {sidebar?.open() && (
+                  <i class="fa fa-caret-square-o-left" aria-hidden="true"></i>
+                )}
+                {!sidebar?.open() && (
+                  <i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
+                )}
+              </button>
+              {<Outlet />}
+            </div>
             <div>
               <div class="ad-block-horizontal mt-5"></div>
               <div class="d-flex justify-content-end mt-3">

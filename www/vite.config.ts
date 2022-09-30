@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
         template: 'index.html',
         inject: {
           data: {
+            domain: 'https://www.solid-form-handler.com',
             adSenseScript:
               mode === 'production'
                 ? `
@@ -45,6 +46,10 @@ export default defineConfig(({ mode }) => {
           {
             src: 'node_modules/shiki/dist/onig.wasm',
             dest: 'shiki/dist',
+          },
+          {
+            src: 'src/assets/images/solid-form-handler.png',
+            dest: 'images',
           },
         ],
       }),

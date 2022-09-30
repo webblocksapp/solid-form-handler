@@ -15,7 +15,6 @@ export default defineConfig(({ mode }) => {
         template: 'index.html',
         inject: {
           data: {
-            title: 'SolidJS Form Handler Docs',
             adSenseScript:
               mode === 'production'
                 ? `

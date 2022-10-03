@@ -324,9 +324,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Refresh the form field initial state
    */
-  const refreshFormField = async (path: string) => {
+  const refreshFormField = async (path: string = '') => {
     const fieldState = getFieldState(path);
-    await setFieldValue(path, get(formData.data, path), { validate: true });
+    await setFieldValue(path, get(formData.data, path), { validate: true, touch: fieldState?.touched });
     fieldState?.touched === false && setFieldState(path, { ...fieldState, errorMessage: '' });
   };
 

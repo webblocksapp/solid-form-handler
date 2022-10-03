@@ -240,7 +240,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       /**
        * When form reset, field data is updated with pre-configured default value.
        */
-      options?.reset && defaultValue && setFieldData(path, defaultValue);
+      options?.reset && defaultValue !== undefined && setFieldData(path, defaultValue);
     });
 
     setFormState('data', state);

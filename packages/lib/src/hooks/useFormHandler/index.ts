@@ -1,4 +1,4 @@
-import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema } from '@interfaces';
+import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema, FormFieldError } from '@interfaces';
 import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationError } from '@utils';
 import { createSignal } from 'solid-js';
 import { createStore } from 'solid-js/store';
@@ -48,12 +48,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      setFieldData(path, parseValue(getFieldValue(path) || value));
+      setFieldValue(path, parseValue(getFieldValue(path) || value), {
+        silentValidation: fieldState.touched ? false : true,
+        touch: fieldState.touched,
+        dirty: false,
+      });
       /**
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
        */
-      setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
+      setFieldState(path, { ...fieldState, initialValue: parseValue(value), defaultValue: parseValue(value) });
     }
   };
 
@@ -86,7 +90,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.touch && touchField(path);
       options?.dirty && dirtyField(path);
-      options?.validate && (await validateField(path));
+      options?.validate && (await validateField(path, { silentValidation: options?.silentValidation }));
     }
   };
 
@@ -101,7 +105,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Validates a single field of the form.
    */
-  const validateField = async (path: string = '') => {
+  const validateField = async (path: string = '', options?: { silentValidation?: boolean }) => {
     if (!validationSchema.isFieldFromSchema(path) || !path) return;
 
     try {
@@ -113,7 +117,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       }));
     } catch (error) {
       if (error instanceof ValidationError) {
-        const errorMessage = error.message;
+        const errorMessage = options?.silentValidation ? '' : error.message;
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
           isInvalid: true,
@@ -207,7 +211,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Gets all the form fields errors
    */
   const getFormErrors = () => {
-    const errors: { path: string; errorMessage: string }[] = [];
+    const errors: FormFieldError[] = [];
 
     for (let path in flattenObject(formData.data)) {
       getFieldError(path) && errors.push({ path, errorMessage: getFieldError(path) });
@@ -219,7 +223,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Generates the whole form state object metadata
    */
-  const generateFormState = async (options?: { validateFields?: boolean; reset?: boolean; fill?: boolean }) => {
+  const generateFormState = async (options?: { reset?: boolean; fill?: boolean }) => {
     const flattenedObject = flattenObject(formData.data);
     const state = Array.isArray(formData.data) ? [] : {};
 
@@ -245,15 +249,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
 
     setFormState('data', state);
 
-    if (options?.validateFields) {
-      const promises: Promise<void>[] = [];
-      Object.keys(flattenedObject).forEach((path) => {
-        path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
-        promises.push(validateField(path));
-      });
+    const promises: Promise<void>[] = [];
+    Object.keys(flattenedObject).forEach((path) => {
+      path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
+      promises.push(validateField(path, { silentValidation: true }));
+    });
 
-      await Promise.all(promises);
-    }
+    await Promise.all(promises);
   };
 
   /**
@@ -325,6 +327,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Refresh the form field initial state
    */
   const refreshFormField = async (path: string = '') => {
+    if (formIsResetting()) return;
     const fieldState = getFieldState(path);
     await setFieldValue(path, get(formData.data, path), { validate: true, touch: fieldState?.touched });
     fieldState?.touched === false && setFieldState(path, { ...fieldState, errorMessage: '' });
@@ -339,7 +342,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       setTimeout(async () => {
         if (data === undefined) return;
         setFormData('data', data);
-        await generateFormState({ validateFields: true, fill: true });
+        await generateFormState({ fill: true });
         setFormIsFilling(false);
         resolve(undefined);
       });
@@ -415,10 +418,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Resets the form data
    */
-  const resetForm = () => {
-    setFormData('data', validationSchema.buildDefault());
-    generateFormState({ reset: true });
+  const resetForm = async () => {
     setFormIsResetting(true);
+    setFormData('data', validationSchema.buildDefault());
+    await generateFormState({ reset: true });
     setFormIsResetting(false);
   };
 

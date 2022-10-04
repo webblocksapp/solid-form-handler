@@ -85,18 +85,17 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
 
   /**
    * Computes the checked status.
-   * - If checked prop is provided, it's used (controlled from outside)
-   * - If no value prop is provided, it's used the boolean flag stored at form handler.
    * - If value is provided, it's compared with form handler value.
+   * - If no value prop is provided, it's used the boolean flag stored at form handler.
+   * - If checked prop is provided, it's used (controlled from outside)
    */
   createEffect(() => {
-    if (typeof local.checked === 'boolean') {
-      setStore('checked', local.checked);
-    } else if (rest.value === undefined) {
-      setStore('checked', local.formHandler?.getFieldValue?.(rest.name));
-    } else {
-      setStore('checked', local.formHandler?.getFieldValue?.(rest.name) == rest.value);
-    }
+    setStore(
+      'checked',
+      local.formHandler?.getFieldValue?.(rest.name) == rest.value ||
+        local.formHandler?.getFieldValue?.(rest.name) ||
+        local.checked
+    );
   });
 
   /**

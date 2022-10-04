@@ -1,7 +1,7 @@
 import { Checkbox, TextInput } from '@components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import * as yup from 'yup';
 
 type Schema = {
@@ -23,19 +23,31 @@ export const ConditionalFormImpl: Component = () => {
     try {
       await formHandler.validateForm();
       alert(JSON.stringify(formData()));
-      formHandler.resetForm();
+      reset();
     } catch (error) {
       console.error(error);
     }
   };
 
+  const reset = () => {
+    formHandler.resetForm();
+  };
+
   return (
     <form onSubmit={submit}>
       <Checkbox label="isAdult" name="isAdult" checked={false} formHandler={formHandler} />
-      {formData().isAdult && <TextInput label="Email" name="email" formHandler={formHandler} />}
-      <button>Submit</button>
+      <Show when={formData().isAdult}>
+        <TextInput label="Email" name="email" formHandler={formHandler} />
+      </Show>
+      <button disabled={formHandler.isFormInvalid()}>Submit</button>
+      <button type="button" onClick={reset}>
+        Reset
+      </button>
       <pre>
         <code>{JSON.stringify(formData(), null, 2)}</code>
+      </pre>
+      <pre>
+        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
       </pre>
     </form>
   );

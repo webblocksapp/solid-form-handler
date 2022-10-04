@@ -67,11 +67,7 @@ export const Radio: Component<RadioProps> = (props) => {
    * - If value is provided, it's compared with form handler value.
    */
   createEffect(() => {
-    if (typeof local.checked === 'boolean') {
-      setStore('checked', local.checked);
-    } else {
-      setStore('checked', local.formHandler?.getFieldValue?.(rest.name) == rest.value);
-    }
+    setStore('checked', local.formHandler?.getFieldValue?.(rest.name) == rest.value || local.checked || false);
   });
 
   /**

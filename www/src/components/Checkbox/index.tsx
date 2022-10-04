@@ -1,4 +1,11 @@
-import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
+import {
+  Component,
+  createEffect,
+  JSX,
+  onCleanup,
+  onMount,
+  splitProps,
+} from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { FormHandler } from 'solid-form-handler';
 
@@ -89,21 +96,17 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
 
   /**
    * Computes the checked status.
-   * - If checked prop is provided, it's used (controlled from outside)
-   * - If no value prop is provided, it's used the boolean flag stored at form handler.
    * - If value is provided, it's compared with form handler value.
+   * - If no value prop is provided, it's used the boolean flag stored at form handler.
+   * - If checked prop is provided, it's used (controlled from outside)
    */
   createEffect(() => {
-    if (typeof local.checked === 'boolean') {
-      setStore('checked', local.checked);
-    } else if (rest.value === undefined) {
-      setStore('checked', local.formHandler?.getFieldValue?.(rest.name));
-    } else {
-      setStore(
-        'checked',
-        local.formHandler?.getFieldValue?.(rest.name) == rest.value
-      );
-    }
+    setStore(
+      'checked',
+      local.formHandler?.getFieldValue?.(rest.name) == rest.value ||
+        local.formHandler?.getFieldValue?.(rest.name) ||
+        local.checked
+    );
   });
 
   /**
@@ -137,11 +140,14 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.checked &&
-      local.formHandler?.setFieldDefaultValue(
-        rest.name,
-        getValue(local.checked)
-      );
+    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    local.formHandler?.refreshFormField(rest.name);
   });
 
   return (

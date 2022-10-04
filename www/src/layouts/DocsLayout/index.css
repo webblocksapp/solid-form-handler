@@ -39,6 +39,7 @@
   border: 1px solid #dee2e6;
   width: 100%;
   min-height: 90px;
+  display: none;
 }
 
 .docs-layout .sidebar {

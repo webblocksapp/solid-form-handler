@@ -1,5 +1,4 @@
 //@ts-nocheck
-
 try {
   await formHandler.validateForm();
 } catch (error) {

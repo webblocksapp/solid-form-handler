@@ -10,6 +10,7 @@ console.log(formHandler.getFormState());
  *           "isInvalid": true,
  *           "errorMessage": "",
  *           "initialValue": "",
+ *           "defaultValue": "",
  *           "touched": false,
  *           "dirty": false
  *         },
@@ -18,6 +19,7 @@ console.log(formHandler.getFormState());
  *           "isInvalid": true,
  *           "errorMessage": "",
  *           "initialValue": "",
+ *           "defaultValue": "",
  *           "touched": false,
  *           "dirty": false
  *         }

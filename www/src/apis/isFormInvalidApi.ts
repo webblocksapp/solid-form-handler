@@ -1,2 +1,2 @@
 //@ts-nocheck
-function isFormInvalid(path: string): boolean;
+function isFormInvalid(): boolean;

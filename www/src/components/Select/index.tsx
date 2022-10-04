@@ -4,6 +4,7 @@ import {
   createSignal,
   For,
   JSX,
+  onCleanup,
   onMount,
   splitProps,
 } from 'solid-js';
@@ -146,8 +147,14 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    store.defaultValue &&
-      local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+    local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    local.formHandler?.refreshFormField(rest.name);
   });
 
   return (

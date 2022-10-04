@@ -13,9 +13,7 @@ export const IsFormInvalid: Component = () => (
     <p>
       <b>Implementation:</b>
     </p>
-    <p>
-      Form will be invalid if it doesn't satisfy the Yup schema constraints:
-    </p>
+    <p>Form will be invalid if it doesn't satisfy the schema constraints:</p>
     <Code content={getRaw('isFormInvalid1')} />
   </>
 );

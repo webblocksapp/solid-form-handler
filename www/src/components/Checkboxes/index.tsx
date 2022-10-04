@@ -4,6 +4,7 @@ import {
   createSelector,
   For,
   JSX,
+  onCleanup,
   onMount,
   splitProps,
 } from 'solid-js';
@@ -137,8 +138,14 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    store.defaultValue &&
-      rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+    rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    rest.formHandler?.refreshFormField(rest.name);
   });
 
   return (

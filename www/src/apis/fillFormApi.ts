@@ -1,2 +1,2 @@
 //@ts-nocheck
-function fillForm(data: Partial<T>): Promise<void>;
+function fillForm(data: T): Promise<void>;

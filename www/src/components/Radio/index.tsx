@@ -1,4 +1,11 @@
-import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
+import {
+  Component,
+  createEffect,
+  JSX,
+  onMount,
+  splitProps,
+  onCleanup,
+} from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { FormHandler } from 'solid-form-handler';
 
@@ -68,14 +75,12 @@ export const Radio: Component<RadioProps> = (props) => {
    * - If value is provided, it's compared with form handler value.
    */
   createEffect(() => {
-    if (typeof local.checked === 'boolean') {
-      setStore('checked', local.checked);
-    } else {
-      setStore(
-        'checked',
-        local.formHandler?.getFieldValue?.(rest.name) == rest.value
-      );
-    }
+    setStore(
+      'checked',
+      local.formHandler?.getFieldValue?.(rest.name) == rest.value ||
+        local.checked ||
+        false
+    );
   });
 
   /**
@@ -109,11 +114,14 @@ export const Radio: Component<RadioProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.checked &&
-      local.formHandler?.setFieldDefaultValue(
-        rest.name,
-        getValue(local.checked)
-      );
+    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    local.formHandler?.refreshFormField(rest.name);
   });
 
   return (

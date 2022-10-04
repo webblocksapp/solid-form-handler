@@ -6,7 +6,7 @@ export const GetFieldError: Component = () => (
   <>
     <h2 class="mb-4 border-bottom">getFieldError</h2>
     <p>
-      This method returns an string with the field error message. This
+      This method returns a string with the field error message. This
       information is get from the form state.
     </p>
     <Code content={getRaw('getFieldErrorApi')} />

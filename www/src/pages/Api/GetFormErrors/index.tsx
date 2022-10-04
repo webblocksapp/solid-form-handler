@@ -12,7 +12,7 @@ export const GetFormErrors: Component = () => (
     </p>
     <Code content={getRaw('getFormErrors1')} />
     <p>
-      <code>ValidationResult</code> is composed by:
+      <code>FormFieldError</code> is composed by:
     </p>
     <ul>
       <li>

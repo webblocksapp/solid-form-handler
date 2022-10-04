@@ -15,5 +15,14 @@ export const ValidateField: Component = () => (
       <b>Implementation:</b>
     </p>
     <Code content={getRaw('validateField1')} />
+    <p>
+      <code>options</code> is composed by:
+    </p>
+    <ul>
+      <li>
+        <code>silentValidation:</code> by default is <code>false</code>. When
+        set to <code>true</code> validation error message is not displayed.
+      </li>
+    </ul>
   </>
 );

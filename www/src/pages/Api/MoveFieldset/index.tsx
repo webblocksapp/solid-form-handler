@@ -13,6 +13,6 @@ export const MoveFieldset: Component = () => (
     <p>
       <b>Implementation:</b>
     </p>
-    <Code content={getRaw('moveFieldset1')} />
+    <Code content={getRaw('/moveFieldset1')} />
   </>
 );

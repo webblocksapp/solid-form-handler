@@ -21,6 +21,10 @@ export const SetFieldValue: Component = () => (
         value is set.
       </li>
       <li>
+        <code>silentValidation:</code> by default is <code>false</code>. No
+        error message is displayed when set to <code>true</code>.
+      </li>
+      <li>
         <code>touch:</code> by default is <code>true</code>.
       </li>
       <li>

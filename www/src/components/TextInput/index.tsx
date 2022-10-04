@@ -1,4 +1,11 @@
-import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
+import {
+  Component,
+  createEffect,
+  JSX,
+  onCleanup,
+  onMount,
+  splitProps,
+} from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { FormHandler } from 'solid-form-handler';
 
@@ -117,8 +124,14 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * Initializes the form field default value if it's defined.
    */
   onMount(() => {
-    store.defaultValue &&
-      local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+    local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    local.formHandler?.refreshFormField(rest.name);
   });
 
   return (

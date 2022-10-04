@@ -29,7 +29,12 @@ export const GetFormState: Component = () => (
         <code>errorMessage:</code> field validation error message.
       </li>
       <li>
-        <code>initialValue:</code> initial field value.
+        <code>defaultValue:</code> value the field takes when it's initialized
+        or the form is reset.
+      </li>
+      <li>
+        <code>initialValue:</code> first value the field takes when the form is
+        initialized or filled.
       </li>
       <li>
         <code>touched:</code> becomes <code>true</code> if the user has

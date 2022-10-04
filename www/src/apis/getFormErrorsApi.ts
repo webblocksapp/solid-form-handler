@@ -1,2 +1,2 @@
 //@ts-nocheck
-function getFormErrors(): ValidationResult[];
+function getFormErrors(): FormFieldError[];

@@ -6,6 +6,7 @@ export * from './FieldsetsFormImpl';
 export * from './FieldsetsFormStress1';
 export * from './FormImpl';
 export * from './NestedFieldsetsFormImpl';
+export * from './ReferralsForm';
 export * from './SelectImpl';
 export * from './SortableFieldsetsFormImpl';
 export * from './StoreImpl';

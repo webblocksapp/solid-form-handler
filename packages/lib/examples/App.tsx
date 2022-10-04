@@ -14,6 +14,7 @@ import {
   VanillaCompFormImpl,
   FieldsetsFormStress1,
   ConditionalFormImpl,
+  ReferralsForm,
 } from '@implementations';
 import './App.css';
 
@@ -60,6 +61,9 @@ export const App: Component = () => {
         <div>
           <Link href="conditional-form-impl">conditional-form-impl</Link>
         </div>
+        <div>
+          <Link href="referrals-form">referrals-form</Link>
+        </div>
       </div>
       <Routes>
         <Route path="checkbox-impl" element={<CheckboxImpl />} />
@@ -75,6 +79,7 @@ export const App: Component = () => {
         <Route path="vanilla-comp-form-impl" element={<VanillaCompFormImpl />} />
         <Route path="fieldsets-form-stress-1" element={<FieldsetsFormStress1 />} />
         <Route path="conditional-form-impl" element={<ConditionalFormImpl />} />
+        <Route path="referrals-form" element={<ReferralsForm />} />
       </Routes>
     </div>
   );

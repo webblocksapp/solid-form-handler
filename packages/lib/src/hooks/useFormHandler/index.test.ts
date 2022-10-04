@@ -232,6 +232,15 @@ describe('useFormHandler', () => {
     ]);
   });
 
+  it('Nested fieldsets: form is filled and marked as valid', async () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    await formHandler.fillForm({
+      hostName: 'John',
+      referrals: [{ name: 'Mike', age: 22 }],
+    });
+    expect(formHandler.isFormInvalid()).toBe(false);
+  });
+
   it('Nested fieldsets: default form data must be an array of 1 record', () => {
     const formHandler = useFormHandler(yupSchema(referralsSchema));
     expect(formHandler.formData().referrals).toMatchObject([{ name: '', age: '' }]);

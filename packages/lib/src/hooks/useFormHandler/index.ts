@@ -31,6 +31,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * when it's initialized or reset. No validation is triggered.
    */
   const setFieldDefaultValue = (path: string = '', value: any) => {
+    if (value === undefined || formIsFilling() || formIsResetting()) return;
+
     //Avoids to overwrite filled data with default data
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return;
@@ -48,7 +50,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      setFieldValue(path, parseValue(getFieldValue(path) || value), {
+      setFieldValue(path, getFieldValue(path) || value, {
         silentValidation: fieldState.touched ? false : true,
         touch: fieldState.touched,
         dirty: false,
@@ -57,7 +59,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
        */
-      setFieldState(path, { ...fieldState, initialValue: parseValue(value), defaultValue: parseValue(value) });
+      setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
     }
   };
 
@@ -327,7 +329,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Refresh the form field initial state
    */
   const refreshFormField = async (path: string = '') => {
-    if (formIsResetting()) return;
+    if (formIsFilling() || formIsResetting()) return;
+
     const fieldState = getFieldState(path);
     await setFieldValue(path, get(formData.data, path), { validate: true, touch: fieldState?.touched });
     fieldState?.touched === false && setFieldState(path, { ...fieldState, errorMessage: '' });

@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
+import { Component, createEffect, JSX, onCleanup, onMount, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -123,7 +123,14 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.checked !== undefined && local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    local.formHandler?.refreshFormField(rest.name);
   });
 
   return (

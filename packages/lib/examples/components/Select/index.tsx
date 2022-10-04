@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, createSignal, For, JSX, onMount, splitProps } from 'solid-js';
+import { Component, createEffect, createSignal, For, JSX, onCleanup, onMount, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 type SelectableOption = { value: string | number; label: string };
@@ -126,7 +126,14 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    store.defaultValue && local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+    local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    local.formHandler?.refreshFormField(rest.name);
   });
 
   return (

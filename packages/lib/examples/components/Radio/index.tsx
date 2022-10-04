@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, JSX, onMount, splitProps } from 'solid-js';
+import { Component, createEffect, JSX, onCleanup, onMount, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 export interface RadioProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type' | 'value'> {
@@ -95,7 +95,14 @@ export const Radio: Component<RadioProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    local.checked !== undefined && local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    local.formHandler?.refreshFormField(rest.name);
   });
 
   return (

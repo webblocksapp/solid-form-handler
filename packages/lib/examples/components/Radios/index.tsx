@@ -1,4 +1,4 @@
-import { Component, createEffect, createSelector, For, JSX, onMount, splitProps } from 'solid-js';
+import { Component, createEffect, createSelector, For, JSX, onCleanup, onMount, splitProps } from 'solid-js';
 import { Radio } from '@components';
 import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
@@ -99,7 +99,14 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Initializes the form field default value
    */
   onMount(() => {
-    store.defaultValue && rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+    rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  });
+
+  /**
+   * Refresh the form field when unmounted.
+   */
+  onCleanup(() => {
+    rest.formHandler?.refreshFormField(rest.name);
   });
 
   return (

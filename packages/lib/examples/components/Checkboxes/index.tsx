@@ -40,7 +40,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    */
   const checked = createSelector(
     () => store.value,
-    (optionValue: string | number, storeValue) => storeValue.some((item) => item == optionValue)
+    (optionValue: string | number, storeValue) => storeValue?.some?.((item) => item == optionValue)
   );
 
   /**

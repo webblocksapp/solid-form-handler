@@ -82,7 +82,6 @@ export const UserForm: Component = () => {
         </div>
         <div class="mb-3">
           <Checkbox
-            display="switch"
             label="Subscribe to newsletter"
             name="subscribed"
             formHandler={formHandler}

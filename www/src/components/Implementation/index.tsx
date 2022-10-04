@@ -1,4 +1,4 @@
-import { Code, CodeTabs } from '@components';
+import { Code, CodeTabs, Tabs } from '@components';
 import {
   Component,
   createSignal,
@@ -22,28 +22,10 @@ export const Implementation: Component<ImplementationProps> = (props) => {
 
   return (
     <>
-      <ul class="nav nav-tabs d-flex justify-content-end">
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            classList={{ active: tabIndex() === 0 }}
-            onClick={() => setTabIndex(0)}
-          >
-            Preview
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            classList={{ active: tabIndex() === 1 }}
-            onClick={() => setTabIndex(1)}
-          >
-            Code
-          </a>
-        </li>
-      </ul>
+      <Tabs
+        tabs={[{ text: 'Preview' }, { text: 'code' }]}
+        onChange={(index) => setTabIndex(index)}
+      />
       <div class="border border-top-0">
         <div
           class="p-2"

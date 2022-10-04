@@ -7,9 +7,9 @@ export const FormValidation: Component = () => (
   <>
     <h2 class="mb-4 border-bottom">Form Validation</h2>
     <p>
-      Form validation will depend on how well you have defined the Yup schema.
-      Once settled, the form handler will receive it for controlling the defined
-      data validations.{' '}
+      Form validation will depend on how well you have defined the validation
+      schema. Once settled, the form handler will receive it for controlling the
+      defined data validations.{' '}
     </p>
     <p>The following example shows a basic usage:</p>
     <Implementation

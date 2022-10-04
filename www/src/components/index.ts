@@ -12,4 +12,5 @@ export * from './Select';
 export * from './Sidebar';
 export * from './SidebarMenu';
 export * from './SidebarProvider';
+export * from './Tabs';
 export * from './TextInput';

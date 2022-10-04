@@ -1,6 +1,12 @@
-import { Code } from '@components';
-import { CodeTab } from '@interfaces';
-import { Component, createSignal, For, mergeProps } from 'solid-js';
+import { Code, Tabs } from '@components';
+import { CodeTab, Tab } from '@interfaces';
+import {
+  Component,
+  createEffect,
+  createSignal,
+  For,
+  mergeProps,
+} from 'solid-js';
 import './index.css';
 
 export interface CodeTabsProps {
@@ -11,26 +17,16 @@ export interface CodeTabsProps {
 
 export const CodeTabs: Component<CodeTabsProps> = (props) => {
   const [tabIndex, setTabIndex] = createSignal<number>(0);
+  const [tabs, setTabs] = createSignal<Tab[]>([]);
   props = mergeProps({ class: 'my-3' }, props);
+
+  createEffect(() => {
+    setTabs(() => props.tabs.map((item) => ({ text: item.name })));
+  });
 
   return (
     <div class={props.class} classList={{ 'code-tabs': true }}>
-      <ul class="nav nav-tabs d-flex justify-content-end ps-2 pe-2 pt-2">
-        <For each={props.tabs}>
-          {(tab, index) => (
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="#"
-                classList={{ active: tabIndex() === index() }}
-                onClick={() => setTabIndex(index())}
-              >
-                {tab.name}
-              </a>
-            </li>
-          )}
-        </For>
-      </ul>
+      <Tabs tabs={tabs()} onChange={(index) => setTabIndex(index)} />
       <div
         classList={{
           border: props.border === undefined,

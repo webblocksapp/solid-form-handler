@@ -77,17 +77,17 @@ export const PersonForm: Component = () => {
         </div>
       </div>
       <div class="mb-3 w-100">
-        <button class="btn btn-primary me-2">Submit</button>
+        <button class="btn btn-primary me-2 mt-2">Submit</button>
         <button
-          class="btn btn-primary me-2"
+          class="btn btn-primary me-2 mt-2"
           disabled={formHandler.isFormInvalid()}
         >
           Submit
         </button>
-        <button class="btn btn-primary me-2" onClick={fill} type="button">
+        <button class="btn btn-primary me-2 mt-2" onClick={fill} type="button">
           Fill
         </button>
-        <button class="btn btn-primary me-2" onClick={reset} type="button">
+        <button class="btn btn-primary me-2 mt-2" onClick={reset} type="button">
           Reset
         </button>
       </div>

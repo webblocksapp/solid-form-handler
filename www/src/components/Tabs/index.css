@@ -1,0 +1,8 @@
+.tabs .nav-tabs {
+  flex-wrap: nowrap;
+}
+
+.tabs .nav-tabs .nav-item {
+  cursor: pointer;
+  white-space: nowrap;
+}

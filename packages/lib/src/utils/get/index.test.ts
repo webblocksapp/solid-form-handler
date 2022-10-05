@@ -29,4 +29,9 @@ describe('get', () => {
     expect(value1).toBe('Julia');
     expect(value2).toBe('Leo');
   });
+
+  it('CASE-6', () => {
+    const obj = { height: 2.23 };
+    expect(get(obj, 'height')).toBe(2.23);
+  });
 });

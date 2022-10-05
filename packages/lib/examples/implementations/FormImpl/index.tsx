@@ -29,6 +29,7 @@ export const FormImpl: Component = () => {
       setError('');
       await formHandler.validateForm();
       alert(`Data submitted \n ${JSON.stringify(formData())}`);
+      formHandler.resetForm();
     } catch (error) {
       if (error instanceof FormErrorsException) {
         setError(
@@ -48,14 +49,24 @@ export const FormImpl: Component = () => {
       <div>
         <label>Name</label>
         <br />
-        <input data-testid="name" name="name" onInput={onInput}></input>
+        <input
+          data-testid="name"
+          name="name"
+          onInput={onInput}
+          value={formHandler.getFieldValue('name', (value) => String(value))}
+        ></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('name')}</small>
       </div>
       <div>
         <label>Age</label>
         <br />
-        <input data-testid="age" name="age" onInput={onInput}></input>
+        <input
+          data-testid="age"
+          name="age"
+          onInput={onInput}
+          value={formHandler.getFieldValue('age', (value) => String(value))}
+        ></input>
         <br />
         <small style="color: red;">{formHandler.getFieldError('age')}</small>
       </div>
@@ -66,6 +77,12 @@ export const FormImpl: Component = () => {
       <br />
       <pre style="color: red">
         <code data-testid="error">{error()}</code>
+      </pre>
+      <pre>
+        <code>{JSON.stringify(formData(), null, 2)}</code>
+      </pre>
+      <pre>
+        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
       </pre>
     </form>
   );

@@ -78,10 +78,19 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
       const prevTargetPath = targetPath.split('.').slice(0, -1).join('.');
       obj = Array.isArray(get(obj, prevTargetPath))
         ? set(obj, prevTargetPath, _schema.getDefault() ?? [])
-        : set(obj, targetPath, _schema.getDefault() ?? '');
+        : set(obj, targetPath, _schema.getDefault() ?? buildDefaultValue(_schema));
     }
 
     return obj;
+  };
+
+  const buildDefaultValue = (schema: yup.AnySchema) => {
+    switch (schema._type) {
+      case 'boolean':
+        return false;
+      default:
+        return '';
+    }
   };
 
   return { isFieldFromSchema, validateAt, buildDefault };

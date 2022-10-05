@@ -4,4 +4,5 @@ export type SetFieldValueOptions = {
   touch?: boolean;
   dirty?: boolean;
   htmlElement?: HTMLElement;
+  mapValue?: (value: any) => any;
 };

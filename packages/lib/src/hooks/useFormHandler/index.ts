@@ -23,7 +23,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    */
   const setFieldData = (path: string = '', value: any) => {
     path = path ? `data.${path}` : 'data';
-    setFormData(...(formatObjectPath(path).split('.') as []), value);
+    setFormData(...(formatObjectPath(path).split('.') as []), parseValue(value));
   };
 
   /**
@@ -31,7 +31,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * when it's initialized or reset. No validation is triggered.
    */
   const setFieldDefaultValue = (path: string = '', value: any) => {
-    if (value === undefined || formIsFilling() || formIsResetting()) return;
+    if (formIsFilling() || formIsResetting()) return;
 
     //Avoids to overwrite filled data with default data
     const fieldState = getFieldState(path);
@@ -50,7 +50,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      setFieldValue(path, getFieldValue(path) || value, {
+      const currentValue = getFieldValue(path);
+      value = currentValue === false ? false : value;
+
+      setFieldValue(path, currentValue || value, {
         silentValidation: fieldState.touched ? false : true,
         touch: fieldState.touched,
         dirty: false,
@@ -59,7 +62,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
        */
-      setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
+      value !== undefined && setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
     }
   };
 
@@ -72,7 +75,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     if (!path) return;
 
     const fieldState = getFieldState(path);
-    options = { touch: true, dirty: true, validate: true, ...options };
+    options = { touch: true, dirty: true, validate: true, mapValue: (value) => value, ...options };
 
     if (fieldState === undefined) return;
 
@@ -88,7 +91,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       });
       await Promise.all(promises);
     } else {
-      setFieldData(path, value);
+      setFieldData(path, options?.mapValue?.(value));
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.touch && touchField(path);
       options?.dirty && dirtyField(path);
@@ -101,7 +104,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    */
   const setFieldState = (path: string = '', value: any) => {
     path = path ? `data.${path}` : 'data';
-    setFormState(...(formatObjectPath(path).split('.') as []), value);
+    setFormState(...(formatObjectPath(path).split('.') as []), parseValue(value));
   };
 
   /**
@@ -160,8 +163,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Gets the field value from formData store.
    */
-  const getFieldValue = (path: string = '') => {
-    return path && parseValue(get(formData.data, path));
+  const getFieldValue = (path: string = '', mapValue = (value: any) => value) => {
+    return path && mapValue(get(formData.data, path));
   };
 
   /**
@@ -232,16 +235,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     Object.keys(flattenedObject).forEach((path) => {
       const fieldState = getFieldState(path);
       const defaultValue = parseValue(fieldState?.defaultValue);
-
       /**
        * Initial value is very different to default value. It refers first value
        * the field takes when the form is initialized or filled. It's used to check if
        * the field is dirty (had a change).
        */
-      const initialValue = parseValue(options?.fill ? flattenedObject[path] : defaultValue);
-
       path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
-      set(state, path, { ...buildFieldState(path, options?.reset), initialValue, defaultValue });
+      set(state, path, { ...buildFieldState(path, { reset: options?.reset, fill: options?.fill }) });
 
       /**
        * When form reset, field data is updated with pre-configured default value.
@@ -279,14 +279,20 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Initializes a default or existing state of a field.
    */
-  const buildFieldState = (path: string, reset: boolean = false) => {
+  const buildFieldState = (path: string, options?: { reset?: boolean; fill?: boolean }) => {
+    const fieldState = getFieldState(path);
+    const value = getFieldValue(path);
+    options = { reset: false, ...options };
+
     return {
+      ...fieldState,
       __state: true,
-      isInvalid: reset ? true : getFieldState(path)?.isInvalid || true,
-      errorMessage: reset ? '' : getFieldState(path)?.errorMessage || '',
-      defaultValue: parseValue(get(formData.data, path)),
-      touched: reset ? false : getFieldState(path)?.touched || false,
-      dirty: reset ? false : getFieldState(path)?.dirty || false,
+      isInvalid: options.reset ? true : fieldState?.isInvalid || true,
+      errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
+      defaultValue: options.reset || options?.fill ? fieldState?.defaultValue : value,
+      initialValue: options?.fill ? value : fieldState?.defaultValue ?? value,
+      touched: options.reset ? false : fieldState?.touched || false,
+      dirty: options.reset ? false : fieldState?.dirty || false,
     };
   };
 
@@ -441,7 +447,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       : (formData.data as unknown as any[]).length;
     const builtPath = options?.basePath ? `${options?.basePath}.${length}` : `${length}`;
     const data = defaultData[0];
-    setFieldData(builtPath, parseValue(data));
+    setFieldData(builtPath, data);
     /**
      * Fieldset is validated if data is passed.
      */

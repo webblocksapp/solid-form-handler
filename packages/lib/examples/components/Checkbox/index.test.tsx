@@ -101,4 +101,33 @@ describe('Checkbox ', () => {
       expect(formHandler.getFieldDefaultValue('subscribed')).toBe(true);
     });
   });
+
+  it('Value prop is set at form handler when checked', async () => {
+    dom = render(() => <Checkbox name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />);
+    checkbox = dom.container.querySelector('[name="status"]') as HTMLInputElement;
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+    expect(formHandler.getFieldValue('status')).toBe('enabled');
+  });
+
+  it('Unchecked value prop is set at form handler when unchecked', async () => {
+    dom = render(() => <Checkbox name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />);
+    checkbox = dom.container.querySelector('[name="status"]') as HTMLInputElement;
+    fireEvent.click(checkbox);
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(false);
+    expect(formHandler.getFieldValue('status')).toBe('disabled');
+  });
+
+  it('If checked and value prop given, form handler takes as value the value prop.', async () => {
+    dom = render(() => (
+      <Checkbox checked name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />
+    ));
+    expect(formHandler.getFieldValue('status')).toBe('enabled');
+  });
+
+  it('If unchecked and uncheckedValue prop given, form handler takes as value the uncheckedValue prop.', async () => {
+    dom = render(() => <Checkbox name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />);
+    expect(formHandler.getFieldValue('status')).toBe('disabled');
+  });
 });

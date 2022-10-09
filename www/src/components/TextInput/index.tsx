@@ -1,3 +1,4 @@
+import { FormHandler } from 'solid-form-handler';
 import {
   Component,
   createEffect,
@@ -7,7 +8,6 @@ import {
   splitProps,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { FormHandler } from 'solid-form-handler';
 
 export interface TextInputProps
   extends JSX.InputHTMLAttributes<HTMLInputElement> {
@@ -80,11 +80,20 @@ export const TextInput: Component<TextInputProps> = (props) => {
   };
 
   /**
-   * Single source of truth for default value and value.
+   * Initializes component's default value.
    */
   createEffect(() => {
     setStore('defaultValue', local.value as any);
-    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+  });
+
+  /**
+   * Controls component's value.
+   */
+  createEffect(() => {
+    /**
+     * If formHandler is defined, value is controlled
+     * by the same component, if no, by the value prop.
+     */
     setStore(
       'value',
       local.formHandler
@@ -121,7 +130,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
   });
 
   /**
-   * Initializes the form field default value if it's defined.
+   * Initializes the form field default.
    */
   onMount(() => {
     local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);

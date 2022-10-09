@@ -1,3 +1,4 @@
+import { FormHandler } from 'solid-form-handler';
 import {
   Component,
   createEffect,
@@ -10,7 +11,6 @@ import {
 } from 'solid-js';
 import { Checkbox } from '@components';
 import { createStore } from 'solid-js/store';
-import { FormHandler } from 'solid-form-handler';
 
 type SelectableOption = { value: string | number; label: string };
 
@@ -122,20 +122,27 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   });
 
   /**
-   * Single source of truth for default value and value.
+   * Initializes component's default value
    */
   createEffect(() => {
-    const value: any = rest.value || [];
-    setStore('defaultValue', value);
+    setStore('defaultValue', rest.value as any);
+  });
+
+  /**
+   * Controls component's value.
+   */
+  createEffect(() => {
     //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
     setStore(
       'value',
-      rest.formHandler ? rest.formHandler?.getFieldValue?.(rest.name) : value
+      rest.formHandler
+        ? rest.formHandler?.getFieldValue?.(rest.name)
+        : rest.value
     );
   });
 
   /**
-   * Initializes the form field default value
+   * Initializes the form field default value.
    */
   onMount(() => {
     rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);

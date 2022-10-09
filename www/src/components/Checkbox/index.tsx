@@ -1,3 +1,4 @@
+import { FormHandler } from 'solid-form-handler';
 import {
   Component,
   createEffect,
@@ -7,7 +8,6 @@ import {
   splitProps,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { FormHandler } from 'solid-form-handler';
 
 export interface CheckboxProps
   extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -137,7 +137,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
   });
 
   /**
-   * Initializes the form field default value
+   * Initializes the form field default value.
    */
   onMount(() => {
     local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));

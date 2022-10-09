@@ -83,10 +83,16 @@ export const Select: Component<SelectProps> = (props) => {
   };
 
   /**
-   * Single source of truth for default value and value.
+   * Initializes component's default value
    */
   createEffect(() => {
     setStore('defaultValue', local.value as any);
+  });
+
+  /**
+   * Controls component's value.
+   */
+  createEffect(() => {
     //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
     setStore('value', local.formHandler ? local.formHandler?.getFieldValue?.(rest.name) : local.value);
   });

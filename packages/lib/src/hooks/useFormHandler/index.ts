@@ -31,7 +31,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * when it's initialized or reset. No validation is triggered.
    */
   const setFieldDefaultValue = (path: string = '', value: any) => {
-    if (formIsFilling() || formIsResetting()) return;
+    if (!path || value === undefined || formIsFilling() || formIsResetting()) return;
 
     //Avoids to overwrite filled data with default data
     const fieldState = getFieldState(path);
@@ -50,10 +50,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      const currentValue = getFieldValue(path);
-      value = currentValue === false ? false : value;
-
-      setFieldValue(path, currentValue || value, {
+      setFieldValue(path, getFieldValue(path) || parseValue(value), {
         silentValidation: fieldState.touched ? false : true,
         touch: fieldState.touched,
         dirty: false,
@@ -62,7 +59,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
        */
-      value !== undefined && setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
+      setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
     }
   };
 
@@ -165,6 +162,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    */
   const getFieldValue = (path: string = '', mapValue = (value: any) => value) => {
     return path && mapValue(get(formData.data, path));
+  };
+
+  /**
+   * Gets the field value from formData store.
+   */
+  const getFieldDefaultValue = (path: string = '') => {
+    return path && getFieldState(path)?.defaultValue;
   };
 
   /**
@@ -520,6 +524,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     formIsFilling,
     formIsResetting,
     getFieldError,
+    getFieldDefaultValue,
     getFieldValue,
     formData: getFormData,
     getFormErrors,

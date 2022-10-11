@@ -42,7 +42,6 @@ export const TextInput: Component<TextInputProps> = (props) => {
     errorMessage: '',
     error: false,
     value: '',
-    defaultValue: '',
     id: '',
   });
 
@@ -80,20 +79,10 @@ export const TextInput: Component<TextInputProps> = (props) => {
   };
 
   /**
-   * Initializes component's default value.
-   */
-  createEffect(() => {
-    setStore('defaultValue', local.value as any);
-  });
-
-  /**
    * Controls component's value.
    */
   createEffect(() => {
-    /**
-     * If formHandler is defined, value is controlled
-     * by the same component, if no, by the value prop.
-     */
+    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
     setStore(
       'value',
       local.formHandler
@@ -130,17 +119,24 @@ export const TextInput: Component<TextInputProps> = (props) => {
   });
 
   /**
-   * Initializes the form field default.
+   * Initializes component's default value
    */
-  onMount(() => {
-    local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  createEffect(() => {
+    local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
   });
 
   /**
-   * Refresh the form field when unmounted.
+   * Mount lifecycle
+   */
+  onMount(() => {
+    local.formHandler?.mountField?.(rest.name);
+  });
+
+  /**
+   * Unmount lifecycle
    */
   onCleanup(() => {
-    local.formHandler?.refreshFormField(rest.name);
+    local.formHandler?.unmountField?.(rest.name);
   });
 
   return (

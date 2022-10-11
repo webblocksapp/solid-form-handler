@@ -1,5 +1,7 @@
 import { useFormHandler } from '@hooks';
+import { FieldState } from '@interfaces';
 import { yupSchema } from '@utils';
+import { waitFor } from 'solid-testing-library';
 import { personSchema, contactSchema, personsSchema, referralsSchema } from './mocks';
 
 describe('useFormHandler', () => {
@@ -410,6 +412,55 @@ describe('useFormHandler', () => {
         touched: false,
         dirty: false,
       },
+    });
+  });
+
+  it('Mounts the field', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    await formHandler.mountField('name');
+    const { __cache } = formHandler._.getFieldState('name') as FieldState;
+    await waitFor(() => {
+      expect(__cache).toMatchObject({
+        mounted: {
+          __state: true,
+          errorMessage: '',
+          isInvalid: true,
+          defaultValue: '',
+          initialValue: '',
+          touched: false,
+          dirty: false,
+        },
+      });
+    });
+  });
+
+  it('Unmounts the field', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    await formHandler.mountField('name');
+    await formHandler.setFieldValue('name', '');
+    formHandler.unmountField('name');
+    const { __cache } = formHandler._.getFieldState('name') as FieldState;
+    await waitFor(() => {
+      expect(__cache).toMatchObject({
+        mounted: {
+          __state: true,
+          errorMessage: '',
+          isInvalid: true,
+          defaultValue: '',
+          initialValue: '',
+          touched: false,
+          dirty: false,
+        },
+        unmounted: {
+          __state: true,
+          errorMessage: 'name is a required field',
+          isInvalid: true,
+          defaultValue: '',
+          initialValue: '',
+          touched: true,
+          dirty: false,
+        },
+      });
     });
   });
 });

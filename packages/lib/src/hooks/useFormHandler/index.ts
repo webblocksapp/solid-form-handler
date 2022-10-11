@@ -1,6 +1,6 @@
 import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema, FormFieldError } from '@interfaces';
 import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationError } from '@utils';
-import { createSignal } from 'solid-js';
+import { createSignal, untrack } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 /**
@@ -30,36 +30,41 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Sets the default field value which will be used
    * when it's initialized or reset. No validation is triggered.
    */
-  const setFieldDefaultValue = (path: string = '', value: any) => {
-    if (!path || value === undefined || formIsFilling() || formIsResetting()) return;
+  const setFieldDefaultValue = (path: string = '', defaultValue: any) => {
+    if (!path || defaultValue === undefined || formIsFilling() || formIsResetting()) return;
 
     //Avoids to overwrite filled data with default data
-    const fieldState = getFieldState(path);
+    const fieldState = untrack(() => getFieldState(path));
     if (fieldState === undefined) return;
 
     /**
      * Recursion is necessary if the field value is not a primitive.
      */
     if (fieldState.__state === undefined) {
-      Object.keys(flattenObject(value)).forEach((key) => {
+      Object.keys(flattenObject(defaultValue)).forEach((key) => {
         const finalPath = `${path}.${key}`;
-        setFieldDefaultValue(finalPath, get(value, key));
+        setFieldDefaultValue(finalPath, get(defaultValue, key));
       });
     } else {
       /**
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      setFieldValue(path, getFieldValue(path) || parseValue(value), {
-        silentValidation: fieldState.touched ? false : true,
-        touch: fieldState.touched,
-        dirty: false,
-      });
+      const currentValue = untrack(() => getFieldValue(path));
+      let falseValue = currentValue === false ? false : '';
+      untrack(() => setFieldData(path, currentValue || parseValue(defaultValue) || falseValue));
+
       /**
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
        */
-      setFieldState(path, { ...fieldState, initialValue: value, defaultValue: value });
+      untrack(() =>
+        setFieldState(path, {
+          ...fieldState,
+          initialValue: defaultValue,
+          defaultValue: defaultValue,
+        })
+      );
     }
   };
 
@@ -102,6 +107,43 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   const setFieldState = (path: string = '', value: any) => {
     path = path ? `data.${path}` : 'data';
     setFormState(...(formatObjectPath(path).split('.') as []), parseValue(value));
+  };
+
+  /**
+   * Form handler method to be implemented at onMount lifecycle of a reusable
+   * form field component. It triggers form field validation and caches the field state at first mount,
+   * to prevent component revalidation if it needs to be re-mounted (Conditional rendering).
+   */
+  const mountField = async (path: string = '') => {
+    if (!path) return;
+
+    const fieldState = getFieldState(path);
+    if (fieldState === undefined || fieldState.__state === undefined) return;
+
+    const { __cache, ...rest } = fieldState;
+
+    if (__cache?.unmounted === undefined) await validateField(path, { silentValidation: true });
+
+    setFieldState(
+      path,
+      (fieldState: FieldState) =>
+        ({ ...fieldState, ...__cache?.unmounted, __cache: { ...__cache, mounted: rest } } as FieldState)
+    );
+  };
+
+  /**
+   * Form handler method to be implemented at onCleanup lifecycle of a reusable
+   * form field component. It caches the current field state when field is unmounted,
+   * to be recovered when the component is re-mounted (Conditional rendering).
+   */
+  const unmountField = async (path: string = '') => {
+    if (!path) return;
+
+    const fieldState = getFieldState(path);
+    if (fieldState === undefined || fieldState.__state === undefined) return;
+
+    const { __cache, ...rest } = fieldState;
+    setFieldState(path, { ...fieldState, ...__cache?.mounted, __cache: { ...__cache, unmounted: rest } } as FieldState);
   };
 
   /**
@@ -531,6 +573,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     getFormState,
     isFieldInvalid,
     isFormInvalid,
+    mountField,
+    unmountField,
     moveFieldset,
     refreshFormField,
     removeFieldset,

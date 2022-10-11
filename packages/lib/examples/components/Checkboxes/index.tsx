@@ -1,6 +1,6 @@
+import { FormHandler } from '@interfaces';
 import { Component, createEffect, createSelector, For, JSX, onCleanup, onMount, splitProps } from 'solid-js';
 import { Checkbox } from '@components';
-import { FormHandler } from '@interfaces';
 import { createStore } from 'solid-js/store';
 
 type SelectableOption = { value: string | number; label: string };

@@ -31,7 +31,6 @@ export const Radios: Component<RadiosProps> = (props) => {
   const [store, setStore] = createStore({
     errorMessage: '',
     error: false,
-    defaultValue: '',
     value: '',
   });
 
@@ -86,13 +85,6 @@ export const Radios: Component<RadiosProps> = (props) => {
   });
 
   /**
-   * Initializes component's default value
-   */
-  createEffect(() => {
-    setStore('defaultValue', rest.value as any);
-  });
-
-  /**
    * Controls component's value.
    */
   createEffect(() => {
@@ -103,15 +95,22 @@ export const Radios: Component<RadiosProps> = (props) => {
   /**
    * Initializes the form field default value.
    */
-  onMount(() => {
-    rest.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  createEffect(() => {
+    rest.formHandler?.setFieldDefaultValue?.(rest.name, rest.value);
   });
 
   /**
-   * Refresh the form field when unmounted.
+   * Mount lifecycle
+   */
+  onMount(() => {
+    rest.formHandler?.mountField?.(rest.name);
+  });
+
+  /**
+   * Unmount lifecycle
    */
   onCleanup(() => {
-    rest.formHandler?.refreshFormField(rest.name);
+    rest.formHandler?.unmountField?.(rest.name);
   });
 
   return (

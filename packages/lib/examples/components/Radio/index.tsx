@@ -110,15 +110,22 @@ export const Radio: Component<RadioProps> = (props) => {
   /**
    * Initializes the form field default value.
    */
-  onMount(() => {
-    local.formHandler?.setFieldDefaultValue(rest.name, getValue(local.checked));
+  createEffect(() => {
+    local.formHandler?.setFieldDefaultValue?.(rest.name, getValue(local.checked));
   });
 
   /**
-   * Refresh the form field when unmounted.
+   * Mount lifecycle
+   */
+  onMount(() => {
+    local.formHandler?.mountField?.(rest.name);
+  });
+
+  /**
+   * Unmount lifecycle
    */
   onCleanup(() => {
-    local.formHandler?.refreshFormField(rest.name);
+    local.formHandler?.unmountField?.(rest.name);
   });
 
   return (

@@ -41,7 +41,6 @@ export const Select: Component<SelectProps> = (props) => {
     errorMessage: '',
     id: '',
     value: '',
-    defaultValue: '',
   });
 
   /**
@@ -83,13 +82,6 @@ export const Select: Component<SelectProps> = (props) => {
   };
 
   /**
-   * Initializes component's default value
-   */
-  createEffect(() => {
-    setStore('defaultValue', local.value as any);
-  });
-
-  /**
    * Controls component's value.
    */
   createEffect(() => {
@@ -129,17 +121,24 @@ export const Select: Component<SelectProps> = (props) => {
   });
 
   /**
-   * Initializes the form field default value
+   * Initializes component's default value
    */
-  onMount(() => {
-    local.formHandler?.setFieldDefaultValue(rest.name, store.defaultValue);
+  createEffect(() => {
+    local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
   });
 
   /**
-   * Refresh the form field when unmounted.
+   * Mount lifecycle
+   */
+  onMount(() => {
+    local.formHandler?.mountField?.(rest.name);
+  });
+
+  /**
+   * Unmount lifecycle
    */
   onCleanup(() => {
-    local.formHandler?.refreshFormField(rest.name);
+    local.formHandler?.unmountField?.(rest.name);
   });
 
   return (

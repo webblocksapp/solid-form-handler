@@ -18,6 +18,7 @@ export interface RadiosProps {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
+  id?: string;
   label?: string;
   options?: Array<SelectableOption>;
   name?: string;
@@ -35,6 +36,7 @@ export const Radios: Component<RadiosProps> = (props) => {
   const [local, rest] = splitProps(props, [
     'error',
     'errorMessage',
+    'id',
     'onChange',
     'onBlur',
   ]);
@@ -46,6 +48,7 @@ export const Radios: Component<RadiosProps> = (props) => {
     errorMessage: '',
     error: false,
     value: '',
+    id: '',
   });
 
   /**
@@ -105,6 +108,13 @@ export const Radios: Component<RadiosProps> = (props) => {
   });
 
   /**
+   * Initializes the form field unique id.
+   */
+  createEffect(() => {
+    setStore('id', local.id || rest.name || '');
+  });
+
+  /**
    * Controls component's value.
    */
   createEffect(() => {
@@ -145,7 +155,7 @@ export const Radios: Component<RadiosProps> = (props) => {
         <For each={rest.options}>
           {(option, i) => (
             <Radio
-              id={`${rest.name}-${i()}`}
+              id={`${store.id}-${i()}`}
               label={option.label}
               value={option.value}
               name={rest.name}

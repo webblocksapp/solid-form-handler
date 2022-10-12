@@ -9,6 +9,7 @@ export interface CheckboxesProps {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
+  id?: string;
   label?: string;
   options?: Array<SelectableOption>;
   name?: string;
@@ -23,7 +24,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    * - local: newer or extended/computed props.
    * - rest: remaining props from the interface.
    */
-  const [local, rest] = splitProps(props, ['error', 'errorMessage', 'onChange', 'onBlur']);
+  const [local, rest] = splitProps(props, ['error', 'errorMessage', 'id', 'onChange', 'onBlur']);
 
   /**
    * Derived/computed states from props.
@@ -32,6 +33,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
     errorMessage: '',
     error: false,
     value: [],
+    id: '',
   });
 
   /**
@@ -97,6 +99,13 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   });
 
   /**
+   * Initializes the form field unique id.
+   */
+  createEffect(() => {
+    setStore('id', local.id || rest.name || '');
+  });
+
+  /**
    * Controls component's value.
    */
   createEffect(() => {
@@ -132,7 +141,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
         <For each={rest.options}>
           {(option, i) => (
             <Checkbox
-              id={`${rest.name}-${i()}`}
+              id={`${store.id}-${i()}`}
               label={option.label}
               value={option.value}
               name={rest.name}

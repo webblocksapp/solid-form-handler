@@ -88,15 +88,19 @@ describe('Radio', () => {
   });
 
   it('Default value is set with checked prop', () => {
-    render(() => <Radio name="gender" value="male" checked formHandler={formHandler} />);
-    expect(formHandler.getFieldDefaultValue('gender')).toBe('male');
+    formHandler = useFormHandler<Schema>(yupSchema(schema));
+    dom = render(() => <Radio checked name="gender" value="male" formHandler={formHandler} />);
+    radio = dom.container.querySelector('[name="gender"]') as HTMLInputElement;
+    expect(radio.checked).toBe(true);
   });
 
   it('Default value is set with checked prop and persists after form reset', async () => {
-    dom = render(() => <Radio name="gender" value="male" checked formHandler={formHandler} />);
+    formHandler = useFormHandler<Schema>(yupSchema(schema));
+    dom = render(() => <Radio checked label="Gender Label" name="gender" value="male" formHandler={formHandler} />);
+    radio = dom.container.querySelector('[name="gender"]') as HTMLInputElement;
     await formHandler.resetForm();
     await waitFor(() => {
-      expect(true).toBe(true);
+      expect(radio.checked).toBe(true);
     });
   });
 });

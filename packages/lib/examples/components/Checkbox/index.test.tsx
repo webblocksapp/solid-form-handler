@@ -123,11 +123,15 @@ describe('Checkbox ', () => {
     dom = render(() => (
       <Checkbox checked name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />
     ));
+    checkbox = dom.container.querySelector('[name="status"]') as HTMLInputElement;
+    expect(checkbox.checked).toBe(true);
     expect(formHandler.getFieldValue('status')).toBe('enabled');
   });
 
   it('If unchecked and uncheckedValue prop given, form handler takes as value the uncheckedValue prop.', async () => {
     dom = render(() => <Checkbox name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />);
+    checkbox = dom.container.querySelector('[name="status"]') as HTMLInputElement;
+    expect(checkbox.checked).toBe(false);
     expect(formHandler.getFieldValue('status')).toBe('disabled');
   });
 });

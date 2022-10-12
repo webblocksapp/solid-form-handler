@@ -51,8 +51,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
        * default value is set as initial field data.
        */
       const currentValue = untrack(() => getFieldValue(path));
-      let falseValue = currentValue === false ? false : '';
-      untrack(() => setFieldData(path, currentValue || parseValue(defaultValue) || falseValue));
+      untrack(() => setFieldData(path, computeDefaultValue(currentValue, defaultValue)));
 
       /**
        * Stores the default value at field state. Which will be used as new
@@ -65,6 +64,21 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
           defaultValue: defaultValue,
         })
       );
+    }
+  };
+
+  /**
+   * Computes the default value according to the given scenarios.
+   */
+  const computeDefaultValue = (currentValue: any, defaultValue: any) => {
+    if (Array.isArray(defaultValue) && Array.isArray(currentValue) && defaultValue.length && !currentValue.length) {
+      return defaultValue;
+    } else if (currentValue === false && defaultValue === undefined) {
+      return currentValue;
+    } else if (defaultValue === undefined) {
+      return currentValue;
+    } else {
+      return currentValue || defaultValue;
     }
   };
 

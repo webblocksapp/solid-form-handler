@@ -27,7 +27,7 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
 });
 
 export const VanillaCompFormImpl: Component = () => {
-  const formHandler = useFormHandler(yupSchema(schema));
+  const formHandler = useFormHandler<Schema>(yupSchema(schema));
   const { formData } = formHandler;
 
   const submit = async () => {
@@ -48,11 +48,11 @@ export const VanillaCompFormImpl: Component = () => {
     <form>
       <h3>Vanilla Form Implementation</h3>
       <div>
-        <TextInput label="Name" name="name" value="Example name" formHandler={formHandler} />
+        <TextInput label="Name" name="name" defaultValue="Example name" formHandler={formHandler} />
       </div>
       <br />
       <div>
-        <TextInput label="Age" name="age" value="2" formHandler={formHandler} />
+        <TextInput label="Age" name="age" defaultValue="2" formHandler={formHandler} />
       </div>
       <br />
       <div>
@@ -81,6 +81,7 @@ export const VanillaCompFormImpl: Component = () => {
         <Checkboxes
           label="Favorite foods"
           name="favoriteFoods"
+          defaultValue={[1, 2]}
           options={[
             { value: 1, label: 'Pizza' },
             { value: 2, label: 'Ice cream' },
@@ -97,7 +98,7 @@ export const VanillaCompFormImpl: Component = () => {
         <Radios
           label="Gender"
           name="gender"
-          value="female"
+          defaultValue="female"
           options={[
             {
               value: 'male',

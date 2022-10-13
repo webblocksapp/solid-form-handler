@@ -15,6 +15,7 @@ type SelectableOption = { value: string | number; label: string };
 
 export interface SelectProps
   extends JSX.SelectHTMLAttributes<HTMLSelectElement> {
+  defaultValue?: SelectProps['value'];
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -31,6 +32,7 @@ export const Select: Component<SelectProps> = (props) => {
    */
   const [local, rest] = splitProps(props, [
     'classList',
+    'defaultValue',
     'error',
     'errorMessage',
     'formHandler',
@@ -100,8 +102,22 @@ export const Select: Component<SelectProps> = (props) => {
       'value',
       local.formHandler
         ? local.formHandler?.getFieldValue?.(rest.name)
-        : local.value
+        : local.value || (local.value === undefined ? local.defaultValue : '')
     );
+  });
+
+  /**
+   * Value prop updates form handler in case it's controlled from outside.
+   */
+  createEffect(() => {
+    local.formHandler?.setFieldValue(rest.name, local.value);
+  });
+
+  /**
+   * Initializes component's default value
+   */
+  createEffect(() => {
+    local.formHandler?.setFieldDefaultValue?.(rest.name, local.defaultValue);
   });
 
   /**
@@ -139,13 +155,6 @@ export const Select: Component<SelectProps> = (props) => {
       ...(local.placeholder ? [{ value: '', label: local.placeholder }] : []),
       ...(local.options || []),
     ]);
-  });
-
-  /**
-   * Initializes component's default value
-   */
-  createEffect(() => {
-    local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
   });
 
   /**

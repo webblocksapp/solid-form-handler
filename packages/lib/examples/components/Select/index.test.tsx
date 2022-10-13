@@ -95,12 +95,12 @@ describe('Select', () => {
   });
 
   it('Default value is set with value prop', () => {
-    render(() => <Select name="country" options={COUNTRIES} formHandler={formHandler} value={2} />);
+    render(() => <Select name="country" options={COUNTRIES} formHandler={formHandler} defaultValue={2} />);
     expect(formHandler.getFieldDefaultValue('country')).toBe(2);
   });
 
   it('Default value is set with value prop and persists after form reset', async () => {
-    dom = render(() => <Select name="country" options={COUNTRIES} formHandler={formHandler} value={2} />);
+    dom = render(() => <Select name="country" options={COUNTRIES} formHandler={formHandler} defaultValue={2} />);
     select = dom.container.querySelector('[name="country"]') as HTMLInputElement;
     fireEvent.input(select, { target: { value: 1 } });
     formHandler.resetForm();

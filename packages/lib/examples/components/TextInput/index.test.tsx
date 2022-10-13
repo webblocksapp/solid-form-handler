@@ -95,12 +95,12 @@ describe('TextInput', () => {
   });
 
   it('Default value is set with value prop', () => {
-    render(() => <TextInput name="name" formHandler={formHandler} value="Louise" />);
+    render(() => <TextInput name="name" formHandler={formHandler} defaultValue="Louise" />);
     expect(formHandler.getFieldDefaultValue('name')).toBe('Louise');
   });
 
   it('Default value is set with value prop and persists after form reset', async () => {
-    dom = render(() => <TextInput name="name" formHandler={formHandler} value="Louise" />);
+    dom = render(() => <TextInput name="name" formHandler={formHandler} defaultValue="Louise" />);
     textInput = dom.container.querySelector('[name="name"]') as HTMLInputElement;
     fireEvent.input(textInput, { target: { value: 'Laura' } });
     formHandler.resetForm();

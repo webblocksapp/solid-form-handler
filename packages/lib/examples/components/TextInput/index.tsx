@@ -3,6 +3,7 @@ import { Component, createEffect, JSX, onCleanup, onMount, splitProps } from 'so
 import { createStore } from 'solid-js/store';
 
 export interface TextInputProps extends JSX.InputHTMLAttributes<HTMLInputElement> {
+  defaultValue?: TextInputProps['value'];
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -16,6 +17,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * - rest: remaining inherited props applied to the original component.
    */
   const [local, rest] = splitProps(props, [
+    'defaultValue',
     'error',
     'errorMessage',
     'formHandler',
@@ -71,11 +73,30 @@ export const TextInput: Component<TextInputProps> = (props) => {
   };
 
   /**
-   * Controls component's value.
+   * Controls component's value and default value.
    */
   createEffect(() => {
-    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
-    setStore('value', local.formHandler ? local.formHandler?.getFieldValue?.(rest.name) : local.value);
+    //If formHandler is defined, value is controlled by the form handler, if no, by the value and defaultValue props.
+    setStore(
+      'value',
+      local.formHandler
+        ? local.formHandler?.getFieldValue?.(rest.name)
+        : local.value || (local.value === undefined ? local.defaultValue : '')
+    );
+  });
+
+  /**
+   * Value prop updates form handler in case it's controlled from outside.
+   */
+  createEffect(() => {
+    local.formHandler?.setFieldValue(rest.name, local.value);
+  });
+
+  /**
+   * Initializes component's default value
+   */
+  createEffect(() => {
+    local.formHandler?.setFieldDefaultValue?.(rest.name, local.defaultValue);
   });
 
   /**
@@ -97,13 +118,6 @@ export const TextInput: Component<TextInputProps> = (props) => {
    */
   createEffect(() => {
     setStore('id', local.id || rest.name || '');
-  });
-
-  /**
-   * Initializes component's default value
-   */
-  createEffect(() => {
-    local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
   });
 
   /**

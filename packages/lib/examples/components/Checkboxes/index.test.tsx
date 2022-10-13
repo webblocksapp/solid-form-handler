@@ -109,14 +109,16 @@ describe('Checkboxes', () => {
   });
 
   it('Default value is set with value prop', () => {
-    render(() => <Checkboxes name="favoriteFoods" value={[1]} options={FAVORITE_FOODS} formHandler={formHandler} />);
+    render(() => (
+      <Checkboxes name="favoriteFoods" defaultValue={[1]} options={FAVORITE_FOODS} formHandler={formHandler} />
+    ));
     expect(formHandler.getFieldDefaultValue('favoriteFoods')).toMatchObject([1]);
     expect(checkboxes[0].checked).toBe(true);
   });
 
   it('Default value is set with value prop and persists after form reset', async () => {
     dom = render(() => (
-      <Checkboxes name="favoriteFoods" value={[1]} options={FAVORITE_FOODS} formHandler={formHandler} />
+      <Checkboxes name="favoriteFoods" defaultValue={[1]} options={FAVORITE_FOODS} formHandler={formHandler} />
     ));
     checkboxes = dom.container.querySelectorAll('[name="favoriteFoods"]');
     await formHandler.resetForm();

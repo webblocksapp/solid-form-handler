@@ -1,3 +1,4 @@
+export * from './CheckboxCompForm';
 export * from './CheckboxImpl';
 export * from './CheckboxesImpl';
 export * from './ComplexFormImpl';
@@ -9,6 +10,5 @@ export * from './NestedFieldsetsFormImpl';
 export * from './ReferralsForm';
 export * from './SelectImpl';
 export * from './SortableFieldsetsFormImpl';
-export * from './StoreImpl';
 export * from './TextInputImpl';
 export * from './VanillaCompFormImpl';

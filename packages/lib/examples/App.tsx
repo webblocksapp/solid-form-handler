@@ -3,6 +3,7 @@ import { Component } from 'solid-js';
 import {
   CheckboxImpl,
   CheckboxesImpl,
+  CheckboxCompForm,
   FormImpl,
   SelectImpl,
   TextInputImpl,
@@ -10,7 +11,6 @@ import {
   FieldsetsFormImpl,
   NestedFieldsetsFormImpl,
   SortableFieldsetsFormImpl,
-  StoreImpl,
   VanillaCompFormImpl,
   FieldsetsFormStress1,
   ConditionalFormImpl,
@@ -20,7 +20,7 @@ import './App.css';
 
 export const App: Component = () => {
   return (
-    <div style="display: grid; grid-template-columns: 200px 1fr">
+    <div style="display: grid; grid-template-columns: 300px 1fr">
       <div>
         <div>
           <Link href="checkbox-impl">checkbox-impl</Link>
@@ -50,9 +50,6 @@ export const App: Component = () => {
           <Link href="sortable-fieldsets-form-impl">sortable-fieldsets-form-impl</Link>
         </div>
         <div>
-          <Link href="store-impl">store-impl</Link>
-        </div>
-        <div>
           <Link href="vanilla-comp-form-impl">vanilla-comp-form-impl</Link>
         </div>
         <div>
@@ -63,6 +60,9 @@ export const App: Component = () => {
         </div>
         <div>
           <Link href="referrals-form">referrals-form</Link>
+        </div>
+        <div>
+          <Link href="checkbox-comp-form">checkbox-comp-form</Link>
         </div>
       </div>
       <Routes>
@@ -75,11 +75,11 @@ export const App: Component = () => {
         <Route path="fieldsets-form-impl" element={<FieldsetsFormImpl />} />
         <Route path="nested-fieldsets-form-impl" element={<NestedFieldsetsFormImpl />} />
         <Route path="sortable-fieldsets-form-impl" element={<SortableFieldsetsFormImpl />} />
-        <Route path="store-impl" element={<StoreImpl />} />
         <Route path="vanilla-comp-form-impl" element={<VanillaCompFormImpl />} />
         <Route path="fieldsets-form-stress-1" element={<FieldsetsFormStress1 />} />
         <Route path="conditional-form-impl" element={<ConditionalFormImpl />} />
         <Route path="referrals-form" element={<ReferralsForm />} />
+        <Route path="checkbox-comp-form" element={<CheckboxCompForm />} />
       </Routes>
     </div>
   );

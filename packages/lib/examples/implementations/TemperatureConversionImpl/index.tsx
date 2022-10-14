@@ -29,7 +29,7 @@ export const TemperatureConversionImpl: Component = () => {
           <TextInput
             name="celsius"
             formHandler={formHandler}
-            defaultValue={0}
+            value={0}
             onInput={() => {
               formHandler.setFieldValue('kelvin', (Number(formData().celsius) + 273.15).toFixed(2));
             }}
@@ -41,7 +41,7 @@ export const TemperatureConversionImpl: Component = () => {
             onInput={() => {
               formHandler.setFieldValue('celsius', (Number(formData().kelvin) - 273.15).toFixed(2));
             }}
-            defaultValue={273.15}
+            value={273.15}
             formHandler={formHandler}
           />
         </div>

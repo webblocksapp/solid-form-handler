@@ -15,7 +15,6 @@ import { createStore } from 'solid-js/store';
 type SelectableOption = { value: string | number; label: string };
 
 export interface RadiosProps {
-  defaultValue?: RadiosProps['value'];
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -35,7 +34,6 @@ export const Radios: Component<RadiosProps> = (props) => {
    * - rest: remaining props from the interface.
    */
   const [local, rest] = splitProps(props, [
-    'defaultValue',
     'error',
     'errorMessage',
     'id',
@@ -125,22 +123,15 @@ export const Radios: Component<RadiosProps> = (props) => {
       'value',
       rest.formHandler
         ? rest.formHandler?.getFieldValue?.(rest.name)
-        : rest.value || (rest.value === undefined ? local.defaultValue : '')
+        : rest.value
     );
-  });
-
-  /**
-   * Value prop updates form handler in case it's controlled from outside.
-   */
-  createEffect(() => {
-    rest.formHandler?.setFieldValue(rest.name, rest.value);
   });
 
   /**
    * Initializes the form field default value.
    */
   createEffect(() => {
-    rest.formHandler?.setFieldDefaultValue?.(rest.name, local.defaultValue);
+    rest.formHandler?.setFieldDefaultValue?.(rest.name, rest.value);
   });
 
   /**

@@ -100,12 +100,12 @@ describe('Radios', () => {
   });
 
   it('Default value is set with value prop', () => {
-    render(() => <Radios name="gender" defaultValue="male" options={GENDERS} formHandler={formHandler} />);
+    render(() => <Radios name="gender" value="male" options={GENDERS} formHandler={formHandler} />);
     expect(formHandler.getFieldDefaultValue('gender')).toBe('male');
   });
 
   it('Default value is set with value prop and persists after form reset', async () => {
-    dom = render(() => <Radios name="gender" defaultValue="male" options={GENDERS} formHandler={formHandler} />);
+    dom = render(() => <Radios name="gender" value="male" options={GENDERS} formHandler={formHandler} />);
     radios = dom.container.querySelectorAll('[name="gender"]');
     await formHandler.resetForm();
     await waitFor(() => {

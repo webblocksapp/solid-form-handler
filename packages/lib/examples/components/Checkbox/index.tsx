@@ -3,6 +3,7 @@ import { Component, createEffect, JSX, onCleanup, onMount, splitProps } from 'so
 import { createStore } from 'solid-js/store';
 
 export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+  display?: 'switch';
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -18,6 +19,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   const [local, rest] = splitProps(props, [
     'checked',
+    'display',
     'error',
     'errorMessage',
     'formHandler',
@@ -146,6 +148,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
         classList={{
           'is-invalid': local.error || local?.formHandler?.fieldHasError?.(rest.name),
           'form-check': true,
+          'form-switch': local.display === 'switch',
         }}
       >
         <input

@@ -134,4 +134,20 @@ describe('Checkbox ', () => {
     expect(checkbox.checked).toBe(false);
     expect(formHandler.getFieldValue('status')).toBe('disabled');
   });
+
+  it('If default value matches value, checkbox is checked.', async () => {
+    formHandler.setFieldDefaultValue('status', 'enabled');
+    dom = render(() => <Checkbox name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />);
+    checkbox = dom.container.querySelector('[name="status"]') as HTMLInputElement;
+    expect(checkbox.checked).toBe(true);
+    expect(formHandler.getFieldValue('status')).toBe('enabled');
+  });
+
+  it('If default value matches unchecked value, checkbox is unchecked.', async () => {
+    formHandler.setFieldDefaultValue('status', 'disabled');
+    dom = render(() => <Checkbox name="status" value="enabled" uncheckedValue="disabled" formHandler={formHandler} />);
+    checkbox = dom.container.querySelector('[name="status"]') as HTMLInputElement;
+    expect(checkbox.checked).toBe(false);
+    expect(formHandler.getFieldValue('status')).toBe('disabled');
+  });
 });

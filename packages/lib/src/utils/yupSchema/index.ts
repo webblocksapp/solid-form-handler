@@ -93,5 +93,9 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
     }
   };
 
-  return { isFieldFromSchema, validateAt, buildDefault };
+  const getFieldDataType = (path: string) => {
+    return reach(schema, path).type;
+  };
+
+  return { isFieldFromSchema, validateAt, buildDefault, getFieldDataType };
 };

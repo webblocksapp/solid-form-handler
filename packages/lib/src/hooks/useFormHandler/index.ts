@@ -1,5 +1,14 @@
 import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema, FormFieldError } from '@interfaces';
-import { flattenObject, formatObjectPath, FormErrorsException, get, reorderArray, set, ValidationError } from '@utils';
+import {
+  flattenObject,
+  formatObjectPath,
+  FormErrorsException,
+  get,
+  isNumber,
+  reorderArray,
+  set,
+  ValidationError,
+} from '@utils';
 import { createSignal, untrack } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
@@ -22,8 +31,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Sets the field value inside the form data store.
    */
   const setFieldData = (path: string = '', value: any) => {
+    value = parseValue(path, value);
     path = path ? `data.${path}` : 'data';
-    setFormData(...(formatObjectPath(path).split('.') as []), parseValue(value));
+    setFormData(...(formatObjectPath(path).split('.') as []), value);
   };
 
   /**
@@ -120,7 +130,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    */
   const setFieldState = (path: string = '', value: any) => {
     path = path ? `data.${path}` : 'data';
-    setFormState(...(formatObjectPath(path).split('.') as []), parseValue(value));
+    setFormState(...(formatObjectPath(path).split('.') as []), value);
   };
 
   /**
@@ -294,7 +304,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
 
     Object.keys(flattenedObject).forEach((path) => {
       const fieldState = getFieldState(path);
-      const defaultValue = parseValue(fieldState?.defaultValue);
+      const defaultValue = parseValue(path, fieldState?.defaultValue);
       /**
        * Initial value is very different to default value. It refers first value
        * the field takes when the form is initialized or filled. It's used to check if
@@ -347,6 +357,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
     return {
       ...fieldState,
       __state: true,
+      dataType: validationSchema.getFieldDataType(path),
       isInvalid: options.reset ? true : fieldState?.isInvalid || true,
       errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
       defaultValue: options.reset || options?.fill ? fieldState?.defaultValue : value,
@@ -383,8 +394,12 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Parses the value according to the scenario
    */
-  const parseValue = (value: any) => {
-    if (value === undefined) {
+  const parseValue = (path: string, value: any) => {
+    const fieldState = getFieldState(path);
+
+    if (fieldState?.dataType === 'number' && isNumber(value)) {
+      return Number(value);
+    } else if (value === undefined) {
       return '';
     } else {
       return value;

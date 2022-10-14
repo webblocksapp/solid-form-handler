@@ -52,7 +52,7 @@ export const VanillaCompFormImpl: Component = () => {
       </div>
       <br />
       <div>
-        <TextInput label="Age" name="age" value="2" formHandler={formHandler} />
+        <TextInput label="Age" name="age" value="0" formHandler={formHandler} />
       </div>
       <br />
       <div>

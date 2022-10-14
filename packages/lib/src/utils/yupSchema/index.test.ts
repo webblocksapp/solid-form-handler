@@ -91,4 +91,21 @@ describe('yupSchema', () => {
       ],
     });
   });
+
+  it('buildDefault CASE-8', () => {
+    const validationSchema = yupSchema(
+      yup.object({
+        name: yup.string(),
+        age: yup.number(),
+        contacts: yup.array(yup.object({ name: yup.string(), age: yup.number() })),
+      })
+    );
+    expect(validationSchema.getFieldDataType('name')).toBe('string');
+    expect(validationSchema.getFieldDataType('age')).toBe('number');
+    expect(validationSchema.getFieldDataType('contacts')).toBe('array');
+    expect(validationSchema.getFieldDataType('contacts.0.name')).toBe('string');
+    expect(validationSchema.getFieldDataType('contacts.1.name')).toBe('string');
+    expect(validationSchema.getFieldDataType('contacts.0.age')).toBe('number');
+    expect(validationSchema.getFieldDataType('contacts.1.age')).toBe('number');
+  });
 });

@@ -105,6 +105,7 @@ describe('useFormHandler', () => {
       contact: {
         name: {
           __state: true,
+          dataType: 'string',
           isInvalid: false,
           errorMessage: '',
           initialValue: 'John',
@@ -114,6 +115,7 @@ describe('useFormHandler', () => {
         },
         age: {
           __state: true,
+          dataType: 'number',
           isInvalid: false,
           errorMessage: '',
           initialValue: 28,
@@ -132,6 +134,7 @@ describe('useFormHandler', () => {
       contact: {
         name: {
           __state: true,
+          dataType: 'string',
           isInvalid: false,
           errorMessage: '',
           initialValue: '',
@@ -141,6 +144,7 @@ describe('useFormHandler', () => {
         },
         age: {
           __state: true,
+          dataType: 'number',
           isInvalid: false,
           errorMessage: '',
           initialValue: '',
@@ -283,6 +287,7 @@ describe('useFormHandler', () => {
     expect(formHandler._.getFieldState('referrals.0')).toMatchObject({
       name: {
         __state: true,
+        dataType: 'string',
         isInvalid: true,
         errorMessage: '',
         initialValue: 'John',
@@ -292,6 +297,7 @@ describe('useFormHandler', () => {
       },
       age: {
         __state: true,
+        dataType: 'number',
         isInvalid: true,
         errorMessage: '',
         initialValue: 18,
@@ -308,6 +314,7 @@ describe('useFormHandler', () => {
     expect(formHandler._.getFieldState('name')).toMatchObject({
       __state: true,
       isInvalid: true,
+      dataType: 'string',
       errorMessage: '',
       initialValue: '',
       defaultValue: '',
@@ -322,6 +329,7 @@ describe('useFormHandler', () => {
     formHandler._.buildFieldState('name');
     expect(formHandler._.getFieldState('name')).toMatchObject({
       __state: true,
+      dataType: 'string',
       isInvalid: true,
       errorMessage: '',
       initialValue: 'Laura',
@@ -339,6 +347,7 @@ describe('useFormHandler', () => {
       {
         name: {
           __state: true,
+          dataType: 'string',
           isInvalid: true,
           errorMessage: '',
           initialValue: 'Laura',
@@ -348,6 +357,7 @@ describe('useFormHandler', () => {
         },
         age: {
           __state: true,
+          dataType: 'number',
           isInvalid: true,
           errorMessage: '',
           initialValue: 18,
@@ -367,6 +377,7 @@ describe('useFormHandler', () => {
     expect(formHandler.getFormState()).toMatchObject({
       name: {
         __state: true,
+        dataType: 'string',
         isInvalid: false,
         errorMessage: '',
         initialValue: 'Laura',
@@ -376,6 +387,7 @@ describe('useFormHandler', () => {
       },
       age: {
         __state: true,
+        dataType: 'number',
         isInvalid: false,
         errorMessage: '',
         initialValue: 19,
@@ -396,6 +408,7 @@ describe('useFormHandler', () => {
     expect(formHandler.getFormState()).toMatchObject({
       name: {
         __state: true,
+        dataType: 'string',
         isInvalid: false,
         errorMessage: '',
         initialValue: 'George',
@@ -405,6 +418,7 @@ describe('useFormHandler', () => {
       },
       age: {
         __state: true,
+        dataType: 'number',
         isInvalid: false,
         errorMessage: '',
         initialValue: 19,
@@ -423,6 +437,7 @@ describe('useFormHandler', () => {
       expect(__cache).toMatchObject({
         mounted: {
           __state: true,
+          dataType: 'string',
           errorMessage: '',
           isInvalid: true,
           defaultValue: '',
@@ -444,6 +459,7 @@ describe('useFormHandler', () => {
       expect(__cache).toMatchObject({
         mounted: {
           __state: true,
+          dataType: 'string',
           errorMessage: '',
           isInvalid: true,
           defaultValue: '',
@@ -453,6 +469,7 @@ describe('useFormHandler', () => {
         },
         unmounted: {
           __state: true,
+          dataType: 'string',
           errorMessage: 'name is a required field',
           isInvalid: true,
           defaultValue: '',

@@ -422,7 +422,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Returns the state of an specific form field
    */
   const getFieldState = (path: string) => {
-    return get<FieldState | undefined>(formState.data, path);
+    const fieldState = get<FieldState | undefined>(formState.data, path);
+    return typeof fieldState === 'object' ? fieldState : undefined;
   };
 
   /**

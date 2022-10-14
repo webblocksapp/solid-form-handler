@@ -15,6 +15,7 @@ import {
   FieldsetsFormStress1,
   ConditionalFormImpl,
   ReferralsForm,
+  TemperatureConversionImpl,
 } from '@implementations';
 import './App.css';
 
@@ -64,6 +65,9 @@ export const App: Component = () => {
         <div>
           <Link href="checkbox-comp-form">checkbox-comp-form</Link>
         </div>
+        <div>
+          <Link href="temperature-conversion">temperature-conversion</Link>
+        </div>
       </div>
       <Routes>
         <Route path="checkbox-impl" element={<CheckboxImpl />} />
@@ -80,6 +84,7 @@ export const App: Component = () => {
         <Route path="conditional-form-impl" element={<ConditionalFormImpl />} />
         <Route path="referrals-form" element={<ReferralsForm />} />
         <Route path="checkbox-comp-form" element={<CheckboxCompForm />} />
+        <Route path="temperature-conversion" element={<TemperatureConversionImpl />} />
       </Routes>
     </div>
   );

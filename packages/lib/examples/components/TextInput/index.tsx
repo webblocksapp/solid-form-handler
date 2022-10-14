@@ -76,7 +76,10 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * Controls component's value and default value.
    */
   createEffect(() => {
-    //If formHandler is defined, value is controlled by the form handler, if no, by the value and defaultValue props.
+    /**
+     * If formHandler is defined, value is controlled by the form handler,
+     * if no, by the value and defaultValue props.
+     */
     setStore(
       'value',
       local.formHandler

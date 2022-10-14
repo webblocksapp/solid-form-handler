@@ -10,5 +10,6 @@ export * from './NestedFieldsetsFormImpl';
 export * from './ReferralsForm';
 export * from './SelectImpl';
 export * from './SortableFieldsetsFormImpl';
+export * from './TemperatureConversionImpl';
 export * from './TextInputImpl';
 export * from './VanillaCompFormImpl';

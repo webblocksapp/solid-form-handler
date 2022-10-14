@@ -31,40 +31,40 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * when it's initialized or reset. No validation is triggered.
    */
   const setFieldDefaultValue = (path: string = '', defaultValue: any) => {
-    if (!path || defaultValue === undefined || formIsFilling() || formIsResetting()) return;
+    untrack(() => {
+      if (!path || defaultValue === undefined || formIsFilling() || formIsResetting()) return;
 
-    //Avoids to overwrite filled data with default data
-    const fieldState = untrack(() => getFieldState(path));
-    if (fieldState === undefined) return;
-
-    /**
-     * Recursion is necessary if the field value is not a primitive.
-     */
-    if (fieldState.__state === undefined) {
-      Object.keys(flattenObject(defaultValue)).forEach((key) => {
-        const finalPath = `${path}.${key}`;
-        setFieldDefaultValue(finalPath, get(defaultValue, key));
-      });
-    } else {
-      /**
-       * If the field currently has data, it's prioritized, otherwise,
-       * default value is set as initial field data.
-       */
-      const currentValue = untrack(() => getFieldValue(path));
-      untrack(() => setFieldData(path, computeDefaultValue(currentValue, defaultValue)));
+      //Avoids to overwrite filled data with default data
+      const fieldState = getFieldState(path);
+      if (fieldState === undefined) return;
 
       /**
-       * Stores the default value at field state. Which will be used as new
-       * default value when form is reset.
+       * Recursion is necessary if the field value is not a primitive.
        */
-      untrack(() =>
+      if (fieldState.__state === undefined) {
+        Object.keys(flattenObject(defaultValue)).forEach((key) => {
+          const finalPath = `${path}.${key}`;
+          setFieldDefaultValue(finalPath, get(defaultValue, key));
+        });
+      } else {
+        /**
+         * If the field currently has data, it's prioritized, otherwise,
+         * default value is set as initial field data.
+         */
+        const currentValue = getFieldValue(path);
+        setFieldData(path, computeDefaultValue(currentValue, defaultValue));
+
+        /**
+         * Stores the default value at field state. Which will be used as new
+         * default value when form is reset.
+         */
         setFieldState(path, {
           ...fieldState,
           initialValue: defaultValue,
           defaultValue: defaultValue,
-        })
-      );
-    }
+        });
+      }
+    });
   };
 
   /**

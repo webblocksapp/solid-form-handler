@@ -480,4 +480,20 @@ describe('useFormHandler', () => {
       });
     });
   });
+
+  it('Value is mapped after automatic parse on setting value', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    await formHandler.setFieldValue('age', 2e3);
+    expect(formHandler.getFieldValue('age')).toBe(2000);
+    await formHandler.setFieldValue('age', 2e3, { mapValue: (value) => value.toExponential() });
+    expect(expect(formHandler.getFieldValue('age')).toBe('2e+3'));
+  });
+
+  it('Value is mapped after automatic parse on setting default value', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    formHandler.setFieldDefaultValue('age', 2e3);
+    expect(formHandler.getFieldValue('age')).toBe(2000);
+    formHandler.setFieldDefaultValue('age', 2e3, { mapValue: (value) => value.toExponential() });
+    expect(expect(formHandler.getFieldValue('age')).toBe('2e+3'));
+  });
 });

@@ -30,8 +30,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
   /**
    * Sets the field value inside the form data store.
    */
-  const setFieldData = (path: string = '', value: any) => {
-    value = parseValue(path, value);
+  const setFieldData = (path: string = '', value: any, options?: { mapValue?: (value: any) => any }) => {
+    options = { mapValue: (value) => value, ...options };
+    value = options?.mapValue?.(parseValue(path, value));
     path = path ? `data.${path}` : 'data';
     setFormData(...(formatObjectPath(path).split('.') as []), value);
   };
@@ -40,13 +41,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    * Sets the default field value which will be used
    * when it's initialized or reset. No validation is triggered.
    */
-  const setFieldDefaultValue = (path: string = '', defaultValue: any) => {
+  const setFieldDefaultValue = (path: string = '', defaultValue: any, options?: { mapValue?: (value: any) => any }) => {
     untrack(() => {
       if (!path || defaultValue === undefined || formIsFilling() || formIsResetting()) return;
 
       //Avoids to overwrite filled data with default data
       const fieldState = getFieldState(path);
       if (fieldState === undefined) return;
+
+      options = { mapValue: (value) => value, ...options };
 
       /**
        * Recursion is necessary if the field value is not a primitive.
@@ -62,7 +65,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
          * default value is set as initial field data.
          */
         const currentValue = getFieldValue(path);
-        setFieldData(path, computeDefaultValue(currentValue, defaultValue));
+        setFieldData(path, computeDefaultValue(currentValue, defaultValue), { mapValue: options?.mapValue });
 
         /**
          * Stores the default value at field state. Which will be used as new
@@ -117,7 +120,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
       });
       await Promise.all(promises);
     } else {
-      setFieldData(path, options?.mapValue?.(value));
+      setFieldData(path, value, { mapValue: options.mapValue });
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.touch && touchField(path);
       options?.dirty && dirtyField(path);

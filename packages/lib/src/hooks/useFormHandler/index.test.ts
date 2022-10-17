@@ -519,4 +519,28 @@ describe('useFormHandler', () => {
       }
     }
   });
+
+  it('No error message is generated when silent validation is active', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema), { silentValidation: true });
+    await formHandler.setFieldValue('name', '');
+    expect(formHandler.getFieldError('name')).toBe('');
+  });
+
+  it('Checks if has event types', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema), { validateOn: ['input'] });
+    expect(formHandler._.hasEventTypes(undefined)).toBe(false);
+    expect(formHandler._.hasEventTypes([])).toBe(false);
+    expect(formHandler._.hasEventTypes(['noRegisteredEvent'])).toBe(false);
+    expect(formHandler._.hasEventTypes(['input'])).toBe(true);
+  });
+
+  it('Validates on specific event type', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema), { validateOn: ['input'] });
+    await formHandler.setFieldValue('name', '');
+    expect(formHandler.getFieldError('name')).toBe('name is a required field');
+    await formHandler.setFieldValue('name', '', { validateOn: ['input'] });
+    expect(formHandler.getFieldError('name')).toBe('name is a required field');
+    await formHandler.setFieldValue('age', '', { validateOn: ['noRegisteredEvent'] });
+    expect(formHandler.getFieldError('age')).toBe('');
+  });
 });

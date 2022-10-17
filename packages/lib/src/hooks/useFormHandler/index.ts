@@ -133,8 +133,20 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.touch && touchField(path);
       options?.dirty && dirtyField(path);
-      options?.validate && (await validateField(path, { silentValidation: options?.silentValidation }));
+      options?.validate &&
+        (await validateField(path, {
+          silentValidation: options?.silentValidation,
+          validateOn: options?.validateOn,
+        }));
     }
+  };
+
+  /**
+   * Checks if the event types matches the given from form handler options.
+   */
+  const hasEventTypes = (eventTypes: string[] = []) => {
+    if (formHandlerOptions.validateOn === undefined) return true;
+    return formHandlerOptions.validateOn.some((item) => eventTypes.includes(item));
   };
 
   /**
@@ -185,10 +197,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Validates a single field of the form.
    */
-  const validateField = async (path: string = '', options?: { silentValidation?: boolean }) => {
-    if (!validationSchema.isFieldFromSchema(path) || !path) return;
+  const validateField = async (path: string = '', options?: { silentValidation?: boolean; validateOn?: string[] }) => {
+    options = {
+      ...options,
+      silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
+      validateOn: options?.validateOn || formHandlerOptions.validateOn,
+    };
 
-    options = { silentValidation: formHandlerOptions.silentValidation, ...options };
+    if (!validationSchema.isFieldFromSchema(path) || !path) return;
+    if (!hasEventTypes(options.validateOn)) return;
 
     try {
       await validationSchema.validateAt(path, formData.data);
@@ -636,6 +653,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       findErrorMessages,
       generateFormState,
       getFieldState,
+      hasEventTypes,
       moveFieldsetState,
       parseValue,
       removeFieldsetState,

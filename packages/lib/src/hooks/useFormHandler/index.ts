@@ -1,4 +1,12 @@
-import { Flatten, FormState, FieldState, SetFieldValueOptions, ValidationSchema, FormFieldError } from '@interfaces';
+import {
+  Flatten,
+  FormState,
+  FieldState,
+  SetFieldValueOptions,
+  ValidationSchema,
+  FormFieldError,
+  FormHandlerOptions,
+} from '@interfaces';
 import {
   flattenObject,
   formatObjectPath,
@@ -16,10 +24,11 @@ import { createStore } from 'solid-js/store';
  * Creates a reactive formHandler object that simplifies forms manipulation.
  * It uses as parameter a validation schema.
  */
-export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) => {
+export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, options?: FormHandlerOptions) => {
   /**
    * Form handler main states.
    */
+  const formHandlerOptions = { ...options };
   const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
     data: validationSchema.buildDefault(),
@@ -178,6 +187,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>) =
    */
   const validateField = async (path: string = '', options?: { silentValidation?: boolean }) => {
     if (!validationSchema.isFieldFromSchema(path) || !path) return;
+
+    options = { silentValidation: formHandlerOptions.silentValidation, ...options };
 
     try {
       await validationSchema.validateAt(path, formData.data);

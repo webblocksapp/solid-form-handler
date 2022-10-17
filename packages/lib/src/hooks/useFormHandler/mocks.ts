@@ -8,7 +8,7 @@ export type Person = {
 
 export const personSchema: SchemaOf<Person> = yup.object().shape({
   name: yup.string().required(),
-  age: yup.number().required(),
+  age: yup.number().required().typeError('age is a required field'),
 });
 
 export type Contact = {

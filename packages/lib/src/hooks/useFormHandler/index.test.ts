@@ -1,6 +1,6 @@
 import { useFormHandler } from '@hooks';
 import { FieldState } from '@interfaces';
-import { yupSchema } from '@utils';
+import { FormErrorsException, yupSchema } from '@utils';
 import { waitFor } from 'solid-testing-library';
 import { personSchema, contactSchema, personsSchema, referralsSchema } from './mocks';
 
@@ -34,8 +34,20 @@ describe('useFormHandler', () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
     try {
       await formHandler.validateForm();
-    } catch (_) {
+    } catch (error) {
       expect(formHandler.isFormInvalid()).toBe(true);
+      if (error instanceof FormErrorsException) {
+        expect(error.validationResult).toMatchObject([
+          {
+            path: 'age',
+            errorMessage: 'age is a required field',
+          },
+          {
+            path: 'name',
+            errorMessage: 'name is a required field',
+          },
+        ]);
+      }
     }
   });
 
@@ -495,5 +507,16 @@ describe('useFormHandler', () => {
     expect(formHandler.getFieldValue('age')).toBe(2000);
     formHandler.setFieldDefaultValue('age', 2e3, { mapValue: (value) => value.toExponential() });
     expect(expect(formHandler.getFieldValue('age')).toBe('2e+3'));
+  });
+
+  it('Validation result is an empty array when silent validation is active', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema), { silentValidation: true });
+    try {
+      await formHandler.validateForm();
+    } catch (error) {
+      if (error instanceof FormErrorsException) {
+        expect(error.validationResult).toMatchObject([]);
+      }
+    }
   });
 });

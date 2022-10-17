@@ -1,9 +1,9 @@
-import { ValidationResult } from '@interfaces';
+import { FormFieldError } from '@interfaces';
 
 export class FormErrorsException {
-  validationResult: ValidationResult[];
+  validationResult: FormFieldError[];
 
-  constructor(errors: ValidationResult[]) {
+  constructor(errors: FormFieldError[]) {
     this.validationResult = errors;
   }
 }

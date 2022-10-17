@@ -3,6 +3,7 @@ export * from './FieldState';
 export * from './Flatten';
 export * from './FormFieldError';
 export * from './FormHandler';
+export * from './FormHandlerOptions';
 export * from './FormState';
 export * from './SetFieldValueOptions';
 export * from './ValidationSchema';

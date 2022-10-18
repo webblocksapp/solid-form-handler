@@ -8,6 +8,7 @@ import {
   FormHandlerOptions,
 } from '@interfaces';
 import {
+  equals,
   flattenObject,
   formatObjectPath,
   FormErrorsException,
@@ -73,8 +74,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
          * If the field currently has data, it's prioritized, otherwise,
          * default value is set as initial field data.
          */
-        const currentValue = getFieldValue(path);
-        setFieldData(path, computeDefaultValue(currentValue, defaultValue), { mapValue: options?.mapValue });
+        const currentValue = computeDefaultValue(getFieldValue(path), defaultValue);
+        setFieldData(path, currentValue, { mapValue: options?.mapValue });
 
         /**
          * Stores the default value at field state. Which will be used as new
@@ -82,6 +83,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
          */
         setFieldState(path, {
           ...fieldState,
+          currentValue: options?.mapValue?.(parseValue(path, currentValue)),
           initialValue: defaultValue,
           defaultValue: defaultValue,
         });
@@ -130,14 +132,18 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       await Promise.all(promises);
     } else {
       setFieldData(path, value, { mapValue: options.mapValue });
-      options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
-      options?.touch && touchField(path);
-      options?.dirty && dirtyField(path);
       options?.validate &&
         (await validateField(path, {
           silentValidation: options?.silentValidation,
           validateOn: options?.validateOn,
         }));
+      setFieldState(path, (fieldState: FieldState) => ({
+        ...fieldState,
+        currentValue: options?.mapValue?.(parseValue(path, value)),
+      }));
+      options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
+      options?.touch && touchField(path);
+      options?.dirty && dirtyField(path);
     }
   };
 
@@ -195,6 +201,17 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
+   * Checks if the field can be validated if it hasn't been touched or
+   * given value is different from current value. (Prevents unnecessary re-validations)
+   */
+  const formFieldCanBeValidated = (path: string = '') => {
+    if (!path) return false;
+
+    const fieldState = getFieldState(path);
+    return fieldState?.touched === false || !equals(fieldState?.currentValue, getFieldValue(path)) ? true : false;
+  };
+
+  /**
    * Validates a single field of the form.
    */
   const validateField = async (path: string = '', options?: { silentValidation?: boolean; validateOn?: string[] }) => {
@@ -206,6 +223,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     if (!validationSchema.isFieldFromSchema(path) || !path) return;
     if (!hasEventTypes(options.validateOn)) return;
+    if (!formFieldCanBeValidated(path)) return;
 
     try {
       await validationSchema.validateAt(path, formData.data);
@@ -391,8 +409,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       dataType: validationSchema.getFieldDataType(path),
       isInvalid: options.reset ? true : fieldState?.isInvalid || true,
       errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
+      currentValue: options.reset ? fieldState?.defaultValue : value,
       defaultValue: options.reset || options?.fill ? fieldState?.defaultValue : value,
-      initialValue: options?.fill ? value : fieldState?.defaultValue ?? value,
+      initialValue: options.fill ? value : fieldState?.defaultValue ?? value,
       touched: options.reset ? false : fieldState?.touched || false,
       dirty: options.reset ? false : fieldState?.dirty || false,
     };
@@ -509,7 +528,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (fieldState === undefined) return;
 
     setFieldState(path, (fieldState: FieldState) => {
-      if (JSON.stringify(get(formData.data, path)) !== JSON.stringify(fieldState.initialValue)) {
+      if (JSON.stringify(fieldState.currentValue) !== JSON.stringify(fieldState.initialValue)) {
         return { ...fieldState, dirty: true };
       }
 

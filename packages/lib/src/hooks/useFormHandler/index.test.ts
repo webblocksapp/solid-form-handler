@@ -68,7 +68,7 @@ describe('useFormHandler', () => {
 
   it('Form has changes', async () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
-    formHandler.setFieldValue('name', 'George');
+    await formHandler.setFieldValue('name', 'George');
     expect(formHandler.formHasChanges()).toBe(true);
   });
 
@@ -93,6 +93,7 @@ describe('useFormHandler', () => {
         __state: true,
         isInvalid: false,
         errorMessage: '',
+        currentValue: 'George',
         initialValue: 'George',
         defaultValue: '',
         touched: false,
@@ -102,6 +103,7 @@ describe('useFormHandler', () => {
         __state: true,
         isInvalid: false,
         errorMessage: '',
+        currentValue: 60,
         initialValue: 60,
         defaultValue: '',
         touched: false,
@@ -120,6 +122,7 @@ describe('useFormHandler', () => {
           dataType: 'string',
           isInvalid: false,
           errorMessage: '',
+          currentValue: 'John',
           initialValue: 'John',
           defaultValue: '',
           touched: false,
@@ -130,6 +133,7 @@ describe('useFormHandler', () => {
           dataType: 'number',
           isInvalid: false,
           errorMessage: '',
+          currentValue: 28,
           initialValue: 28,
           defaultValue: '',
           touched: false,
@@ -149,6 +153,7 @@ describe('useFormHandler', () => {
           dataType: 'string',
           isInvalid: false,
           errorMessage: '',
+          currentValue: 'John',
           initialValue: '',
           defaultValue: '',
           touched: true,
@@ -159,6 +164,7 @@ describe('useFormHandler', () => {
           dataType: 'number',
           isInvalid: false,
           errorMessage: '',
+          currentValue: 28,
           initialValue: '',
           defaultValue: '',
           touched: true,
@@ -302,6 +308,7 @@ describe('useFormHandler', () => {
         dataType: 'string',
         isInvalid: true,
         errorMessage: '',
+        currentValue: 'John',
         initialValue: 'John',
         defaultValue: 'John',
         touched: false,
@@ -312,6 +319,7 @@ describe('useFormHandler', () => {
         dataType: 'number',
         isInvalid: true,
         errorMessage: '',
+        currentValue: 18,
         initialValue: 18,
         defaultValue: 18,
         touched: false,
@@ -328,6 +336,7 @@ describe('useFormHandler', () => {
       isInvalid: true,
       dataType: 'string',
       errorMessage: '',
+      currentValue: '',
       initialValue: '',
       defaultValue: '',
       touched: false,
@@ -344,6 +353,7 @@ describe('useFormHandler', () => {
       dataType: 'string',
       isInvalid: true,
       errorMessage: '',
+      currentValue: 'Laura',
       initialValue: 'Laura',
       defaultValue: 'Laura',
       touched: false,
@@ -362,6 +372,7 @@ describe('useFormHandler', () => {
           dataType: 'string',
           isInvalid: true,
           errorMessage: '',
+          currentValue: 'Laura',
           initialValue: 'Laura',
           defaultValue: 'Laura',
           touched: false,
@@ -372,6 +383,7 @@ describe('useFormHandler', () => {
           dataType: 'number',
           isInvalid: true,
           errorMessage: '',
+          currentValue: 18,
           initialValue: 18,
           defaultValue: 18,
           touched: false,
@@ -392,6 +404,7 @@ describe('useFormHandler', () => {
         dataType: 'string',
         isInvalid: false,
         errorMessage: '',
+        currentValue: 'George',
         initialValue: 'Laura',
         defaultValue: 'Laura',
         touched: false,
@@ -402,6 +415,7 @@ describe('useFormHandler', () => {
         dataType: 'number',
         isInvalid: false,
         errorMessage: '',
+        currentValue: 19,
         initialValue: 19,
         defaultValue: '',
         touched: false,
@@ -423,6 +437,7 @@ describe('useFormHandler', () => {
         dataType: 'string',
         isInvalid: false,
         errorMessage: '',
+        currentValue: 'George',
         initialValue: 'George',
         defaultValue: 'Laura',
         touched: false,
@@ -433,6 +448,7 @@ describe('useFormHandler', () => {
         dataType: 'number',
         isInvalid: false,
         errorMessage: '',
+        currentValue: 19,
         initialValue: 19,
         defaultValue: '',
         touched: false,
@@ -452,6 +468,7 @@ describe('useFormHandler', () => {
           dataType: 'string',
           errorMessage: '',
           isInvalid: true,
+          currentValue: '',
           defaultValue: '',
           initialValue: '',
           touched: false,
@@ -474,6 +491,7 @@ describe('useFormHandler', () => {
           dataType: 'string',
           errorMessage: '',
           isInvalid: true,
+          currentValue: '',
           defaultValue: '',
           initialValue: '',
           touched: false,
@@ -484,6 +502,7 @@ describe('useFormHandler', () => {
           dataType: 'string',
           errorMessage: 'name is a required field',
           isInvalid: true,
+          currentValue: '',
           defaultValue: '',
           initialValue: '',
           touched: true,
@@ -542,5 +561,36 @@ describe('useFormHandler', () => {
     expect(formHandler.getFieldError('name')).toBe('name is a required field');
     await formHandler.setFieldValue('age', '', { validateOn: ['noRegisteredEvent'] });
     expect(formHandler.getFieldError('age')).toBe('');
+  });
+
+  it("Form doesn't have changes after fill form", async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    await formHandler.fillForm({ name: 'John', age: 22 });
+    expect(formHandler.formHasChanges()).toBe(false);
+  });
+
+  it("Form doesn't have changes after changing but then going back to initial value", async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    await formHandler.setFieldValue('name', 'John');
+    expect(formHandler.formHasChanges()).toBe(true);
+    await formHandler.setFieldValue('name', '');
+    expect(formHandler.formHasChanges()).toBe(false);
+  });
+
+  it('Current value is initialized with default value after reset when default value is given', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    formHandler.setFieldDefaultValue('age', 22);
+    await formHandler.resetForm();
+    expect(formHandler._.getFieldState('age')).toMatchObject({
+      __state: true,
+      dataType: 'number',
+      isInvalid: false,
+      errorMessage: '',
+      currentValue: 22,
+      initialValue: 22,
+      defaultValue: 22,
+      touched: false,
+      dirty: false,
+    });
   });
 });

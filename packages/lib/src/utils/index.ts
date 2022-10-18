@@ -1,5 +1,6 @@
 export * from './FormErrorsException';
 export * from './ValidationError';
+export * from './equals';
 export * from './flattenObject';
 export * from './formatObjectPath';
 export * from './get';

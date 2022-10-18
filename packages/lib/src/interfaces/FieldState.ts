@@ -10,6 +10,7 @@ export type FieldState = {
   htmlElement?: HTMLElement;
   defaultValue: any;
   initialValue: any;
+  currentValue: any;
   touched: boolean;
   dirty: boolean;
 };

@@ -482,33 +482,31 @@ describe('useFormHandler', () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
     await formHandler.mountField('name');
     await formHandler.setFieldValue('name', '');
-    formHandler.unmountField('name');
+    await formHandler.unmountField('name');
     const { __cache } = formHandler._.getFieldState('name') as FieldState;
-    await waitFor(() => {
-      expect(__cache).toMatchObject({
-        mounted: {
-          __state: true,
-          dataType: 'string',
-          errorMessage: '',
-          isInvalid: true,
-          currentValue: '',
-          defaultValue: '',
-          initialValue: '',
-          touched: false,
-          dirty: false,
-        },
-        unmounted: {
-          __state: true,
-          dataType: 'string',
-          errorMessage: 'name is a required field',
-          isInvalid: true,
-          currentValue: '',
-          defaultValue: '',
-          initialValue: '',
-          touched: true,
-          dirty: false,
-        },
-      });
+    expect(__cache).toMatchObject({
+      mounted: {
+        __state: true,
+        dataType: 'string',
+        errorMessage: '',
+        isInvalid: true,
+        currentValue: '',
+        defaultValue: '',
+        initialValue: '',
+        touched: false,
+        dirty: false,
+      },
+      unmounted: {
+        __state: true,
+        dataType: 'string',
+        errorMessage: 'name is a required field',
+        isInvalid: true,
+        currentValue: '',
+        defaultValue: '',
+        initialValue: '',
+        touched: true,
+        dirty: false,
+      },
     });
   });
 

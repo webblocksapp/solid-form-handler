@@ -5,5 +5,7 @@ export type SetFieldValueOptions = {
   dirty?: boolean;
   htmlElement?: HTMLElement;
   validateOn?: string[];
+  delay?: number;
+  forceValidate?: boolean;
   mapValue?: (value: any) => any;
 };

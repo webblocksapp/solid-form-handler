@@ -6,6 +6,7 @@ import {
   ValidationSchema,
   FormFieldError,
   FormHandlerOptions,
+  CommonObject,
 } from '@interfaces';
 import {
   equals,
@@ -29,7 +30,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Form handler main states.
    */
-  const formHandlerOptions = { ...options };
+  const formHandlerOptions = { delay: 300, ...options };
+  const timers: CommonObject = { validate: {}, touch: {} };
   const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
     data: validationSchema.buildDefault(),
@@ -83,6 +85,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
          */
         setFieldState(path, {
           ...fieldState,
+          cachedValue: defaultValue,
           currentValue: options?.mapValue?.(parseValue(path, currentValue)),
           initialValue: defaultValue,
           defaultValue: defaultValue,
@@ -132,23 +135,27 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       return Promise.all(promises);
     } else {
       setFieldData(path, value, { mapValue: options.mapValue });
+      setFieldState(path, (fieldState: FieldState) => ({
+        ...fieldState,
+        cachedValue: fieldState.currentValue,
+        currentValue: options?.mapValue?.(parseValue(path, value)),
+        delay: options?.delay,
+      }));
       const promises = Promise.all([
         ...(options?.validate
           ? [
               validateField(path, {
                 silentValidation: options?.silentValidation,
                 validateOn: options?.validateOn,
+                delay: options?.delay,
+                force: options?.forceValidate,
               }),
             ]
           : []),
+        ...(options?.touch ? [touchField(path)] : []),
       ]);
-      setFieldState(path, (fieldState: FieldState) => ({
-        ...fieldState,
-        currentValue: options?.mapValue?.(parseValue(path, value)),
-      }));
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.dirty && dirtyField(path);
-      options?.touch && touchField(path);
       return promises;
     }
   };
@@ -182,7 +189,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     const { __cache, ...rest } = fieldState;
 
-    if (__cache?.unmounted === undefined) await validateField(path, { silentValidation: true });
+    if (__cache?.unmounted === undefined) await validateField(path, { silentValidation: true, delay: 0 });
 
     setFieldState(
       path,
@@ -214,7 +221,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (!path) return false;
 
     const fieldState = getFieldState(path);
-    return fieldState?.touched === false || !equals(fieldState?.currentValue, getFieldValue(path)) ? true : false;
+    const result =
+      fieldState?.touched === false || !equals(fieldState?.cachedValue, getFieldValue(path)) ? true : false;
+    setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, cachedValue: getFieldValue(path) }));
+    return result;
   };
 
   /**
@@ -222,49 +232,68 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const validateField = async (
     path: string = '',
-    options?: { silentValidation?: boolean; validateOn?: string[]; force?: boolean }
+    options?: { silentValidation?: boolean; validateOn?: string[]; force?: boolean; delay?: number }
   ) => {
-    options = {
+    let _options = {
       ...options,
+      delay: options?.delay ?? formHandlerOptions.delay,
       silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
       validateOn: options?.validateOn || formHandlerOptions.validateOn,
     };
 
-    if (!validationSchema.isFieldFromSchema(path) || !path) return;
+    return new Promise<void>(async (resolve) => {
+      clearTimeout(timers.validate?.[path]);
+      delete timers.validate?.[path];
 
-    if (options.force !== true) {
-      if (!hasEventTypes(options.validateOn)) return;
-      if (!formFieldCanBeValidated(path)) return;
-    }
+      timers.validate[path] = setTimeout(async () => {
+        if (!validationSchema.isFieldFromSchema(path) || !path) {
+          resolve(undefined);
+          return;
+        }
 
-    /**
-     * Field is invalidated before is validated again, specially for
-     * async validations that can take time.
-     */
-    setFieldState(path, (fieldState: FieldState) => ({
-      ...fieldState,
-      isInvalid: true,
-    }));
+        if (_options.force !== true) {
+          if (!hasEventTypes(_options.validateOn)) {
+            resolve(undefined);
+            return;
+          }
+          if (!formFieldCanBeValidated(path)) {
+            resolve(undefined);
+            return;
+          }
+        }
 
-    try {
-      await validationSchema.validateAt(path, formData.data);
-      setFieldState(path, (fieldState: FieldState) => ({
-        ...fieldState,
-        isInvalid: false,
-        errorMessage: '',
-      }));
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        const errorMessage = options?.silentValidation ? '' : error.message;
+        /**
+         * Field is invalidated before is validated again, specially for
+         * async validations that can take time.
+         */
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
           isInvalid: true,
-          errorMessage,
         }));
-      } else {
-        console.error(error);
-      }
-    }
+
+        try {
+          await validationSchema.validateAt(path, formData.data);
+          setFieldState(path, (fieldState: FieldState) => ({
+            ...fieldState,
+            isInvalid: false,
+            errorMessage: '',
+          }));
+        } catch (error) {
+          if (error instanceof ValidationError) {
+            const errorMessage = _options?.silentValidation ? '' : error.message;
+            setFieldState(path, (fieldState: FieldState) => ({
+              ...fieldState,
+              isInvalid: true,
+              errorMessage,
+            }));
+          } else {
+            console.error(error);
+          }
+        } finally {
+          resolve(undefined);
+        }
+      }, _options.delay);
+    });
   };
 
   /**
@@ -272,16 +301,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * catchError: throws an error exception if form is invalid.
    */
   const validateForm = async () => {
-    await validate({ throwException: true, force: true });
+    await validate({ throwException: true, force: true, delay: 0 });
   };
 
   /**
    * Validates the whole form data.
    */
-  const validate = async (options?: { throwException?: boolean; force?: boolean }) => {
+  const validate = async (options?: { throwException?: boolean; force?: boolean; delay?: 0 }) => {
     const promises: Promise<void>[] = [];
     Object.keys(flattenObject(formData.data)).forEach((path) => {
-      promises.push(validateField(path, { force: options?.force }));
+      promises.push(validateField(path, { force: options?.force, delay: options?.delay }));
     });
 
     await Promise.all(promises);
@@ -428,8 +457,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       ...fieldState,
       __state: true,
       dataType: validationSchema.getFieldDataType(path),
+      delay: fieldState?.delay,
       isInvalid: options.reset ? true : fieldState?.isInvalid || true,
       errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
+      cachedValue: options.reset ? value : fieldState?.currentValue,
       currentValue: options.reset ? fieldState?.defaultValue : value,
       defaultValue: options.reset || options?.fill ? fieldState?.defaultValue : value,
       initialValue: options.fill ? value : fieldState?.defaultValue ?? value,
@@ -484,7 +515,12 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (formIsFilling() || formIsResetting()) return;
 
     const fieldState = getFieldState(path);
-    await setFieldValue(path, get(formData.data, path), { validate: true, touch: fieldState?.touched });
+    await setFieldValue(path, get(formData.data, path), {
+      validate: true,
+      touch: fieldState?.touched,
+      forceValidate: true,
+      delay: 0,
+    });
     fieldState?.touched === false && setFieldState(path, { ...fieldState, errorMessage: '' });
   };
 
@@ -536,8 +572,18 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Marks a field as touched when the user interacted with it.
    */
-  const touchField = (path: string = '') => {
-    path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
+  const touchField = async (path: string) => {
+    const fieldState = getFieldState(path);
+    const delay = fieldState?.delay ?? formHandlerOptions.delay;
+    clearTimeout(timers.touch?.[path]);
+    delete timers.touch?.[path];
+
+    return new Promise((resolve) => {
+      timers.touch[path] = setTimeout(() => {
+        path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
+        resolve(undefined);
+      }, delay);
+    });
   };
 
   /**

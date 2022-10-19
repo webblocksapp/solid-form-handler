@@ -5,11 +5,13 @@ export type FieldState = {
     unmounted?: Omit<FieldState, '__cache'>;
   };
   dataType: string;
+  delay: number;
   errorMessage: string;
   isInvalid: boolean;
   htmlElement?: HTMLElement;
   defaultValue: any;
   initialValue: any;
+  cachedValue: any;
   currentValue: any;
   touched: boolean;
   dirty: boolean;

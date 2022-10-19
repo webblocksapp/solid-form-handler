@@ -593,4 +593,25 @@ describe('useFormHandler', () => {
       dirty: false,
     });
   });
+
+  it('Validates the whole form despite the given event types', async () => {
+    const formHandler = useFormHandler(yupSchema(personSchema), { validateOn: ['input'] });
+    try {
+      await formHandler.validateForm();
+    } catch (error) {
+      expect(formHandler.isFormInvalid()).toBe(true);
+      if (error instanceof FormErrorsException) {
+        expect(error.validationResult).toMatchObject([
+          {
+            path: 'age',
+            errorMessage: 'age is a required field',
+          },
+          {
+            path: 'name',
+            errorMessage: 'name is a required field',
+          },
+        ]);
+      }
+    }
+  });
 });

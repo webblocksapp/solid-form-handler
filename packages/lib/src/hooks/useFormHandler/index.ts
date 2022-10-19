@@ -124,26 +124,32 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
      */
     if (fieldState.__state === undefined) {
       const data = get(formData.data, path);
-      const promises: Promise<void>[] = [];
+      const promises: Promise<any>[] = [];
       Object.keys(flattenObject(data)).forEach((key) => {
         const finalPath = `${path}.${key}`;
         promises.push(setFieldValue(finalPath, get(value, key), options));
       });
-      await Promise.all(promises);
+      return Promise.all(promises);
     } else {
       setFieldData(path, value, { mapValue: options.mapValue });
-      options?.validate &&
-        (await validateField(path, {
-          silentValidation: options?.silentValidation,
-          validateOn: options?.validateOn,
-        }));
+      const promises = Promise.all([
+        ...(options?.validate
+          ? [
+              validateField(path, {
+                silentValidation: options?.silentValidation,
+                validateOn: options?.validateOn,
+              }),
+            ]
+          : []),
+      ]);
       setFieldState(path, (fieldState: FieldState) => ({
         ...fieldState,
         currentValue: options?.mapValue?.(parseValue(path, value)),
       }));
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
-      options?.touch && touchField(path);
       options?.dirty && dirtyField(path);
+      options?.touch && touchField(path);
+      return promises;
     }
   };
 
@@ -214,7 +220,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Validates a single field of the form.
    */
-  const validateField = async (path: string = '', options?: { silentValidation?: boolean; validateOn?: string[] }) => {
+  const validateField = async (
+    path: string = '',
+    options?: { silentValidation?: boolean; validateOn?: string[]; force?: boolean }
+  ) => {
     options = {
       ...options,
       silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
@@ -222,8 +231,11 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     };
 
     if (!validationSchema.isFieldFromSchema(path) || !path) return;
-    if (!hasEventTypes(options.validateOn)) return;
-    if (!formFieldCanBeValidated(path)) return;
+
+    if (options.force !== true) {
+      if (!hasEventTypes(options.validateOn)) return;
+      if (!formFieldCanBeValidated(path)) return;
+    }
 
     try {
       await validationSchema.validateAt(path, formData.data);
@@ -251,16 +263,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * catchError: throws an error exception if form is invalid.
    */
   const validateForm = async () => {
-    await validate({ throwException: true });
+    await validate({ throwException: true, force: true });
   };
 
   /**
    * Validates the whole form data.
    */
-  const validate = async (options?: { throwException?: boolean }) => {
+  const validate = async (options?: { throwException?: boolean; force?: boolean }) => {
     const promises: Promise<void>[] = [];
     Object.keys(flattenObject(formData.data)).forEach((path) => {
-      promises.push(validateField(path));
+      promises.push(validateField(path, { force: options?.force }));
     });
 
     await Promise.all(promises);

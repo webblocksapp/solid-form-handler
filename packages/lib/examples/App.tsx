@@ -1,6 +1,7 @@
 import { Link, Route, Routes } from 'solid-app-router';
 import { Component } from 'solid-js';
 import {
+  AsyncValidationImpl,
   CheckboxImpl,
   CheckboxesImpl,
   CheckboxCompForm,
@@ -68,6 +69,9 @@ export const App: Component = () => {
         <div>
           <Link href="temperature-conversion">temperature-conversion</Link>
         </div>
+        <div>
+          <Link href="async-validation-impl">async-validation-impl</Link>
+        </div>
       </div>
       <Routes>
         <Route path="checkbox-impl" element={<CheckboxImpl />} />
@@ -85,6 +89,7 @@ export const App: Component = () => {
         <Route path="referrals-form" element={<ReferralsForm />} />
         <Route path="checkbox-comp-form" element={<CheckboxCompForm />} />
         <Route path="temperature-conversion" element={<TemperatureConversionImpl />} />
+        <Route path="async-validation-impl" element={<AsyncValidationImpl />} />
       </Routes>
     </div>
   );

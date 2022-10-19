@@ -237,6 +237,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       if (!formFieldCanBeValidated(path)) return;
     }
 
+    /**
+     * Field is invalidated before is validated again, specially for
+     * async validations that can take time.
+     */
+    setFieldState(path, (fieldState: FieldState) => ({
+      ...fieldState,
+      isInvalid: true,
+    }));
+
     try {
       await validationSchema.validateAt(path, formData.data);
       setFieldState(path, (fieldState: FieldState) => ({

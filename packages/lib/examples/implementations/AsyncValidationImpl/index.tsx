@@ -41,7 +41,15 @@ export const AsyncValidationImpl: Component = () => {
     <>
       <form onSubmit={submit}>
         <TextInput label="Email" name="email" formHandler={formHandler} />
+        <div>
+          {formHandler.isFormInvalid() ? (
+            <span style="color: red">Invalid</span>
+          ) : (
+            <span style="color: green">Valid</span>
+          )}
+        </div>
         <button>Submit</button>
+        <button disabled={formHandler.isFormInvalid()}>Submit</button>
       </form>
     </>
   );

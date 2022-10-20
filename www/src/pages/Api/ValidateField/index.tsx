@@ -20,8 +20,23 @@ export const ValidateField: Component = () => (
     </p>
     <ul>
       <li>
-        <code>silentValidation:</code> by default is <code>false</code>. When
-        set to <code>true</code> validation error message is not displayed.
+        <code>silentValidation:</code> by default is <code>false</code>. No
+        error message is displayed when set to <code>true</code>.
+      </li>
+      <li>
+        <code>validateOn:</code> receives an array of event types, as for
+        example <code>['input', 'change', 'aCustomEvent']</code>. The field will
+        be validated if it matches the event types set at{' '}
+        <code>formHandler</code> instance.
+      </li>
+      <li>
+        <code>delay:</code> by default is <code>0</code>. It will debounce
+        validations with the given delay time in milliseconds.
+      </li>
+      <li>
+        <code>force:</code> by default is <code>false</code>. The form field
+        always will be validated if set to <code>true</code> bypassing any
+        validation caching.
       </li>
     </ul>
   </>

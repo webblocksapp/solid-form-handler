@@ -92,9 +92,6 @@ export const VanillaCompFormImpl: Component = () => {
       <br />
       <div>
         <Radio label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
-        <pre>
-          <code>{JSON.stringify(formHandler._.getFieldState('accountStatus'), null, 2)}</code>
-        </pre>
       </div>
       <div>
         <Radios

@@ -5,7 +5,6 @@ export type FieldState = {
     unmounted?: Omit<FieldState, '__cache'>;
   };
   dataType: string;
-  delay: number;
   errorMessage: string;
   isInvalid: boolean;
   htmlElement?: HTMLElement;

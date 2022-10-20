@@ -186,6 +186,22 @@ export const mainRoutes: RouteDefinition[] = [
             path: 'validate-form',
             component: lazyImport('pages/Api/ValidateForm'),
           },
+          {
+            path: 'form-is-filling',
+            component: lazyImport('pages/Api/FormIsFilling'),
+          },
+          {
+            path: 'form-is-resetting',
+            component: lazyImport('pages/Api/FormIsResetting'),
+          },
+          {
+            path: 'mount-field',
+            component: lazyImport('pages/Api/MountField'),
+          },
+          {
+            path: 'unmount-field',
+            component: lazyImport('pages/Api/UnmountField'),
+          },
         ],
       },
       {

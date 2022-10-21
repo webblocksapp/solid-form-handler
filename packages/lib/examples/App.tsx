@@ -17,6 +17,7 @@ import {
   ConditionalFormImpl,
   ReferralsForm,
   TemperatureConversionImpl,
+  DependantValidationImpl,
 } from '@implementations';
 import './App.css';
 
@@ -70,7 +71,7 @@ export const App: Component = () => {
           <Link href="temperature-conversion">temperature-conversion</Link>
         </div>
         <div>
-          <Link href="async-validation-impl">async-validation-impl</Link>
+          <Link href="dependant-validation-impl">dependant-validation-impl</Link>
         </div>
       </div>
       <Routes>
@@ -90,6 +91,7 @@ export const App: Component = () => {
         <Route path="checkbox-comp-form" element={<CheckboxCompForm />} />
         <Route path="temperature-conversion" element={<TemperatureConversionImpl />} />
         <Route path="async-validation-impl" element={<AsyncValidationImpl />} />
+        <Route path="dependant-validation-impl" element={<DependantValidationImpl />} />
       </Routes>
     </div>
   );

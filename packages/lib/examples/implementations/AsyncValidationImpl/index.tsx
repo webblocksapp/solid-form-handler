@@ -4,7 +4,7 @@ import { useFormHandler } from '@hooks';
 import * as yup from 'yup';
 import { yupSchema } from '@utils';
 
-export const asyncSchema = yup.object({
+const asyncSchema = yup.object({
   email: yup
     .string()
     .email()

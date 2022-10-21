@@ -2,7 +2,7 @@ import { useFormHandler } from '@hooks';
 import { FieldState } from '@interfaces';
 import { FormErrorsException, yupSchema } from '@utils';
 import { waitFor } from 'solid-testing-library';
-import { personSchema, contactSchema, personsSchema, referralsSchema } from './mocks';
+import { personSchema, contactSchema, personsSchema, referralsSchema, triggersSchema } from './mocks';
 
 describe('useFormHandler', () => {
   it('formHandler object must be defined', () => {
@@ -611,5 +611,73 @@ describe('useFormHandler', () => {
         ]);
       }
     }
+  });
+
+  it('Triggers are set as expected', () => {
+    const formHandler = useFormHandler(yupSchema(triggersSchema));
+    formHandler.setFieldTriggers('password', ['passwordConfirm']);
+    formHandler.setFieldTriggers('passwordConfirm', ['password']);
+    expect(formHandler._.getFieldState('password')?.triggers).toMatchObject(['passwordConfirm']);
+    expect(formHandler._.getFieldState('passwordConfirm')?.triggers).toMatchObject(['password']);
+  });
+
+  it('Dependant validation is not run if dependant field is not touched', async () => {
+    const formHandler = useFormHandler(yupSchema(triggersSchema));
+    formHandler.setFieldTriggers('password', ['passwordConfirm']);
+    formHandler.setFieldTriggers('passwordConfirm', ['password']);
+    await formHandler.setFieldValue('password', 'abc');
+    await waitFor(() => {
+      expect(formHandler.getFieldError('password')).toBe("Password doesn't match");
+      expect(formHandler.getFieldError('passwordConfirm')).toBe('');
+    });
+  });
+
+  it('Dependant validation is run if dependant field is touched', async () => {
+    const formHandler = useFormHandler(yupSchema(triggersSchema));
+    formHandler.setFieldTriggers('password', ['passwordConfirm']);
+    formHandler.setFieldTriggers('passwordConfirm', ['password']);
+    await formHandler.setFieldValue('password', 'abc');
+    await formHandler.setFieldValue('passwordConfirm', 'ab');
+    await formHandler.setFieldValue('password', 'ab');
+    await waitFor(() => {
+      expect(formHandler.getFieldError('password')).toBe('');
+      expect(formHandler.getFieldError('passwordConfirm')).toBe('');
+    });
+  });
+
+  it('Dependant validation is run with delay', async () => {
+    const formHandler = useFormHandler(yupSchema(triggersSchema), { delay: 200 });
+    formHandler.setFieldTriggers('password', ['passwordConfirm']);
+    formHandler.setFieldTriggers('passwordConfirm', ['password']);
+    await formHandler.setFieldValue('password', 'abc', { delay: 100 });
+    await formHandler.setFieldValue('passwordConfirm', 'ab', { delay: 150 });
+    await waitFor(() => {
+      expect(formHandler.getFieldError('password')).toBe("Password doesn't match");
+      expect(formHandler.getFieldError('passwordConfirm')).toBe("Password doesn't match");
+    });
+  });
+
+  it('Form can be validated with configured triggers', async () => {
+    const formHandler = useFormHandler(yupSchema(triggersSchema), { delay: 200 });
+    formHandler.setFieldTriggers('password', ['passwordConfirm']);
+    formHandler.setFieldTriggers('passwordConfirm', ['password']);
+    await formHandler.setFieldValue('password', 'abc');
+    await formHandler.setFieldValue('passwordConfirm', 'abc');
+    try {
+      await formHandler.validateForm();
+    } finally {
+      expect(formHandler.isFormInvalid()).toBe(false);
+    }
+  });
+
+  it('Form can be reset with configured triggers', async () => {
+    const formHandler = useFormHandler(yupSchema(triggersSchema), { delay: 200 });
+    formHandler.setFieldTriggers('password', ['passwordConfirm']);
+    formHandler.setFieldTriggers('passwordConfirm', ['password']);
+    await formHandler.setFieldValue('password', 'abc');
+    await formHandler.setFieldValue('passwordConfirm', 'abc');
+    await formHandler.resetForm();
+    expect(formHandler.formData()).toMatchObject({ password: '', passwordConfirm: '' });
+    expect(formHandler.getFormErrors()).toMatchObject([]);
   });
 });

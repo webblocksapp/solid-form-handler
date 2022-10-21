@@ -139,16 +139,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         currentValue: options?.mapValue?.(parseValue(path, value)),
       }));
       const promises = Promise.all([
-        ...(options?.validate
-          ? [
-              validateField(path, {
-                silentValidation: options?.silentValidation,
-                validateOn: options?.validateOn,
-                delay: options?.delay,
-                force: options?.forceValidate,
-              }),
-            ]
-          : []),
+        options?.validate &&
+          validateField(path, {
+            silentValidation: options?.silentValidation,
+            validateOn: options?.validateOn,
+            delay: options?.delay,
+            force: options?.forceValidate,
+          }),
       ]);
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.dirty && dirtyField(path);
@@ -186,7 +183,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     const { __cache, ...rest } = fieldState;
 
-    if (__cache?.unmounted === undefined) await validateField(path, { silentValidation: true, delay: 0, force: true });
+    if (__cache?.unmounted === undefined)
+      await validateField(path, { silentValidation: true, delay: 0, force: true, omitTriggers: true });
 
     setFieldState(
       path,
@@ -230,8 +228,35 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Removes validate timeout from memory.
    */
   const deleteValidateTimer = (path: string = '') => {
-    if (!path) return;
-    delete timers.validate?.[path];
+    path && delete timers.validate?.[path];
+  };
+
+  /**
+   * Method for setting fields validations that depends on the current field validation.
+   */
+  const setFieldTriggers = (path: string = '', paths: string[] = []) => {
+    path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, triggers: paths }));
+  };
+
+  /**
+   * Method for getting field dependant validations.
+   */
+  const getFieldTriggers = (path: string = '') => {
+    return (path && getFieldState(path)?.triggers) || [];
+  };
+
+  /**
+   * Runs the field dependant validations.
+   */
+  const runFieldTriggers = async (path: string = '') => {
+    const triggers = getFieldTriggers(path);
+    const promises: Promise<void>[] = [];
+
+    triggers.forEach((trigger) => {
+      isFieldTouched(trigger) && promises.push(validateField(trigger, { force: true, delay: 0, omitTriggers: true }));
+    });
+
+    await Promise.allSettled(triggers);
   };
 
   /**
@@ -239,7 +264,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const validateField = async (
     path: string = '',
-    options?: { silentValidation?: boolean; validateOn?: string[]; force?: boolean; delay?: number }
+    options?: {
+      silentValidation?: boolean;
+      validateOn?: string[];
+      force?: boolean;
+      delay?: number;
+      omitTriggers?: boolean;
+    }
   ) => {
     let _options = {
       ...options,
@@ -250,7 +281,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     return new Promise<void>(async (resolve) => {
       clearTimeout(timers.validate?.[path]);
-
       timers.validate[path] = setTimeout(async () => {
         let abort = false;
         if (!validationSchema.isFieldFromSchema(path) || !path) abort = true;
@@ -270,13 +300,19 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
           isInvalid: true,
+          validating: true,
         }));
 
         try {
-          await validationSchema.validateAt(path, formData.data);
+          await Promise.all([
+            _options.omitTriggers !== true && runFieldTriggers(path),
+            validationSchema.validateAt(path, formData.data),
+          ]);
+
           setFieldState(path, (fieldState: FieldState) => ({
             ...fieldState,
             isInvalid: false,
+            validating: false,
             errorMessage: '',
           }));
         } catch (error) {
@@ -285,6 +321,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
             setFieldState(path, (fieldState: FieldState) => ({
               ...fieldState,
               isInvalid: true,
+              validating: false,
               errorMessage,
             }));
           } else {
@@ -312,7 +349,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const validate = async (options?: { throwException?: boolean; force?: boolean; delay?: 0 }) => {
     const promises: Promise<void>[] = [];
     Object.keys(flattenObject(formData.data)).forEach((path) => {
-      promises.push(validateField(path, { force: options?.force, delay: options?.delay }));
+      promises.push(validateField(path, { force: options?.force, delay: options?.delay, omitTriggers: true }));
     });
 
     await Promise.all(promises);
@@ -425,7 +462,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const promises: Promise<void>[] = [];
     Object.keys(flattenedObject).forEach((path) => {
       path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
-      promises.push(validateField(path, { silentValidation: true, force: true, delay: 0 }));
+      promises.push(validateField(path, { silentValidation: true, force: true, delay: 0, omitTriggers: true }));
     });
 
     await Promise.all(promises);
@@ -467,11 +504,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       initialValue: options.fill ? value : fieldState?.defaultValue ?? value,
       touched: options.reset ? false : fieldState?.touched || false,
       dirty: options.reset ? false : fieldState?.dirty || false,
+      triggers: fieldState?.triggers,
+      validating: false,
     };
   };
 
   /**
-   * Retrieves a boolean flag for the given field path if the field is invalid.
+   * Retrieves a boolean flag for the given field path to check if it's invalid.
    */
   const isFieldInvalid = (path: string) => {
     return findInvalidFlags(path).includes(true);
@@ -492,6 +531,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     }
 
     return invalidFlags;
+  };
+
+  /**
+   * Retrieves a boolean flag for the given field path to check if it's touched.
+   */
+  const isFieldTouched = (path: string) => {
+    return path && getFieldState(path)?.touched;
   };
 
   /**
@@ -555,7 +601,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const isFormInvalid = () => {
     for (let key in flattenObject(formData.data)) {
-      if (getFieldState(key)?.isInvalid) {
+      if (isFieldInvalid(key)) {
         return true;
       }
     }
@@ -717,6 +763,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     refreshFormField,
     removeFieldset,
     resetForm,
+    setFieldTriggers,
     setFieldValue,
     setFieldDefaultValue,
     touchField,

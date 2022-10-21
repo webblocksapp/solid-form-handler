@@ -4,6 +4,7 @@ export * from './CheckboxImpl';
 export * from './CheckboxesImpl';
 export * from './ComplexFormImpl';
 export * from './ConditionalFormImpl';
+export * from './DependantValidationImpl';
 export * from './FieldsetsFormImpl';
 export * from './FieldsetsFormStress1';
 export * from './FormImpl';

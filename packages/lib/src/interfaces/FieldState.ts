@@ -14,4 +14,6 @@ export type FieldState = {
   currentValue: any;
   touched: boolean;
   dirty: boolean;
+  triggers: string[];
+  validating: boolean;
 };

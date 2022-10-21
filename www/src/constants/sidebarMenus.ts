@@ -64,6 +64,7 @@ export const API_MENU: TreeMenuItem[] = [
       { text: 'isFormInvalid', route: 'is-form-invalid' },
       { text: 'getFormState', route: 'get-form-state' },
       { text: 'setFieldValue', route: 'set-field-value' },
+      { text: 'setFieldDefaultValue', route: 'set-field-default-value' },
       { text: 'isFieldInvalid', route: 'is-field-invalid' },
       { text: 'fieldHasError', route: 'field-has-error' },
       { text: 'getFieldError', route: 'get-field-error' },

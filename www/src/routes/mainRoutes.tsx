@@ -202,6 +202,14 @@ export const mainRoutes: RouteDefinition[] = [
             path: 'unmount-field',
             component: lazyImport('pages/Api/UnmountField'),
           },
+          {
+            path: 'set-field-default-value',
+            component: lazyImport('pages/Api/SetFieldDefaultValue'),
+          },
+          {
+            path: 'get-field-default-value',
+            component: lazyImport('pages/Api/GetFieldDefaultValue'),
+          },
         ],
       },
       {

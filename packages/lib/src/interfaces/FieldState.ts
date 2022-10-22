@@ -17,4 +17,5 @@ export type FieldState = {
   dirty: boolean;
   triggers: string[];
   validating: boolean;
+  validationId: string;
 };

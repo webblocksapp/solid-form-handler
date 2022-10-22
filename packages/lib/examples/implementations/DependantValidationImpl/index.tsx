@@ -28,7 +28,7 @@ const schema = yup.object({
 });
 
 export const DependantValidationImpl: Component = () => {
-  const formHandler = useFormHandler(yupSchema(schema), { delay: 300 });
+  const formHandler = useFormHandler(yupSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
@@ -51,9 +51,14 @@ export const DependantValidationImpl: Component = () => {
     formHandler.fillForm({ password: 'abc', passwordConfirm: 'abc' });
   };
 
-  const setValues = () => {
-    formHandler.setFieldValue('password', 'abc');
-    formHandler.setFieldValue('passwordConfirm', 'ab');
+  const setValues = async () => {
+    console.log('Setting values');
+    await Promise.allSettled([
+      formHandler.setFieldValue('password', 'abc'),
+      formHandler.setFieldValue('passwordConfirm', 'ab'),
+      formHandler.setFieldValue('password', 'ab'),
+    ]);
+    console.log('Values set');
   };
 
   formHandler.setFieldTriggers('password', ['passwordConfirm']);

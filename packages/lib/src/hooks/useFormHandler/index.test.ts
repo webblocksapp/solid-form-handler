@@ -595,7 +595,7 @@ describe('useFormHandler', () => {
       initialValue: 22,
       defaultValue: 22,
       touched: false,
-      interacted: true,
+      interacted: false,
       dirty: false,
     });
   });
@@ -634,10 +634,8 @@ describe('useFormHandler', () => {
     formHandler.setFieldTriggers('password', ['passwordConfirm']);
     formHandler.setFieldTriggers('passwordConfirm', ['password']);
     await formHandler.setFieldValue('password', 'abc');
-    await waitFor(() => {
-      expect(formHandler.getFieldError('password')).toBe("Password doesn't match");
-      expect(formHandler.getFieldError('passwordConfirm')).toBe('');
-    });
+    expect(formHandler.getFieldError('password')).toBe("Password doesn't match");
+    expect(formHandler.getFieldError('passwordConfirm')).toBe('');
   });
 
   it('Dependant validation is run if dependant field is touched', async () => {
@@ -647,10 +645,8 @@ describe('useFormHandler', () => {
     await formHandler.setFieldValue('password', 'abc');
     await formHandler.setFieldValue('passwordConfirm', 'ab');
     await formHandler.setFieldValue('password', 'ab');
-    await waitFor(() => {
-      expect(formHandler.getFieldError('password')).toBe('');
-      expect(formHandler.getFieldError('passwordConfirm')).toBe('');
-    });
+    expect(formHandler.getFieldError('password')).toBe('');
+    expect(formHandler.getFieldError('passwordConfirm')).toBe('');
   });
 
   it('Dependant validation is run with delay', async () => {
@@ -659,10 +655,8 @@ describe('useFormHandler', () => {
     formHandler.setFieldTriggers('passwordConfirm', ['password']);
     await formHandler.setFieldValue('password', 'abc', { delay: 100 });
     await formHandler.setFieldValue('passwordConfirm', 'ab', { delay: 150 });
-    await waitFor(() => {
-      expect(formHandler.getFieldError('password')).toBe("Password doesn't match");
-      expect(formHandler.getFieldError('passwordConfirm')).toBe("Password doesn't match");
-    });
+    expect(formHandler.getFieldError('password')).toBe("Password doesn't match");
+    expect(formHandler.getFieldError('passwordConfirm')).toBe("Password doesn't match");
   });
 
   it('Form can be validated with configured triggers', async () => {

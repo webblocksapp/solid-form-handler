@@ -6,7 +6,6 @@ import {
   ValidationSchema,
   FormFieldError,
   FormHandlerOptions,
-  CommonObject,
 } from '@interfaces';
 import {
   equals,
@@ -19,7 +18,7 @@ import {
   set,
   ValidationError,
 } from '@utils';
-import { createSignal, untrack } from 'solid-js';
+import { createSignal, createUniqueId, untrack } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 /**
@@ -31,7 +30,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Form handler main states.
    */
   const formHandlerOptions = { delay: 0, ...options };
-  const timers: CommonObject = { validate: {} };
   const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
     data: validationSchema.buildDefault(),
@@ -227,13 +225,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
-   * Removes validate timeout from memory.
-   */
-  const deleteValidateTimer = (path: string = '') => {
-    path && delete timers.validate?.[path];
-  };
-
-  /**
    * Method for setting fields validations that depends on the current field validation.
    */
   const setFieldTriggers = (path: string = '', paths: string[] = []) => {
@@ -259,7 +250,26 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         promises.push(validateField(trigger, { force: true, delay: 0, omitTriggers: true }));
     });
 
-    await Promise.allSettled(triggers);
+    await Promise.all(promises);
+  };
+
+  /**
+   * Sets the unique validation id.
+   */
+  const setValidationId = (path: string = '', id: string) => {
+    path &&
+      setFieldState(path, (fieldState: FieldState) => ({
+        ...fieldState,
+        validationId: id,
+      }));
+  };
+
+  /**
+   * Gets the unique validation id to abort current running validation if it's re-triggered.
+   */
+  const getValidationId = (path: string = '') => {
+    if (!path) return;
+    return getFieldState(path)?.validationId;
   };
 
   /**
@@ -275,68 +285,63 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       omitTriggers?: boolean;
     }
   ) => {
-    let _options = {
+    options = {
       ...options,
-      delay: options?.delay ?? formHandlerOptions.delay,
       silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
       validateOn: options?.validateOn || formHandlerOptions.validateOn,
+      delay: options?.delay ?? formHandlerOptions.delay,
     };
 
-    return new Promise<void>(async (resolve) => {
-      clearTimeout(timers.validate?.[path]);
-      timers.validate[path] = setTimeout(async () => {
-        let abort = false;
-        if (!validationSchema.isFieldFromSchema(path) || !path) abort = true;
-        if (_options.force !== true && !hasEventTypes(_options.validateOn)) abort = true;
-        if (_options.force !== true && abortValidation(path)) abort = true;
+    let abort = false;
+    let validationId = createUniqueId();
 
-        if (abort) {
-          resolve(undefined);
-          deleteValidateTimer(path);
-          return;
-        }
+    if (!validationSchema.isFieldFromSchema(path) || !path) abort = true;
+    if (options?.force !== true && !hasEventTypes(options?.validateOn)) abort = true;
+    if (options?.force !== true && abortValidation(path)) abort = true;
 
-        /**
-         * Field is invalidated before is validated again, specially for
-         * async validations that can take time.
-         */
+    await new Promise((resolve) => {
+      setValidationId(path, validationId);
+      setTimeout(resolve, options?.delay) as unknown as number;
+    });
+
+    if (getValidationId(path) !== validationId) abort = true;
+    if (abort) return;
+
+    /**
+     * Field is invalidated before is validated again, specially for
+     * async validations that can take time.
+     */
+    setFieldState(path, (fieldState: FieldState) => ({
+      ...fieldState,
+      isInvalid: true,
+      validating: true,
+    }));
+
+    try {
+      await Promise.all([
+        validationSchema.validateAt(path, formData.data),
+        options?.omitTriggers !== true && runFieldTriggers(path),
+      ]);
+
+      setFieldState(path, (fieldState: FieldState) => ({
+        ...fieldState,
+        isInvalid: false,
+        validating: false,
+        errorMessage: '',
+      }));
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        const errorMessage = options?.silentValidation ? '' : error.message;
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
           isInvalid: true,
-          validating: true,
-          interacted: true,
+          validating: false,
+          errorMessage,
         }));
-
-        try {
-          await Promise.all([
-            _options.omitTriggers !== true && runFieldTriggers(path),
-            validationSchema.validateAt(path, formData.data),
-          ]);
-
-          setFieldState(path, (fieldState: FieldState) => ({
-            ...fieldState,
-            isInvalid: false,
-            validating: false,
-            errorMessage: '',
-          }));
-        } catch (error) {
-          if (error instanceof ValidationError) {
-            const errorMessage = _options?.silentValidation ? '' : error.message;
-            setFieldState(path, (fieldState: FieldState) => ({
-              ...fieldState,
-              isInvalid: true,
-              validating: false,
-              errorMessage,
-            }));
-          } else {
-            console.error(error);
-          }
-        } finally {
-          resolve(undefined);
-          deleteValidateTimer(path);
-        }
-      }, _options.delay);
-    });
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   /**

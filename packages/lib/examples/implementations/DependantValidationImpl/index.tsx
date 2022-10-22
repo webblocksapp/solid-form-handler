@@ -28,7 +28,7 @@ const schema = yup.object({
 });
 
 export const DependantValidationImpl: Component = () => {
-  const formHandler = useFormHandler(yupSchema(schema));
+  const formHandler = useFormHandler(yupSchema(schema), { delay: 300 });
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

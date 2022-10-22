@@ -30,7 +30,9 @@ export const VanillaCompFormImpl: Component = () => {
   const formHandler = useFormHandler(yupSchema(schema));
   const { formData } = formHandler;
 
-  const submit = async () => {
+  const submit = async (event: Event) => {
+    event.preventDefault();
+
     try {
       await formHandler.validateForm();
       alert(`Data submitted \n ${JSON.stringify(formData())}`);
@@ -45,7 +47,7 @@ export const VanillaCompFormImpl: Component = () => {
   };
 
   return (
-    <form>
+    <form onSubmit={submit}>
       <h3>Vanilla Form Implementation</h3>
       <div>
         <TextInput label="Name" name="name" value="Example name" formHandler={formHandler} />
@@ -116,7 +118,7 @@ export const VanillaCompFormImpl: Component = () => {
         />
       </div>
       <br />
-      <button data-testid="submit" type="button" onClick={submit}>
+      <button data-testid="submit" onClick={submit}>
         Submit
       </button>
       <button data-testid="reset" type="button" onClick={reset}>

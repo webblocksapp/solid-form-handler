@@ -408,6 +408,7 @@ describe('useFormHandler', () => {
         initialValue: 'Laura',
         defaultValue: 'Laura',
         touched: false,
+        interacted: true,
         dirty: false,
       },
       age: {
@@ -419,6 +420,7 @@ describe('useFormHandler', () => {
         initialValue: 19,
         defaultValue: '',
         touched: false,
+        interacted: true,
         dirty: false,
       },
     });
@@ -441,6 +443,7 @@ describe('useFormHandler', () => {
         initialValue: 'George',
         defaultValue: 'Laura',
         touched: false,
+        interacted: true,
         dirty: false,
       },
       age: {
@@ -452,6 +455,7 @@ describe('useFormHandler', () => {
         initialValue: 19,
         defaultValue: '',
         touched: false,
+        interacted: true,
         dirty: false,
       },
     });
@@ -472,6 +476,7 @@ describe('useFormHandler', () => {
           defaultValue: '',
           initialValue: '',
           touched: false,
+          interacted: false,
           dirty: false,
         },
       });
@@ -494,6 +499,7 @@ describe('useFormHandler', () => {
         defaultValue: '',
         initialValue: '',
         touched: false,
+        interacted: false,
         dirty: false,
       },
       unmounted: {
@@ -505,6 +511,7 @@ describe('useFormHandler', () => {
         defaultValue: '',
         initialValue: '',
         touched: true,
+        interacted: true,
         dirty: false,
       },
     });
@@ -588,6 +595,7 @@ describe('useFormHandler', () => {
       initialValue: 22,
       defaultValue: 22,
       touched: false,
+      interacted: true,
       dirty: false,
     });
   });

@@ -36,6 +36,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   });
   const [formIsResetting, setFormIsResetting] = createSignal<boolean>(false);
   const [formIsFilling, setFormIsFilling] = createSignal<boolean>(false);
+  const [formIsValidating, setFormIsValidating] = createSignal<boolean>(false);
 
   /**
    * Sets the field value inside the form data store.
@@ -349,7 +350,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * catchError: throws an error exception if form is invalid.
    */
   const validateForm = async () => {
+    setFormIsValidating(true);
     await validate({ throwException: true, force: true, delay: 0 });
+    setFormIsValidating(false);
   };
 
   /**
@@ -606,6 +609,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
+   * Returns a boolean flag when the form field is being validated.
+   */
+  const isFieldValidating = (path: string = '') => {
+    return path && getFieldState(path)?.validating;
+  };
+
+  /**
    * Checks on all the fields if there is an invalidated field.
    * If yes the form is invalid.
    */
@@ -766,6 +776,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     formHasChanges,
     formIsFilling,
     formIsResetting,
+    formIsValidating,
     getFieldError,
     getFieldDefaultValue,
     getFieldValue,
@@ -773,6 +784,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     getFormErrors,
     getFormState,
     isFieldInvalid,
+    isFieldValidating,
     isFormInvalid,
     mountField,
     unmountField,

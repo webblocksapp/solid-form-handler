@@ -210,6 +210,18 @@ export const mainRoutes: RouteDefinition[] = [
             path: 'get-field-default-value',
             component: lazyImport('pages/Api/GetFieldDefaultValue'),
           },
+          {
+            path: 'form-is-validating',
+            component: lazyImport('pages/Api/FormIsValidating'),
+          },
+          {
+            path: 'set-field-triggers',
+            component: lazyImport('pages/Api/SetFieldTriggers'),
+          },
+          {
+            path: 'is-field-validating',
+            component: lazyImport('pages/Api/IsFieldValidating'),
+          },
         ],
       },
       {

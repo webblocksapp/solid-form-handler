@@ -62,6 +62,11 @@ export const GetFormState: Component = () => (
         interacted with the form field.
       </li>
       <li>
+        <code>interacted:</code> different from <code>touched</code>, becomes{' '}
+        <code>true</code> if there is a programmatically interaction with the
+        form field.
+      </li>
+      <li>
         <code>dirty:</code> becomes <code>true</code> if the field current value
         is different from initial value. Field current value is stored at{' '}
         <code>formData()</code>

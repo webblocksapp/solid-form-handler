@@ -11,6 +11,7 @@ export interface SelectProps extends JSX.SelectHTMLAttributes<HTMLSelectElement>
   label?: string;
   options?: Array<SelectableOption>;
   placeholder?: string;
+  triggers?: string[];
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -31,6 +32,7 @@ export const Select: Component<SelectProps> = (props) => {
     'options',
     'placeholder',
     'value',
+    'triggers',
   ]);
 
   /**
@@ -55,6 +57,7 @@ export const Select: Component<SelectProps> = (props) => {
     //Form handler prop sets and validate the value onInput.
     local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
       htmlElement: event.currentTarget,
+      validateOn: [event.type],
     });
 
     //onInput prop is preserved
@@ -70,7 +73,7 @@ export const Select: Component<SelectProps> = (props) => {
    */
   const onBlur: SelectProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
@@ -118,6 +121,13 @@ export const Select: Component<SelectProps> = (props) => {
       ...(local.placeholder ? [{ value: '', label: local.placeholder }] : []),
       ...(local.options || []),
     ]);
+  });
+
+  /**
+   * Triggers dependant validations
+   */
+  createEffect(() => {
+    local?.formHandler?.setFieldTriggers?.(rest.name, local.triggers);
   });
 
   /**

@@ -7,6 +7,7 @@ export interface TextInputProps extends JSX.InputHTMLAttributes<HTMLInputElement
   errorMessage?: string;
   formHandler?: FormHandler;
   label?: string;
+  triggers?: string[];
 }
 
 export const TextInput: Component<TextInputProps> = (props) => {
@@ -25,6 +26,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
     'onInput',
     'value',
     'classList',
+    'triggers',
   ]);
 
   /**
@@ -44,6 +46,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
     //Form handler prop sets and validate the value onInput.
     local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
       htmlElement: event.currentTarget,
+      validateOn: [event.type],
     });
 
     //onInput prop is preserved
@@ -59,7 +62,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
    */
   const onBlur: TextInputProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
@@ -104,6 +107,13 @@ export const TextInput: Component<TextInputProps> = (props) => {
    */
   createEffect(() => {
     local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
+  });
+
+  /**
+   * Triggers dependant validations
+   */
+  createEffect(() => {
+    local?.formHandler?.setFieldTriggers?.(rest.name, local.triggers);
   });
 
   /**

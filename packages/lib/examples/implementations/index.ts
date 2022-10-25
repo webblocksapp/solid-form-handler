@@ -14,4 +14,5 @@ export * from './SelectImpl';
 export * from './SortableFieldsetsFormImpl';
 export * from './TemperatureConversionImpl';
 export * from './TextInputImpl';
+export * from './ValidateOnImpl';
 export * from './VanillaCompFormImpl';

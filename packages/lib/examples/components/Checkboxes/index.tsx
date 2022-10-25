@@ -6,6 +6,7 @@ import { createStore } from 'solid-js/store';
 type SelectableOption = { value: string | number; label: string };
 
 export interface CheckboxesProps {
+  display?: 'switch';
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
@@ -16,6 +17,7 @@ export interface CheckboxesProps {
   onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
   onBlur?: JSX.DOMAttributes<HTMLInputElement>['onBlur'];
   value?: Array<string | number>;
+  triggers?: string[];
 }
 
 export const Checkboxes: Component<CheckboxesProps> = (props) => {
@@ -50,7 +52,9 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   const onChange: CheckboxesProps['onChange'] = (event) => {
     //If checked, value is pushed inside form handler.
     if (event.currentTarget.checked) {
-      rest.formHandler?.setFieldValue?.(rest.name, [...store.value, event.currentTarget.value]);
+      rest.formHandler?.setFieldValue?.(rest.name, [...store.value, event.currentTarget.value], {
+        validateOn: [event.type],
+      });
 
       //If unchecked, value is filtered from form handler.
     } else {
@@ -73,7 +77,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    */
   const onBlur: CheckboxesProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    rest.formHandler?.validateField?.(rest.name);
+    rest.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     rest.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
@@ -121,6 +125,13 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   });
 
   /**
+   * Triggers dependant validations
+   */
+  createEffect(() => {
+    rest?.formHandler?.setFieldTriggers?.(rest.name, rest.triggers);
+  });
+
+  /**
    * Mount lifecycle
    */
   onMount(() => {
@@ -141,6 +152,7 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
         <For each={rest.options}>
           {(option, i) => (
             <Checkbox
+              display={rest.display}
               id={`${store.id}-${i()}`}
               label={option.label}
               value={option.value}

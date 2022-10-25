@@ -228,8 +228,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Method for setting fields validations that depends on the current field validation.
    */
-  const setFieldTriggers = (path: string = '', paths: string[] = []) => {
-    path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, triggers: paths }));
+  const setFieldTriggers = async (path: string = '', paths: string[] = []) => {
+    return new Promise((resolve) => {
+      //Timeout required for dynamic fieldsets.
+      setTimeout(() => {
+        path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, triggers: paths }));
+        resolve(undefined);
+      });
+    });
   };
 
   /**
@@ -293,20 +299,20 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       delay: options?.delay ?? formHandlerOptions.delay,
     };
 
-    let abort = false;
     let validationId = createUniqueId();
 
-    if (!validationSchema.isFieldFromSchema(path) || !path) abort = true;
-    if (options?.force !== true && !hasEventTypes(options?.validateOn)) abort = true;
-    if (options?.force !== true && abortValidation(path)) abort = true;
+    if (!validationSchema.isFieldFromSchema(path) || !path) return;
+    if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
+    if (options?.force !== true && abortValidation(path)) return;
 
     await new Promise((resolve) => {
       setValidationId(path, validationId);
       setTimeout(resolve, options?.delay) as unknown as number;
     });
 
-    if (getValidationId(path) !== validationId) abort = true;
-    if (abort) return;
+    if (getValidationId(path) !== validationId) return;
+
+    console.log(path);
 
     /**
      * Field is invalidated before is validated again, specially for
@@ -448,7 +454,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Generates the whole form state object metadata
    */
-  const generateFormState = async (options?: { reset?: boolean; fill?: boolean }) => {
+  const generateFormState = async (options?: { reset?: boolean; fill?: boolean; silentValidation?: boolean }) => {
     const flattenedObject = flattenObject(formData.data);
     const state = Array.isArray(formData.data) ? [] : {};
 
@@ -474,7 +480,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const promises: Promise<void>[] = [];
     Object.keys(flattenedObject).forEach((path) => {
       path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
-      promises.push(validateField(path, { silentValidation: true, force: true, delay: 0, omitTriggers: true }));
+      promises.push(
+        validateField(path, {
+          silentValidation: options?.silentValidation ?? true,
+          force: true,
+          delay: 0,
+          omitTriggers: true,
+        })
+      );
     });
 
     await Promise.all(promises);
@@ -587,13 +600,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Fills the state of the form.
    */
-  const fillForm = async (data: T): Promise<void> => {
+  const fillForm = async (data: T, options?: { silentValidation?: boolean }): Promise<void> => {
     setFormIsFilling(true);
     return new Promise((resolve) => {
       setTimeout(async () => {
         if (data === undefined) return;
         setFormData('data', data);
-        await generateFormState({ fill: true });
+        await generateFormState({ fill: true, silentValidation: options?.silentValidation });
         setFormIsFilling(false);
         resolve(undefined);
       });
@@ -704,23 +717,20 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       : (formData.data as unknown as any[]).length;
     const builtPath = options?.basePath ? `${options?.basePath}.${length}` : `${length}`;
     const data = defaultData[0];
-    setFieldData(builtPath, data);
-    /**
-     * Fieldset is validated if data is passed.
-     */
+
     addFieldsetState(builtPath, data);
+    setFieldData(builtPath, data);
   };
 
   /**
    * Initializes the fieldset state at formState store.
    */
-  const addFieldsetState = (basePath: string, defaultData: any, validateFields: boolean = false) => {
+  const addFieldsetState = (basePath: string, defaultData: any) => {
     const flattenedObject = flattenObject(defaultData);
     setFieldState(basePath, {});
     Object.keys(flattenedObject).forEach((key) => {
       const path = `${basePath}.${key}`;
       setFieldState(path, { ...buildFieldState(path), defaultValue: flattenedObject[key] });
-      validateFields && validateField(path);
     });
   };
 

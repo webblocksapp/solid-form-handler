@@ -9,6 +9,7 @@ export interface CheckboxProps extends Omit<JSX.InputHTMLAttributes<HTMLInputEle
   formHandler?: FormHandler;
   label?: string;
   uncheckedValue?: string | number;
+  triggers?: string[];
 }
 
 export const Checkbox: Component<CheckboxProps> = (props) => {
@@ -29,6 +30,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
     'onChange',
     'uncheckedValue',
     'classList',
+    'triggers',
   ]);
 
   /**
@@ -46,7 +48,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   const onChange: CheckboxProps['onChange'] = (event) => {
     //Form handler prop sets and validate the value onInput.
-    local.formHandler?.setFieldValue?.(rest.name, getValue(event.currentTarget.checked));
+    local.formHandler?.setFieldValue?.(rest.name, getValue(event.currentTarget.checked), { validateOn: [event.type] });
     setStore('checked', event.currentTarget.checked);
 
     //onInput prop is preserved
@@ -62,7 +64,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   const onBlur: CheckboxProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
@@ -126,6 +128,13 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    */
   createEffect(() => {
     local.formHandler?.setFieldDefaultValue?.(rest.name, getValue(local.checked));
+  });
+
+  /**
+   * Triggers dependant validations
+   */
+  createEffect(() => {
+    local?.formHandler?.setFieldTriggers?.(rest.name, local.triggers);
   });
 
   /**

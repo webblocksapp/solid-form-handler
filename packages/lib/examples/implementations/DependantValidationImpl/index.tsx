@@ -1,4 +1,4 @@
-import { Component, onMount } from 'solid-js';
+import { Component } from 'solid-js';
 import { TextInput } from '@components';
 import { useFormHandler } from '@hooks';
 import * as yup from 'yup';
@@ -61,14 +61,11 @@ export const DependantValidationImpl: Component = () => {
     console.log('Values set');
   };
 
-  formHandler.setFieldTriggers('password', ['passwordConfirm']);
-  formHandler.setFieldTriggers('passwordConfirm', ['password']);
-
   return (
     <>
       <form onSubmit={submit}>
-        <TextInput label="Password" name="password" formHandler={formHandler} />
-        <TextInput label="Password Confirm" name="passwordConfirm" formHandler={formHandler} />
+        <TextInput label="Password" name="password" formHandler={formHandler} triggers={['passwordConfirm']} />
+        <TextInput label="Password Confirm" name="passwordConfirm" formHandler={formHandler} triggers={['password']} />
         <button>Submit</button>
         <button disabled={formHandler.isFormInvalid()}>Submit</button>
         <button type="button" onClick={reset}>

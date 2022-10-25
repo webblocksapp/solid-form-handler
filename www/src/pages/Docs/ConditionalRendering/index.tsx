@@ -23,7 +23,7 @@ export const ConditionalRendering: Component = () => {
         but it will be less optimal revalidating the field every time is mounted
         and unmounted. For solving this you can make use of the methods{' '}
         <code>mountField</code> and <code>unmountField</code>. You can check
-        them at{' '}
+        them in{' '}
         <Link target="blank" href="../components">
           components'
         </Link>{' '}

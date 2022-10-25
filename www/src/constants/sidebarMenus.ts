@@ -48,6 +48,7 @@ export const DOCS_MENU: TreeMenuItem[] = [
       { text: 'Dependant Validations', route: 'dependant-validations' },
       { text: 'Validate On', route: 'validate-on' },
       { text: 'Conditional Rendering', route: 'conditional-rendering' },
+      { text: 'Validation Delay', route: 'validation-delay' },
     ],
   },
 ];

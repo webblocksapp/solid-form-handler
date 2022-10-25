@@ -72,6 +72,9 @@ export const App: Component = () => {
           <Link href="temperature-conversion">temperature-conversion</Link>
         </div>
         <div>
+          <Link href="async-validation-impl">async-validation-impl</Link>
+        </div>
+        <div>
           <Link href="dependant-validation-impl">dependant-validation-impl</Link>
         </div>
         <div>

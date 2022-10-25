@@ -34,6 +34,9 @@ export const Form: Component = () => {
   createEffect(() => {
     formHandler.isFieldValidating('isAdult') &&
       setStore((prev) => ({ ...prev, isAdult: prev.isAdult + 1 }));
+  });
+
+  createEffect(() => {
     formHandler.isFieldValidating('email') &&
       setStore((prev) => ({ ...prev, email: prev.email + 1 }));
   });

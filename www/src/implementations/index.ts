@@ -11,6 +11,7 @@ export { Form as CheckboxesCompForm } from './CheckboxesCompForm';
 export { Form as PasswordConfirmForm } from './PasswordConfirmForm';
 export { Form as ValidateOnForm } from './ValidateOnForm';
 export { Form as ConditionalRenderingForm } from './ConditionalRenderingForm';
+export { Form as ValidationDelayForm } from './ValidationDelayForm';
 export * from './ProductsForm';
 export * from './UserForm';
 export * from './PersonForm';

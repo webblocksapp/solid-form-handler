@@ -113,6 +113,10 @@ export const mainRoutes: RouteDefinition[] = [
             path: 'conditional-rendering',
             component: lazyImport('pages/Docs/ConditionalRendering'),
           },
+          {
+            path: 'validation-delay',
+            component: lazyImport('pages/Docs/ValidationDelay'),
+          },
         ],
       },
       {

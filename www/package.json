@@ -1,7 +1,7 @@
 {
   "name": "solid-form-handler",
   "description": "A SolidJS library for simplifying form building and validations.",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0",
   "author": {
     "name": "Mauricio Rivera"
   },
@@ -26,7 +26,7 @@
     "bootstrap-icons": "^1.8.3",
     "font-awesome": "^4.7.0",
     "shiki": "^0.10.1",
-    "solid-form-handler": "^1.0.0-alpha.2",
+    "solid-form-handler": "^1.0.0-alpha.3",
     "solid-js": "^1.4.0",
     "yup": "^0.32.11"
   },

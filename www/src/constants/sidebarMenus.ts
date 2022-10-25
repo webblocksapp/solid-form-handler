@@ -45,6 +45,9 @@ export const DOCS_MENU: TreeMenuItem[] = [
         text: 'Dynamic Nested Form',
         route: 'dynamic-nested-form',
       },
+      { text: 'Dependant Validations', route: 'dependant-validations' },
+      { text: 'Validate On', route: 'validate-on' },
+      { text: 'Conditional Rendering', route: 'conditional-rendering' },
     ],
   },
 ];

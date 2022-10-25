@@ -16,6 +16,7 @@ export interface RadioProps
   formHandler?: FormHandler;
   label?: string;
   value: string | number;
+  triggers?: string[];
 }
 
 export const Radio: Component<RadioProps> = (props) => {
@@ -34,6 +35,7 @@ export const Radio: Component<RadioProps> = (props) => {
     'onChange',
     'classList',
     'checked',
+    'triggers',
   ]);
 
   /**
@@ -51,7 +53,9 @@ export const Radio: Component<RadioProps> = (props) => {
    */
   const onChange: RadioProps['onChange'] = (event) => {
     //Form handler prop sets and validate the value onChange.
-    local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
+    local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
+      validateOn: [event.type],
+    });
 
     //onChange prop is preserved
     if (typeof local.onChange === 'function') {
@@ -66,7 +70,7 @@ export const Radio: Component<RadioProps> = (props) => {
    */
   const onBlur: RadioProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    local.formHandler?.validateField?.(rest.name);
+    local.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
@@ -124,6 +128,13 @@ export const Radio: Component<RadioProps> = (props) => {
    */
   createEffect(() => {
     setStore('id', local.id || rest.name || '');
+  });
+
+  /**
+   * Triggers dependant validations
+   */
+  createEffect(() => {
+    local?.formHandler?.setFieldTriggers?.(rest.name, local.triggers);
   });
 
   /**

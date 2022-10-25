@@ -101,6 +101,18 @@ export const mainRoutes: RouteDefinition[] = [
             path: 'dynamic-nested-form',
             component: lazyImport('pages/Docs/DynamicNestedForm'),
           },
+          {
+            path: 'dependant-validations',
+            component: lazyImport('pages/Docs/DependantValidations'),
+          },
+          {
+            path: 'validate-on',
+            component: lazyImport('pages/Docs/ValidateOn'),
+          },
+          {
+            path: 'conditional-rendering',
+            component: lazyImport('pages/Docs/ConditionalRendering'),
+          },
         ],
       },
       {

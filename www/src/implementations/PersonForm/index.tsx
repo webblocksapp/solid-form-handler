@@ -91,6 +91,12 @@ export const PersonForm: Component = () => {
           Reset
         </button>
       </div>
+      <p class="mt-5">
+        <b>Form data:</b>
+      </p>
+      <pre class="mt-3 border bg-light p-3">
+        <code>{JSON.stringify(formData(), null, 2)}</code>
+      </pre>
     </form>
   );
 };

@@ -23,7 +23,7 @@ export const Implementation: Component<ImplementationProps> = (props) => {
   return (
     <>
       <Tabs
-        tabs={[{ text: 'Preview' }, { text: 'code' }]}
+        tabs={[{ text: 'Preview' }, { text: 'Code' }]}
         onChange={(index) => setTabIndex(index)}
       />
       <div class="border border-top-0">

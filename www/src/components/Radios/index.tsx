@@ -25,6 +25,7 @@ export interface RadiosProps {
   onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
   onBlur?: JSX.DOMAttributes<HTMLInputElement>['onBlur'];
   value?: string | number;
+  triggers?: string[];
 }
 
 export const Radios: Component<RadiosProps> = (props) => {
@@ -61,7 +62,9 @@ export const Radios: Component<RadiosProps> = (props) => {
    */
   const onChange: RadiosProps['onChange'] = (event) => {
     //Form handler prop sets and validate the value onChange.
-    rest.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value);
+    rest.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
+      validateOn: [event.type],
+    });
 
     //onChange prop is preserved
     if (typeof local.onChange === 'function') {
@@ -76,7 +79,7 @@ export const Radios: Component<RadiosProps> = (props) => {
    */
   const onBlur: RadiosProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    rest.formHandler?.validateField?.(rest.name);
+    rest.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     rest.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
@@ -132,6 +135,13 @@ export const Radios: Component<RadiosProps> = (props) => {
    */
   createEffect(() => {
     rest.formHandler?.setFieldDefaultValue?.(rest.name, rest.value);
+  });
+
+  /**
+   * Triggers dependant validations
+   */
+  createEffect(() => {
+    rest?.formHandler?.setFieldTriggers?.(rest.name, rest.triggers);
   });
 
   /**

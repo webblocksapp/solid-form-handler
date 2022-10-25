@@ -6,7 +6,7 @@
 
 ## Overview
 
-**solid-form-handler** is a lightweight library for building form components and validating forms with them. Under the hood, it works with the built-in granular reactivity of [SolidJS stores](https://www.solidjs.com/docs/latest/api#stores).
+**solid-form-handler** is a fully equipped library for building form components and validating forms with them. Under the hood, it works with the built-in granular reactivity of [SolidJS stores](https://www.solidjs.com/docs/latest/api#stores).
 
 It uses as a third-party library the yup object schema for data assertion however other validators will be supported in the future.
 

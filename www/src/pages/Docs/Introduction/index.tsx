@@ -6,7 +6,7 @@ export const Introduction: Component = () => (
   <>
     <h2 class="mb-4 border-bottom">Introduction</h2>
     <p>
-      <b>solidjs-form-handler</b> is a lightweight library for building form
+      <b>solid-form-handler</b> is a fully equipped library for building form
       components and validating forms with them. Under the hood, it works with
       the built-in granular reactivity of{' '}
       <a href={SOLID_JS_STORES_URL} target="blank">
@@ -26,14 +26,14 @@ export const Introduction: Component = () => (
       simply doesn't work.
     </p>
     <p>
-      <b>solidjs-form-handler</b> helps you during development to build/extend{' '}
+      <b>solid-form-handler</b> helps you during development to build/extend{' '}
       <Link href="/docs/components">form components</Link> by using the
       library's reactive APIs. This documentation contains implementation
       examples, so you can adapt them lately with any UI library of preference
       or CSS framework.
     </p>
     <p>
-      Advantages of using <b>solidjs-form-handler</b>:
+      Advantages of using <b>solid-form-handler</b>:
     </p>
     <ul>
       <li>Gives full control of your form components definition.</li>

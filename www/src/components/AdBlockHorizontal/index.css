@@ -1,0 +1,6 @@
+.ad-horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid rgb(197, 197, 197);
+  margin: auto;
+}

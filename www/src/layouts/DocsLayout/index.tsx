@@ -5,7 +5,12 @@ import {
   useNavigate,
   useRouteData,
 } from '@solidjs/router';
-import { Sidebar, SidebarMenu, useSidebarContext } from '@components';
+import {
+  AdBlockHorizontal,
+  Sidebar,
+  SidebarMenu,
+  useSidebarContext,
+} from '@components';
 import { TreeMenuItem } from '@interfaces';
 import { flattenTree } from '@utils';
 import './index.css';
@@ -94,7 +99,7 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
               {<Outlet />}
             </div>
             <div>
-              <div class="ad-block-horizontal mt-5"></div>
+              <AdBlockHorizontal />
               <div class="d-flex justify-content-end mt-3">
                 {index() > (menuOffset || 0) && (
                   <button class="btn bg-primary text-white" onClick={prev}>

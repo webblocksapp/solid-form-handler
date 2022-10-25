@@ -10,10 +10,6 @@ on:
       - master
     paths:
       - www/**
-  release:
-    types: [published]
-    branches:
-      - master
 defaults:
   run:
     working-directory: www
@@ -29,7 +25,6 @@ jobs:
       - name: Build and test
         uses: ./.github/workflows/actions/www-build-and-test
       - name: Deploy
-        if: github.event_name == 'release'
         uses: ./.github/workflows/actions/www-deploy
         with:
           ftp-server: ${{ secrets.FTP_SERVER }}

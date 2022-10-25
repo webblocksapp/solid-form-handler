@@ -1,3 +1,4 @@
+export * from './AdBlockHorizontal';
 export * from './Checkbox';
 export * from './Checkboxes';
 export * from './Code';

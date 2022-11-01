@@ -682,4 +682,16 @@ describe('useFormHandler', () => {
     expect(formHandler.formData()).toMatchObject({ password: '', passwordConfirm: '' });
     expect(formHandler.getFormErrors()).toMatchObject([]);
   });
+
+  it('Gets the value from a nested object', async () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    await formHandler.setFieldValue('referrals', [{ name: 'John' }]);
+    expect(formHandler.getFieldValue('referrals')).toMatchObject([{ name: 'John' }]);
+  });
+
+  it('Gets the default value from a nested object', () => {
+    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    formHandler.setFieldDefaultValue('referrals', [{ name: 'John' }]);
+    expect(formHandler.getFieldDefaultValue('referrals')).toMatchObject([{ name: 'John' }]);
+  });
 });

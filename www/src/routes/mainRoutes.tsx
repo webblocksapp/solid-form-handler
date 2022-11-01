@@ -117,6 +117,10 @@ export const mainRoutes: RouteDefinition[] = [
             path: 'validation-delay',
             component: lazyImport('pages/Docs/ValidationDelay'),
           },
+          {
+            path: 'validating-multi-step-form',
+            component: lazyImport('pages/Docs/ValidatingMultiStepForm'),
+          },
         ],
       },
       {

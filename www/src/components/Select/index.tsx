@@ -188,7 +188,11 @@ export const Select: Component<SelectProps> = (props) => {
         value={store.value}
       >
         <For each={options()}>
-          {(option) => <option value={option.value}>{option.label}</option>}
+          {(option) => (
+            <option value={option.value} selected={option.value == store.value}>
+              {option.label}
+            </option>
+          )}
         </For>
       </select>
       {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}

@@ -12,6 +12,7 @@ export { Form as PasswordConfirmForm } from './PasswordConfirmForm';
 export { Form as ValidateOnForm } from './ValidateOnForm';
 export { Form as ConditionalRenderingForm } from './ConditionalRenderingForm';
 export { Form as ValidationDelayForm } from './ValidationDelayForm';
+export { Form as MultiStepForm } from './MultiStepForm';
 export * from './ProductsForm';
 export * from './UserForm';
 export * from './PersonForm';

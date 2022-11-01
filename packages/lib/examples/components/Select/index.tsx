@@ -166,7 +166,13 @@ export const Select: Component<SelectProps> = (props) => {
         onBlur={onBlur}
         value={store.value}
       >
-        <For each={options()}>{(option) => <option value={option.value}>{option.label}</option>}</For>
+        <For each={options()}>
+          {(option) => (
+            <option value={option.value} selected={option.value == store.value}>
+              {option.label}
+            </option>
+          )}
+        </For>
       </select>
       {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
     </div>

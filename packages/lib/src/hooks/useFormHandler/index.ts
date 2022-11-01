@@ -300,29 +300,30 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     };
 
     let validationId = createUniqueId();
+    const fieldState = getFieldState(path);
 
     if (!validationSchema.isFieldFromSchema(path) || !path) return;
     if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
-    if (options?.force !== true && abortValidation(path)) return;
+    if (options?.force !== true && fieldState?.__state && abortValidation(path)) return;
 
-    await new Promise((resolve) => {
-      setValidationId(path, validationId);
-      setTimeout(resolve, options?.delay) as unknown as number;
-    });
+    if (fieldState?.__state) {
+      await new Promise((resolve) => {
+        setValidationId(path, validationId);
+        setTimeout(resolve, options?.delay) as unknown as number;
+      });
 
-    if (getValidationId(path) !== validationId) return;
+      if (getValidationId(path) !== validationId) return;
 
-    console.log(path);
-
-    /**
-     * Field is invalidated before is validated again, specially for
-     * async validations that can take time.
-     */
-    setFieldState(path, (fieldState: FieldState) => ({
-      ...fieldState,
-      isInvalid: true,
-      validating: true,
-    }));
+      /**
+       * Field is invalidated before is validated again, specially for
+       * async validations that can take time.
+       */
+      setFieldState(path, (fieldState: FieldState) => ({
+        ...fieldState,
+        isInvalid: true,
+        validating: true,
+      }));
+    }
 
     try {
       await Promise.all([
@@ -330,21 +331,23 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         options?.omitTriggers !== true && runFieldTriggers(path),
       ]);
 
-      setFieldState(path, (fieldState: FieldState) => ({
-        ...fieldState,
-        isInvalid: false,
-        validating: false,
-        errorMessage: '',
-      }));
+      fieldState?.__state &&
+        setFieldState(path, (fieldState: FieldState) => ({
+          ...fieldState,
+          isInvalid: false,
+          validating: false,
+          errorMessage: '',
+        }));
     } catch (error) {
       if (error instanceof ValidationError) {
         const errorMessage = options?.silentValidation ? '' : error.message;
-        setFieldState(path, (fieldState: FieldState) => ({
-          ...fieldState,
-          isInvalid: true,
-          validating: false,
-          errorMessage,
-        }));
+        fieldState?.__state &&
+          setFieldState(path, (fieldState: FieldState) => ({
+            ...fieldState,
+            isInvalid: true,
+            validating: false,
+            errorMessage,
+          }));
       } else {
         console.error(error);
       }
@@ -390,7 +393,24 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Gets the field value from formData store.
    */
   const getFieldDefaultValue = (path: string = '') => {
-    return path && getFieldState(path)?.defaultValue;
+    return path && findFieldDefaultValue(path);
+  };
+
+  /**
+   * Finds recursively the default value of a field.
+   */
+  const findFieldDefaultValue = (path: string = '', defaultValue?: any) => {
+    const fieldState = getFieldState(path);
+    if (fieldState === undefined) return;
+    if (fieldState?.__state === undefined) {
+      defaultValue = Array.isArray(fieldState) ? [] : {};
+      Object.keys(fieldState).forEach((key) => {
+        set(defaultValue, key, findFieldDefaultValue(`${path}.${key}`, defaultValue));
+      });
+      return defaultValue;
+    } else {
+      return fieldState.defaultValue;
+    }
   };
 
   /**

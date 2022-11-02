@@ -172,44 +172,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
-   * Form handler method to be implemented at onMount lifecycle of a reusable
-   * form field component. It triggers form field validation and caches the field state at first mount,
-   * to prevent component revalidation if it needs to be re-mounted (Conditional rendering).
-   */
-  const mountField = async (path: string = '') => {
-    if (!path) return;
-
-    const fieldState = getFieldState(path);
-    if (fieldState === undefined || fieldState.__state === undefined) return;
-
-    const { __cache, ...rest } = fieldState;
-
-    if (__cache?.unmounted === undefined)
-      await validateField(path, { silentValidation: true, delay: 0, force: true, omitTriggers: true });
-
-    setFieldState(
-      path,
-      (fieldState: FieldState) =>
-        ({ ...fieldState, ...__cache?.unmounted, __cache: { ...__cache, mounted: rest } } as FieldState)
-    );
-  };
-
-  /**
-   * Form handler method to be implemented at onCleanup lifecycle of a reusable
-   * form field component. It caches the current field state when it's unmounted,
-   * to be recovered when the component is re-mounted (Conditional rendering).
-   */
-  const unmountField = async (path: string = '') => {
-    if (!path) return;
-
-    const fieldState = getFieldState(path);
-    if (fieldState === undefined || fieldState.__state === undefined) return;
-
-    const { __cache, ...rest } = fieldState;
-    setFieldState(path, { ...fieldState, ...__cache?.mounted, __cache: { ...__cache, unmounted: rest } } as FieldState);
-  };
-
-  /**
    * Aborts the validation if the field cached value is
    * equals to current value. Cached value is the prev value,
    * which is rewritten with the current when this function is run.
@@ -252,10 +214,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const triggers = getFieldTriggers(path);
     const promises: Promise<void>[] = [];
 
-    triggers.forEach((trigger) => {
-      isFieldInteracted(trigger) &&
-        promises.push(validateField(trigger, { force: true, delay: 0, omitTriggers: true }));
-    });
+    triggers.forEach((trigger) =>
+      promises.push(
+        validateField(trigger, {
+          force: true,
+          delay: 0,
+          omitTriggers: true,
+          silentValidation: !isFieldInteracted(trigger),
+        })
+      )
+    );
 
     await Promise.all(promises);
   };
@@ -816,8 +784,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     isFieldInvalid,
     isFieldValidating,
     isFormInvalid,
-    mountField,
-    unmountField,
     moveFieldset,
     refreshFormField,
     removeFieldset,

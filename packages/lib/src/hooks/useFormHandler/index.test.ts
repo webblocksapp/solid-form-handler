@@ -1,7 +1,5 @@
 import { useFormHandler } from '@hooks';
-import { FieldState } from '@interfaces';
 import { FormErrorsException, yupSchema } from '@utils';
-import { waitFor } from 'solid-testing-library';
 import { personSchema, contactSchema, personsSchema, referralsSchema, triggersSchema } from './mocks';
 
 describe('useFormHandler', () => {
@@ -455,62 +453,6 @@ describe('useFormHandler', () => {
         initialValue: 19,
         defaultValue: '',
         touched: false,
-        interacted: true,
-        dirty: false,
-      },
-    });
-  });
-
-  it('Mounts the field', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
-    await formHandler.mountField('name');
-    const { __cache } = formHandler._.getFieldState('name') as FieldState;
-    await waitFor(() => {
-      expect(__cache).toMatchObject({
-        mounted: {
-          __state: true,
-          dataType: 'string',
-          errorMessage: '',
-          isInvalid: true,
-          currentValue: '',
-          defaultValue: '',
-          initialValue: '',
-          touched: false,
-          interacted: false,
-          dirty: false,
-        },
-      });
-    });
-  });
-
-  it('Unmounts the field', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
-    await formHandler.mountField('name');
-    await formHandler.setFieldValue('name', '');
-    await formHandler.unmountField('name');
-    const { __cache } = formHandler._.getFieldState('name') as FieldState;
-    expect(__cache).toMatchObject({
-      mounted: {
-        __state: true,
-        dataType: 'string',
-        errorMessage: '',
-        isInvalid: true,
-        currentValue: '',
-        defaultValue: '',
-        initialValue: '',
-        touched: false,
-        interacted: false,
-        dirty: false,
-      },
-      unmounted: {
-        __state: true,
-        dataType: 'string',
-        errorMessage: 'name is a required field',
-        isInvalid: true,
-        currentValue: '',
-        defaultValue: '',
-        initialValue: '',
-        touched: true,
         interacted: true,
         dirty: false,
       },

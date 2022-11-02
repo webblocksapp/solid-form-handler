@@ -37,12 +37,15 @@ export const ConditionalFormImpl: Component = () => {
 
   createEffect(() => {
     formHandler.isFieldValidating('isAdult') && setStore((prev) => ({ ...prev, isAdult: prev.isAdult + 1 }));
+  });
+
+  createEffect(() => {
     formHandler.isFieldValidating('email') && setStore((prev) => ({ ...prev, email: prev.email + 1 }));
   });
 
   return (
     <form onSubmit={submit}>
-      <Checkbox label="isAdult" name="isAdult" checked={false} formHandler={formHandler} />
+      <Checkbox triggers={['email']} label="isAdult" name="isAdult" checked={false} formHandler={formHandler} />
       <Show when={formData().isAdult}>
         <TextInput label="Email" name="email" formHandler={formHandler} />
       </Show>

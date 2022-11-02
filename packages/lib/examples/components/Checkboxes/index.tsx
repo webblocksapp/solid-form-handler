@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, createSelector, For, JSX, onCleanup, onMount, splitProps } from 'solid-js';
+import { Component, createEffect, createSelector, For, JSX, splitProps } from 'solid-js';
 import { Checkbox } from '@components';
 import { createStore } from 'solid-js/store';
 
@@ -129,20 +129,6 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    */
   createEffect(() => {
     rest?.formHandler?.setFieldTriggers?.(rest.name, rest.triggers);
-  });
-
-  /**
-   * Mount lifecycle
-   */
-  onMount(() => {
-    rest.formHandler?.mountField?.(rest.name);
-  });
-
-  /**
-   * Unmount lifecycle
-   */
-  onCleanup(() => {
-    rest.formHandler?.unmountField?.(rest.name);
   });
 
   return (

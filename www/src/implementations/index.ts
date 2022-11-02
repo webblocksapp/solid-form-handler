@@ -10,7 +10,7 @@ export { Form as RadiosCompForm } from './RadiosCompForm';
 export { Form as CheckboxesCompForm } from './CheckboxesCompForm';
 export { Form as PasswordConfirmForm } from './PasswordConfirmForm';
 export { Form as ValidateOnForm } from './ValidateOnForm';
-export { Form as ConditionalRenderingForm } from './ConditionalRenderingForm';
+export { Form as ConditionalValidationForm } from './ConditionalValidationForm';
 export { Form as ValidationDelayForm } from './ValidationDelayForm';
 export { Form as MultiStepForm } from './MultiStepForm';
 export * from './ProductsForm';

@@ -5,8 +5,6 @@ import {
   createSignal,
   For,
   JSX,
-  onCleanup,
-  onMount,
   splitProps,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
@@ -156,20 +154,6 @@ export const Select: Component<SelectProps> = (props) => {
    */
   createEffect(() => {
     local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
-  });
-
-  /**
-   * Mount lifecycle
-   */
-  onMount(() => {
-    local.formHandler?.mountField?.(rest.name);
-  });
-
-  /**
-   * Unmount lifecycle
-   */
-  onCleanup(() => {
-    local.formHandler?.unmountField?.(rest.name);
   });
 
   return (

@@ -1,5 +1,4 @@
 import { Component } from 'solid-js';
-import { DocsContentLayout } from '@layouts';
 import { Implementation } from '@components';
 import { getRaw } from '@utils';
 import { RadiosForm } from '@implementations';

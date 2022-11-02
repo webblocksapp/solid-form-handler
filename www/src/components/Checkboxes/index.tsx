@@ -5,8 +5,6 @@ import {
   createSelector,
   For,
   JSX,
-  onCleanup,
-  onMount,
   splitProps,
 } from 'solid-js';
 import { Checkbox } from '@components';
@@ -160,20 +158,6 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    */
   createEffect(() => {
     rest?.formHandler?.setFieldTriggers?.(rest.name, rest.triggers);
-  });
-
-  /**
-   * Mount lifecycle
-   */
-  onMount(() => {
-    rest.formHandler?.mountField?.(rest.name);
-  });
-
-  /**
-   * Unmount lifecycle
-   */
-  onCleanup(() => {
-    rest.formHandler?.unmountField?.(rest.name);
   });
 
   return (

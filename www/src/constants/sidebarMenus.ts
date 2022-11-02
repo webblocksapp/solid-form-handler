@@ -47,7 +47,6 @@ export const DOCS_MENU: TreeMenuItem[] = [
       },
       { text: 'Dependant Validations', route: 'dependant-validations' },
       { text: 'Validate On', route: 'validate-on' },
-      { text: 'Conditional Rendering', route: 'conditional-rendering' },
       { text: 'Validation Delay', route: 'validation-delay' },
       {
         text: 'Multi Step Form',
@@ -82,8 +81,6 @@ export const API_MENU: TreeMenuItem[] = [
       { text: 'getFieldDefaultValue', route: 'get-field-default-value' },
       { text: 'refreshFormField', route: 'refresh-form-field' },
       { text: 'formHasChanges', route: 'form-has-changes' },
-      { text: 'mountField', route: 'mount-field' },
-      { text: 'unmountField', route: 'unmount-field' },
       { text: 'validateField', route: 'validate-field' },
       { text: 'touchField', route: 'touch-field' },
       { text: 'validateForm', route: 'validate-form' },

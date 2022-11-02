@@ -23,12 +23,6 @@ export const GetFormState: Component = () => (
         state. Always <code>true</code>.
       </li>
       <li>
-        <code>__cache:</code> stores a cached state when methods{' '}
-        <code>mountField</code> and <code>unmountField</code> are implemented.
-        Ideally for conditional rendering of form fields to preserve it's
-        previous state when re-mounted.
-      </li>
-      <li>
         <code>dataType:</code> contains the data type of the value given by the
         validation schema.
       </li>

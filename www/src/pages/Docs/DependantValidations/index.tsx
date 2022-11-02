@@ -1,5 +1,8 @@
 import { Implementation } from '@components';
-import { PasswordConfirmForm } from '@implementations';
+import {
+  ConditionalValidationForm,
+  PasswordConfirmForm,
+} from '@implementations';
 import { getRaw } from '@utils';
 import { Component } from 'solid-js';
 
@@ -14,10 +17,6 @@ export const DependantValidations: Component = () => {
         interaction the other is validated and vice versa. At this point, the{' '}
         <code>triggers</code> property defined on each form component is used.
       </p>
-      <p>
-        Triggers are optimized to be run when the user has interacted with the
-        dependant field.
-      </p>
       <Implementation
         codeTabs={[
           {
@@ -29,6 +28,29 @@ export const DependantValidations: Component = () => {
         ]}
       >
         <PasswordConfirmForm />
+      </Implementation>
+      <p class="mt-4">
+        Also you can have scenarios where you have a conditional validation. The
+        following example makes required the <code>email</code> field when the{' '}
+        <code>isAdult</code> field is marked.
+      </p>
+      <Implementation
+        codeTabs={[
+          {
+            name: 'Form.tsx',
+            code: getRaw('ConditionalValidationForm/index.tsx'),
+          },
+          {
+            name: 'schema.ts',
+            code: getRaw('ConditionalValidationForm/schema.ts'),
+          },
+          {
+            name: 'types.ts',
+            code: getRaw('ConditionalValidationForm/types.ts'),
+          },
+        ]}
+      >
+        <ConditionalValidationForm />
       </Implementation>
     </>
   );

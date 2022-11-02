@@ -5,8 +5,6 @@ import {
   createSelector,
   For,
   JSX,
-  onCleanup,
-  onMount,
   splitProps,
 } from 'solid-js';
 import { Radio } from '@components';
@@ -142,20 +140,6 @@ export const Radios: Component<RadiosProps> = (props) => {
    */
   createEffect(() => {
     rest?.formHandler?.setFieldTriggers?.(rest.name, rest.triggers);
-  });
-
-  /**
-   * Mount lifecycle
-   */
-  onMount(() => {
-    rest.formHandler?.mountField?.(rest.name);
-  });
-
-  /**
-   * Unmount lifecycle
-   */
-  onCleanup(() => {
-    rest.formHandler?.unmountField?.(rest.name);
   });
 
   return (

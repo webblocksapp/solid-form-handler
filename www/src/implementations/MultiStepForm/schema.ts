@@ -21,7 +21,7 @@ export const schema: yup.SchemaOf<Schema> = yup.object({
       contact: yup
         .array(
           yup.object({
-            email: yup.string().required(),
+            email: yup.string().email().required(),
             phone: yup.string().optional(),
           })
         )

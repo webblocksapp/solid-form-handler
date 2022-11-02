@@ -1,12 +1,5 @@
 import { FormHandler } from 'solid-form-handler';
-import {
-  Component,
-  createEffect,
-  JSX,
-  onCleanup,
-  onMount,
-  splitProps,
-} from 'solid-js';
+import { Component, createEffect, JSX, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 export interface RadioProps
@@ -145,20 +138,6 @@ export const Radio: Component<RadioProps> = (props) => {
       rest.name,
       getValue(local.checked)
     );
-  });
-
-  /**
-   * Mount lifecycle
-   */
-  onMount(() => {
-    local.formHandler?.mountField?.(rest.name);
-  });
-
-  /**
-   * Unmount lifecycle
-   */
-  onCleanup(() => {
-    local.formHandler?.unmountField?.(rest.name);
   });
 
   return (

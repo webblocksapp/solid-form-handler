@@ -86,7 +86,7 @@ export const Form: Component = () => {
         <p class="mt-5">
           <b>Times validated:</b>
         </p>
-        <pre>
+        <pre class="mt-3 border bg-light p-3">
           <code>{JSON.stringify(store, null, 2)}</code>
         </pre>
       </form>

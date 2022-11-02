@@ -46,10 +46,11 @@ export const Form: Component = () => {
       <div class="row gy-3">
         <div class="col-sm-12">
           <Checkbox
-            label="isAdult"
+            label="Is Adult"
             name="isAdult"
             checked={false}
             formHandler={formHandler}
+            triggers={['email']}
           />
         </div>
         <Show when={formData().isAdult}>
@@ -86,13 +87,13 @@ export const Form: Component = () => {
       <p class="mt-5">
         <b>Form data:</b>
       </p>
-      <pre>
+      <pre class="border bg-light p-3">
         <code>{JSON.stringify(formData(), null, 2)}</code>
       </pre>
       <p class="mt-5">
         <b>Times validated:</b>
       </p>
-      <pre>
+      <pre class="border bg-light p-3">
         <code>{JSON.stringify(store, null, 2)}</code>
       </pre>
     </form>

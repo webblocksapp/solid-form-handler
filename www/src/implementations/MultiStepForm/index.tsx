@@ -13,6 +13,14 @@ export const Form: Component = () => {
 
   const submit = async (event: Event) => {
     event.preventDefault();
+    try {
+      await formHandler.validateForm();
+      alert(JSON.stringify(formHandler.formData()));
+      formHandler.resetForm();
+      setStep(1);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const next = () => {
@@ -35,22 +43,18 @@ export const Form: Component = () => {
               <Match when={step() === 2}>
                 <Step2 />
               </Match>
-              <Match when={step() === 2}>
+              <Match when={step() === 3}>
                 <Step3 />
               </Match>
             </Switch>
           </div>
-          <Show when={step() < 3}>
-            <div class="col-12 d-flex justify-content-end">
-              <Show when={step() > 1}>
-                <button
-                  type="button"
-                  class="btn btn-primary me-2"
-                  onClick={back}
-                >
-                  Back
-                </button>
-              </Show>
+          <div class="col-12 d-flex justify-content-end">
+            <Show when={step() > 1}>
+              <button type="button" class="btn btn-primary me-2" onClick={back}>
+                Back
+              </button>
+            </Show>
+            <Show when={step() < 3}>
               <button
                 type="button"
                 class="btn btn-primary"
@@ -59,16 +63,16 @@ export const Form: Component = () => {
               >
                 Next
               </button>
-              <Show when={step() === 3}>
-                <button
-                  class="btn btn-primary ms-2"
-                  disabled={formHandler.isFormInvalid()}
-                >
-                  Submit
-                </button>
-              </Show>
-            </div>
-          </Show>
+            </Show>
+            <Show when={step() === 3}>
+              <button
+                class="btn btn-primary ms-2"
+                disabled={formHandler.isFormInvalid()}
+              >
+                Submit
+              </button>
+            </Show>
+          </div>
         </div>
       </form>
     </FormContext.Provider>

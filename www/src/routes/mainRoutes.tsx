@@ -110,10 +110,6 @@ export const mainRoutes: RouteDefinition[] = [
             component: lazyImport('pages/Docs/ValidateOn'),
           },
           {
-            path: 'conditional-rendering',
-            component: lazyImport('pages/Docs/ConditionalRendering'),
-          },
-          {
             path: 'validation-delay',
             component: lazyImport('pages/Docs/ValidationDelay'),
           },
@@ -213,14 +209,6 @@ export const mainRoutes: RouteDefinition[] = [
           {
             path: 'form-is-resetting',
             component: lazyImport('pages/Api/FormIsResetting'),
-          },
-          {
-            path: 'mount-field',
-            component: lazyImport('pages/Api/MountField'),
-          },
-          {
-            path: 'unmount-field',
-            component: lazyImport('pages/Api/UnmountField'),
           },
           {
             path: 'set-field-default-value',

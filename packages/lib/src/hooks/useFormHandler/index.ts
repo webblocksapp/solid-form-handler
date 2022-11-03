@@ -660,7 +660,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (fieldState === undefined) return;
 
     setFieldState(path, (fieldState: FieldState) => {
-      if (JSON.stringify(fieldState.currentValue) !== JSON.stringify(fieldState.initialValue)) {
+      if (!equals(fieldState.currentValue, fieldState.initialValue)) {
         return { ...fieldState, dirty: true };
       }
 

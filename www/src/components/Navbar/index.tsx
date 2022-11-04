@@ -1,17 +1,18 @@
 import { Component, For, JSX, Show } from 'solid-js';
 import { NavLink } from '@solidjs/router';
-import { MenuItem } from '@interfaces';
+import { MenuItem, Size } from '@interfaces';
 import './index.css';
 
 export interface NavbarProps {
   menu?: MenuItem[];
   brand?: JSX.Element;
   rightMenu?: Omit<MenuItem, 'text' | 'section'>[];
+  size?: Size;
 }
 
 export const Navbar: Component<NavbarProps> = (props) => (
   <nav class="sticky-top navbar navbar-dark bg-dark navbar-expand-lg">
-    <div class="container-xxl">
+    <div class={`container-${props.size || 'fluid'}`}>
       {props.brand}
       <button
         class="navbar-toggler"

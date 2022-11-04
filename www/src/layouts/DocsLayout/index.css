@@ -26,6 +26,7 @@
 .docs-layout > div > div:nth-child(2) {
   padding: 24px 20px 17px 40px;
   display: grid;
+  grid-template-columns: 1fr auto;
 }
 
 .docs-layout > div > div:nth-child(3) > div {
@@ -41,7 +42,17 @@
   overflow: auto;
   height: calc(100vh - var(--navbar-height));
   padding-left: 20px;
-  margin-left: -20px;
+  margin-left: -10px;
+}
+
+.docs-layout .add-wrapper {
+  position: sticky;
+  top: calc(var(--navbar-height) + 24px);
+  height: calc(100vh - var(--navbar-height) - 48px);
+  min-width: 200px;
+  padding-left: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .docs-layout .sidebar .section-item {
@@ -56,6 +67,9 @@
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: minmax(0, 1fr);
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 @media (max-width: 1399px) {
@@ -103,5 +117,9 @@
 
   .docs-layout > div > div:nth-child(2) {
     padding: 20px 10px;
+  }
+
+  .docs-layout .add-wrapper {
+    display: none;
   }
 }

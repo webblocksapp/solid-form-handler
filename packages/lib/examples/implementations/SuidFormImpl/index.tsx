@@ -1,4 +1,4 @@
-import { TextInput, Select, Checkbox, Checkboxes, Radio, Radios } from '@suid';
+import { TextInput, Select, Checkbox, Checkboxes, Radio, Radios } from '@components/suid';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { Component } from 'solid-js';

@@ -5,8 +5,13 @@ import {
   useNavigate,
   useRouteData,
 } from '@solidjs/router';
-import { Sidebar, SidebarMenu, useSidebarContext } from '@components';
-import { TreeMenuItem } from '@interfaces';
+import {
+  AdBlockVertical,
+  Sidebar,
+  SidebarMenu,
+  useSidebarContext,
+} from '@components';
+import { Size, TreeMenuItem } from '@interfaces';
 import { flattenTree } from '@utils';
 import './index.css';
 
@@ -14,9 +19,10 @@ export interface DocsLayoutProps {
   headerText?: string;
   menu?: TreeMenuItem[];
   menuOffset?: number;
+  size?: Size;
 }
 
-export const DocsLayout: Component<DocsLayoutProps> = () => {
+export const DocsLayout: Component<DocsLayoutProps> = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [index, setIndex] = createSignal<number>(0);
@@ -68,7 +74,7 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
 
   return (
     <div class="docs-layout container-fluid px-0">
-      <div class="container-xxl">
+      <div class={`container-${props.size || 'fluid'}`}>
         <div>
           <Sidebar>
             <SidebarMenu
@@ -108,6 +114,9 @@ export const DocsLayout: Component<DocsLayoutProps> = () => {
               </div>
             </div>
           </div>
+          <aside class="add-wrapper">
+            <AdBlockVertical />
+          </aside>
         </div>
       </div>
     </div>

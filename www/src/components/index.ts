@@ -1,3 +1,4 @@
+export * from './AddBlockVertical';
 export * from './Checkbox';
 export * from './Checkboxes';
 export * from './Code';

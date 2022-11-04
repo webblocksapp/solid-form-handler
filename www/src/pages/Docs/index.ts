@@ -5,6 +5,7 @@ export * from './DependantValidations';
 export * from './DynamicForm';
 export * from './DynamicNestedForm';
 export * from './FormValidation';
+export * from './MaterialUI';
 export * from './Introduction';
 export * from './NestedFormValidation';
 export * from './QuickStart';

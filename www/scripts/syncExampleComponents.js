@@ -3,12 +3,21 @@ const path = require('path');
 const prettier = require('prettier');
 
 const syncExampleComponents = async () => {
-  const initialPath = path.join(
-    __dirname,
-    '../../',
-    'packages/lib/examples/components'
+  let baseInitialPath = path.join(__dirname, '../../', 'packages/lib/examples');
+  let baseTargetPath = path.join(__dirname, '..', 'src');
+
+  await writeComponents(
+    `${baseInitialPath}/components`,
+    `${baseTargetPath}/components`
   );
-  const targetPath = path.join(__dirname, '..', 'src/components');
+
+  await writeComponents(
+    `${baseInitialPath}/components/suid`,
+    `${baseTargetPath}/components/suid`
+  );
+};
+
+const writeComponents = async (initialPath, targetPath) => {
   let prettierOptions = await prettier.resolveConfig(
     path.join(__dirname, '..', '.prettierrc')
   );

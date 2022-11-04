@@ -117,6 +117,10 @@ export const mainRoutes: RouteDefinition[] = [
             path: 'validating-multi-step-form',
             component: lazyImport('pages/Docs/ValidatingMultiStepForm'),
           },
+          {
+            path: 'material-ui',
+            component: lazyImport('pages/Docs/MaterialUI'),
+          },
         ],
       },
       {

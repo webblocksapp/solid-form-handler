@@ -4,11 +4,13 @@ import {
   createEffect,
   createSelector,
   For,
-  JSX,
   splitProps,
 } from 'solid-js';
-import { Radio } from '@components';
+import { Radio, RadioProps } from '@components/suid';
 import { createStore } from 'solid-js/store';
+import FormGroup from '@suid/material/FormGroup';
+import FormLabel from '@suid/material/FormLabel';
+import FormHelperText from '@suid/material/FormHelperText';
 
 type SelectableOption = { value: string | number; label: string };
 
@@ -16,12 +18,14 @@ export interface RadiosProps {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
+  helperText?: string;
   id?: string;
   label?: string;
   options?: Array<SelectableOption>;
   name?: string;
-  onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
-  onBlur?: JSX.DOMAttributes<HTMLInputElement>['onBlur'];
+  onChange?: RadioProps['onChange'];
+  onBlur?: RadioProps['onBlur'];
+  required?: boolean;
   value?: string | number;
   triggers?: string[];
 }
@@ -58,18 +62,14 @@ export const Radios: Component<RadiosProps> = (props) => {
   /**
    * Extended onChange event.
    */
-  const onChange: RadiosProps['onChange'] = (event) => {
+  const onChange: RadiosProps['onChange'] = (event, checked) => {
     //Form handler prop sets and validate the value onChange.
     rest.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
       validateOn: [event.type],
     });
 
     //onChange prop is preserved
-    if (typeof local.onChange === 'function') {
-      local.onChange(event);
-    } else {
-      local.onChange?.[0](local.onChange?.[1], event);
-    }
+    local?.onChange?.(event, checked);
   };
 
   /**
@@ -146,25 +146,32 @@ export const Radios: Component<RadiosProps> = (props) => {
   });
 
   return (
-    <div>
-      {rest.label && <label>{rest.label}</label>}
-      <div classList={{ 'is-invalid': store.error }}>
-        <For each={rest.options}>
-          {(option, i) => (
-            <Radio
-              id={`${store.id}-${i()}`}
-              label={option.label}
-              value={option.value}
-              name={rest.name}
-              onChange={onChange}
-              onBlur={onBlur}
-              error={store.error}
-              checked={checked(option.value)}
-            />
-          )}
-        </For>
-      </div>
-      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
-    </div>
+    <FormGroup>
+      {rest.label && (
+        <FormLabel error={store.error} required={rest.required}>
+          {rest.label}
+        </FormLabel>
+      )}
+      <For each={rest.options}>
+        {(option, i) => (
+          <Radio
+            id={`${store.id}-${i()}`}
+            label={option.label}
+            value={option.value}
+            name={rest.name}
+            onChange={onChange}
+            onBlur={onBlur}
+            error={store.error}
+            checked={checked(option.value)}
+          />
+        )}
+      </For>
+      {rest.helperText && <FormHelperText>{rest.helperText}</FormHelperText>}
+      {store.error && (
+        <FormHelperText error={store.error}>
+          {store.errorMessage}
+        </FormHelperText>
+      )}
+    </FormGroup>
   );
 };

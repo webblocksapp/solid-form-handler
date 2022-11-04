@@ -4,18 +4,22 @@ import {
   createEffect,
   createSignal,
   For,
-  JSX,
   splitProps,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
+import SuidNativeSelect, {
+  NativeSelectProps as SuidNativeSelectProps,
+} from '@suid/material/NativeSelect';
+import FormHelperText from '@suid/material/FormHelperText';
+import FormLabel from '@suid/material/FormLabel';
+import FormGroup from '@suid/material/FormGroup';
 
 type SelectableOption = { value: string | number; label: string };
 
-export interface SelectProps
-  extends JSX.SelectHTMLAttributes<HTMLSelectElement> {
-  error?: boolean;
+export interface SelectProps extends SuidNativeSelectProps {
   errorMessage?: string;
   formHandler?: FormHandler;
+  helperText?: string;
   label?: string;
   options?: Array<SelectableOption>;
   placeholder?: string;
@@ -29,14 +33,14 @@ export const Select: Component<SelectProps> = (props) => {
    * - rest: remaining inherited props applied to the original component.
    */
   const [local, rest] = splitProps(props, [
-    'classList',
     'error',
     'errorMessage',
     'formHandler',
+    'helperText',
     'id',
     'label',
     'onBlur',
-    'onInput',
+    'onChange',
     'options',
     'placeholder',
     'value',
@@ -61,19 +65,15 @@ export const Select: Component<SelectProps> = (props) => {
   /**
    * Extended onInput event.
    */
-  const onInput: SelectProps['onInput'] = (event) => {
+  const onChange: SelectProps['onChange'] = (event) => {
     //Form handler prop sets and validate the value onInput.
     local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
       htmlElement: event.currentTarget,
       validateOn: [event.type],
     });
 
-    //onInput prop is preserved
-    if (typeof local.onInput === 'function') {
-      local.onInput(event);
-    } else {
-      local.onInput?.[0](local.onInput?.[1], event);
-    }
+    //onChange prop is preserved
+    local?.onChange?.(event);
   };
 
   /**
@@ -85,11 +85,7 @@ export const Select: Component<SelectProps> = (props) => {
     local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
-    if (typeof local.onBlur === 'function') {
-      local.onBlur(event);
-    } else {
-      local.onBlur?.[0](local.onBlur?.[1], event);
-    }
+    local?.onBlur?.(event);
   };
 
   /**
@@ -160,19 +156,18 @@ export const Select: Component<SelectProps> = (props) => {
   });
 
   return (
-    <div classList={local.classList}>
+    <FormGroup>
       {local.label && (
-        <label class="form-label" for={store.id}>
+        <FormLabel error={store.error} required={rest.required}>
           {local.label}
-        </label>
+        </FormLabel>
       )}
-      <select
+      <SuidNativeSelect
         {...rest}
-        classList={{ 'is-invalid': store.error, 'form-select': true }}
+        error={store.error}
         id={store.id}
-        onInput={onInput}
+        onChange={onChange}
         onBlur={onBlur}
-        value={store.value}
       >
         <For each={options()}>
           {(option) => (
@@ -181,8 +176,13 @@ export const Select: Component<SelectProps> = (props) => {
             </option>
           )}
         </For>
-      </select>
-      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
-    </div>
+      </SuidNativeSelect>
+      {local.helperText && <FormHelperText>{local.helperText}</FormHelperText>}
+      {store.error && (
+        <FormHelperText error={store.error}>
+          {store.errorMessage}
+        </FormHelperText>
+      )}
+    </FormGroup>
   );
 };

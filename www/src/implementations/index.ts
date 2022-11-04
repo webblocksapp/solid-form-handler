@@ -13,6 +13,7 @@ export { Form as ValidateOnForm } from './ValidateOnForm';
 export { Form as ConditionalValidationForm } from './ConditionalValidationForm';
 export { Form as ValidationDelayForm } from './ValidationDelayForm';
 export { Form as MultiStepForm } from './MultiStepForm';
+export { Form as SuidUserForm } from './SuidUserForm';
 export * from './ProductsForm';
 export * from './UserForm';
 export * from './PersonForm';

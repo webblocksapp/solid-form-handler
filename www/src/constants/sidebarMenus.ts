@@ -54,6 +54,11 @@ export const DOCS_MENU: TreeMenuItem[] = [
       },
     ],
   },
+  {
+    text: 'Integrations',
+    section: true,
+    children: [{ text: 'Material UI', route: 'material-ui' }],
+  },
 ];
 
 export const API_MENU: TreeMenuItem[] = [

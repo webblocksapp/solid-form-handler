@@ -4,29 +4,33 @@ import {
   createEffect,
   createSelector,
   For,
-  JSX,
   splitProps,
 } from 'solid-js';
-import { Radio } from '@components';
+import { Checkbox, CheckboxProps } from '@components/suid';
 import { createStore } from 'solid-js/store';
+import FormGroup from '@suid/material/FormGroup';
+import FormLabel from '@suid/material/FormLabel';
+import FormHelperText from '@suid/material/FormHelperText';
 
 type SelectableOption = { value: string | number; label: string };
 
-export interface RadiosProps {
+export interface CheckboxesProps {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
+  helperText?: string;
   id?: string;
   label?: string;
   options?: Array<SelectableOption>;
   name?: string;
-  onChange?: JSX.DOMAttributes<HTMLInputElement>['onChange'];
-  onBlur?: JSX.DOMAttributes<HTMLInputElement>['onBlur'];
-  value?: string | number;
+  onChange?: CheckboxProps['onChange'];
+  onBlur?: CheckboxProps['onBlur'];
+  required?: boolean;
+  value?: Array<string | number>;
   triggers?: string[];
 }
 
-export const Radios: Component<RadiosProps> = (props) => {
+export const Checkboxes: Component<CheckboxesProps> = (props) => {
   /**
    * Props are divided in two groups:
    * - local: newer or extended/computed props.
@@ -46,36 +50,49 @@ export const Radios: Component<RadiosProps> = (props) => {
   const [store, setStore] = createStore({
     errorMessage: '',
     error: false,
-    value: '',
+    value: [],
     id: '',
   });
 
   /**
-   * Radio is checked
+   * Checkbox is checked
    */
-  const checked = createSelector(() => store.value);
+  const checked = createSelector(
+    () => store.value,
+    (optionValue: string | number, storeValue) =>
+      storeValue?.some?.((item) => item == optionValue)
+  );
 
   /**
-   * Extended onChange event.
+   * Checkboxes onChange logic.
    */
-  const onChange: RadiosProps['onChange'] = (event) => {
-    //Form handler prop sets and validate the value onChange.
-    rest.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
-      validateOn: [event.type],
-    });
+  const onChange: CheckboxesProps['onChange'] = (event, checked) => {
+    //If checked, value is pushed inside form handler.
+    if (event.currentTarget.checked) {
+      rest.formHandler?.setFieldValue?.(
+        rest.name,
+        [...store.value, event.currentTarget.value],
+        {
+          validateOn: [event.type],
+        }
+      );
+
+      //If unchecked, value is filtered from form handler.
+    } else {
+      rest.formHandler?.setFieldValue?.(
+        rest.name,
+        store.value?.filter?.((item: any) => event.currentTarget.value != item)
+      );
+    }
 
     //onChange prop is preserved
-    if (typeof local.onChange === 'function') {
-      local.onChange(event);
-    } else {
-      local.onChange?.[0](local.onChange?.[1], event);
-    }
+    local?.onChange?.(event, checked);
   };
 
   /**
    * Checkboxes onBlur event.
    */
-  const onBlur: RadiosProps['onBlur'] = (event) => {
+  const onBlur: CheckboxesProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
     rest.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     rest.formHandler?.touchField?.(rest.name);
@@ -135,7 +152,7 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Initializes the form field default value.
    */
   createEffect(() => {
-    rest.formHandler?.setFieldDefaultValue?.(rest.name, rest.value);
+    rest.formHandler?.setFieldDefaultValue(rest.name, rest.value);
   });
 
   /**
@@ -146,25 +163,32 @@ export const Radios: Component<RadiosProps> = (props) => {
   });
 
   return (
-    <div>
-      {rest.label && <label>{rest.label}</label>}
-      <div classList={{ 'is-invalid': store.error }}>
-        <For each={rest.options}>
-          {(option, i) => (
-            <Radio
-              id={`${store.id}-${i()}`}
-              label={option.label}
-              value={option.value}
-              name={rest.name}
-              onChange={onChange}
-              onBlur={onBlur}
-              error={store.error}
-              checked={checked(option.value)}
-            />
-          )}
-        </For>
-      </div>
-      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
-    </div>
+    <FormGroup>
+      {rest.label && (
+        <FormLabel error={store.error} required={rest.required}>
+          {rest.label}
+        </FormLabel>
+      )}
+      <For each={rest.options}>
+        {(option, i) => (
+          <Checkbox
+            id={`${store.id}-${i()}`}
+            label={option.label}
+            value={option.value}
+            name={rest.name}
+            onChange={onChange}
+            onBlur={onBlur}
+            error={store.error}
+            checked={checked(option.value)}
+          />
+        )}
+      </For>
+      {rest.helperText && <FormHelperText>{rest.helperText}</FormHelperText>}
+      {store.error && (
+        <FormHelperText error={store.error}>
+          {store.errorMessage}
+        </FormHelperText>
+      )}
+    </FormGroup>
   );
 };

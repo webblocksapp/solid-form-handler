@@ -1,17 +1,21 @@
 import { FormHandler } from 'solid-form-handler';
-import { Component, createEffect, JSX, splitProps } from 'solid-js';
+import { Component, createEffect, splitProps } from 'solid-js';
+import SuidRadio, { RadioProps as SuidRadioProps } from '@suid/material/Radio';
 import { createStore } from 'solid-js/store';
+import FormControlLabel from '@suid/material/FormControlLabel';
+import FormHelperText from '@suid/material/FormHelperText';
 
-export interface TextInputProps
-  extends JSX.InputHTMLAttributes<HTMLInputElement> {
+export type RadioProps = SuidRadioProps & {
   error?: boolean;
   errorMessage?: string;
   formHandler?: FormHandler;
+  helperText?: string;
   label?: string;
+  value: string | number;
   triggers?: string[];
-}
+};
 
-export const TextInput: Component<TextInputProps> = (props) => {
+export const Radio: Component<RadioProps> = (props) => {
   /**
    * Props are divided in two groups:
    * - local: newer or extended/computed props.
@@ -21,12 +25,13 @@ export const TextInput: Component<TextInputProps> = (props) => {
     'error',
     'errorMessage',
     'formHandler',
+    'helperText',
     'id',
     'label',
     'onBlur',
-    'onInput',
-    'value',
+    'onChange',
     'classList',
+    'checked',
     'triggers',
   ]);
 
@@ -36,32 +41,27 @@ export const TextInput: Component<TextInputProps> = (props) => {
   const [store, setStore] = createStore({
     errorMessage: '',
     error: false,
-    value: '',
     id: '',
+    checked: false,
   });
 
   /**
-   * Extended onInput event.
+   * Extended onChange event.
    */
-  const onInput: TextInputProps['onInput'] = (event) => {
-    //Form handler prop sets and validate the value onInput.
+  const onChange: RadioProps['onChange'] = (event, checked) => {
+    //Form handler prop sets and validate the value onChange.
     local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
-      htmlElement: event.currentTarget,
       validateOn: [event.type],
     });
 
-    //onInput prop is preserved
-    if (typeof local.onInput === 'function') {
-      local.onInput(event);
-    } else {
-      local.onInput?.[0](local.onInput?.[1], event);
-    }
+    //onChange prop is preserved
+    local?.onChange?.(event, checked);
   };
 
   /**
    * Extended onBlur event.
    */
-  const onBlur: TextInputProps['onBlur'] = (event) => {
+  const onBlur: RadioProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
     local.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     local.formHandler?.touchField?.(rest.name);
@@ -75,18 +75,24 @@ export const TextInput: Component<TextInputProps> = (props) => {
   };
 
   /**
-   * Controls component's value.
+   * Returns value when checked.
+   */
+  const getValue = (checked?: boolean) => {
+    if (checked) return rest.value;
+    return '';
+  };
+
+  /**
+   * Computes the checked status.
+   * - If checked prop is provided, it's used (controlled from outside)
+   * - If value is provided, it's compared with form handler value.
    */
   createEffect(() => {
-    /**
-     * If formHandler is defined, value is controlled by
-     * the same component, if no, by the value prop.
-     */
     setStore(
-      'value',
-      local.formHandler
-        ? local.formHandler?.getFieldValue?.(rest.name)
-        : local.value
+      'checked',
+      local.formHandler?.getFieldValue?.(rest.name) == rest.value ||
+        local.checked ||
+        false
     );
   });
 
@@ -118,35 +124,42 @@ export const TextInput: Component<TextInputProps> = (props) => {
   });
 
   /**
-   * Initializes component's default value
-   */
-  createEffect(() => {
-    local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
-  });
-
-  /**
    * Triggers dependant validations
    */
   createEffect(() => {
     local?.formHandler?.setFieldTriggers?.(rest.name, local.triggers);
   });
 
+  /**
+   * Initializes the form field default value.
+   */
+  createEffect(() => {
+    local.formHandler?.setFieldDefaultValue?.(
+      rest.name,
+      getValue(local.checked)
+    );
+  });
+
   return (
-    <div classList={local.classList}>
-      {local.label && (
-        <label class="form-label" for={store.id}>
-          {local.label}
-        </label>
-      )}
-      <input
-        {...rest}
-        classList={{ 'is-invalid': store.error, 'form-control': true }}
-        id={store.id}
-        onInput={onInput}
-        onBlur={onBlur}
-        value={store.value}
+    <div>
+      <FormControlLabel
+        control={
+          <SuidRadio
+            {...rest}
+            checked={store.checked}
+            id={store.id}
+            onChange={onChange}
+            onBlur={onBlur}
+          />
+        }
+        label={local.label}
       />
-      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
+      {local.helperText && <FormHelperText>{local.helperText}</FormHelperText>}
+      {store.error && (
+        <FormHelperText error={store.error}>
+          {store.errorMessage}
+        </FormHelperText>
+      )}
     </div>
   );
 };

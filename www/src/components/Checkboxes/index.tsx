@@ -137,7 +137,10 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
    * Controls component's value.
    */
   createEffect(() => {
-    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    /**
+     * If formHandler is defined, value is controlled by
+     * the same component, if no, by the value prop.
+     */
     setStore(
       'value',
       rest.formHandler

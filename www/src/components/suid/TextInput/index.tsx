@@ -1,44 +1,32 @@
 import { FormHandler } from 'solid-form-handler';
-import {
-  Component,
-  createEffect,
-  createSignal,
-  For,
-  JSX,
-  splitProps,
-} from 'solid-js';
+import { Component, createEffect, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
+import SuidTextInput, {
+  TextFieldProps as SuidTextInputProps,
+} from '@suid/material/TextField';
+import FormHelperText from '@suid/material/FormHelperText';
+import FormGroup from '@suid/material/FormGroup';
 
-type SelectableOption = { value: string | number; label: string };
-
-export interface SelectProps
-  extends JSX.SelectHTMLAttributes<HTMLSelectElement> {
-  error?: boolean;
+export type TextInputProps = SuidTextInputProps & {
   errorMessage?: string;
   formHandler?: FormHandler;
-  label?: string;
-  options?: Array<SelectableOption>;
-  placeholder?: string;
   triggers?: string[];
-}
+};
 
-export const Select: Component<SelectProps> = (props) => {
+export const TextInput: Component<TextInputProps> = (props) => {
   /**
    * Props are divided in two groups:
    * - local: newer or extended/computed props.
    * - rest: remaining inherited props applied to the original component.
    */
   const [local, rest] = splitProps(props, [
-    'classList',
     'error',
     'errorMessage',
     'formHandler',
+    'helperText',
     'id',
-    'label',
     'onBlur',
-    'onInput',
-    'options',
-    'placeholder',
+    'onChange',
     'value',
     'triggers',
   ]);
@@ -47,49 +35,36 @@ export const Select: Component<SelectProps> = (props) => {
    * Derived/computed states from props.
    */
   const [store, setStore] = createStore({
-    error: false,
     errorMessage: '',
-    id: '',
+    error: false,
     value: '',
+    id: '',
   });
-
-  /**
-   * Derived/computed options from props
-   */
-  const [options, setOptions] = createSignal<SelectableOption[]>([]);
 
   /**
    * Extended onInput event.
    */
-  const onInput: SelectProps['onInput'] = (event) => {
+  const onChange: TextInputProps['onChange'] = (event, value) => {
     //Form handler prop sets and validate the value onInput.
-    local.formHandler?.setFieldValue?.(rest.name, event.currentTarget.value, {
+    local.formHandler?.setFieldValue?.(rest.name, event.target.value, {
       htmlElement: event.currentTarget,
       validateOn: [event.type],
     });
 
-    //onInput prop is preserved
-    if (typeof local.onInput === 'function') {
-      local.onInput(event);
-    } else {
-      local.onInput?.[0](local.onInput?.[1], event);
-    }
+    //onChange prop is preserved
+    local?.onChange?.(event, value);
   };
 
   /**
    * Extended onBlur event.
    */
-  const onBlur: SelectProps['onBlur'] = (event) => {
+  const onBlur: TextInputProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
     local.formHandler?.validateField?.(rest.name, { validateOn: [event.type] });
     local.formHandler?.touchField?.(rest.name);
 
     //onBlur prop is preserved
-    if (typeof local.onBlur === 'function') {
-      local.onBlur(event);
-    } else {
-      local.onBlur?.[0](local.onBlur?.[1], event);
-    }
+    local?.onBlur?.(event);
   };
 
   /**
@@ -136,13 +111,10 @@ export const Select: Component<SelectProps> = (props) => {
   });
 
   /**
-   * Computes the select options by using the placeholder and options props.
+   * Initializes component's default value
    */
   createEffect(() => {
-    setOptions(() => [
-      ...(local.placeholder ? [{ value: '', label: local.placeholder }] : []),
-      ...(local.options || []),
-    ]);
+    local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
   });
 
   /**
@@ -152,37 +124,22 @@ export const Select: Component<SelectProps> = (props) => {
     local?.formHandler?.setFieldTriggers?.(rest.name, local.triggers);
   });
 
-  /**
-   * Initializes component's default value
-   */
-  createEffect(() => {
-    local.formHandler?.setFieldDefaultValue?.(rest.name, local.value);
-  });
-
   return (
-    <div classList={local.classList}>
-      {local.label && (
-        <label class="form-label" for={store.id}>
-          {local.label}
-        </label>
-      )}
-      <select
+    <FormGroup>
+      <SuidTextInput
         {...rest}
-        classList={{ 'is-invalid': store.error, 'form-select': true }}
+        error={store.error}
         id={store.id}
-        onInput={onInput}
+        onChange={onChange}
         onBlur={onBlur}
         value={store.value}
-      >
-        <For each={options()}>
-          {(option) => (
-            <option value={option.value} selected={option.value == store.value}>
-              {option.label}
-            </option>
-          )}
-        </For>
-      </select>
-      {store.error && <div class="invalid-feedback">{store.errorMessage}</div>}
-    </div>
+      />
+      {local.helperText && <FormHelperText>{local.helperText}</FormHelperText>}
+      {store.error && (
+        <FormHelperText error={store.error}>
+          {store.errorMessage}
+        </FormHelperText>
+      )}
+    </FormGroup>
   );
 };

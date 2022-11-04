@@ -19,6 +19,8 @@ import {
   TemperatureConversionImpl,
   DependantValidationImpl,
   ValidateOnImpl,
+  ValidateFileInputImpl,
+  SuidFormImpl,
 } from '@implementations';
 import './App.css';
 
@@ -80,6 +82,12 @@ export const App: Component = () => {
         <div>
           <Link href="validate-on-impl">validate-on-impl</Link>
         </div>
+        <div>
+          <Link href="validate-file-input">validate-file-input</Link>
+        </div>
+        <div>
+          <Link href="suid-form">suid-form</Link>
+        </div>
       </div>
       <Routes>
         <Route path="checkbox-impl" element={<CheckboxImpl />} />
@@ -100,6 +108,8 @@ export const App: Component = () => {
         <Route path="async-validation-impl" element={<AsyncValidationImpl />} />
         <Route path="dependant-validation-impl" element={<DependantValidationImpl />} />
         <Route path="validate-on-impl" element={<ValidateOnImpl />} />
+        <Route path="validate-file-input" element={<ValidateFileInputImpl />} />
+        <Route path="suid-form" element={<SuidFormImpl />} />
       </Routes>
     </div>
   );

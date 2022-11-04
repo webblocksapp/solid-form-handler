@@ -1350,6 +1350,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@popperjs/core@^2.11.6":
+  version "2.11.6"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
+  integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
+
 "@rushstack/node-core-library@3.49.0", "@rushstack/node-core-library@^3.45.1":
   version "3.49.0"
   resolved "https://registry.yarnpkg.com/@rushstack/node-core-library/-/node-core-library-3.49.0.tgz#0324c1a5ba5e469967b70e9718d1a90750648503"
@@ -1401,6 +1406,69 @@
   integrity sha512-BPS4ynJW/o92PUR4wgriz2Ud5gpST5vz6GQfMixEDK0Z8ZCUv2M7SkBLykH56T++Xs+8ln9zTGbOvNGIe02/jw==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
+
+"@suid/base@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@suid/base/-/base-0.3.2.tgz#3698d20a18934d331c027a2b82caae0a7be29309"
+  integrity sha512-uRigKjiSRYaDBdLY/raxIrk0qHCgx1Bx34z6cP6HY2RgeZxAz09/z2Ii4nhwyI2xGRTbNRbt7yJcACBU6/4J6w==
+  dependencies:
+    "@popperjs/core" "^2.11.6"
+    "@suid/css" "0.1.6"
+    "@suid/system" "0.5.2"
+    "@suid/types" "0.2.0"
+    "@suid/utils" "0.5.0"
+    clsx "^1.2.1"
+
+"@suid/css@0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@suid/css/-/css-0.1.6.tgz#4eaca08c4d9d7621a70e3a9ece37d138d00f5774"
+  integrity sha512-1Pcb1IfuHSm/jkf/cjxoXECCpAOnK27aRt7d7WdAoFMN+oCW3rRqjZm08pFF8naNqjlm0WaweR2+LvhDv76ODw==
+  dependencies:
+    "@suid/utils" "0.5.0"
+
+"@suid/material@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@suid/material/-/material-0.6.3.tgz#d09ecf0a09c9dd79c1859d127a32ba3b23da06d4"
+  integrity sha512-02TxLOA6xmfx3Cunp/F/cqaQIKh295LZX9OFDvG/nNy6gUqBj9FX7Z+A89VKIyeASMLl1UQ1gPsUo4CrEpYGHA==
+  dependencies:
+    "@suid/base" "0.3.2"
+    "@suid/css" "0.1.6"
+    "@suid/system" "0.5.2"
+    "@suid/types" "0.2.0"
+    "@suid/utils" "0.5.0"
+    clsx "^1.2.1"
+
+"@suid/styled-engine@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@suid/styled-engine/-/styled-engine-0.2.1.tgz#8b3ac7924c141b7186dced21254578d71ad86dd2"
+  integrity sha512-41TVpbrkph5hdT8AMUyJtW/IlsTArXudHHyw75HbVeFsLeni0RUQZRn0axFSJFVZX3jjudMljmTHJYJZ83r5Pw==
+  dependencies:
+    "@suid/css" "0.1.6"
+    "@suid/utils" "0.5.0"
+
+"@suid/system@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@suid/system/-/system-0.5.2.tgz#329bab1be3e2ba91cc2b50698c52ab711dc3e188"
+  integrity sha512-P5O37mh/NfIOh1j+Zy5JVHFc9hvwl1QUzJEEY7Diwce5H517cLRbfAeS58VY3E5mVLlRZqtT6SM/lCQm7ijGWA==
+  dependencies:
+    "@suid/css" "0.1.6"
+    "@suid/styled-engine" "0.2.1"
+    "@suid/types" "0.2.0"
+    "@suid/utils" "0.5.0"
+    clsx "^1.2.1"
+    csstype "^3.1.1"
+
+"@suid/types@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@suid/types/-/types-0.2.0.tgz#ea3cfe435e338686c41d181e6556d85a24956da9"
+  integrity sha512-96+O5iCKWE13eM9e9BedxdfxdfR5ujjgnMHeDTk5lbqiq0pbKW32VNxU5Zy4UaEHBNkmLC+Pw1Uir8gBPujdMA==
+
+"@suid/utils@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@suid/utils/-/utils-0.5.0.tgz#c0b898f45c440d470ab895c6f59fac027ad3b967"
+  integrity sha512-0+1t2QRxEIQd/NfXf7E/5h3klkiAKuZ3V8owQzCewzM1dX1ElfQDbVkZ5u4+gNXdpd1Te0eiBtoeK1wMYdq1+Q==
+  dependencies:
+    "@suid/types" "0.2.0"
 
 "@testing-library/dom@^7.29.4":
   version "7.31.2"
@@ -2053,6 +2121,11 @@ cliui@^7.0.2:
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
+clsx@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.npmjs.org/co/-/co-4.6.0.tgz"
@@ -2182,7 +2255,7 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-csstype@^3.1.0:
+csstype@^3.1.0, csstype@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==

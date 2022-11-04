@@ -16,7 +16,7 @@
       "@utils": ["src/utils"],
       "@implementations": ["examples/implementations"],
       "@components": ["examples/components"],
-      "@suid": ["examples/components/suid"]
+      "@components/suid": ["examples/components/suid"]
     },
     "types": ["vite/client", "node", "@types/jest"]
   }

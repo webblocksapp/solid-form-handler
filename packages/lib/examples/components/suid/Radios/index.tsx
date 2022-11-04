@@ -1,6 +1,6 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, createSelector, For, JSX, splitProps } from 'solid-js';
-import { Radio, RadioProps } from '@suid';
+import { Component, createEffect, createSelector, For, splitProps } from 'solid-js';
+import { Radio, RadioProps } from '@components/suid';
 import { createStore } from 'solid-js/store';
 import FormGroup from '@suid/material/FormGroup';
 import FormLabel from '@suid/material/FormLabel';
@@ -99,7 +99,10 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Controls component's value.
    */
   createEffect(() => {
-    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    /**
+     * If formHandler is defined, value is controlled by
+     * the same component, if no, by the value prop.
+     */
     setStore('value', rest.formHandler ? rest.formHandler?.getFieldValue?.(rest.name) : rest.value);
   });
 

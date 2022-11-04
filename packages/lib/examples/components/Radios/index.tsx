@@ -98,7 +98,10 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Controls component's value.
    */
   createEffect(() => {
-    //If formHandler is defined, value is controlled by the same component, if no, by the value prop.
+    /**
+     * If formHandler is defined, value is controlled by
+     * the same component, if no, by the value prop.
+     */
     setStore('value', rest.formHandler ? rest.formHandler?.getFieldValue?.(rest.name) : rest.value);
   });
 

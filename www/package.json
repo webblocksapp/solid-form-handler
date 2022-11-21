@@ -27,7 +27,7 @@
     "bootstrap-icons": "^1.8.3",
     "font-awesome": "^4.7.0",
     "shiki": "^0.10.1",
-    "solid-form-handler": "^1.0.0-alpha.4",
+    "solid-form-handler": "^1.0.0-alpha.5",
     "solid-js": "^1.4.0",
     "yup": "^0.32.11"
   },

@@ -399,7 +399,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Extracts the error message from the fieldState according to the given path.
    */
   const getFieldError = (path: string = ''): string => {
-    return path && findErrorMessages(path).join(', ').replace(/,$/, '').replace(/^,/, '');
+    return path && findErrorMessages(path).join(', ').replace(/,\s$/, '').replace(/^,\s/, '');
   };
 
   /**

@@ -636,4 +636,84 @@ describe('useFormHandler', () => {
     formHandler.setFieldDefaultValue('referrals', [{ name: 'John' }]);
     expect(formHandler.getFieldDefaultValue('referrals')).toMatchObject([{ name: 'John' }]);
   });
+
+  it('Error message for nested object', async () => {
+    const formHandler = useFormHandler(yupSchema(contactSchema));
+    await formHandler.validateField('contact');
+    expect(formHandler.getFieldError('contact')).toBe('age is a required field, contact.name is a required field');
+  });
+
+  it('Field state for touched nested object', () => {
+    const formHandler = useFormHandler(yupSchema(contactSchema));
+    formHandler.touchField('contact');
+    expect(formHandler._.getFieldState('contact')).toMatchObject({
+      age: {
+        __state: true,
+        dataType: 'number',
+        isInvalid: true,
+        errorMessage: '',
+        cachedValue: undefined,
+        currentValue: '',
+        defaultValue: '',
+        initialValue: '',
+        touched: true,
+        interacted: false,
+        dirty: false,
+        triggers: undefined,
+        validating: false,
+      },
+      name: {
+        __state: true,
+        dataType: 'string',
+        isInvalid: true,
+        errorMessage: '',
+        cachedValue: undefined,
+        currentValue: '',
+        defaultValue: '',
+        initialValue: '',
+        touched: true,
+        interacted: false,
+        dirty: false,
+        triggers: undefined,
+        validating: false,
+      },
+    });
+  });
+
+  it('Field state for nested object with triggers', async () => {
+    const formHandler = useFormHandler(yupSchema(contactSchema));
+    await formHandler.setFieldTriggers('contact', []);
+    expect(formHandler._.getFieldState('contact')).toMatchObject({
+      age: {
+        __state: true,
+        dataType: 'number',
+        isInvalid: true,
+        errorMessage: '',
+        cachedValue: undefined,
+        currentValue: '',
+        defaultValue: '',
+        initialValue: '',
+        touched: false,
+        interacted: false,
+        dirty: false,
+        triggers: [],
+        validating: false,
+      },
+      name: {
+        __state: true,
+        dataType: 'string',
+        isInvalid: true,
+        errorMessage: '',
+        cachedValue: undefined,
+        currentValue: '',
+        defaultValue: '',
+        initialValue: '',
+        touched: false,
+        interacted: false,
+        dirty: false,
+        triggers: [],
+        validating: false,
+      },
+    });
+  });
 });

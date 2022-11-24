@@ -270,21 +270,29 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       omitTriggers?: boolean;
     }
   ) => {
-    options = {
-      ...options,
-      silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
-      validateOn: options?.validateOn || formHandlerOptions.validateOn,
-      delay: options?.delay ?? formHandlerOptions.delay,
-    };
-
-    let validationId = createUniqueId();
     const fieldState = getFieldState(path);
 
-    if (!validationSchema.isFieldFromSchema(path) || !path) return;
-    if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
-    if (options?.force !== true && fieldState?.__state && abortValidation(path)) return;
+    if (fieldState === undefined) return;
+    if (fieldState.__state === undefined) {
+      const promises: Promise<void>[] = [];
+      Object.keys(fieldState).forEach((key) => {
+        promises.push(validateField(`${path}.${key}`, options));
+      });
+      await Promise.all(promises);
+    } else {
+      let validationId = createUniqueId();
 
-    if (fieldState?.__state) {
+      options = {
+        ...options,
+        silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
+        validateOn: options?.validateOn || formHandlerOptions.validateOn,
+        delay: options?.delay ?? formHandlerOptions.delay,
+      };
+
+      if (!validationSchema.isFieldFromSchema(path) || !path) return;
+      if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
+      if (options?.force !== true && fieldState?.__state && abortValidation(path)) return;
+
       await new Promise((resolve) => {
         setValidationId(path, validationId);
         setTimeout(resolve, options?.delay) as unknown as number;
@@ -301,33 +309,32 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         isInvalid: true,
         validating: true,
       }));
-    }
 
-    try {
-      await Promise.all([
-        validationSchema.validateAt(path, formData.data),
-        options?.omitTriggers !== true && runFieldTriggers(path),
-      ]);
+      try {
+        await Promise.all([
+          validationSchema.validateAt(path, formData.data),
+          options?.omitTriggers !== true && runFieldTriggers(path),
+        ]);
 
-      fieldState?.__state &&
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
           isInvalid: false,
           validating: false,
           errorMessage: '',
         }));
-    } catch (error) {
-      if (error instanceof ValidationError) {
-        const errorMessage = options?.silentValidation ? '' : error.message;
-        fieldState?.__state &&
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          const errorMessage = options?.silentValidation ? '' : error.message;
+
           setFieldState(path, (fieldState: FieldState) => ({
             ...fieldState,
             isInvalid: true,
             validating: false,
             errorMessage,
           }));
-      } else {
-        console.error(error);
+        } else {
+          console.error(error);
+        }
       }
     }
   };

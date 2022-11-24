@@ -193,9 +193,19 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const setFieldTriggers = async (path: string = '', paths: string[] = []) => {
     return new Promise((resolve) => {
       //Timeout required for dynamic fieldsets.
-      setTimeout(() => {
-        path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, triggers: paths }));
-        resolve(undefined);
+      setTimeout(async () => {
+        const fieldState = getFieldState(path);
+        if (fieldState === undefined) return;
+        if (fieldState.__state === undefined) {
+          const promises: Promise<unknown>[] = [];
+          Object.keys(fieldState).forEach((key) => {
+            promises.push(setFieldTriggers(`${path}.${key}`));
+          });
+          resolve(await Promise.all(promises));
+        } else {
+          setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, triggers: paths }));
+          resolve(undefined);
+        }
       });
     });
   };
@@ -641,7 +651,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Marks a field as touched when the user interacted with it.
    */
   const touchField = (path: string = '') => {
-    path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
+    const fieldState = getFieldState(path);
+    if (fieldState === undefined) return;
+    if (fieldState.__state === undefined) {
+      Object.keys(fieldState).forEach((key) => {
+        touchField(`${path}.${key}`);
+      });
+    } else {
+      setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
+    }
   };
 
   /**

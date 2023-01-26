@@ -44,8 +44,9 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
     let obj = object;
     path = path ? `${path}.` : '';
     const targetPath = path.replace(/\.$/, '');
+    const schemaType = _schema.type;
 
-    if (_schema.type === 'array') {
+    if (schemaType === 'array') {
       if (_schema.getDefault()) {
         set(obj, targetPath, _schema.getDefault());
       } else {
@@ -57,7 +58,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
         const reachedSchema = reach(_schema, '0') as yup.AnySchema;
         obj = buildDefault(reachedSchema, `${path}0`, obj);
       }
-    } else if (_schema.type === 'object') {
+    } else if (schemaType === 'object') {
       obj = obj ? set(obj, targetPath, {}) : {};
       /**
        * Iterates every schema key to check if it is an ArraySchema or ObjectSchema.

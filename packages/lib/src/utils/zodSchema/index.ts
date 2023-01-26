@@ -32,11 +32,9 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
     let obj = object;
     path = path ? `${path}.` : '';
     const targetPath = path.replace(/\.$/, '');
-    const schemaDef = _schema._def as ZodTypeDef & { typeName?: string; defaultValue?: () => any };
-    const schemaType = schemaDef?.typeName;
-    const getDefault = () => schemaDef?.defaultValue?.();
+    const { type, getDefault } = getSchemaDef(_schema);
 
-    if (schemaType === 'ZodArray') {
+    if (type === 'ZodArray') {
       const arrSchema = _schema as ZodArray<any>;
 
       if (getDefault()) {
@@ -50,7 +48,7 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
         const reachedSchema = arrSchema.element;
         obj = buildDefault(reachedSchema, `${path}0`, obj);
       }
-    } else if (schemaType === 'ZodObject') {
+    } else if (type === 'ZodObject') {
       const objSchema = _schema as ZodObject<any>;
       const zodSchemas = objSchema.shape; //Gives inner zod schemas for every key of the ZodObject.
       obj = obj ? set(obj, targetPath, {}) : {};
@@ -89,8 +87,50 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
   };
 
   const getFieldDataType = (path: string) => {
-    //TODO add logic to get field data type.
-    return '';
+    /**
+     * Array indexes are not needed for reaching the Zod schema.
+     * Paths with indexes must be treated as follows:
+     *
+     * key1.0.key2.1 ==> key1.key2
+     * key1.11.key2.22 ==> key1.key2
+     */
+    path = path.replace(/\.\d+\./g, '.').replace(/\.\d+\$/g, '');
+    const reachedSchema = reach(schema, path);
+    const { type } = getSchemaDef(reachedSchema);
+    return type.replace(/Zod/g, '').toLowerCase();
+  };
+
+  /**
+   * Returns the Zod schema definition
+   */
+  const getSchemaDef = (schema: ZodSchema) => {
+    const schemaDef = schema._def as ZodTypeDef & { typeName?: string; defaultValue?: () => any };
+    return {
+      type: schemaDef?.typeName || '',
+      getDefault: () => schemaDef?.defaultValue?.(),
+    };
+  };
+
+  /**
+   * For nested schemas, reach will retrieve an inner schema based on the provided path.
+   */
+  const reach = (schema: ZodSchema, path: string): ZodSchema => {
+    let [currentPath, ...rest] = path.split('.');
+    let currentSchema = schema;
+    const { type } = getSchemaDef(currentSchema);
+
+    if (type === 'ZodArray') {
+      const element = (schema as ZodArray<any>).element;
+      currentSchema = element?.shape?.[currentPath] || element;
+    } else if (type === 'ZodObject') {
+      currentSchema = (schema as ZodObject<any>).shape[currentPath];
+    }
+
+    if (rest.length === 0) {
+      return currentSchema;
+    } else {
+      return reach(currentSchema, rest.join('.'));
+    }
   };
 
   return {

@@ -8,3 +8,4 @@ export * from './isNumber';
 export * from './reorderArray';
 export * from './set';
 export * from './yupSchema';
+export * from './zodSchema';

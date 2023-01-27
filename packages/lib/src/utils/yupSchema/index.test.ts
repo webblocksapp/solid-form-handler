@@ -108,4 +108,45 @@ describe('yupSchema', () => {
     expect(validationSchema.getFieldDataType('contacts.0.age')).toBe('number');
     expect(validationSchema.getFieldDataType('contacts.1.age')).toBe('number');
   });
+
+  it('isFieldFromSchema', () => {
+    const validationSchema = yupSchema(
+      yup.object({
+        name: yup.string(),
+        age: yup.number(),
+        contacts: yup.array(yup.object({ name: yup.string(), age: yup.number() })),
+      })
+    );
+    expect(validationSchema.isFieldFromSchema('name')).toBe(true);
+    expect(validationSchema.isFieldFromSchema('age')).toBe(true);
+    expect(validationSchema.isFieldFromSchema('contacts')).toBe(true);
+    expect(validationSchema.isFieldFromSchema('contacts.0.name')).toBe(true);
+    expect(validationSchema.isFieldFromSchema('contacts.1.name')).toBe(true);
+    expect(validationSchema.isFieldFromSchema('contacts.0.age')).toBe(true);
+    expect(validationSchema.isFieldFromSchema('contacts.1.age')).toBe(true);
+    expect(validationSchema.isFieldFromSchema('fake.1.age')).toBe(false);
+  });
+
+  it('validateAt', async () => {
+    const validationSchema = yupSchema(
+      yup.object({
+        name: yup.string().min(1),
+        age: yup.number().min(1),
+      })
+    );
+
+    const data = { name: '', age: 0 };
+
+    try {
+      await validationSchema.validateAt('name', data);
+    } catch (error) {
+      expect(error).toMatchObject({ path: 'name', message: 'name must be at least 1 characters' });
+    }
+
+    try {
+      await validationSchema.validateAt('age', data);
+    } catch (error) {
+      expect(error).toMatchObject({ path: 'age', message: 'age must be greater than or equal to 1' });
+    }
+  });
 });

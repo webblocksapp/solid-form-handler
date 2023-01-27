@@ -1,6 +1,6 @@
-import { ZodArray, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
-import { set, get, ValidationError } from '@utils';
 import { ValidationSchema } from '@interfaces';
+import { set, get, ValidationError } from '@utils';
+import { ZodArray, ZodError, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
 
 export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
   /**
@@ -9,20 +9,29 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
    * and doesn't require validation. e.g. id, timestamp, foreignId, etc...
    */
   const isFieldFromSchema = (path: string) => {
-    let isFromSchema = true;
-    try {
-      //TODO add logic for check if the field is part of the zod schema.
-    } catch (_) {
-      isFromSchema = false;
-    }
-    return isFromSchema;
+    const reachedSchema = reach(schema, path);
+    return reachedSchema ? true : false;
   };
 
   /**
    * Validates a single field of the form.
    */
   const validateAt: ValidationSchema<T>['validateAt'] = async (path, data) => {
-    //TODO add logic for validate at.
+    const reachedSchema = reach(schema, path);
+
+    try {
+      const value = get(data, path);
+      await reachedSchema.parseAsync(value);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const {
+          formErrors: [message],
+        } = error.flatten();
+        throw new ValidationError(path, message);
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   /**
@@ -34,7 +43,7 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
     const targetPath = path.replace(/\.$/, '');
     const { type, getDefault } = getSchemaDef(_schema);
 
-    if (type === 'ZodArray') {
+    if (type === 'array') {
       const arrSchema = _schema as ZodArray<any>;
 
       if (getDefault()) {
@@ -48,7 +57,7 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
         const reachedSchema = arrSchema.element;
         obj = buildDefault(reachedSchema, `${path}0`, obj);
       }
-    } else if (type === 'ZodObject') {
+    } else if (type === 'object') {
       const objSchema = _schema as ZodObject<any>;
       const zodSchemas = objSchema.shape; //Gives inner zod schemas for every key of the ZodObject.
       obj = obj ? set(obj, targetPath, {}) : {};
@@ -78,7 +87,9 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
   };
 
   const buildDefaultValue = (schema: ZodSchema) => {
-    switch (schema._type) {
+    const { type } = getSchemaDef(schema);
+
+    switch (type) {
       case 'boolean':
         return false;
       default:
@@ -104,9 +115,12 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
    * Returns the Zod schema definition
    */
   const getSchemaDef = (schema: ZodSchema) => {
-    const schemaDef = schema._def as ZodTypeDef & { typeName?: string; defaultValue?: () => any };
+    const schemaDef = schema?._def as ZodTypeDef & { typeName?: string; defaultValue?: () => any };
+    //Parses ZodObject, ZodArray, ... into object, array, ...
+    const type = (schemaDef?.typeName || '').replace(/Zod/g, '').toLowerCase();
+
     return {
-      type: schemaDef?.typeName || '',
+      type,
       getDefault: () => schemaDef?.defaultValue?.(),
     };
   };
@@ -119,10 +133,10 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
     let currentSchema = schema;
     const { type } = getSchemaDef(currentSchema);
 
-    if (type === 'ZodArray') {
+    if (type === 'array') {
       const element = (schema as ZodArray<any>).element;
       currentSchema = element?.shape?.[currentPath] || element;
-    } else if (type === 'ZodObject') {
+    } else if (type === 'object') {
       currentSchema = (schema as ZodObject<any>).shape[currentPath];
     }
 

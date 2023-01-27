@@ -10,6 +10,7 @@ const config: Config.InitialOptions = {
   transform: {
     '\\.[jt]sx?$': 'babel-jest',
   },
+  testMatch: ['**/?(*.)(test).ts?(x)'],
   testEnvironment: 'jsdom',
   preset: 'solid-jest/preset/browser',
 };

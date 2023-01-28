@@ -128,7 +128,7 @@ describe('zodSchema', () => {
     expect(validationSchema.isFieldFromSchema('fake.1.age')).toBe(false);
   });
 
-  it('validateAt', async () => {
+  it('validateAt CASE-1', async () => {
     const validationSchema = zodSchema(
       z.object({
         name: z.string().min(1),
@@ -148,6 +148,93 @@ describe('zodSchema', () => {
       await validationSchema.validateAt('age', data);
     } catch (error) {
       expect(error).toMatchObject({ path: 'age', message: 'Number must be greater than or equal to 1' });
+    }
+  });
+
+  it('validateAt CASE-2', async () => {
+    const validationSchema = zodSchema(
+      z
+        .object({
+          password: z
+            .string()
+            .min(1, 'password is a required field')
+            .refine((value) => value.length <= 3, "password can't be greater than 3 characters"),
+          passwordConfirm: z.string().min(1, 'passwordConfirm is a required field'),
+        })
+        .superRefine((data, ctx) => {
+          if (data.password !== data.passwordConfirm) {
+            ctx.addIssue({
+              code: 'custom',
+              path: ['password', 'passwordConfirm'],
+              message: "Password doesn't match",
+            });
+          }
+        })
+    );
+
+    let data = { password: 'A', passwordConfirm: '' };
+
+    try {
+      await validationSchema.validateAt('password', data);
+    } catch (error) {
+      expect(error).toMatchObject({ path: 'password', message: "Password doesn't match" });
+    }
+
+    try {
+      await validationSchema.validateAt('passwordConfirm', data);
+    } catch (error) {
+      expect(error).toMatchObject({ path: 'passwordConfirm', message: 'passwordConfirm is a required field' });
+    }
+
+    data = { password: 'ABCD', passwordConfirm: '' };
+
+    try {
+      await validationSchema.validateAt('password', data);
+    } catch (error) {
+      expect(error).toMatchObject({ path: 'password', message: "password can't be greater than 3 characters" });
+    }
+  });
+
+  it('validateAt CASE-3', async () => {
+    const validationSchema = zodSchema(
+      z.object({
+        key1: z.object({
+          key2: z
+            .object({
+              password: z
+                .string()
+                .min(1, 'password is a required field')
+                .refine((value) => value.length <= 3, "password can't be greater than 3 characters"),
+              passwordConfirm: z.string().min(1, 'passwordConfirm is a required field'),
+            })
+            .superRefine((data, ctx) => {
+              if (data.password !== data.passwordConfirm) {
+                ctx.addIssue({
+                  code: 'custom',
+                  path: ['password', 'passwordConfirm'],
+                  message: "Password doesn't match",
+                });
+              }
+            }),
+        }),
+      })
+    );
+
+    let data = { key1: { key2: { password: 'A', passwordConfirm: '' } } };
+
+    try {
+      await validationSchema.validateAt('key1.key2.password', data);
+    } catch (error) {
+      expect(error).toMatchObject({ path: 'key1.key2.password', message: "Password doesn't match" });
+    }
+
+    try {
+      await validationSchema.validateAt('key1.key2.passwordConfirm', data);
+    } catch (error) {
+      expect(error).toMatchObject({
+        path: 'key1.key2.passwordConfirm',
+        message: 'passwordConfirm is a required field',
+      });
     }
   });
 });

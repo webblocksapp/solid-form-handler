@@ -1,35 +1,35 @@
 import { useFormHandler } from '@hooks';
-import { FormErrorsException, yupSchema } from '@utils';
+import { FormErrorsException, zodSchema } from '@utils';
 import { personSchema, contactSchema, personsSchema, referralsSchema, triggersSchema } from './mocks';
 
-describe('useFormHandler with yup', () => {
+describe('useFormHandler with zod', () => {
   it('formHandler object must be defined', () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     expect(formHandler).toBeDefined();
   });
 
   it('If field path is no provided, the returned value is an empty string', () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     formHandler.setFieldValue('', 'George');
     expect(formHandler.getFieldValue('name')).toBe('');
   });
 
   it('Required name value, must be valid', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.setFieldValue('name', 'George');
     expect(formHandler.getFieldError('name')).toBe('');
     expect(formHandler.isFieldInvalid('name')).toBe(false);
   });
 
   it('Required name value, must be invalid', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.setFieldValue('name', '');
     expect(formHandler.getFieldError('name')).toBe('name is a required field');
     expect(formHandler.isFieldInvalid('name')).toBe(true);
   });
 
   it('is form invalid', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     try {
       await formHandler.validateForm();
     } catch (error) {
@@ -52,7 +52,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('is form valid', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.setFieldValue('name', 'George');
     await formHandler.setFieldValue('age', 60);
     await formHandler.validateForm();
@@ -60,33 +60,33 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Form data matches the set data', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     formHandler.setFieldValue('name', 'George');
     formHandler.setFieldValue('age', 60);
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 60 });
   });
 
   it('Form has changes', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.setFieldValue('name', 'George');
     expect(formHandler.formHasChanges()).toBe(true);
   });
 
   it("Form doesn't have changes", async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.fillForm({ name: 'George', age: 19 });
     await formHandler.setFieldValue('name', 'George');
     expect(formHandler.formHasChanges()).toBe(false);
   });
 
   it('form is filled', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.fillForm({ name: 'George', age: 60 });
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 60 });
   });
 
   it('form state match object when form is filled', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.fillForm({ name: 'George', age: 60 });
     expect(formHandler.getFormState()).toMatchObject({
       name: {
@@ -113,7 +113,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Schema with nested objects: form state match object when form is filled', async () => {
-    const formHandler = useFormHandler(yupSchema(contactSchema));
+    const formHandler = useFormHandler(zodSchema(contactSchema));
     await formHandler.fillForm({ contact: { name: 'John', age: 28 } });
     expect(formHandler.getFormState()).toMatchObject({
       contact: {
@@ -144,7 +144,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Schema with nested objects: form state match object when field value is set', async () => {
-    const formHandler = useFormHandler(yupSchema(contactSchema));
+    const formHandler = useFormHandler(zodSchema(contactSchema));
     await formHandler.setFieldValue('contact', { name: 'John', age: 28 });
     expect(formHandler.getFormState()).toMatchObject({
       contact: {
@@ -175,12 +175,12 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Fieldsets: default form data must be an array of 1 record', () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
+    const formHandler = useFormHandler(zodSchema(personsSchema));
     expect(formHandler.formData()).toMatchObject([{ name: '', age: '' }]);
   });
 
   it('Fieldsets add: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
+    const formHandler = useFormHandler(zodSchema(personsSchema));
     formHandler.addFieldset();
     expect(formHandler.formData()).toMatchObject([
       { name: '', age: '' },
@@ -189,7 +189,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Fieldsets multiple adds: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
+    const formHandler = useFormHandler(zodSchema(personsSchema));
     formHandler.addFieldset();
     formHandler.addFieldset();
     formHandler.addFieldset();
@@ -202,14 +202,14 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Fieldsets remove: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
+    const formHandler = useFormHandler(zodSchema(personsSchema));
     formHandler.addFieldset();
     formHandler.removeFieldset(0);
     expect(formHandler.formData()).toMatchObject([{ name: '', age: '' }]);
   });
 
   it('Fieldsets multiples remove: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
+    const formHandler = useFormHandler(zodSchema(personsSchema));
     formHandler.addFieldset();
     formHandler.addFieldset();
     formHandler.addFieldset();
@@ -224,7 +224,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Fieldsets sort: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
+    const formHandler = useFormHandler(zodSchema(personsSchema));
     formHandler.addFieldset();
     formHandler.setFieldDefaultValue('1', { name: 'John', age: 18 });
     formHandler.moveFieldset(1, 0);
@@ -235,7 +235,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Fieldsets multiples sorts: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(personsSchema));
+    const formHandler = useFormHandler(zodSchema(personsSchema));
     formHandler.addFieldset();
     formHandler.setFieldDefaultValue('1', { name: 'John', age: 18 });
     formHandler.addFieldset();
@@ -257,7 +257,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Nested fieldsets: form is filled and marked as valid', async () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     await formHandler.fillForm({
       hostName: 'John',
       referrals: [{ name: 'Mike', age: 22 }],
@@ -266,12 +266,12 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Nested fieldsets: default form data must be an array of 1 record', () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     expect(formHandler.formData().referrals).toMatchObject([{ name: '', age: '' }]);
   });
 
   it('Nested fieldsets add: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     formHandler.addFieldset({ basePath: 'referrals' });
     expect(formHandler.formData()).toMatchObject({
       referrals: [
@@ -282,7 +282,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Nested fieldsets remove: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     formHandler.addFieldset({ basePath: 'referrals' });
     formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
     formHandler.removeFieldset(0, 'referrals');
@@ -292,7 +292,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Nested fieldsets sort: form data matches the expected object', async () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     formHandler.addFieldset({ basePath: 'referrals' });
     formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
     formHandler.moveFieldset(1, 0, 'referrals');
@@ -329,7 +329,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('buildFieldState without default field value.', () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     formHandler._.buildFieldState('name');
     expect(formHandler._.getFieldState('name')).toMatchObject({
       __state: true,
@@ -345,7 +345,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('buildFieldState with default field value.', () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     formHandler.setFieldDefaultValue('name', 'Laura');
     formHandler._.buildFieldState('name');
     expect(formHandler._.getFieldState('name')).toMatchObject({
@@ -362,7 +362,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('buildFieldState with nested field value.', () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     formHandler.setFieldDefaultValue('referrals', [{ name: 'Laura', age: 18 }]);
     formHandler._.buildFieldState('referrals');
     expect(formHandler._.getFieldState('referrals')).toMatchObject([
@@ -394,7 +394,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Setting field default value predominates after fillForm', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.fillForm({ name: 'George', age: 19 });
     formHandler.setFieldDefaultValue('name', 'Laura');
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
@@ -427,7 +427,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Setting field default value predominates after fillForm from a previous resetForm', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.fillForm({ name: 'George', age: 19 });
     formHandler.setFieldDefaultValue('name', 'Laura');
     formHandler.resetForm();
@@ -462,7 +462,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Value is mapped after automatic parse on setting value', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.setFieldValue('age', 2e3);
     expect(formHandler.getFieldValue('age')).toBe(2000);
     await formHandler.setFieldValue('age', 2e3, { mapValue: (value) => value.toExponential() });
@@ -470,7 +470,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Value is mapped after automatic parse on setting default value', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     formHandler.setFieldDefaultValue('age', 2e3);
     expect(formHandler.getFieldValue('age')).toBe(2000);
     formHandler.setFieldDefaultValue('age', 2e3, { mapValue: (value) => value.toExponential() });
@@ -478,7 +478,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Validation result is an empty array when silent validation is active', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema), { silentValidation: true });
+    const formHandler = useFormHandler(zodSchema(personSchema), { silentValidation: true });
     try {
       await formHandler.validateForm();
     } catch (error) {
@@ -489,13 +489,13 @@ describe('useFormHandler with yup', () => {
   });
 
   it('No error message is generated when silent validation is active', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema), { silentValidation: true });
+    const formHandler = useFormHandler(zodSchema(personSchema), { silentValidation: true });
     await formHandler.setFieldValue('name', '');
     expect(formHandler.getFieldError('name')).toBe('');
   });
 
   it('Checks if has event types', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema), { validateOn: ['input'] });
+    const formHandler = useFormHandler(zodSchema(personSchema), { validateOn: ['input'] });
     expect(formHandler._.hasEventTypes(undefined)).toBe(false);
     expect(formHandler._.hasEventTypes([])).toBe(false);
     expect(formHandler._.hasEventTypes(['noRegisteredEvent'])).toBe(false);
@@ -503,7 +503,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Validates on specific event type', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema), { validateOn: ['input'] });
+    const formHandler = useFormHandler(zodSchema(personSchema), { validateOn: ['input'] });
     await formHandler.setFieldValue('name', '');
     expect(formHandler.getFieldError('name')).toBe('name is a required field');
     await formHandler.setFieldValue('name', '', { validateOn: ['input'] });
@@ -513,13 +513,13 @@ describe('useFormHandler with yup', () => {
   });
 
   it("Form doesn't have changes after fill form", async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.fillForm({ name: 'John', age: 22 });
     expect(formHandler.formHasChanges()).toBe(false);
   });
 
   it("Form doesn't have changes after changing but then going back to initial value", async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.setFieldValue('name', 'John');
     expect(formHandler.formHasChanges()).toBe(true);
     await formHandler.setFieldValue('name', '');
@@ -527,7 +527,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Current value is initialized with default value after reset when default value is given', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema));
+    const formHandler = useFormHandler(zodSchema(personSchema));
     formHandler.setFieldDefaultValue('age', 22);
     await formHandler.resetForm();
     expect(formHandler._.getFieldState('age')).toMatchObject({
@@ -545,7 +545,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Validates the whole form despite the given event types', async () => {
-    const formHandler = useFormHandler(yupSchema(personSchema), { validateOn: ['input'] });
+    const formHandler = useFormHandler(zodSchema(personSchema), { validateOn: ['input'] });
     try {
       await formHandler.validateForm();
     } catch (error) {
@@ -568,7 +568,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Triggers are set as expected', async () => {
-    const formHandler = useFormHandler(yupSchema(triggersSchema));
+    const formHandler = useFormHandler(zodSchema(triggersSchema));
     await formHandler.setFieldTriggers('password', ['passwordConfirm']);
     await formHandler.setFieldTriggers('passwordConfirm', ['password']);
     expect(formHandler._.getFieldState('password')?.triggers).toMatchObject(['passwordConfirm']);
@@ -576,7 +576,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Dependant validation is not run if dependant field is not touched', async () => {
-    const formHandler = useFormHandler(yupSchema(triggersSchema));
+    const formHandler = useFormHandler(zodSchema(triggersSchema));
     await formHandler.setFieldTriggers('password', ['passwordConfirm']);
     await formHandler.setFieldTriggers('passwordConfirm', ['password']);
     await formHandler.setFieldValue('password', 'abc');
@@ -585,7 +585,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Dependant validation is run if dependant field is touched', async () => {
-    const formHandler = useFormHandler(yupSchema(triggersSchema));
+    const formHandler = useFormHandler(zodSchema(triggersSchema));
     await formHandler.setFieldTriggers('password', ['passwordConfirm']);
     await formHandler.setFieldTriggers('passwordConfirm', ['password']);
     await formHandler.setFieldValue('password', 'abc');
@@ -596,7 +596,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Dependant validation is run with delay', async () => {
-    const formHandler = useFormHandler(yupSchema(triggersSchema), { delay: 200 });
+    const formHandler = useFormHandler(zodSchema(triggersSchema), { delay: 200 });
     await formHandler.setFieldTriggers('password', ['passwordConfirm']);
     await formHandler.setFieldTriggers('passwordConfirm', ['password']);
     await formHandler.setFieldValue('password', 'abc', { delay: 100 });
@@ -606,7 +606,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Form can be validated with configured triggers', async () => {
-    const formHandler = useFormHandler(yupSchema(triggersSchema), { delay: 200 });
+    const formHandler = useFormHandler(zodSchema(triggersSchema), { delay: 200 });
     await formHandler.setFieldTriggers('password', ['passwordConfirm']);
     await formHandler.setFieldTriggers('passwordConfirm', ['password']);
     await formHandler.setFieldValue('password', 'abc');
@@ -619,7 +619,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Form can be reset with configured triggers', async () => {
-    const formHandler = useFormHandler(yupSchema(triggersSchema), { delay: 200 });
+    const formHandler = useFormHandler(zodSchema(triggersSchema), { delay: 200 });
     await formHandler.setFieldTriggers('password', ['passwordConfirm']);
     await formHandler.setFieldTriggers('passwordConfirm', ['password']);
     await formHandler.setFieldValue('password', 'abc');
@@ -630,25 +630,25 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Gets the value from a nested object', async () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     await formHandler.setFieldValue('referrals', [{ name: 'John' }]);
     expect(formHandler.getFieldValue('referrals')).toMatchObject([{ name: 'John' }]);
   });
 
   it('Gets the default value from a nested object', () => {
-    const formHandler = useFormHandler(yupSchema(referralsSchema));
+    const formHandler = useFormHandler(zodSchema(referralsSchema));
     formHandler.setFieldDefaultValue('referrals', [{ name: 'John' }]);
     expect(formHandler.getFieldDefaultValue('referrals')).toMatchObject([{ name: 'John' }]);
   });
 
   it('Error message for nested object', async () => {
-    const formHandler = useFormHandler(yupSchema(contactSchema));
+    const formHandler = useFormHandler(zodSchema(contactSchema));
     await formHandler.validateField('contact');
-    expect(formHandler.getFieldError('contact')).toBe('age is a required field, contact.name is a required field');
+    expect(formHandler.getFieldError('contact')).toBe('name is a required field, age is a required field');
   });
 
   it('Field state for touched nested object', () => {
-    const formHandler = useFormHandler(yupSchema(contactSchema));
+    const formHandler = useFormHandler(zodSchema(contactSchema));
     formHandler.touchField('contact');
     expect(formHandler._.getFieldState('contact')).toMatchObject({
       age: {
@@ -685,7 +685,7 @@ describe('useFormHandler with yup', () => {
   });
 
   it('Field state for nested object with triggers', async () => {
-    const formHandler = useFormHandler(yupSchema(contactSchema));
+    const formHandler = useFormHandler(zodSchema(contactSchema));
     await formHandler.setFieldTriggers('contact', []);
     expect(formHandler._.getFieldState('contact')).toMatchObject({
       age: {

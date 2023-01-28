@@ -19,12 +19,7 @@ export const contactSchema: SchemaOf<Contact> = yup.object().shape({
   contact: personSchema,
 });
 
-export const personsSchema: SchemaOf<Person[]> = yup.array(
-  yup.object().shape({
-    name: yup.string().required(),
-    age: yup.number().required(),
-  })
-);
+export const personsSchema: SchemaOf<Person[]> = yup.array(personSchema);
 
 export type Referrals = {
   hostName: string;

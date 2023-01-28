@@ -1,6 +1,6 @@
 import { ValidationSchema } from '@interfaces';
 import { set, get, ValidationError } from '@utils';
-import { ZodArray, ZodError, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
+import { ZodArray, ZodEffects, ZodError, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
 
 export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
   /**
@@ -9,7 +9,7 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
    * and doesn't require validation. e.g. id, timestamp, foreignId, etc...
    */
   const isFieldFromSchema = (path: string) => {
-    const reachedSchema = reach(schema, path);
+    const { schema: reachedSchema } = reach(schema, path);
     return reachedSchema ? true : false;
   };
 
@@ -17,19 +17,67 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
    * Validates a single field of the form.
    */
   const validateAt: ValidationSchema<T>['validateAt'] = async (path, data) => {
-    const reachedSchema = reach(schema, path);
+    /**
+     * A portion of the schema is reached to avoid re-validating the whole schema. If it
+     * contains a superRefine, it will get the closest parent effect for doing
+     * dependant validations.
+     */
+    let { schema: reachedSchema, store } = reach(schema, path);
 
-    try {
+    //Effects is a special zod schema which is generated when superRefine fn is used.
+    if (store.effects) {
+      reachedSchema = store.effects;
+      const arrPath = path.split('.');
+      const lastKey = arrPath.pop() || '';
+      let value: any;
+
+      /**
+       * If the path is nested and contains a superRefine, prev path is used for
+       * getting the data to validate.
+       *
+       * e.g.
+       *
+       * key1.key2.keyToValidate --> key1.key2
+       * store.effects is located at key1.key2
+       * so it needs the data from prev path.
+       */
+      if (arrPath.length > 1) {
+        const prevPath = arrPath.join('.');
+        value = get(data, prevPath);
+      }
+
+      //No nested path is provided
+      if (arrPath.length <= 1) {
+        value = data;
+      }
+
+      try {
+        await reachedSchema.parseAsync(value);
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const errorMessage = error.errors.find((item) => item.path.includes(lastKey))?.message || '';
+          throw new ValidationError(path, errorMessage);
+        } else {
+          console.error(error);
+        }
+      }
+    }
+
+    //When no superRefine is used code block
+    if (store.effects === undefined) {
       const value = get(data, path);
-      await reachedSchema.parseAsync(value);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const {
-          formErrors: [message],
-        } = error.flatten();
-        throw new ValidationError(path, message);
-      } else {
-        console.error(error);
+
+      try {
+        await reachedSchema.parseAsync(value);
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const {
+            formErrors: [message],
+          } = error.flatten();
+          throw new ValidationError(path, message);
+        } else {
+          console.error(error);
+        }
       }
     }
   };
@@ -43,7 +91,9 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
     const targetPath = path.replace(/\.$/, '');
     const { type, getDefault } = getSchemaDef(_schema);
 
-    if (type === 'array') {
+    if (type === 'effects') {
+      obj = buildDefault((_schema as ZodEffects<any>)._def.schema, obj);
+    } else if (type === 'array') {
       const arrSchema = _schema as ZodArray<any>;
 
       if (getDefault()) {
@@ -106,7 +156,7 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
      * key1.11.key2.22 ==> key1.key2
      */
     path = path.replace(/\.\d+\./g, '.').replace(/\.\d+\$/g, '');
-    const reachedSchema = reach(schema, path);
+    const { schema: reachedSchema } = reach(schema, path);
     const { type } = getSchemaDef(reachedSchema);
     return type.replace(/Zod/g, '').toLowerCase();
   };
@@ -128,12 +178,25 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
   /**
    * For nested schemas, reach will retrieve an inner schema based on the provided path.
    */
-  const reach = (schema: ZodSchema, path: string): ZodSchema => {
+  const reach = (
+    schema: ZodSchema,
+    path: string,
+    store: { effects?: ZodEffects<any> } = {}
+  ): { schema: ZodSchema; store: { effects?: ZodEffects<any> } } => {
     let [currentPath, ...rest] = path.split('.');
     let currentSchema = schema;
     const { type } = getSchemaDef(currentSchema);
 
-    if (type === 'array') {
+    /**
+     * Effects are created when zod superRefine fn is used.
+     * Only is stored the parent effect of the given path.
+     */
+    if (type === 'effects') {
+      const effects = schema as ZodEffects<any>;
+      store.effects = effects;
+      currentSchema = effects._def.schema;
+      return reach(currentSchema, path, store);
+    } else if (type === 'array') {
       const element = (schema as ZodArray<any>).element;
       currentSchema = element?.shape?.[currentPath] || element;
     } else if (type === 'object') {
@@ -141,9 +204,9 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
     }
 
     if (rest.length === 0) {
-      return currentSchema;
+      return { schema: currentSchema, store };
     } else {
-      return reach(currentSchema, rest.join('.'));
+      return reach(currentSchema, rest.join('.'), store);
     }
   };
 

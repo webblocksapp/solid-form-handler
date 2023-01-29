@@ -6,6 +6,6 @@ runs:
     - name: Publish package on NPM
       run: npm publish
       shell: bash
-      working-directory: ./packages/lib/dist
+      working-directory: ./packages/lib
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm-token }}

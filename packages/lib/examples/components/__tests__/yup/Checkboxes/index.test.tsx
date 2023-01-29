@@ -9,7 +9,7 @@ import { schema, Schema, FAVORITE_FOODS } from './mocks';
 const onChangeCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Checkboxes', () => {
+describe('Checkboxes with yup', () => {
   let formHandler: FormHandler<Schema>;
   let checkboxes: NodeListOf<HTMLInputElement>;
   let dom: Result;

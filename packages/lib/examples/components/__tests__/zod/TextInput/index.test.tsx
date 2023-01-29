@@ -3,19 +3,19 @@ import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
 import { TextInput } from '@components';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { zodSchema } from '@utils';
 import { schema, Schema } from './mocks';
 
 const onInputCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('TextInput', () => {
+describe('TextInput with yup', () => {
   let formHandler: FormHandler<Schema>;
   let textInput: HTMLInputElement;
   let dom: Result;
 
   beforeEach(() => {
-    formHandler = useFormHandler<Schema>(yupSchema(schema));
+    formHandler = useFormHandler<Schema>(zodSchema(schema));
     dom = render(() => <TextInput label="Name Label" name="name" formHandler={formHandler} />);
     textInput = dom.container.querySelector('[name="name"]') as HTMLInputElement;
   });

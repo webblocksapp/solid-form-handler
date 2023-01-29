@@ -9,7 +9,7 @@ import { schema, Schema, COUNTRIES } from './mocks';
 const onInputCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Select', () => {
+describe('Select with yup', () => {
   let formHandler: FormHandler<Schema>;
   let select: HTMLInputElement;
   let dom: Result;

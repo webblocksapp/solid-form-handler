@@ -9,7 +9,7 @@ import { schema, Schema, GENDERS } from './mocks';
 const onChangeCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Radios', () => {
+describe('Radios with yup', () => {
   let formHandler: FormHandler<Schema>;
   let radios: NodeListOf<HTMLInputElement>;
   let dom: Result;

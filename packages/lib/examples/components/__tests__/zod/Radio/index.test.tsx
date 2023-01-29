@@ -3,19 +3,19 @@ import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
 import { Radio } from '@components';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { zodSchema } from '@utils';
 import { schema, Schema } from './mocks';
 
 const onChangeCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Radio', () => {
+describe('Radio with yup', () => {
   let formHandler: FormHandler<Schema>;
   let radio: HTMLInputElement;
   let dom: Result;
 
   beforeEach(() => {
-    formHandler = useFormHandler<Schema>(yupSchema(schema));
+    formHandler = useFormHandler<Schema>(zodSchema(schema));
     dom = render(() => <Radio label="Gender Label" name="gender" value="male" formHandler={formHandler} />);
     radio = dom.container.querySelector('[name="gender"]') as HTMLInputElement;
   });
@@ -88,14 +88,14 @@ describe('Radio', () => {
   });
 
   it('Default value is set with checked prop', () => {
-    formHandler = useFormHandler<Schema>(yupSchema(schema));
+    formHandler = useFormHandler<Schema>(zodSchema(schema));
     dom = render(() => <Radio checked name="gender" value="male" formHandler={formHandler} />);
     radio = dom.container.querySelector('[name="gender"]') as HTMLInputElement;
     expect(radio.checked).toBe(true);
   });
 
   it('Default value is set with checked prop and persists after form reset', async () => {
-    formHandler = useFormHandler<Schema>(yupSchema(schema));
+    formHandler = useFormHandler<Schema>(zodSchema(schema));
     dom = render(() => <Radio checked label="Gender Label" name="gender" value="male" formHandler={formHandler} />);
     radio = dom.container.querySelector('[name="gender"]') as HTMLInputElement;
     await formHandler.resetForm();

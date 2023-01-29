@@ -9,7 +9,7 @@ import { schema, Schema } from './mocks';
 const onChangeCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Checkbox ', () => {
+describe('Checkbox with yup', () => {
   let formHandler: FormHandler<Schema>;
   let checkbox: HTMLInputElement;
   let dom: Result;

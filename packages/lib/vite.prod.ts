@@ -9,7 +9,7 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       name: 'SolidJSFormHandler',
-      formats: ['es'],
+      formats: ['es', 'cjs'],
       fileName: 'index',
     },
     rollupOptions: {

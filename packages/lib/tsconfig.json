@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
+    "target": "esnext",
     "paths": {
       "@interfaces": ["src/interfaces"],
       "@hooks": ["src/hooks"],

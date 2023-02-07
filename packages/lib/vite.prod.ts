@@ -3,6 +3,11 @@ import solidPlugin from 'vite-plugin-solid';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import dts from 'vite-plugin-dts';
 
+import packageJson from './package.json';
+
+const { peerDependencies, devDependencies } = packageJson;
+const external = [...Object.keys(peerDependencies), ...Object.keys(devDependencies)];
+
 export default defineConfig({
   plugins: [solidPlugin({ babel: { presets: ['solid'] } }), tsconfigPaths({ root: __dirname }), dts()],
   build: {
@@ -13,7 +18,7 @@ export default defineConfig({
       fileName: 'index',
     },
     rollupOptions: {
-      external: ['solid-js', 'yup', 'solid-js/store'],
+      external,
     },
   },
   optimizeDeps: {

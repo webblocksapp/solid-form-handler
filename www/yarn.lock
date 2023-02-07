@@ -3333,7 +3333,7 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-csstype@^3.1.1:
+csstype@^3.1.0, csstype@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
@@ -6215,10 +6215,10 @@ socks@^2.6.2:
     ip "^1.1.5"
     smart-buffer "^4.2.0"
 
-solid-form-handler@^1.0.0-alpha.4:
-  version "1.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/solid-form-handler/-/solid-form-handler-1.0.0-alpha.4.tgz#022b7b8bbfeaf02baccdf764dee5517640fa3761"
-  integrity sha512-EWGNQddEn/Zx/YQur/n3GQQmPMmtE6hx3jzwNkX87EBieIMr/TJZbF3wBDdpb1bBW93Tb9/zx0fYGLk5WoSAcQ==
+solid-form-handler@^1.0.0-alpha.6:
+  version "1.0.0-alpha.6"
+  resolved "https://registry.npmjs.org/solid-form-handler/-/solid-form-handler-1.0.0-alpha.6.tgz#efbd9216e093be23327216fb32e28b217947e444"
+  integrity sha512-bUBsC3BLCYz4YpyitYBc04vuy1516NSR8sOxD7/ScZ9WIaVqiGN3BemQlzmFjbS5XOjMiqVlKksp+3NbIK4t7A==
 
 solid-jest@^0.2.0:
   version "0.2.0"
@@ -6234,10 +6234,12 @@ solid-js@^1.3.3:
   resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.4.5.tgz#11083b273751b33cb766c22ad66001ed8daef239"
   integrity sha512-32NGpuabEJDTeQ7fjaTR2TLC7R/X5hbqhYdEQ1e+GcIK8r8+/V0Nv17eZQii5Z/97/mtdt8yi63chzg73qnz/A==
 
-solid-js@^1.4.0:
-  version "1.4.4"
-  resolved "https://registry.npmjs.org/solid-js/-/solid-js-1.4.4.tgz"
-  integrity sha512-nf/cbRzMuhb5UjbRDNfSJPqHKzUxNb9YgCQwijPUbdA3koQ/hWrz/lj0ter3lvThgxinvGPtXofDGy9bsKrXqA==
+solid-js@^1.6.10:
+  version "1.6.10"
+  resolved "https://registry.npmjs.org/solid-js/-/solid-js-1.6.10.tgz#fbd8e0a4adfe7b38da1885170369ede6a1cc7379"
+  integrity sha512-Sf0e6PQCEFkFtbPq0L+93Ua81YQOefBEbvDJ0YXT92b6Lzw0k7UvzSd2l1BbYM+yzE3UmepU1tyMDc/3nIByjA==
+  dependencies:
+    csstype "^3.1.0"
 
 solid-refresh@^0.4.0:
   version "0.4.1"
@@ -7102,3 +7104,8 @@ yup@^0.32.11:
     nanoclone "^0.2.1"
     property-expr "^2.0.4"
     toposort "^2.0.2"
+
+zod@^3.20.2:
+  version "3.20.2"
+  resolved "https://registry.npmjs.org/zod/-/zod-3.20.2.tgz#068606642c8f51b3333981f91c0a8ab37dfc2807"
+  integrity sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==

@@ -27,9 +27,10 @@
     "bootstrap-icons": "^1.8.3",
     "font-awesome": "^4.7.0",
     "shiki": "^0.10.1",
-    "solid-form-handler": "^1.0.0-alpha.5",
-    "solid-js": "^1.4.0",
-    "yup": "^0.32.11"
+    "solid-form-handler": "^1.0.0-alpha.6",
+    "solid-js": "^1.6.10",
+    "yup": "^0.32.11",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",

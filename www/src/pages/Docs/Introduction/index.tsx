@@ -15,8 +15,8 @@ export const Introduction: Component = () => (
       .
     </p>
     <p>
-      It uses as a third-party library the yup object schema for data assertion
-      however other validators will be supported in the future.
+      It supports the following data assertion libraries: <b>yup</b> and{' '}
+      <b>zod</b>, however other validators will be supported in the future.
     </p>
     <p>
       As a big difference from other form validation libraries, it won't provide
@@ -38,8 +38,8 @@ export const Introduction: Component = () => (
     <ul>
       <li>Gives full control of your form components definition.</li>
       <li>
-        Integrated with yup to ease form schema definition - Other validators
-        will be supported in the future.
+        Integrated with <b>yup</b> and <b>zod</b> to ease form schema definition
+        - Other validators will be supported in the future.
       </li>
       <li>Full reactivity during form input, validation, and submission.</li>
       <li>

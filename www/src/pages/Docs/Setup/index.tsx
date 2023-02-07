@@ -1,16 +1,23 @@
-import { Code } from '@components';
+import { Tabs } from '@components';
 import { Component } from 'solid-js';
+import { SetupCmd } from './SetupCmd';
 
-export const Setup: Component = () => (
-  <>
-    <h2 class="mb-4 border-bottom">Setup</h2>
-    <div class="mb-5">
-      <b>npm installation:</b>
-      <Code>&gt; npm i solid-form-handler yup</Code>
-    </div>
-    <div>
-      <b>yarn installation:</b>
-      <Code>&gt; yarn add solid-form-handler yup</Code>
-    </div>
-  </>
-);
+export const Setup: Component = () => {
+  return (
+    <>
+      <h2 class="mb-4 border-bottom">Setup</h2>
+      <Tabs
+        tabs={[
+          {
+            text: 'yup',
+            children: <SetupCmd validatorLib="yup" />,
+          },
+          {
+            text: 'zod',
+            children: <SetupCmd validatorLib="zod" />,
+          },
+        ]}
+      />
+    </>
+  );
+};

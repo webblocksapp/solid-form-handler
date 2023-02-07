@@ -1,7 +1,10 @@
 import { Component } from 'solid-js';
-import { Code, Implementation } from '@components';
+import { Code, Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { SingleTextInputForm } from '@implementations';
+import {
+  YupSingleTextInputForm,
+  ZodSingleTextInputForm,
+} from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingTextInput: Component = () => (
@@ -24,14 +27,54 @@ export const ValidatingTextInput: Component = () => (
       <code>fieldHasError</code> and <code>getFieldError</code>. All of them
       receive the field name as a parameter.
     </p>
-    <Code content={getRaw('ValidatingTextInput1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('ValidatingTextInput1')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('ValidatingTextInput1')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
     <p>
       You can check the full implementation in the code tab. For doing text
       input validation more legible, this logic can be abstracted into a{' '}
       <Link href="/docs/text-input">TextInput.tsx</Link> component.
     </p>
-    <Implementation code={getRaw('SingleTextInputForm')}>
-      <SingleTextInputForm />
-    </Implementation>
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation code={getRaw('SingleTextInputForm/yup')}>
+              <YupSingleTextInputForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation code={getRaw('SingleTextInputForm/zod')}>
+              <ZodSingleTextInputForm />
+            </Implementation>
+          ),
+        },
+      ]}
+    />
   </>
 );

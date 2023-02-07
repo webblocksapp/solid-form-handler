@@ -1,17 +1,13 @@
 import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
-import * as yup from 'yup';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { z } from 'zod';
 
-type Schema = {
-  email: string;
-};
-
-const schema: yup.SchemaOf<Schema> = yup.object({
-  email: yup.string().email().required(),
+const schema = z.object({
+  email: z.string().email(),
 });
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler(yupSchema(schema));
+  const formHandler = useFormHandler(zodSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
@@ -36,6 +32,7 @@ export const Form: Component = () => {
   return (
     <form autocomplete="off" onSubmit={submit}>
       <div class="mb-3">
+        <h4 class="mb-3">Using zod schema</h4>
         <label class="form-label">Email</label>
         <input
           class="form-control"

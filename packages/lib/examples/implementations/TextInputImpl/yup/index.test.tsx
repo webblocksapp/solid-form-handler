@@ -1,5 +1,5 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
-import { TextInputImpl } from '@implementations';
+import { TextInputImpl } from '.';
 
 describe('Text input use case', () => {
   it('must render error message on input when value is empty', async () => {

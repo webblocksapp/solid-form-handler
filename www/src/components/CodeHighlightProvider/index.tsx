@@ -9,10 +9,12 @@ import {
 } from 'solid-js';
 import * as shiki from 'shiki';
 
-export const CodeHighlightContext = createContext<{
-  highlighter: Accessor<shiki.Highlighter | undefined>;
-  loading: Accessor<boolean>;
-}>({} as any);
+export const CodeHighlightContext = createContext(
+  {} as {
+    highlighter: Accessor<shiki.Highlighter | undefined>;
+    loading: Accessor<boolean>;
+  }
+);
 export const useCodeHighlightContext = () => useContext(CodeHighlightContext);
 
 export interface CodeHighlightProviderProps {

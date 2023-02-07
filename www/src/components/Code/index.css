@@ -7,3 +7,7 @@
   font-size: 16px;
   line-height: 26px;
 }
+
+.code-snippet.no-border {
+  border: 0 !important;
+}

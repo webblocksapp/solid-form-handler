@@ -2,7 +2,6 @@ import {
   Component,
   createEffect,
   createSignal,
-  mergeProps,
   onMount,
   JSX,
   splitProps,
@@ -14,16 +13,23 @@ export interface CodeProps extends JSX.HTMLAttributes<HTMLDivElement> {
   language?: string;
   content?: string;
   codeClass?: string;
+  mapReplace?: { [matchText: string]: string };
+  noBorder?: boolean;
 }
 
 export const Code: Component<CodeProps> = (props) => {
   const [code, setCode] = createSignal<string>();
+  const [mapReplace, setMapReplace] = createSignal<{
+    [matchText: string]: string;
+  }>({});
   const { highlighter, loading } = useCodeHighlightContext();
   let codeRef: HTMLDivElement | undefined;
-  const [local, rest] = splitProps(mergeProps({ codeClass: 'my-3' }, props), [
+  const [local, rest] = splitProps(props, [
     'language',
     'content',
     'codeClass',
+    'mapReplace',
+    'noBorder',
   ]);
 
   const setInnerHTML = async () => {
@@ -40,6 +46,12 @@ export const Code: Component<CodeProps> = (props) => {
 
   const formatCode = (code: string) => {
     if (code === undefined) return;
+
+    Object.keys(mapReplace()).forEach((matchText) => {
+      const newValue = mapReplace()[matchText];
+      code = code.replace(new RegExp(`${matchText}`, 'ig'), newValue);
+    });
+
     if (code.match('//@ts-nocheck')) {
       code = code.replace('//@ts-nocheck', '');
       return code.substring(code.indexOf('\n') + 1);
@@ -51,7 +63,8 @@ export const Code: Component<CodeProps> = (props) => {
   createEffect(() => loading() !== undefined && setInnerHTML());
 
   onMount(async () => {
-    local.content && setCode(local.content);
+    setCode(local.content || '');
+    setMapReplace(local.mapReplace || {});
     rest.children && setInnerHTML();
   });
 
@@ -67,8 +80,8 @@ export const Code: Component<CodeProps> = (props) => {
         </div>
       )}
       <div
-        class={`code-snippet border ${local.codeClass}`}
-        classList={{ 'd-none': loading() }}
+        class={`code-snippet border ${local.codeClass || ''}`}
+        classList={{ 'd-none': loading(), 'no-border': local.noBorder }}
         ref={codeRef}
       ></div>
     </div>

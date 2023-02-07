@@ -1,3 +1,7 @@
+.tabs-wrapper .tab-content .tab-content {
+  border: 0 !important;
+}
+
 .tabs .nav-tabs {
   flex-wrap: nowrap;
 }

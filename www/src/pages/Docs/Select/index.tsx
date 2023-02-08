@@ -41,7 +41,7 @@ export const Select: Component = () => (
             <Implementation
               codeTabs={[
                 { name: 'Form.tsx', code: getRaw('SelectCompForm/yup') },
-                { name: 'TextInput.tsx', code: getRaw('components/Select') },
+                { name: 'Select.tsx', code: getRaw('components/Select') },
               ]}
             >
               <YupSelectCompForm />
@@ -54,7 +54,7 @@ export const Select: Component = () => (
             <Implementation
               codeTabs={[
                 { name: 'Form.tsx', code: getRaw('SelectCompForm/zod') },
-                { name: 'TextInput.tsx', code: getRaw('components/TextInput') },
+                { name: 'Select.tsx', code: getRaw('components/Select') },
               ]}
             >
               <ZodSelectCompForm />

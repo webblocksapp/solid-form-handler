@@ -6,7 +6,8 @@ import {
   CheckboxesImpl,
   CheckboxCompForm,
   FormImpl,
-  SelectImpl,
+  YupSelectImpl,
+  ZodSelectImpl,
   ComplexFormImpl,
   FieldsetsFormImpl,
   NestedFieldsetsFormImpl,
@@ -115,7 +116,7 @@ export const App: Component = () => {
           <Route path="yup">
             <Route path="checkbox-impl" element={<CheckboxImpl />} />
             <Route path="checkboxes-impl" element={<CheckboxesImpl />} />
-            <Route path="select-impl" element={<SelectImpl />} />
+            <Route path="select-impl" element={<YupSelectImpl />} />
             <Route path="text-input-impl" element={<YupTextInputImpl />} />
             <Route path="form-impl" element={<FormImpl />} />
             <Route path="complex-form-impl" element={<ComplexFormImpl />} />
@@ -135,7 +136,26 @@ export const App: Component = () => {
             <Route path="suid-form" element={<SuidFormImpl />} />
           </Route>
           <Route path="zod">
+            {/* <Route path="checkbox-impl" element={<ZodCheckboxImpl />} /> */}
+            {/* <Route path="checkboxes-impl" element={<ZodCheckboxesImpl />} /> */}
+            <Route path="select-impl" element={<ZodSelectImpl />} />
             <Route path="text-input-impl" element={<ZodTextInputImpl />} />
+            {/* <Route path="form-impl" element={<ZodFormImpl />} /> */}
+            {/* <Route path="complex-form-impl" element={<ZodComplexFormImpl />} /> */}
+            {/* <Route path="fieldsets-form-impl" element={<ZodFieldsetsFormImpl />} /> */}
+            {/* <Route path="nested-fieldsets-form-impl" element={<ZodNestedFieldsetsFormImpl />} /> */}
+            {/* <Route path="sortable-fieldsets-form-impl" element={<ZodSortableFieldsetsFormImpl />} /> */}
+            {/* <Route path="vanilla-comp-form-impl" element={<ZodVanillaCompFormImpl />} /> */}
+            {/* <Route path="fieldsets-form-stress-1" element={<ZodFieldsetsFormStress1 />} /> */}
+            {/* <Route path="conditional-form-impl" element={<ZodConditionalFormImpl />} /> */}
+            {/* <Route path="referrals-form" element={<ZodReferralsForm />} /> */}
+            {/* <Route path="checkbox-comp-form" element={<ZodCheckboxCompForm />} /> */}
+            {/* <Route path="temperature-conversion" element={<ZodTemperatureConversionImpl />} /> */}
+            {/* <Route path="async-validation-impl" element={<ZodAsyncValidationImpl />} /> */}
+            {/* <Route path="dependant-validation-impl" element={<ZodDependantValidationImpl />} /> */}
+            {/* <Route path="validate-on-impl" element={<ZodValidateOnImpl />} /> */}
+            {/* <Route path="validate-file-input" element={<ZodValidateFileInputImpl />} /> */}
+            {/* <Route path="suid-form" element={<ZodSuidFormImpl />} /> */}
           </Route>
         </Routes>
       </div>

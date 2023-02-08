@@ -84,7 +84,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
          */
         setFieldState(path, {
           ...fieldState,
-          interacted: true,
           currentValue: options?.mapValue?.(parseValue(path, currentValue)),
           initialValue: defaultValue,
           defaultValue: defaultValue,
@@ -150,7 +149,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.dirty && dirtyField(path);
       options?.touch && touchField(path);
-      interactField(path);
       return promises;
     }
   };
@@ -230,7 +228,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
           force: true,
           delay: 0,
           omitTriggers: true,
-          silentValidation: !isFieldInteracted(trigger),
+          silentValidation: !isFieldTouched(trigger),
         })
       )
     );
@@ -533,7 +531,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       defaultValue: options.reset || options?.fill ? fieldState?.defaultValue : value,
       initialValue: options.fill ? value : fieldState?.defaultValue ?? value,
       touched: options.reset ? false : fieldState?.touched || false,
-      interacted: options.reset ? false : options?.fill ? true : false,
       dirty: options.reset ? false : fieldState?.dirty || false,
       triggers: fieldState?.triggers,
       validating: false,
@@ -567,8 +564,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Retrieves a boolean flag for the given field path to check if it's interacted.
    */
-  const isFieldInteracted = (path: string) => {
-    return path && getFieldState(path)?.interacted;
+  const isFieldTouched = (path: string) => {
+    return path && getFieldState(path)?.touched;
   };
 
   /**
@@ -667,13 +664,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     } else {
       setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
     }
-  };
-
-  /**
-   * Marks a field as interacted when the user interacted with it programmatically.
-   */
-  const interactField = (path: string = '') => {
-    path && setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, interacted: true }));
   };
 
   /**

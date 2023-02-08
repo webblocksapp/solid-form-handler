@@ -9,7 +9,6 @@ export type FieldState = {
   cachedValue: any;
   currentValue: any;
   touched: boolean;
-  interacted: boolean;
   dirty: boolean;
   triggers: string[];
   validating: boolean;

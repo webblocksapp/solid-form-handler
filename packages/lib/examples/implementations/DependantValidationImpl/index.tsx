@@ -64,8 +64,20 @@ export const DependantValidationImpl: Component = () => {
   return (
     <>
       <form onSubmit={submit}>
-        <TextInput label="Password" name="password" formHandler={formHandler} triggers={['passwordConfirm']} />
-        <TextInput label="Password Confirm" name="passwordConfirm" formHandler={formHandler} triggers={['password']} />
+        <TextInput
+          data-testid="test-password"
+          label="Password"
+          name="password"
+          formHandler={formHandler}
+          triggers={['passwordConfirm']}
+        />
+        <TextInput
+          data-testid="test-passwordConfirm"
+          label="Password Confirm"
+          name="passwordConfirm"
+          formHandler={formHandler}
+          triggers={['password']}
+        />
         <button>Submit</button>
         <button disabled={formHandler.isFormInvalid()}>Submit</button>
         <button type="button" onClick={reset}>

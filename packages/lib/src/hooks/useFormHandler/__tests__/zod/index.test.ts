@@ -408,7 +408,6 @@ describe('useFormHandler with zod', () => {
         initialValue: 'Laura',
         defaultValue: 'Laura',
         touched: false,
-        interacted: true,
         dirty: false,
       },
       age: {
@@ -420,7 +419,6 @@ describe('useFormHandler with zod', () => {
         initialValue: 19,
         defaultValue: '',
         touched: false,
-        interacted: true,
         dirty: false,
       },
     });
@@ -443,7 +441,6 @@ describe('useFormHandler with zod', () => {
         initialValue: 'George',
         defaultValue: 'Laura',
         touched: false,
-        interacted: true,
         dirty: false,
       },
       age: {
@@ -455,7 +452,6 @@ describe('useFormHandler with zod', () => {
         initialValue: 19,
         defaultValue: '',
         touched: false,
-        interacted: true,
         dirty: false,
       },
     });
@@ -539,7 +535,6 @@ describe('useFormHandler with zod', () => {
       initialValue: 22,
       defaultValue: 22,
       touched: false,
-      interacted: false,
       dirty: false,
     });
   });
@@ -661,7 +656,6 @@ describe('useFormHandler with zod', () => {
         defaultValue: '',
         initialValue: '',
         touched: true,
-        interacted: false,
         dirty: false,
         triggers: undefined,
         validating: false,
@@ -676,7 +670,6 @@ describe('useFormHandler with zod', () => {
         defaultValue: '',
         initialValue: '',
         touched: true,
-        interacted: false,
         dirty: false,
         triggers: undefined,
         validating: false,
@@ -698,7 +691,6 @@ describe('useFormHandler with zod', () => {
         defaultValue: '',
         initialValue: '',
         touched: false,
-        interacted: false,
         dirty: false,
         triggers: [],
         validating: false,
@@ -713,7 +705,6 @@ describe('useFormHandler with zod', () => {
         defaultValue: '',
         initialValue: '',
         touched: false,
-        interacted: false,
         dirty: false,
         triggers: [],
         validating: false,

@@ -1,18 +1,14 @@
 import { Component, For } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
-import * as yup from 'yup';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { z } from 'zod';
 
 type SelectableOption = {
   value: number | string;
   label: string;
 };
 
-type Schema = {
-  ageRange: string;
-};
-
-const schema: yup.SchemaOf<Schema> = yup.object({
-  ageRange: yup.string().required(),
+const schema = z.object({
+  ageRange: z.string().min(1, 'Age range is required'),
 });
 
 const ageRanges: SelectableOption[] = [
@@ -23,7 +19,7 @@ const ageRanges: SelectableOption[] = [
 ];
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler<Schema>(yupSchema(schema));
+  const formHandler = useFormHandler(zodSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
@@ -47,6 +43,7 @@ export const Form: Component = () => {
 
   return (
     <form autocomplete="off" onSubmit={submit}>
+      <h4>Using zod schema</h4>
       <div class="mb-3">
         <For each={ageRanges}>
           {(ageRange, i) => (

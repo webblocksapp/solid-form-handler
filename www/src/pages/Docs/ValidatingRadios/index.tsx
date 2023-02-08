@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { RadiosForm } from '@implementations';
+import { YupRadiosForm, ZodRadiosForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingRadios: Component = () => (
@@ -22,8 +22,25 @@ export const ValidatingRadios: Component = () => (
       For doing radios validation more legible, this logic can be abstracted
       into a <Link href="/docs/radios">Radios.tsx</Link> component.
     </p>
-    <Implementation code={getRaw('RadiosForm')}>
-      <RadiosForm />
-    </Implementation>
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation code={getRaw('RadiosForm/yup')}>
+              <YupRadiosForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation code={getRaw('RadiosForm/zod')}>
+              <ZodRadiosForm />
+            </Implementation>
+          ),
+        },
+      ]}
+    />
   </>
 );

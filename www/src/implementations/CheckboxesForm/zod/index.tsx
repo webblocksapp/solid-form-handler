@@ -1,18 +1,14 @@
 import { Component, For } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
-import * as yup from 'yup';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { z } from 'zod';
 
 type SelectableOption = {
   value: number | string;
   label: string;
 };
 
-type Schema = {
-  favoriteFoods: number[];
-};
-
-const schema: yup.SchemaOf<Schema> = yup.object({
-  favoriteFoods: yup.array(yup.number().required()).min(2),
+const schema = z.object({
+  favoriteFoods: z.array(z.number()).min(2),
 });
 
 const favoriteFoods: SelectableOption[] = [
@@ -24,7 +20,7 @@ const favoriteFoods: SelectableOption[] = [
 ];
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler<Schema>(yupSchema(schema));
+  const formHandler = useFormHandler(zodSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
@@ -48,6 +44,7 @@ export const Form: Component = () => {
 
   return (
     <form autocomplete="off" onSubmit={submit}>
+      <h4 class="mb-3">Using zod schema</h4>
       <div class="mb-3">
         <For each={favoriteFoods}>
           {(favoriteFood, i) => (

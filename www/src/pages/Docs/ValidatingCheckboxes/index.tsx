@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { CheckboxesForm } from '@implementations';
+import { YupCheckboxesForm, ZodCheckboxesForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingCheckboxes: Component = () => (
@@ -22,8 +22,25 @@ export const ValidatingCheckboxes: Component = () => (
       For doing checkboxes validation more legible, this logic can be abstracted
       into a <Link href="/docs/checkboxes">Checkboxes.tsx</Link> component.
     </p>
-    <Implementation code={getRaw('CheckboxesForm')}>
-      <CheckboxesForm />
-    </Implementation>
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation code={getRaw('CheckboxesForm/yup')}>
+              <YupCheckboxesForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation code={getRaw('CheckboxesForm/zod')}>
+              <ZodCheckboxesForm />
+            </Implementation>
+          ),
+        },
+      ]}
+    />
   </>
 );

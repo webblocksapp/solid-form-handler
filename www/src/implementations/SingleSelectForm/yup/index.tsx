@@ -42,8 +42,8 @@ export const Form: Component = () => {
 
   return (
     <form autocomplete="off" onSubmit={submit}>
+      <h4 class="mb-3">Using yup schema</h4>
       <div class="mb-3">
-        <h4 class="mb-3">Using yup schema</h4>
         <label class="form-label">Country</label>
         <select
           class="form-select"

@@ -7,7 +7,7 @@ export * from './SingleTextInputForm';
 export * from './TextInputCompForm';
 export * from './SelectCompForm';
 export { Form as RadiosCompForm } from './RadiosCompForm';
-export { Form as CheckboxesCompForm } from './CheckboxesCompForm';
+export * from './CheckboxesCompForm';
 export { Form as PasswordConfirmForm } from './PasswordConfirmForm';
 export { Form as ValidateOnForm } from './ValidateOnForm';
 export { Form as ConditionalValidationForm } from './ConditionalValidationForm';

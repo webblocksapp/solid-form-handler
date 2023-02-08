@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { CheckboxesCompForm } from '@implementations';
+import { YupCheckboxesCompForm, ZodCheckboxesCompForm } from '@implementations';
 
 export const Checkboxes: Component = () => (
   <>
@@ -34,13 +34,41 @@ export const Checkboxes: Component = () => (
       <code>&lt;Checkboxes /&gt;</code> component for handling form data
       validations.
     </p>
-    <Implementation
-      codeTabs={[
-        { name: 'Form.tsx', code: getRaw('CheckboxesCompForm') },
-        { name: 'Checkboxes.tsx', code: getRaw('components/Checkboxes') },
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('CheckboxesCompForm/yup') },
+                {
+                  name: 'Checkboxes.tsx',
+                  code: getRaw('components/Checkboxes'),
+                },
+              ]}
+            >
+              <YupCheckboxesCompForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('CheckboxesCompForm/zod') },
+                {
+                  name: 'Checkboxes.tsx',
+                  code: getRaw('components/Checkboxes'),
+                },
+              ]}
+            >
+              <ZodCheckboxesCompForm />
+            </Implementation>
+          ),
+        },
       ]}
-    >
-      <CheckboxesCompForm />
-    </Implementation>
+    />
   </>
 );

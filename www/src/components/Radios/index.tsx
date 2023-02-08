@@ -3,6 +3,7 @@ import {
   Component,
   createEffect,
   createSelector,
+  createUniqueId,
   For,
   JSX,
   splitProps,
@@ -112,7 +113,7 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

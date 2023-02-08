@@ -1,5 +1,11 @@
 import { FormHandler } from 'solid-form-handler';
-import { Component, createEffect, JSX, splitProps } from 'solid-js';
+import {
+  Component,
+  createEffect,
+  createUniqueId,
+  JSX,
+  splitProps,
+} from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 export interface TextInputProps
@@ -114,7 +120,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

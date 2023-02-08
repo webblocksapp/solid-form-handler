@@ -1,6 +1,6 @@
 import { FormHandler } from 'solid-form-handler';
 import SuidCheckbox, { CheckboxTypeMap } from '@suid/material/Checkbox';
-import { Component, createEffect, splitProps } from 'solid-js';
+import { Component, createEffect, createUniqueId, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import FormHelperText from '@suid/material/FormHelperText';
 import FormControlLabel from '@suid/material/FormControlLabel';
@@ -130,7 +130,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

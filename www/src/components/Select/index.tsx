@@ -3,6 +3,7 @@ import {
   Component,
   createEffect,
   createSignal,
+  createUniqueId,
   For,
   JSX,
   splitProps,
@@ -132,7 +133,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

@@ -3,6 +3,7 @@ import {
   Component,
   createEffect,
   createSignal,
+  createUniqueId,
   For,
   splitProps,
 } from 'solid-js';
@@ -128,7 +129,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

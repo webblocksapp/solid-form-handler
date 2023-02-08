@@ -1,11 +1,10 @@
 import { Component, For } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
 import { referralsSchema } from './schema';
-import { Referrals } from './types';
 import { TextInput } from '@components';
 
 export const ReferralsForm: Component = () => {
-  const formHandler = useFormHandler<Referrals>(yupSchema(referralsSchema));
+  const formHandler = useFormHandler(zodSchema(referralsSchema));
   const { formData } = formHandler;
   const limit = 3;
 
@@ -34,6 +33,7 @@ export const ReferralsForm: Component = () => {
 
   return (
     <form class="container" onSubmit={submit}>
+      <h4 class="mb-3">Using zod schema</h4>
       <div class="row gy-3">
         <div class="col-sm-12 col-md-6">
           <TextInput

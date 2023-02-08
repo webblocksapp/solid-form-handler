@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { ReferralsForm } from '@implementations';
+import { YupReferralsForm, ZodReferralsForm } from '@implementations';
 import { getRaw } from '@utils';
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 
 export const DynamicNestedForm: Component = () => (
   <>
@@ -11,15 +11,51 @@ export const DynamicNestedForm: Component = () => (
       the following example shows how to implement adding, sorting, and removing
       operations for a nested set of fields.
     </p>
-
-    <Implementation
-      codeTabs={[
-        { name: 'ReferralsForm.tsx', code: getRaw('ReferralsForm/index.tsx') },
-        { name: 'schema.ts', code: getRaw('ReferralsForm/schema.ts') },
-        { name: 'types.ts', code: getRaw('ReferralsForm/types.ts') },
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation
+              codeTabs={[
+                {
+                  name: 'ReferralsForm.tsx',
+                  code: getRaw('ReferralsForm/yup/index.tsx'),
+                },
+                {
+                  name: 'schema.ts',
+                  code: getRaw('ReferralsForm/yup/schema.ts'),
+                },
+                {
+                  name: 'types.ts',
+                  code: getRaw('ReferralsForm/yup/types.ts'),
+                },
+              ]}
+            >
+              <YupReferralsForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation
+              codeTabs={[
+                {
+                  name: 'ReferralsForm.tsx',
+                  code: getRaw('ReferralsForm/zod/index.tsx'),
+                },
+                {
+                  name: 'schema.ts',
+                  code: getRaw('ReferralsForm/zod/schema.ts'),
+                },
+              ]}
+            >
+              <ZodReferralsForm />
+            </Implementation>
+          ),
+        },
       ]}
-    >
-      <ReferralsForm />
-    </Implementation>
+    />
   </>
 );

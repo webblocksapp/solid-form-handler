@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { SelectCompForm } from '@implementations';
+import { YupSelectCompForm, ZodSelectCompForm } from '@implementations';
 
 export const Select: Component = () => (
   <>
@@ -33,13 +33,35 @@ export const Select: Component = () => (
       <code>&lt;Select /&gt;</code> component for handling form data
       validations.
     </p>
-    <Implementation
-      codeTabs={[
-        { name: 'Form.tsx', code: getRaw('SelectCompForm') },
-        { name: 'Select.tsx', code: getRaw('components/Select') },
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('SelectCompForm/yup') },
+                { name: 'TextInput.tsx', code: getRaw('components/Select') },
+              ]}
+            >
+              <YupSelectCompForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('SelectCompForm/zod') },
+                { name: 'TextInput.tsx', code: getRaw('components/TextInput') },
+              ]}
+            >
+              <ZodSelectCompForm />
+            </Implementation>
+          ),
+        },
       ]}
-    >
-      <SelectCompForm />
-    </Implementation>
+    />
   </>
 );

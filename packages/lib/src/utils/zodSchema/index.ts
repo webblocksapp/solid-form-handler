@@ -92,7 +92,7 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
     const { type, getDefault } = getSchemaDef(_schema);
 
     if (type === 'effects') {
-      obj = buildDefault((_schema as ZodEffects<any>)._def.schema, obj);
+      obj = buildDefault((_schema as ZodEffects<any>)._def.schema, targetPath, obj);
     } else if (type === 'array') {
       const arrSchema = _schema as ZodArray<any>;
 

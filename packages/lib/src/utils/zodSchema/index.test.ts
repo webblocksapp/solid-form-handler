@@ -110,6 +110,18 @@ describe('zodSchema', () => {
     expect(validationSchema.getFieldDataType('contacts.1.age')).toBe('number');
   });
 
+  it('buildDefault CASE-9', () => {
+    const validationSchema = zodSchema(
+      z.object({
+        jsFramework: z.string().refine((value) => ['solidjs', 'reactjs', 'angular'].some((item) => item === value)),
+      })
+    );
+
+    expect(validationSchema.buildDefault()).toMatchObject({
+      jsFramework: '',
+    });
+  });
+
   it('isFieldFromSchema', () => {
     const validationSchema = zodSchema(
       z.object({

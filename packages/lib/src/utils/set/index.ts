@@ -1,8 +1,13 @@
 import { formatObjectPath } from '@utils';
 
 export const set = (object: any, path: string, value: any) => {
-  let obj = object;
   const arrPath = formatObjectPath(path).split('.');
+  const [firstKey] = arrPath;
+
+  if (object === undefined && !isNaN(firstKey as any)) object = [];
+  if (object === undefined && isNaN(firstKey as any)) object = {};
+
+  let obj = object;
 
   arrPath.forEach((key, i) => {
     const nextKey = arrPath[i + 1];

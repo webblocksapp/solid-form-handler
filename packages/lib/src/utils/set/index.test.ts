@@ -24,4 +24,12 @@ describe('set', () => {
   it('CASE-6', () => {
     expect(set([], '0.name', { isValid: false })).toMatchObject([{ name: { isValid: false } }]);
   });
+
+  it('CASE-7', () => {
+    expect(set(undefined, '0.name', { isValid: false })).toMatchObject([{ name: { isValid: false } }]);
+  });
+
+  it('CASE-8', () => {
+    expect(set(undefined, 'name.0', { isValid: false })).toMatchObject({ name: [{ isValid: false }] });
+  });
 });

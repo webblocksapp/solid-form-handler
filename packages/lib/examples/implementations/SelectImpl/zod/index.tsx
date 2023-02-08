@@ -4,7 +4,7 @@ import { zodSchema } from '@utils';
 import { z } from 'zod';
 
 const schema = z.object({
-  country: z.number().min(1, 'Country is required'),
+  country: z.coerce.number().min(1, 'Country is required'),
 });
 
 export const SelectImpl: Component = () => {

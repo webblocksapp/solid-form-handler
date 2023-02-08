@@ -1,4 +1,4 @@
-export { Form as CheckboxCompForm } from './CheckboxCompForm';
+export * from './CheckboxCompForm';
 export * from './CheckboxForm';
 export * from './CheckboxesForm';
 export * from './RadiosForm';

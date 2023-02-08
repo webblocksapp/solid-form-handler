@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { UserForm } from '@implementations';
+import { YupUserForm, ZodUserForm } from '@implementations';
 
 export const FormValidation: Component = () => (
   <>
@@ -12,14 +12,42 @@ export const FormValidation: Component = () => (
       defined data validations.{' '}
     </p>
     <p>The following example shows a basic usage:</p>
-    <Implementation
-      codeTabs={[
-        { name: 'UserForm.tsx', code: getRaw('UserForm/index.tsx') },
-        { name: 'schema.ts', code: getRaw('UserForm/schema.ts') },
-        { name: 'types.ts', code: getRaw('UserForm/types.ts') },
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation
+              codeTabs={[
+                {
+                  name: 'UserForm.tsx',
+                  code: getRaw('UserForm/yup/index.tsx'),
+                },
+                { name: 'schema.ts', code: getRaw('UserForm/yup/schema.ts') },
+                { name: 'types.ts', code: getRaw('UserForm/yup/types.ts') },
+              ]}
+            >
+              <YupUserForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation
+              codeTabs={[
+                {
+                  name: 'UserForm.tsx',
+                  code: getRaw('UserForm/zod/index.tsx'),
+                },
+                { name: 'schema.ts', code: getRaw('UserForm/zod/schema.ts') },
+              ]}
+            >
+              <ZodUserForm />
+            </Implementation>
+          ),
+        },
       ]}
-    >
-      <UserForm />
-    </Implementation>
+    />
   </>
 );

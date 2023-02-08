@@ -1,10 +1,10 @@
 import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
 import { userSchema } from './schema';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 
 export const UserForm: Component = () => {
-  const formHandler = useFormHandler(yupSchema(userSchema));
+  const formHandler = useFormHandler(zodSchema(userSchema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
@@ -36,6 +36,7 @@ export const UserForm: Component = () => {
   return (
     <>
       <form autocomplete="off" onSubmit={submit}>
+        <h4 class="mb-3">Using zod schema</h4>
         <div class="mb-3">
           <TextInput label="Name" name="name" formHandler={formHandler} />
         </div>

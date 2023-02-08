@@ -20,7 +20,6 @@
       "@layouts": ["src/layouts"],
       "@pages": ["src/pages"],
       "@routes": ["src/routes"],
-      "@schemas": ["src/schemas"],
       "@components/suid": ["src/components/suid"],
       "@utils": ["src/utils"]
     },

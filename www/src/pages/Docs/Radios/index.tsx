@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { RadiosCompForm } from '@implementations';
+import { YupRadiosCompForm, ZodRadiosCompForm } from '@implementations';
 
 export const Radios: Component = () => (
   <>
@@ -35,14 +35,35 @@ export const Radios: Component = () => (
       <code>&lt;Radios /&gt;</code> component for handling form data
       validations.
     </p>
-    <Implementation
-      codeTabs={[
-        { name: 'Form.tsx', code: getRaw('RadiosCompForm') },
-        { name: 'Radios.tsx', code: getRaw('components/Radios') },
-        { name: 'Radio.tsx', code: getRaw('components/Radio') },
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('RadiosCompForm/yup') },
+                { name: 'Radios.tsx', code: getRaw('components/Radios') },
+              ]}
+            >
+              <YupRadiosCompForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('RadiosCompForm/zod') },
+                { name: 'Radios.tsx', code: getRaw('components/Radios') },
+              ]}
+            >
+              <ZodRadiosCompForm />
+            </Implementation>
+          ),
+        },
       ]}
-    >
-      <RadiosCompForm />
-    </Implementation>
+    />
   </>
 );

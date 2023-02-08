@@ -1,22 +1,20 @@
 import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
-import * as yup from 'yup';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { z } from 'zod';
 import { Radios } from '@components';
 
-type Schema = {
-  country: number;
-  animal: number;
-  jsFramework: 'solidjs' | 'reactjs' | 'angular';
-};
-
-const schema: yup.SchemaOf<Schema> = yup.object({
-  country: yup.number().required().typeError('country is required'),
-  animal: yup.number().required().typeError('animal is required'),
-  jsFramework: yup.mixed().required().oneOf(['solidjs', 'reactjs', 'angular']),
+const schema = z.object({
+  country: z.number().min(1, 'country is required'),
+  animal: z.number().min(1, 'animal is required'),
+  jsFramework: z
+    .string()
+    .refine((value) =>
+      ['solidjs', 'reactjs', 'angular'].some((item) => item === value)
+    ),
 });
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler(yupSchema(schema));
+  const formHandler = useFormHandler(zodSchema(schema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
@@ -40,6 +38,7 @@ export const Form: Component = () => {
 
   return (
     <form autocomplete="off" onSubmit={submit}>
+      <h4 class="mb-3">Using zod schema</h4>
       <div class="mb-3">
         <Radios
           label="Choose a country"

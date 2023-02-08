@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, createSelector, For, splitProps } from 'solid-js';
+import { Component, createEffect, createSelector, createUniqueId, For, splitProps } from 'solid-js';
 import { Radio, RadioProps } from '@components/suid';
 import { createStore } from 'solid-js/store';
 import FormGroup from '@suid/material/FormGroup';
@@ -92,7 +92,7 @@ export const Radios: Component<RadiosProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

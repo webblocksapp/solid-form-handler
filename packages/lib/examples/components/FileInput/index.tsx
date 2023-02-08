@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, createSignal, JSX, splitProps } from 'solid-js';
+import { Component, createEffect, createSignal, createUniqueId, JSX, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 export interface FileInputProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> {
@@ -125,7 +125,7 @@ export const FileInput: Component<FileInputProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

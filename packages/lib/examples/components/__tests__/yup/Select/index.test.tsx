@@ -27,7 +27,7 @@ describe('Select with yup', () => {
   });
 
   it('Id is automatically generated', () => {
-    expect(select.id).toBe('country');
+    expect(select.id).toBeDefined();
   });
 
   it('Id is passed as prop', () => {

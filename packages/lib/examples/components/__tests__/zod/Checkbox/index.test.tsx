@@ -27,7 +27,7 @@ describe('Checkbox with yup', () => {
   });
 
   it('Id is automatically generated', () => {
-    expect(checkbox.id).toBe('subscribed');
+    expect(checkbox.id).toBeDefined();
   });
 
   it('Id is passed as prop', () => {

@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, createSignal, For, splitProps } from 'solid-js';
+import { Component, createEffect, createSignal, createUniqueId, For, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import SuidNativeSelect, { NativeSelectProps as SuidNativeSelectProps } from '@suid/material/NativeSelect';
 import FormHelperText from '@suid/material/FormHelperText';
@@ -109,7 +109,7 @@ export const Select: Component<SelectProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

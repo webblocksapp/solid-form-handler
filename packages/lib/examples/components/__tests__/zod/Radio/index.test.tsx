@@ -27,7 +27,7 @@ describe('Radio with yup', () => {
   });
 
   it('Id is automatically generated', () => {
-    expect(radio.id).toBe('gender');
+    expect(radio.id).toBeDefined();
   });
 
   it('Id is passed as prop', () => {

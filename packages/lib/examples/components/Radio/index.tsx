@@ -1,5 +1,5 @@
 import { FormHandler } from '@interfaces';
-import { Component, createEffect, JSX, splitProps } from 'solid-js';
+import { Component, createEffect, createUniqueId, JSX, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 export interface RadioProps extends Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type' | 'value'> {
@@ -106,7 +106,7 @@ export const Radio: Component<RadioProps> = (props) => {
    * Initializes the form field unique id.
    */
   createEffect(() => {
-    setStore('id', local.id || rest.name || '');
+    setStore('id', local.id || createUniqueId());
   });
 
   /**

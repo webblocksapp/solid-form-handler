@@ -27,7 +27,7 @@ describe('TextInput with yup', () => {
   });
 
   it('Id is automatically generated', () => {
-    expect(textInput.id).toBe('name');
+    expect(textInput.id).toBeDefined();
   });
 
   it('Id is passed as prop', () => {

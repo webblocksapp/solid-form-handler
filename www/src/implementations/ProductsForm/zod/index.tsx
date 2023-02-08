@@ -1,11 +1,10 @@
 import { Component, For } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
-import { Product } from './types';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
 import { productSchema } from './schema';
 import { TextInput } from '@components';
 
 export const ProductsForm: Component = () => {
-  const formHandler = useFormHandler<Product[]>(yupSchema(productSchema));
+  const formHandler = useFormHandler(zodSchema(productSchema));
   const { formData } = formHandler;
   const limit = 3;
 
@@ -34,6 +33,7 @@ export const ProductsForm: Component = () => {
   return (
     <>
       <form autocomplete="off" onSubmit={submit}>
+        <h4 class="mb-3">Using zod schema</h4>
         <h3>
           Products inventory {formData().length} of {limit}
         </h3>

@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Code, Implementation } from '@components';
+import { Code, Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { CheckboxForm } from '@implementations';
+import { YupCheckboxForm, ZodCheckboxForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingCheckbox: Component = () => (
@@ -25,14 +25,54 @@ export const ValidatingCheckbox: Component = () => (
       prop needs to be set, for this scenario is better to build a custom{' '}
       <Link href="../single-checkbox">&lt;Checkbox /&gt;</Link> component.
     </p>
-    <Code content={getRaw('ValidatingCheckbox1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('ValidatingCheckbox1')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('ValidatingCheckbox1')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
     <p>
       You can check the full implementation in the code tab. For doing checkbox
       validation more legible, this logic can be abstracted into a{' '}
       <Link href="../single-checkbox">Checkbox.tsx</Link> component.
     </p>
-    <Implementation code={getRaw('CheckboxForm')}>
-      <CheckboxForm />
-    </Implementation>
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation code={getRaw('CheckboxForm/yup')}>
+              <YupCheckboxForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation code={getRaw('CheckboxForm/zod')}>
+              <ZodCheckboxForm />
+            </Implementation>
+          ),
+        },
+      ]}
+    />
   </>
 );

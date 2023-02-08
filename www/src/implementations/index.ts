@@ -1,5 +1,5 @@
 export { Form as CheckboxCompForm } from './CheckboxCompForm';
-export { Form as CheckboxForm } from './CheckboxForm';
+export * from './CheckboxForm';
 export { Form as CheckboxesForm } from './CheckboxesForm';
 export { Form as RadiosForm } from './RadiosForm';
 export * from './SingleSelectForm';

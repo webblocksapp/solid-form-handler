@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
-import { Implementation } from '@components';
-import { TextInputCompForm } from '@implementations';
+import { Implementation, Tabs } from '@components';
+import { YupTextInputCompForm, ZodTextInputCompForm } from '@implementations';
 import { getRaw } from '@utils';
 
 export const TextInput: Component = () => (
@@ -32,13 +32,35 @@ export const TextInput: Component = () => (
       <code>formHandler</code> object to the <code>&lt;TextInput /&gt;</code>{' '}
       component for handling form data validations.
     </p>
-    <Implementation
-      codeTabs={[
-        { name: 'Form.tsx', code: getRaw('TextInputCompForm') },
-        { name: 'TextInput.tsx', code: getRaw('components/TextInput') },
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('TextInputCompForm/yup') },
+                { name: 'TextInput.tsx', code: getRaw('components/TextInput') },
+              ]}
+            >
+              <YupTextInputCompForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation
+              codeTabs={[
+                { name: 'Form.tsx', code: getRaw('TextInputCompForm/zod') },
+                { name: 'TextInput.tsx', code: getRaw('components/TextInput') },
+              ]}
+            >
+              <ZodTextInputCompForm />
+            </Implementation>
+          ),
+        },
       ]}
-    >
-      <TextInputCompForm />
-    </Implementation>
+    />
   </>
 );

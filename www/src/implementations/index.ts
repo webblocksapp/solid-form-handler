@@ -4,7 +4,7 @@ export * from './CheckboxesForm';
 export * from './RadiosForm';
 export * from './SingleSelectForm';
 export * from './SingleTextInputForm';
-export { Form as TextInputCompForm } from './TextInputCompForm';
+export * from './TextInputCompForm';
 export { Form as SelectCompForm } from './SelectCompForm';
 export { Form as RadiosCompForm } from './RadiosCompForm';
 export { Form as CheckboxesCompForm } from './CheckboxesCompForm';

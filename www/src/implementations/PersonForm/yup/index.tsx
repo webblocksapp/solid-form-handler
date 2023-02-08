@@ -37,6 +37,7 @@ export const PersonForm: Component = () => {
 
   return (
     <form class="container" onSubmit={submit}>
+      <h4 class="mb-3">Using yup schema</h4>
       <div class="row gy-3">
         <div class="col-sm-12 col-md-6">
           <TextInput label="Name" name="name" formHandler={formHandler} />

@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
-import { Code, Implementation } from '@components';
+import { Code, Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
-import { SingleSelectForm } from '@implementations';
+import { YupSingleSelectForm, ZodSingleSelectForm } from '@implementations';
 import { Link } from '@solidjs/router';
 
 export const ValidatingSelect: Component = () => (
@@ -15,14 +15,54 @@ export const ValidatingSelect: Component = () => (
       method and error rendering is handled by the methods{' '}
       <code>fieldHasError</code> and <code>getFieldError</code>.
     </p>
-    <Code content={getRaw('ValidatingSelect1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('ValidatingSelect1')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('ValidatingSelect1')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
     <p>
       You can check the full implementation in the code tab. For doing select
       validation more legible, this logic can be abstracted into a{' '}
       <Link href="/docs/select">Select.tsx</Link> component.
     </p>
-    <Implementation code={getRaw('SingleSelectForm')}>
-      <SingleSelectForm />
-    </Implementation>
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation code={getRaw('SingleSelectForm/yup')}>
+              <YupSingleSelectForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation code={getRaw('SingleSelectForm/zod')}>
+              <ZodSingleSelectForm />
+            </Implementation>
+          ),
+        },
+      ]}
+    />
   </>
 );

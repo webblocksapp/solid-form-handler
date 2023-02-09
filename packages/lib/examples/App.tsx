@@ -14,7 +14,7 @@ import {
   SortableFieldsetsFormImpl,
   VanillaCompFormImpl,
   FieldsetsFormStress1,
-  ConditionalFormImpl,
+  YupConditionalFormImpl,
   ReferralsForm,
   TemperatureConversionImpl,
   DependantValidationImpl,
@@ -23,6 +23,7 @@ import {
   SuidFormImpl,
   YupTextInputImpl,
   ZodTextInputImpl,
+  ZodConditionalFormImpl,
 } from '@implementations';
 import './App.css';
 
@@ -125,7 +126,7 @@ export const App: Component = () => {
             <Route path="sortable-fieldsets-form-impl" element={<SortableFieldsetsFormImpl />} />
             <Route path="vanilla-comp-form-impl" element={<VanillaCompFormImpl />} />
             <Route path="fieldsets-form-stress-1" element={<FieldsetsFormStress1 />} />
-            <Route path="conditional-form-impl" element={<ConditionalFormImpl />} />
+            <Route path="conditional-form-impl" element={<YupConditionalFormImpl />} />
             <Route path="referrals-form" element={<ReferralsForm />} />
             <Route path="checkbox-comp-form" element={<CheckboxCompForm />} />
             <Route path="temperature-conversion" element={<TemperatureConversionImpl />} />
@@ -147,7 +148,7 @@ export const App: Component = () => {
             {/* <Route path="sortable-fieldsets-form-impl" element={<ZodSortableFieldsetsFormImpl />} /> */}
             {/* <Route path="vanilla-comp-form-impl" element={<ZodVanillaCompFormImpl />} /> */}
             {/* <Route path="fieldsets-form-stress-1" element={<ZodFieldsetsFormStress1 />} /> */}
-            {/* <Route path="conditional-form-impl" element={<ZodConditionalFormImpl />} /> */}
+            <Route path="conditional-form-impl" element={<ZodConditionalFormImpl />} />
             {/* <Route path="referrals-form" element={<ZodReferralsForm />} /> */}
             {/* <Route path="checkbox-comp-form" element={<ZodCheckboxCompForm />} /> */}
             {/* <Route path="temperature-conversion" element={<ZodTemperatureConversionImpl />} /> */}

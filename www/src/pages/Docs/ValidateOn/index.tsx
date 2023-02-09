@@ -1,5 +1,5 @@
-import { Implementation } from '@components';
-import { ValidateOnForm } from '@implementations';
+import { Implementation, Tabs } from '@components';
+import { YupValidateOnForm, ZodValidateOnForm } from '@implementations';
 import { Link } from '@solidjs/router';
 import { getRaw } from '@utils';
 import { Component } from 'solid-js';
@@ -26,18 +26,52 @@ export const ValidateOn: Component = () => {
         In the following example, the form handler is configured to validate
         only at on blur event.
       </p>
-      <Implementation
-        codeTabs={[
+      <Tabs
+        tabs={[
           {
-            name: 'Form.tsx',
-            code: getRaw('ValidateOnForm/index.tsx'),
+            text: 'yup',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('ValidateOnForm/yup/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('ValidateOnForm/yup/schema.ts'),
+                  },
+                  {
+                    name: 'types.ts',
+                    code: getRaw('ValidateOnForm/yup/types.ts'),
+                  },
+                ]}
+              >
+                <YupValidateOnForm />
+              </Implementation>
+            ),
           },
-          { name: 'schema.ts', code: getRaw('ValidateOnForm/schema.ts') },
-          { name: 'types.ts', code: getRaw('ValidateOnForm/types.ts') },
+          {
+            text: 'zod',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('ValidateOnForm/zod/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('ValidateOnForm/zod/schema.ts'),
+                  },
+                ]}
+              >
+                <ZodValidateOnForm />
+              </Implementation>
+            ),
+          },
         ]}
-      >
-        <ValidateOnForm />
-      </Implementation>
+      />
     </>
   );
 };

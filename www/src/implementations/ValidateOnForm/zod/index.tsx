@@ -1,10 +1,10 @@
 import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
 import { TextInput } from '@components';
 import { schema } from './schema';
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler(yupSchema(schema), {
+  const formHandler = useFormHandler(zodSchema(schema), {
     validateOn: ['blur'],
   });
   const { formData } = formHandler;
@@ -31,6 +31,7 @@ export const Form: Component = () => {
   return (
     <>
       <form onSubmit={submit}>
+        <h4 class="mb-3">Using zod schema</h4>
         <div class="row gy-3">
           <div class="col-sm-12 col-md-6">
             <TextInput label="Name" name="name" formHandler={formHandler} />

@@ -9,7 +9,7 @@ export * from './SelectCompForm';
 export * from './RadiosCompForm';
 export * from './CheckboxesCompForm';
 export * from './PasswordConfirmForm';
-export { Form as ValidateOnForm } from './ValidateOnForm';
+export * from './ValidateOnForm';
 export * from './ConditionalValidationForm';
 export { Form as ValidationDelayForm } from './ValidationDelayForm';
 export { Form as MultiStepForm } from './MultiStepForm';

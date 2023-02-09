@@ -1,5 +1,8 @@
-import { Implementation } from '@components';
-import { ValidationDelayForm } from '@implementations';
+import { Implementation, Tabs } from '@components';
+import {
+  YupValidationDelayForm,
+  ZodValidationDelayForm,
+} from '@implementations';
 import { getRaw } from '@utils';
 import { Component } from 'solid-js';
 
@@ -12,24 +15,52 @@ export const ValidationDelay: Component = () => {
         change. The form handler will debounce them, specially if you need to
         work with async validations.
       </p>
-      <Implementation
-        codeTabs={[
+      <Tabs
+        tabs={[
           {
-            name: 'Form.tsx',
-            code: getRaw('ValidationDelayForm/index.tsx'),
+            text: 'yup',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('ValidationDelayForm/yup/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('ValidationDelayForm/yup/schema.ts'),
+                  },
+                  {
+                    name: 'types.ts',
+                    code: getRaw('ValidationDelayForm/yup/types.ts'),
+                  },
+                ]}
+              >
+                <YupValidationDelayForm />
+              </Implementation>
+            ),
           },
           {
-            name: 'schema.ts',
-            code: getRaw('ValidationDelayForm/schema.ts'),
-          },
-          {
-            name: 'types.ts',
-            code: getRaw('ValidationDelayForm/types.ts'),
+            text: 'zod',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('ValidationDelayForm/zod/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('ValidationDelayForm/zod/schema.ts'),
+                  },
+                ]}
+              >
+                <ZodValidationDelayForm />
+              </Implementation>
+            ),
           },
         ]}
-      >
-        <ValidationDelayForm />
-      </Implementation>
+      />
     </>
   );
 };

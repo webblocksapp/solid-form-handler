@@ -11,7 +11,7 @@ export * from './CheckboxesCompForm';
 export * from './PasswordConfirmForm';
 export * from './ValidateOnForm';
 export * from './ConditionalValidationForm';
-export { Form as ValidationDelayForm } from './ValidationDelayForm';
+export * from './ValidationDelayForm';
 export { Form as MultiStepForm } from './MultiStepForm';
 export { Form as SuidUserForm } from './SuidUserForm';
 export * from './ProductsForm';

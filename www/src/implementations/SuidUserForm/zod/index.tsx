@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
 import { userSchema } from './schema';
 import {
   Checkbox,
@@ -15,7 +15,7 @@ import Box from '@suid/material/Box';
 import Typography from '@suid/material/Typography';
 
 export const Form: Component = () => {
-  const formHandler = useFormHandler(yupSchema(userSchema));
+  const formHandler = useFormHandler(zodSchema(userSchema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {
@@ -47,6 +47,9 @@ export const Form: Component = () => {
   return (
     <>
       <form autocomplete="off" onSubmit={submit}>
+        <Box mb={3}>
+          <Typography fontWeight={'bold'}>Using zod schema:</Typography>
+        </Box>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextInput

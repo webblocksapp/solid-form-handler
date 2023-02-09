@@ -13,7 +13,7 @@ export * from './ValidateOnForm';
 export * from './ConditionalValidationForm';
 export * from './ValidationDelayForm';
 export * from './MultiStepForm';
-export { Form as SuidUserForm } from './SuidUserForm';
+export * from './SuidUserForm';
 export * from './ProductsForm';
 export * from './UserForm';
 export * from './PersonForm';

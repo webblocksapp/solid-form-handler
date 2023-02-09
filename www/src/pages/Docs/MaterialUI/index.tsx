@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
 import { SUID_URL } from '@constants';
-import { CodeTabs, Implementation } from '@components';
-import { SuidUserForm } from '@implementations';
+import { CodeTabs, Implementation, Tabs } from '@components';
+import { YupSuidUserForm, ZodSuidUserForm } from '@implementations';
 import { getRaw } from '@utils';
 
 export const MaterialUI: Component = () => (
@@ -24,15 +24,52 @@ export const MaterialUI: Component = () => (
       The following example shows how to build your form field components using
       the form handler and SUID:
     </p>
-    <Implementation
-      codeTabs={[
-        { name: 'Form.tsx', code: getRaw('SuidUserForm/index.tsx') },
-        { name: 'schema.ts', code: getRaw('SuidUserForm/schema.ts') },
-        { name: 'types.ts', code: getRaw('SuidUserForm/types.ts') },
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Implementation
+              codeTabs={[
+                {
+                  name: 'Form.tsx',
+                  code: getRaw('SuidUserForm/yup/index.tsx'),
+                },
+                {
+                  name: 'schema.ts',
+                  code: getRaw('SuidUserForm/yup/schema.ts'),
+                },
+                {
+                  name: 'types.ts',
+                  code: getRaw('SuidUserForm/yup/types.ts'),
+                },
+              ]}
+            >
+              <YupSuidUserForm />
+            </Implementation>
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Implementation
+              codeTabs={[
+                {
+                  name: 'Form.tsx',
+                  code: getRaw('SuidUserForm/zod/index.tsx'),
+                },
+                {
+                  name: 'schema.ts',
+                  code: getRaw('SuidUserForm/zod/schema.ts'),
+                },
+              ]}
+            >
+              <ZodSuidUserForm />
+            </Implementation>
+          ),
+        },
       ]}
-    >
-      <SuidUserForm />
-    </Implementation>
+    />
     <p class="mt-3">
       <b>Components code:</b>
     </p>

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 import { z } from 'z';
 
@@ -17,7 +17,7 @@ export const userSchema = z.object({
 });
 
 export const App: Component = () => {
-  const formHandler = useFormHandler(zodSchema(userSchema));
+  const formHandler = useFormHandler(__VALIDATOR__Schema(userSchema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 import * as yup from 'yup';
 
@@ -28,7 +28,7 @@ export const userSchema: yup.SchemaOf<User> = yup.object({
 });
 
 export const App: Component = () => {
-  const formHandler = useFormHandler(yupSchema(userSchema));
+  const formHandler = useFormHandler(__VALIDATOR__Schema(userSchema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

@@ -34,7 +34,7 @@ export const Tabs: Component<TabsProps> = (props) => {
   return (
     <div class="tabs-wrapper" {...rest} classList={{ 'mb-4': hasChildren() }}>
       <div class="tabs d-flex overflow-auto">
-        <div class="nav nav-tabs flex-grow-1 d-flex justify-content-end ps-2 pe-2 pt-2">
+        <div class="nav nav-tabs flex-grow-1 d-flex justify-content-end ps-2 pe-2">
           <For each={tabs()}>
             {(tab, index) => (
               <div class="nav-item">

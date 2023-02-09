@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
 import { getRaw } from '@utils';
-import { Code } from '@components';
+import { Code, Tabs } from '@components';
 
 export const UseFormHandler: Component = () => (
   <>
@@ -31,10 +31,79 @@ export const UseFormHandler: Component = () => (
     <p>
       <b>Implementation:</b>
     </p>
-    <Code content={getRaw('useFormHandler1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('useFormHandler1')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('useFormHandler1')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
     <p>Restricting validation to specific events:</p>
-    <Code content={getRaw('useFormHandler2')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('useFormHandler2')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('useFormHandler2')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
     <p>Debouncing validation:</p>
-    <Code content={getRaw('useFormHandler3')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('useFormHandler3')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('useFormHandler3')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
   </>
 );

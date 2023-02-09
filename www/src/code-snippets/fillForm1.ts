@@ -1,5 +1,5 @@
 //@ts-nocheck
-const formHandler = useFormHandler(yupSchema(userSchema));
+const formHandler = useFormHandler(__VALIDATOR__Schema(userSchema));
 formHandler.fillForm({ name: 'John', age: 28 });
 console.log(formHandler.formData());
 /**

@@ -16,11 +16,23 @@ export const QuickStart: Component = () => (
       tabs={[
         {
           text: 'yup',
-          children: <Code noBorder content={getRaw('quickStartYup1')} />,
+          children: (
+            <Code
+              noBorder
+              content={getRaw('quickStartYup1')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
         },
         {
           text: 'zod',
-          children: <Code noBorder content={getRaw('quickStartZod1')} />,
+          children: (
+            <Code
+              noBorder
+              content={getRaw('quickStartZod1')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
         },
       ]}
     />

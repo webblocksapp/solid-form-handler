@@ -10,3 +10,7 @@
   cursor: pointer;
   white-space: nowrap;
 }
+
+.tab-content .code-snippet {
+  margin-bottom: 0px;
+}

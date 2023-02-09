@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
 import { getRaw } from '@utils';
-import { Code } from '@components';
+import { Code, Tabs } from '@components';
 
 export const FillForm: Component = () => (
   <>
@@ -14,12 +14,47 @@ export const FillForm: Component = () => (
       <b>Implementation:</b>
     </p>
     <p>Having the following schema:</p>
-    <Code content={getRaw('schema1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: <Code noBorder content={getRaw('schemaYup1')} />,
+        },
+        {
+          text: 'zod',
+          children: <Code noBorder content={getRaw('schemaZod1')} />,
+        },
+      ]}
+    />
     <p>
       The form has the fields <code>name</code> and <code>age</code>, must be
       filled completely:
     </p>
-    <Code content={getRaw('fillForm1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('fillForm1')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('fillForm1')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
+
     <p>
       <code>options</code> are composed by:
     </p>

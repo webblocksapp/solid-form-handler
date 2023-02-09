@@ -1,5 +1,4 @@
 //@ts-nocheck
-const formHandler = useFormHandler(yupSchema(userSchema));
 formHandler.validateForm();
 
 createEffect(() => {

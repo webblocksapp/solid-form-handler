@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
 import { getRaw } from '@utils';
-import { Code } from '@components';
+import { Code, Tabs } from '@components';
 
 export const FormData: Component = () => (
   <>
@@ -17,9 +17,56 @@ export const FormData: Component = () => (
       object through the given schema. You can access to a field value with dot
       notation without the risk of being undefined:
     </p>
-    <Code content={getRaw('formData1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('formData1')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('formData1')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
+
     <p>Also for nested objects, using the following schema as example:</p>
-    <Code content={getRaw('schema2')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('schemaYup2')}
+              mapReplace={{ __VALIDATOR__: 'yup' }}
+            />
+          ),
+        },
+        {
+          text: 'zod',
+          children: (
+            <Code
+              noBorder
+              content={getRaw('schemaZod2')}
+              mapReplace={{ __VALIDATOR__: 'zod' }}
+            />
+          ),
+        },
+      ]}
+    />
     <p>You can access by dot notation to any of the form data values:</p>
     <Code content={getRaw('formData2')} />
   </>

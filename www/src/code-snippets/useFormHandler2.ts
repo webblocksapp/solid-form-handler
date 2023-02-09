@@ -1,7 +1,7 @@
 //@ts-nocheck
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
 
-const formHandler = useFormHandler(yupSchema(userSchema), {
+const formHandler = useFormHandler(__VALIDATOR__Schema(userSchema), {
   //Events are an array of strings so you can set custom event types.
   validateOn: ['input'],
 });

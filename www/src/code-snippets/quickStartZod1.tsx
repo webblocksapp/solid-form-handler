@@ -1,35 +1,23 @@
 //@ts-nocheck
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
-import * as yup from 'yup';
+import { z } from 'z';
 
-type User = {
-  name: string;
-  email: string;
-  country: number;
-  favoriteFoods: number[];
-  gender: 'male' | 'female' | 'other';
-  subscribed: boolean;
-};
-
-export const userSchema: yup.SchemaOf<User> = yup.object({
-  name: yup.string().required('Required field'),
-  email: yup.string().email('Invalid email').required('Required field'),
-  country: yup
-    .number()
-    .required()
-    .required('Required field')
-    .typeError('Country is required'),
-  favoriteFoods: yup.array(yup.number().required('Required field')).min(2),
-  gender: yup
-    .mixed()
-    .oneOf(['male', 'female', 'other'], 'Invalid value')
-    .required('Required field'),
-  subscribed: yup.boolean().required('Required field'),
+export const userSchema = z.object({
+  name: z.string().min(1, 'Required field'),
+  email: z.string().email(),
+  country: z.coerce.number().min(1, 'Required field'),
+  favoriteFoods: z.array(z.number()).min(2),
+  gender: z
+    .string()
+    .refine((value) =>
+      ['male', 'female', 'other'].some((item) => item === value)
+    ),
+  subscribed: z.boolean(),
 });
 
 export const App: Component = () => {
-  const formHandler = useFormHandler(yupSchema(userSchema));
+  const formHandler = useFormHandler(zodSchema(userSchema));
   const { formData } = formHandler;
 
   const submit = async (event: Event) => {

@@ -1,4 +1,4 @@
-import { Code } from '@components';
+import { Code, Tabs } from '@components';
 import { NavLink } from '@solidjs/router';
 import { getRaw } from '@utils';
 import { Component } from 'solid-js';
@@ -12,6 +12,17 @@ export const QuickStart: Component = () => (
       code given on the docs website. The following is a final implementation of
       them:
     </p>
-    <Code content={getRaw('quickStart1')} />
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: <Code noBorder content={getRaw('quickStartYup1')} />,
+        },
+        {
+          text: 'zod',
+          children: <Code noBorder content={getRaw('quickStartZod1')} />,
+        },
+      ]}
+    />
   </>
 );

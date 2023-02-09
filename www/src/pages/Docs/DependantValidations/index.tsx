@@ -1,7 +1,9 @@
-import { Implementation } from '@components';
+import { Implementation, Tabs } from '@components';
 import {
-  ConditionalValidationForm,
-  PasswordConfirmForm,
+  YupConditionalValidationForm,
+  ZodConditionalValidationForm,
+  YupPasswordConfirmForm,
+  ZodPasswordConfirmForm,
 } from '@implementations';
 import { getRaw } from '@utils';
 import { Component } from 'solid-js';
@@ -17,41 +19,103 @@ export const DependantValidations: Component = () => {
         interaction the other is validated and vice versa. At this point, the{' '}
         <code>triggers</code> property defined on each form component is used.
       </p>
-      <Implementation
-        codeTabs={[
+      <Tabs
+        tabs={[
           {
-            name: 'Form.tsx',
-            code: getRaw('PasswordConfirmForm/index.tsx'),
+            text: 'yup',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('PasswordConfirmForm/yup/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('PasswordConfirmForm/yup/schema.ts'),
+                  },
+                  {
+                    name: 'types.ts',
+                    code: getRaw('PasswordConfirmForm/yup/types.ts'),
+                  },
+                ]}
+              >
+                <YupPasswordConfirmForm />
+              </Implementation>
+            ),
           },
-          { name: 'schema.ts', code: getRaw('PasswordConfirmForm/schema.ts') },
-          { name: 'types.ts', code: getRaw('PasswordConfirmForm/types.ts') },
+          {
+            text: 'zod',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('PasswordConfirmForm/zod/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('PasswordConfirmForm/zod/schema.ts'),
+                  },
+                ]}
+              >
+                <ZodPasswordConfirmForm />
+              </Implementation>
+            ),
+          },
         ]}
-      >
-        <PasswordConfirmForm />
-      </Implementation>
+      />
       <p class="mt-4">
         Also you can have scenarios where you have a conditional validation. The
         following example makes required the <code>email</code> field when the{' '}
         <code>isAdult</code> field is marked.
       </p>
-      <Implementation
-        codeTabs={[
+      <Tabs
+        tabs={[
           {
-            name: 'Form.tsx',
-            code: getRaw('ConditionalValidationForm/index.tsx'),
+            text: 'yup',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('ConditionalValidationForm/yup/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('ConditionalValidationForm/yup/schema.ts'),
+                  },
+                  {
+                    name: 'types.ts',
+                    code: getRaw('ConditionalValidationForm/yup/types.ts'),
+                  },
+                ]}
+              >
+                <YupConditionalValidationForm />
+              </Implementation>
+            ),
           },
           {
-            name: 'schema.ts',
-            code: getRaw('ConditionalValidationForm/schema.ts'),
-          },
-          {
-            name: 'types.ts',
-            code: getRaw('ConditionalValidationForm/types.ts'),
+            text: 'zod',
+            children: (
+              <Implementation
+                codeTabs={[
+                  {
+                    name: 'Form.tsx',
+                    code: getRaw('ConditionalValidationForm/zod/index.tsx'),
+                  },
+                  {
+                    name: 'schema.ts',
+                    code: getRaw('ConditionalValidationForm/zod/schema.ts'),
+                  },
+                ]}
+              >
+                <ZodConditionalValidationForm />
+              </Implementation>
+            ),
           },
         ]}
-      >
-        <ConditionalValidationForm />
-      </Implementation>
+      />
     </>
   );
 };

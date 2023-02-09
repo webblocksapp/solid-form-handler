@@ -1,7 +1,6 @@
 import { createHtmlPlugin } from 'vite-plugin-html';
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import dynamicImport from 'vite-plugin-dynamic-import';
 import solidPlugin from 'vite-plugin-solid';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -9,7 +8,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       solidPlugin(),
-      dynamicImport(),
       tsconfigPaths({ root: __dirname }),
       createHtmlPlugin({
         template: 'index.html',

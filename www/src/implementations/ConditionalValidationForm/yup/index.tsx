@@ -43,6 +43,7 @@ export const Form: Component = () => {
 
   return (
     <form onSubmit={submit}>
+      <h4 class="mb-3">Using yup schema</h4>
       <div class="row gy-3">
         <div class="col-sm-12">
           <Checkbox

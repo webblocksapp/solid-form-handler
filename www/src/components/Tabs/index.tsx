@@ -1,3 +1,4 @@
+import { Tab } from '@interfaces';
 import {
   Component,
   createSignal,
@@ -12,24 +13,29 @@ import './index.css';
 
 export interface TabsProps
   extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'> {
-  tabs: Array<{ text: string; children?: JSXElement }>;
+  tabs: Tab[];
   onChange?: (index: number) => void;
 }
 
 export const Tabs: Component<TabsProps> = (props) => {
+  const [tabs, setTabs] = createSignal<Tab[]>([]);
   const [tabIndex, setTabIndex] = createSignal<number>(0);
   const [hasChildren, setHasChildren] = createSignal<boolean>(false);
   const [local, rest] = splitProps(props, ['tabs', 'onChange']);
 
   createEffect(() => {
-    setHasChildren(props.tabs.some((tab) => Boolean(tab.children)));
+    setTabs(props.tabs);
+  });
+
+  createEffect(() => {
+    setHasChildren(tabs().some((tab) => Boolean(tab.children)));
   });
 
   return (
     <div class="tabs-wrapper" {...rest} classList={{ 'mb-4': hasChildren() }}>
       <div class="tabs d-flex overflow-auto">
         <div class="nav nav-tabs flex-grow-1 d-flex justify-content-end ps-2 pe-2 pt-2">
-          <For each={local.tabs}>
+          <For each={tabs()}>
             {(tab, index) => (
               <div class="nav-item">
                 <span
@@ -49,7 +55,7 @@ export const Tabs: Component<TabsProps> = (props) => {
       </div>
       <Show when={hasChildren()}>
         <div class="tab-content border border-top-0">
-          <For each={props.tabs}>
+          <For each={tabs()}>
             {(tab, i) => (
               <div
                 classList={{

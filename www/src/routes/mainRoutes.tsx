@@ -1,29 +1,85 @@
 import { RouteDefinition } from '@solidjs/router';
 import { DOCS_MENU, API_MENU, EXAMPLES_MENU } from '@constants';
-import { lazyImport } from '@utils';
+import { DocsLayout, MainLayout } from '@layouts';
+import {
+  Checkbox,
+  Checkboxes,
+  Radios,
+  Redirect,
+  Select,
+  TextInput,
+} from '@components';
+import {
+  AddFieldset,
+  Components,
+  DependantValidations,
+  DynamicForm,
+  DynamicNestedForm,
+  FieldHasError,
+  FillForm,
+  FormData,
+  FormHasChanges,
+  FormIsFilling,
+  FormIsResetting,
+  FormIsValidating,
+  FormValidation,
+  GetFieldDefaultValue,
+  GetFieldError,
+  GetFieldValue,
+  GetFormErrors,
+  GetFormState,
+  Introduction,
+  IsFieldInvalid,
+  IsFieldValidating,
+  IsFormInvalid,
+  MaterialUI,
+  MoveFieldset,
+  NestedFormValidation,
+  QuickStart,
+  RefreshFormField,
+  RemoveFieldset,
+  ResetForm,
+  SetFieldDefaultValue,
+  SetFieldTriggers,
+  SetFieldValue,
+  Setup,
+  TouchField,
+  UseFormHandler,
+  ValidateField,
+  ValidateForm,
+  ValidateOn,
+  ValidatingCheckbox,
+  ValidatingCheckboxes,
+  ValidatingMultiStepForm,
+  ValidatingRadios,
+  ValidatingSelect,
+  ValidatingTextInput,
+  ValidationDelay,
+  Validations,
+} from '@pages';
 
 export const mainRoutes: RouteDefinition[] = [
   {
     path: '',
-    component: lazyImport('layouts/MainLayout'),
+    component: MainLayout,
     children: [
       {
         path: '',
-        component: lazyImport('components/Redirect'),
+        component: Redirect,
         data: () => ({
           href: 'docs',
         }),
       },
       {
         path: 'home',
-        component: lazyImport('components/Redirect'),
+        component: Redirect,
         data: () => ({
           href: 'docs',
         }),
       },
       {
         path: 'docs',
-        component: lazyImport('layouts/DocsLayout'),
+        component: DocsLayout,
         data: () => ({
           headerText: 'Documentation',
           menu: DOCS_MENU,
@@ -32,213 +88,213 @@ export const mainRoutes: RouteDefinition[] = [
         children: [
           {
             path: '',
-            component: lazyImport('components/Redirect'),
+            component: Redirect,
             data: () => ({
               href: 'introduction',
             }),
           },
           {
             path: 'introduction',
-            component: lazyImport('pages/Docs/Introduction'),
+            component: Introduction,
           },
-          { path: 'setup', component: lazyImport('pages/Docs/Setup') },
+          { path: 'setup', component: Setup },
           {
             path: 'quick-start',
-            component: lazyImport('pages/Docs/QuickStart'),
+            component: QuickStart,
           },
           {
             path: 'validations',
-            component: lazyImport('pages/Docs/Validations'),
+            component: Validations,
           },
           {
             path: 'validating-text-input',
-            component: lazyImport('pages/Docs/ValidatingTextInput'),
+            component: ValidatingTextInput,
           },
           {
             path: 'validating-select',
-            component: lazyImport('pages/Docs/ValidatingSelect'),
+            component: ValidatingSelect,
           },
           {
             path: 'validating-single-checkbox',
-            component: lazyImport('pages/Docs/ValidatingCheckbox'),
+            component: ValidatingCheckbox,
           },
           {
             path: 'validating-checkboxes',
-            component: lazyImport('pages/Docs/ValidatingCheckboxes'),
+            component: ValidatingCheckboxes,
           },
           {
             path: 'validating-radios',
-            component: lazyImport('pages/Docs/ValidatingRadios'),
+            component: ValidatingRadios,
           },
           {
             path: 'components',
-            component: lazyImport('pages/Docs/Components'),
+            component: Components,
           },
-          { path: 'text-input', component: lazyImport('pages/Docs/TextInput') },
-          { path: 'select', component: lazyImport('pages/Docs/Select') },
+          { path: 'text-input', component: TextInput },
+          { path: 'select', component: Select },
           {
             path: 'single-checkbox',
-            component: lazyImport('pages/Docs/Checkbox'),
+            component: Checkbox,
           },
           {
             path: 'checkboxes',
-            component: lazyImport('pages/Docs/Checkboxes'),
+            component: Checkboxes,
           },
-          { path: 'radios', component: lazyImport('pages/Docs/Radios') },
+          { path: 'radios', component: Radios },
           {
             path: 'form-validation',
-            component: lazyImport('pages/Docs/FormValidation'),
+            component: FormValidation,
           },
           {
             path: 'dynamic-form',
-            component: lazyImport('pages/Docs/DynamicForm'),
+            component: DynamicForm,
           },
           {
             path: 'nested-form-validation',
-            component: lazyImport('pages/Docs/NestedFormValidation'),
+            component: NestedFormValidation,
           },
           {
             path: 'dynamic-nested-form',
-            component: lazyImport('pages/Docs/DynamicNestedForm'),
+            component: DynamicNestedForm,
           },
           {
             path: 'dependant-validations',
-            component: lazyImport('pages/Docs/DependantValidations'),
+            component: DependantValidations,
           },
           {
             path: 'validate-on',
-            component: lazyImport('pages/Docs/ValidateOn'),
+            component: ValidateOn,
           },
           {
             path: 'validation-delay',
-            component: lazyImport('pages/Docs/ValidationDelay'),
+            component: ValidationDelay,
           },
           {
             path: 'validating-multi-step-form',
-            component: lazyImport('pages/Docs/ValidatingMultiStepForm'),
+            component: ValidatingMultiStepForm,
           },
           {
             path: 'material-ui',
-            component: lazyImport('pages/Docs/MaterialUI'),
+            component: MaterialUI,
           },
         ],
       },
       {
         path: 'api',
-        component: lazyImport('layouts/DocsLayout'),
+        component: DocsLayout,
         data: () => ({ headerText: 'API', menu: API_MENU }),
         children: [
           {
             path: '',
-            component: lazyImport('components/Redirect'),
+            component: Redirect,
             data: () => ({
               href: 'use-form-handler',
             }),
           },
           {
             path: 'use-form-handler',
-            component: lazyImport('pages/Api/UseFormHandler'),
+            component: UseFormHandler,
           },
           {
             path: 'add-fieldset',
-            component: lazyImport('pages/Api/AddFieldset'),
+            component: AddFieldset,
           },
           {
             path: 'field-has-error',
-            component: lazyImport('pages/Api/FieldHasError'),
+            component: FieldHasError,
           },
-          { path: 'fill-form', component: lazyImport('pages/Api/FillForm') },
+          { path: 'fill-form', component: FillForm },
           {
             path: 'form-has-changes',
-            component: lazyImport('pages/Api/FormHasChanges'),
+            component: FormHasChanges,
           },
           {
             path: 'get-field-error',
-            component: lazyImport('pages/Api/GetFieldError'),
+            component: GetFieldError,
           },
           {
             path: 'get-field-value',
-            component: lazyImport('pages/Api/GetFieldValue'),
+            component: GetFieldValue,
           },
-          { path: 'form-data', component: lazyImport('pages/Api/FormData') },
+          { path: 'form-data', component: FormData },
           {
             path: 'get-form-errors',
-            component: lazyImport('pages/Api/GetFormErrors'),
+            component: GetFormErrors,
           },
           {
             path: 'get-form-state',
-            component: lazyImport('pages/Api/GetFormState'),
+            component: GetFormState,
           },
           {
             path: 'is-field-invalid',
-            component: lazyImport('pages/Api/IsFieldInvalid'),
+            component: IsFieldInvalid,
           },
           {
             path: 'is-form-invalid',
-            component: lazyImport('pages/Api/IsFormInvalid'),
+            component: IsFormInvalid,
           },
           {
             path: 'move-fieldset',
-            component: lazyImport('pages/Api/MoveFieldset'),
+            component: MoveFieldset,
           },
           {
             path: 'refresh-form-field',
-            component: lazyImport('pages/Api/RefreshFormField'),
+            component: RefreshFormField,
           },
           {
             path: 'remove-fieldset',
-            component: lazyImport('pages/Api/RemoveFieldset'),
+            component: RemoveFieldset,
           },
-          { path: 'reset-form', component: lazyImport('pages/Api/ResetForm') },
+          { path: 'reset-form', component: ResetForm },
           {
             path: 'set-field-value',
-            component: lazyImport('pages/Api/SetFieldValue'),
+            component: SetFieldValue,
           },
           {
             path: 'validate-field',
-            component: lazyImport('pages/Api/ValidateField'),
+            component: ValidateField,
           },
           {
             path: 'touch-field',
-            component: lazyImport('pages/Api/TouchField'),
+            component: TouchField,
           },
           {
             path: 'validate-form',
-            component: lazyImport('pages/Api/ValidateForm'),
+            component: ValidateForm,
           },
           {
             path: 'form-is-filling',
-            component: lazyImport('pages/Api/FormIsFilling'),
+            component: FormIsFilling,
           },
           {
             path: 'form-is-resetting',
-            component: lazyImport('pages/Api/FormIsResetting'),
+            component: FormIsResetting,
           },
           {
             path: 'set-field-default-value',
-            component: lazyImport('pages/Api/SetFieldDefaultValue'),
+            component: SetFieldDefaultValue,
           },
           {
             path: 'get-field-default-value',
-            component: lazyImport('pages/Api/GetFieldDefaultValue'),
+            component: GetFieldDefaultValue,
           },
           {
             path: 'form-is-validating',
-            component: lazyImport('pages/Api/FormIsValidating'),
+            component: FormIsValidating,
           },
           {
             path: 'set-field-triggers',
-            component: lazyImport('pages/Api/SetFieldTriggers'),
+            component: SetFieldTriggers,
           },
           {
             path: 'is-field-validating',
-            component: lazyImport('pages/Api/IsFieldValidating'),
+            component: IsFieldValidating,
           },
         ],
       },
       {
         path: 'examples',
-        component: lazyImport('layouts/DocsLayout'),
+        component: DocsLayout,
         data: () => ({ headerText: 'Examples', menu: EXAMPLES_MENU }),
         children: [],
       },

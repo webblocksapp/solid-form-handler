@@ -1,15 +1,14 @@
 import { Component, createSignal, Match, Switch, Show } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler, zodSchema } from 'solid-form-handler';
 import { Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';
 import { schema } from './schema';
 import { FormContext } from './context';
-import { Schema } from './types';
 
 export const Form: Component = () => {
   const [step, setStep] = createSignal(1);
-  const formHandler = useFormHandler(yupSchema<Schema>(schema));
+  const formHandler = useFormHandler(zodSchema(schema));
 
   const submit = async (event: Event) => {
     event.preventDefault();
@@ -34,6 +33,7 @@ export const Form: Component = () => {
   return (
     <FormContext.Provider value={{ formHandler }}>
       <form onSubmit={submit}>
+        <h4 class="mb-3">Using zod schema</h4>
         <div class="row gy-3">
           <div class="col-12">
             <Switch>

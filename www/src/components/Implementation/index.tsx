@@ -1,12 +1,5 @@
 import { Code, CodeTabs, Tabs } from '@components';
-import {
-  Component,
-  createSignal,
-  JSXElement,
-  mergeProps,
-  Switch,
-  Match,
-} from 'solid-js';
+import { Component, JSXElement, mergeProps, Switch, Match } from 'solid-js';
 import { CodeTab } from '@interfaces';
 
 export interface ImplementationProps {

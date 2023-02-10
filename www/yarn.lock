@@ -6215,10 +6215,10 @@ socks@^2.6.2:
     ip "^1.1.5"
     smart-buffer "^4.2.0"
 
-solid-form-handler@^1.0.0-alpha.6:
-  version "1.0.0-alpha.6"
-  resolved "https://registry.npmjs.org/solid-form-handler/-/solid-form-handler-1.0.0-alpha.6.tgz#efbd9216e093be23327216fb32e28b217947e444"
-  integrity sha512-bUBsC3BLCYz4YpyitYBc04vuy1516NSR8sOxD7/ScZ9WIaVqiGN3BemQlzmFjbS5XOjMiqVlKksp+3NbIK4t7A==
+solid-form-handler@^1.0.0-alpha.7:
+  version "1.0.0-alpha.7"
+  resolved "https://registry.npmjs.org/solid-form-handler/-/solid-form-handler-1.0.0-alpha.7.tgz#d14b1cae45bb0ebaa1616144a1ae12c5c33b18d7"
+  integrity sha512-6V82BejIWpthj5izKO0TnwXR7mpCanrFFW8xrHRA1c5P5GzIqYy2cADJ/iD/iz/PRiD3FA9SBaDma/8lgrYPvw==
 
 solid-jest@^0.2.0:
   version "0.2.0"

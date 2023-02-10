@@ -2,6 +2,10 @@
   border: 0 !important;
 }
 
+.tabs-wrapper .tabs-wrapper {
+  padding-top: 17px;
+}
+
 .tabs .nav-tabs {
   flex-wrap: nowrap;
 }

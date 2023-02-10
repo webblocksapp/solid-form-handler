@@ -66,14 +66,14 @@ export const ValidatingTextInput: Component = () => (
             </Implementation>
           ),
         },
-        // {
-        //   text: 'zod',
-        //   children: (
-        //     <Implementation code={getRaw('SingleTextInputForm/zod')}>
-        //       <ZodSingleTextInputForm />
-        //     </Implementation>
-        //   ),
-        // },
+        {
+          text: 'zod',
+          children: (
+            <Implementation code={getRaw('SingleTextInputForm/zod')}>
+              <ZodSingleTextInputForm />
+            </Implementation>
+          ),
+        },
       ]}
     />
   </>

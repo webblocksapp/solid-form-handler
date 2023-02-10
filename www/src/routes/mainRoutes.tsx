@@ -1,16 +1,11 @@
 import { RouteDefinition } from '@solidjs/router';
 import { DOCS_MENU, API_MENU, EXAMPLES_MENU } from '@constants';
 import { DocsLayout, MainLayout } from '@layouts';
-import {
-  Checkbox,
-  Checkboxes,
-  Radios,
-  Redirect,
-  Select,
-  TextInput,
-} from '@components';
+import { Redirect } from '@components';
 import {
   AddFieldset,
+  Checkbox,
+  Checkboxes,
   Components,
   DependantValidations,
   DynamicForm,
@@ -36,13 +31,16 @@ import {
   MoveFieldset,
   NestedFormValidation,
   QuickStart,
+  Radios,
   RefreshFormField,
   RemoveFieldset,
   ResetForm,
+  Select,
   SetFieldDefaultValue,
   SetFieldTriggers,
   SetFieldValue,
   Setup,
+  TextInput,
   TouchField,
   UseFormHandler,
   ValidateField,

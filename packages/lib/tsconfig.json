@@ -17,7 +17,10 @@
       "@utils": ["src/utils"],
       "@implementations": ["examples/implementations"],
       "@components": ["examples/components"],
-      "@components/suid": ["examples/components/suid"]
+      "@components/suid": ["examples/components/suid"],
+      "@components/legacy": ["examples/components/legacy"],
+      "@hocs": ["src/hocs"],
+      "@lib-components": ["src/components"]
     },
     "types": ["vite/client", "node", "@types/jest"]
   }

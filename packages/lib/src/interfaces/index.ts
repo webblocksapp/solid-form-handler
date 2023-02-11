@@ -1,3 +1,5 @@
+export * from './BaseFieldProps';
+export * from './BaseFieldStore';
 export * from './CommonObject';
 export * from './FieldState';
 export * from './Flatten';

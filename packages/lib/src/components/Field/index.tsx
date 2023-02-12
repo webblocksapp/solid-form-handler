@@ -1,20 +1,23 @@
-import { InputField, InputFieldProps } from '@lib-components';
-import { FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { Component, createEffect, createUniqueId, Match, mergeProps, splitProps, Switch } from 'solid-js';
+import { CommonEvent, FieldProps, FieldStore, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { Component, createEffect, createUniqueId, JSXElement, Match, mergeProps, splitProps, Switch } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 
-type FieldByModeProps =
-  | ({ mode?: undefined } & InputFieldProps)
-  | ({ mode: 'input' } & InputFieldProps)
-  | ({ mode: 'select' } & { children?: any });
+interface CommonFieldProps extends FieldProps {
+  onInput?: CommonEvent;
+  onInputOptions?: SetFieldValueOptions;
+  onBlur?: CommonEvent;
+  onBlurOptions?: ValidateFieldOptions;
+  children: (field: FieldStore) => JSXElement;
+}
+
+type FieldByModeProps = { mode?: undefined } & CommonFieldProps;
 
 export type FieldComponentProps = FieldProps & FieldByModeProps;
 
 export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
-  props = mergeProps({ mode: 'input' as FieldComponentProps['mode'] }, props);
   const [_, rest] = splitProps(props, ['error', 'errorMessage', 'formHandler', 'mode', 'children', 'triggers']);
+  const { baseStore, setBaseStore } = useFieldContext();
 
-  const { setBaseStore } = useFieldContext();
   setBaseStore('props', (prev) => ({ ...prev, ...rest }));
 
   /**
@@ -25,8 +28,6 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
     props.formHandler?.setFieldValue?.(props.name, value, options);
   };
 
-  setBaseStore('helpers', (prev) => ({ ...prev, onValueChange }));
-
   /**
    * Helper method for triggering the form handler validation when the field is blurred
    * if no form field event attribute matches the expected interface.
@@ -36,7 +37,61 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
     props.formHandler?.touchField?.(props.name);
   };
 
-  setBaseStore('helpers', (prev) => ({ ...prev, onFieldBlur }));
+  /**
+   * Extended onInput event.
+   */
+  const onInput: CommonFieldProps['onInput'] = (event) => {
+    //Form handler prop sets and validate the value onInput.
+    onValueChange(
+      event.currentTarget.value,
+      mergeProps({ htmlElement: event.currentTarget, validateOn: [event.type] }, props.onInputOptions)
+    );
+
+    //onInput prop is preserved
+    if (typeof props.onInput === 'function') {
+      props.onInput(event);
+    } else {
+      props.onInput?.[0](props.onInput?.[1], event);
+    }
+  };
+
+  /**
+   * Extended onBlur event.
+   */
+  const onBlur: CommonFieldProps['onBlur'] = (event) => {
+    //Form handler prop validate and touch the field.
+    onFieldBlur(props.onBlurOptions);
+
+    //onBlur prop is preserved
+    if (typeof props.onBlur === 'function') {
+      props.onBlur(event);
+    } else {
+      props.onBlur?.[0](props.onBlur?.[1], event);
+    }
+  };
+
+  /**
+   * Extended onChange event
+   */
+  const onChange = onInput;
+
+  /**
+   * Set helper methods.
+   */
+  setBaseStore('helpers', 'onValueChange', () => onValueChange);
+  setBaseStore('helpers', 'onFieldBlur', () => onFieldBlur);
+
+  /**
+   * Initializes event methods according to the mode
+   */
+  if (props.mode === undefined) {
+    setBaseStore('props', 'onInput', () => onInput);
+  }
+
+  /**
+   * Initializes common event methods according to the mode
+   */
+  setBaseStore('props', 'onBlur', () => onBlur);
 
   /**
    * Controls component's value.
@@ -93,9 +148,7 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
 
   return (
     <Switch>
-      <Match when={props.mode === 'input' || props.mode === undefined}>
-        <InputField {...props}>{(field) => props.children(field)}</InputField>
-      </Match>
+      <Match when={props.mode === undefined}>{props.children(baseStore)}</Match>
     </Switch>
   );
 });

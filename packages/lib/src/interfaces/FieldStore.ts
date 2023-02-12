@@ -1,10 +1,12 @@
-import { SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { CommonEvent, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
 
 export type FieldStore = {
   props: {
     value?: any;
     id?: string;
     name?: string;
+    onInput?: CommonEvent;
+    onBlur?: CommonEvent;
   };
   helpers: {
     errorMessage: string;

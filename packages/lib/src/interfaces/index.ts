@@ -1,3 +1,4 @@
+export * from './CommonEvent';
 export * from './CommonObject';
 export * from './FieldProps';
 export * from './FieldState';

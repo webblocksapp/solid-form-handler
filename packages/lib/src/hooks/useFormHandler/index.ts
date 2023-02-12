@@ -6,6 +6,7 @@ import {
   ValidationSchema,
   FormFieldError,
   FormHandlerOptions,
+  ValidateFieldOptions,
 } from '@interfaces';
 import {
   equals,
@@ -137,15 +138,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         ...fieldState,
         currentValue: options?.mapValue?.(parseValue(path, value)),
       }));
-      const promises = Promise.all([
-        options?.validate &&
-          validateField(path, {
-            silentValidation: options?.silentValidation,
-            validateOn: options?.validateOn,
-            delay: options?.delay,
-            force: options?.forceValidate,
-          }),
-      ]);
+      const promises = Promise.all([options?.validate && validateField(path, options)]);
       options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
       options?.dirty && dirtyField(path);
       options?.touch && touchField(path);
@@ -258,16 +251,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Validates a single field of the form.
    */
-  const validateField = async (
-    path: string = '',
-    options?: {
-      silentValidation?: boolean;
-      validateOn?: string[];
-      force?: boolean;
-      delay?: number;
-      omitTriggers?: boolean;
-    }
-  ) => {
+  const validateField = async (path: string = '', options?: ValidateFieldOptions) => {
     const fieldState = getFieldState(path);
 
     if (fieldState === undefined) return;

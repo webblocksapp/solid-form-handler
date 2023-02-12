@@ -1,5 +1,5 @@
 import { InputField, InputFieldProps } from '@lib-components';
-import { BaseFieldProps } from '@interfaces';
+import { BaseFieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
 import { Component, createEffect, createUniqueId, Match, mergeProps, Switch } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 
@@ -8,12 +8,33 @@ type FieldByModeProps =
   | ({ mode: 'input' } & InputFieldProps)
   | ({ mode: 'select' } & { children?: any });
 
-export type FieldProps = BaseFieldProps & FieldByModeProps;
+type FieldProps = BaseFieldProps & FieldByModeProps;
 
 export const Field: Component<FieldProps> = withFieldProvider((props) => {
   props = mergeProps({ mode: 'input' as FieldProps['mode'] }, props);
 
   const { setBaseStore } = useFieldContext();
+
+  /**
+   * Helper method for setting the value to the form handler if no
+   * form field event attribute matches the expected interface.
+   */
+  const onValueChange = (value: any, options?: SetFieldValueOptions) => {
+    props.formHandler?.setFieldValue?.(props.name, value, options);
+  };
+
+  setBaseStore('helpers', (prev) => ({ ...prev, onValueChange }));
+
+  /**
+   * Helper method for triggering the form handler validation when the field is blurred
+   * if no form field event attribute matches the expected interface.
+   */
+  const onFieldBlur = (options?: ValidateFieldOptions) => {
+    props.formHandler?.validateField?.(props.name, options);
+    props.formHandler?.touchField?.(props.name);
+  };
+
+  setBaseStore('helpers', (prev) => ({ ...prev, onFieldBlur }));
 
   /**
    * Controls component's value.

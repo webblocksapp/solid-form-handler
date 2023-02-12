@@ -50,7 +50,7 @@ export const VanillaCompFormImpl: Component = () => {
     <form onSubmit={submit}>
       <h3>Vanilla Form Implementation</h3>
       <div>
-        <TextInput label="Name" name="name" value="Example name" formHandler={formHandler} />
+        <TextInput label="Name" name="name" formHandler={formHandler} />
       </div>
       <br />
       <div>

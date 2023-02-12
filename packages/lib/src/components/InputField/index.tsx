@@ -1,5 +1,5 @@
-import { BaseFieldProps, BaseFieldStore } from '@interfaces';
-import { Component, JSX, JSXElement } from 'solid-js';
+import { BaseFieldProps, BaseFieldStore, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { Component, JSX, JSXElement, mergeProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 
@@ -12,7 +12,9 @@ type InputFieldStore = BaseFieldStore & {
 
 export interface InputFieldProps extends BaseFieldProps {
   onInput?: JSX.InputHTMLAttributes<HTMLInputElement>['onInput'];
+  onInputOptions?: SetFieldValueOptions;
   onBlur?: JSX.InputHTMLAttributes<HTMLInputElement>['onBlur'];
+  onBlurOptions?: ValidateFieldOptions;
   children: (field: InputFieldStore) => JSXElement;
 }
 
@@ -24,10 +26,10 @@ export const InputField: Component<InputFieldProps> = (props) => {
    */
   const onInput: InputFieldProps['onInput'] = (event) => {
     //Form handler prop sets and validate the value onInput.
-    props.formHandler?.setFieldValue?.(props.name, event.currentTarget.value, {
-      htmlElement: event.currentTarget,
-      validateOn: [event.type],
-    });
+    baseStore.helpers.onValueChange(
+      event.currentTarget.value,
+      mergeProps({ htmlElement: event.currentTarget, validateOn: [event.type] }, props.onInputOptions)
+    );
 
     //onInput prop is preserved
     if (typeof props.onInput === 'function') {
@@ -42,8 +44,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
    */
   const onBlur: InputFieldProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    props.formHandler?.validateField?.(props.name);
-    props.formHandler?.touchField?.(props.name);
+    baseStore.helpers.onFieldBlur(props.onBlurOptions);
 
     //onBlur prop is preserved
     if (typeof props.onBlur === 'function') {

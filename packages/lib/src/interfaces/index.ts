@@ -8,4 +8,5 @@ export * from './FormHandler';
 export * from './FormHandlerOptions';
 export * from './FormState';
 export * from './SetFieldValueOptions';
+export * from './ValidateFieldOptions';
 export * from './ValidationSchema';

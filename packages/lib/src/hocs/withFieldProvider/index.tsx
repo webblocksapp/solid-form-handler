@@ -13,7 +13,7 @@ export const withFieldProvider = (BaseComponent: Component<FieldProps>) => {
   return (props: FieldProps) => {
     const [baseStore, setBaseStore] = createStore<BaseFieldStore>({
       props: { id: '', name: '', value: '' },
-      helpers: { error: false, errorMessage: '' },
+      helpers: { error: false, errorMessage: '', onValueChange: () => {} },
     });
 
     return (

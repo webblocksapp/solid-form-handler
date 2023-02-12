@@ -1,16 +1,16 @@
-import { BaseFieldProps, BaseFieldStore, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { FieldProps, FieldStore, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
 import { Component, JSX, JSXElement, mergeProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 
-type InputFieldStore = BaseFieldStore & {
-  props: BaseFieldStore['props'] & {
+type InputFieldStore = FieldStore & {
+  props: FieldStore['props'] & {
     onInput: InputFieldProps['onInput'];
     onBlur: InputFieldProps['onBlur'];
   };
 };
 
-export interface InputFieldProps extends BaseFieldProps {
+export interface InputFieldProps extends FieldProps {
   onInput?: JSX.InputHTMLAttributes<HTMLInputElement>['onInput'];
   onInputOptions?: SetFieldValueOptions;
   onBlur?: JSX.InputHTMLAttributes<HTMLInputElement>['onBlur'];

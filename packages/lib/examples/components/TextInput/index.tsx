@@ -1,8 +1,8 @@
 import { Field } from '@lib-components';
-import { BaseFieldProps } from '@interfaces';
+import { FieldProps } from '@interfaces';
 import { Component, JSX, splitProps } from 'solid-js';
 
-export type TextInputProps = JSX.InputHTMLAttributes<HTMLInputElement> & BaseFieldProps & { label?: string };
+export type TextInputProps = JSX.InputHTMLAttributes<HTMLInputElement> & FieldProps & { label?: string };
 
 export const TextInput: Component<TextInputProps> = (props) => {
   const [local, rest] = splitProps(props, ['classList', 'label']);
@@ -16,11 +16,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
               {local.label}
             </label>
           )}
-          <input
-            {...field.props}
-            value={field.props.value}
-            classList={{ 'is-invalid': field.helpers.error, 'form-control': true }}
-          />
+          <input {...field.props} classList={{ 'is-invalid': field.helpers.error, 'form-control': true }} />
           {field.helpers.error && <div class="invalid-feedback">{field.helpers.errorMessage}</div>}
         </div>
       )}

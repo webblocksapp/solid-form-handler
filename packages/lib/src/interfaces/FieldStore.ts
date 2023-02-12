@@ -1,6 +1,6 @@
 import { SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
 
-export type BaseFieldStore = {
+export type FieldStore = {
   props: {
     value?: any;
     id?: string;

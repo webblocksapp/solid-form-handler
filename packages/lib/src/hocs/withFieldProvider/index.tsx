@@ -1,19 +1,19 @@
-import { BaseFieldStore } from '@interfaces';
-import { FieldProps } from '@lib-components';
+import { FieldStore } from '@interfaces';
+import { FieldComponentProps } from '@lib-components';
 import { Component, createContext, useContext } from 'solid-js';
 import { createStore, SetStoreFunction } from 'solid-js/store';
 
 const FieldContext = createContext({ baseStore: { props: {}, helpers: {} } } as {
-  baseStore: BaseFieldStore;
-  setBaseStore: SetStoreFunction<BaseFieldStore>;
+  baseStore: FieldStore;
+  setBaseStore: SetStoreFunction<FieldStore>;
 });
 export const useFieldContext = () => useContext(FieldContext);
 
-export const withFieldProvider = (BaseComponent: Component<FieldProps>) => {
-  return (props: FieldProps) => {
-    const [baseStore, setBaseStore] = createStore<BaseFieldStore>({
+export const withFieldProvider = (BaseComponent: Component<FieldComponentProps>) => {
+  return (props: FieldComponentProps) => {
+    const [baseStore, setBaseStore] = createStore<FieldStore>({
       props: { id: '', name: '', value: '' },
-      helpers: { error: false, errorMessage: '', onValueChange: () => {} },
+      helpers: { error: false, errorMessage: '', onValueChange: () => {}, onFieldBlur: () => {} },
     });
 
     return (

@@ -1,6 +1,6 @@
 import { InputField, InputFieldProps } from '@lib-components';
-import { BaseFieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { Component, createEffect, createUniqueId, Match, mergeProps, Switch } from 'solid-js';
+import { FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { Component, createEffect, createUniqueId, Match, mergeProps, splitProps, Switch } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 
 type FieldByModeProps =
@@ -8,12 +8,14 @@ type FieldByModeProps =
   | ({ mode: 'input' } & InputFieldProps)
   | ({ mode: 'select' } & { children?: any });
 
-type FieldProps = BaseFieldProps & FieldByModeProps;
+export type FieldComponentProps = FieldProps & FieldByModeProps;
 
-export const Field: Component<FieldProps> = withFieldProvider((props) => {
-  props = mergeProps({ mode: 'input' as FieldProps['mode'] }, props);
+export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
+  props = mergeProps({ mode: 'input' as FieldComponentProps['mode'] }, props);
+  const [_, rest] = splitProps(props, ['error', 'errorMessage', 'formHandler', 'mode', 'children', 'triggers']);
 
   const { setBaseStore } = useFieldContext();
+  setBaseStore('props', (prev) => ({ ...prev, ...rest }));
 
   /**
    * Helper method for setting the value to the form handler if no

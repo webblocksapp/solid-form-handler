@@ -1,6 +1,6 @@
 import { FormHandler } from '@interfaces';
 
-export interface BaseFieldProps {
+export interface FieldProps {
   id?: string;
   error?: boolean;
   errorMessage?: string;

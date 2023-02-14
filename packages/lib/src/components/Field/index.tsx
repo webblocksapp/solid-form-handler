@@ -1,16 +1,16 @@
 import { FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { Component, createEffect, createUniqueId, Match, mergeProps, splitProps, Switch } from 'solid-js';
+import { Component, createEffect, createUniqueId, Match, mergeProps, Switch } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 import { CheckboxField, CheckboxFieldProps, InputField, InputFieldProps } from '@lib-components';
 
-type FieldByModeProps = ({ mode?: 'input' } & InputFieldProps) | ({ mode?: 'checkbox' } & CheckboxFieldProps);
+type FieldByModeProps = ({ type?: string } & InputFieldProps) | ({ type?: 'checkbox' } & CheckboxFieldProps);
 
 export type FieldComponentProps = FieldProps & FieldByModeProps;
 
-export const PROPS_TO_SPLIT = ['error', 'errorMessage', 'formHandler', 'mode', 'children', 'triggers'] as const;
+export const PROPS_TO_SPLIT = ['error', 'errorMessage', 'formHandler', 'children', 'triggers'] as const;
 
 export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
-  props = mergeProps({ mode: 'input' as FieldByModeProps['mode'] }, props);
+  props = mergeProps({ mode: 'input' as FieldByModeProps['type'] }, props);
   const { setBaseStore } = useFieldContext();
 
   /**
@@ -103,11 +103,8 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
   });
 
   return (
-    <Switch>
-      <Match when={props.mode === 'input'}>
-        <InputField {...props}>{(field) => props.children(field)}</InputField>
-      </Match>
-      <Match when={props.mode === 'checkbox'}>
+    <Switch fallback={<InputField {...props}>{(field) => props.children(field)}</InputField>}>
+      <Match when={props.type === 'checkbox'}>
         <CheckboxField {...props}>{(field) => props.children(field)}</CheckboxField>
       </Match>
     </Switch>

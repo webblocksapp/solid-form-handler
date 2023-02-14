@@ -1,21 +1,21 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
 import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
-import { Select } from '@components';
+import { Select } from '@components/legacy';
 import { useFormHandler } from '@hooks';
-import { zodSchema } from '@utils';
+import { yupSchema } from '@utils';
 import { schema, Schema, COUNTRIES } from './mocks';
 
 const onInputCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Select with zod', () => {
+describe('Select with yup', () => {
   let formHandler: FormHandler<Schema>;
   let select: HTMLInputElement;
   let dom: Result;
 
   beforeEach(() => {
-    formHandler = useFormHandler<Schema>(zodSchema(schema));
+    formHandler = useFormHandler<Schema>(yupSchema(schema));
     dom = render(() => <Select label="Country Label" options={COUNTRIES} name="country" formHandler={formHandler} />);
     select = dom.container.querySelector('[name="country"]') as HTMLInputElement;
   });

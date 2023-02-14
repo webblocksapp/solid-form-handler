@@ -1,24 +1,17 @@
-import { CommonEvent, FieldProps, FieldStore, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { Component, createEffect, createUniqueId, JSXElement, Match, mergeProps, splitProps, Switch } from 'solid-js';
+import { FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { Component, createEffect, createUniqueId, Match, mergeProps, splitProps, Switch } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
+import { CheckboxField, CheckboxFieldProps, InputField, InputFieldProps } from '@lib-components';
 
-interface CommonFieldProps extends FieldProps {
-  onInput?: CommonEvent;
-  onInputOptions?: SetFieldValueOptions;
-  onBlur?: CommonEvent;
-  onBlurOptions?: ValidateFieldOptions;
-  children: (field: FieldStore) => JSXElement;
-}
-
-type FieldByModeProps = { mode?: undefined } & CommonFieldProps;
+type FieldByModeProps = ({ mode?: 'input' } & InputFieldProps) | ({ mode?: 'checkbox' } & CheckboxFieldProps);
 
 export type FieldComponentProps = FieldProps & FieldByModeProps;
 
-export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
-  const [_, rest] = splitProps(props, ['error', 'errorMessage', 'formHandler', 'mode', 'children', 'triggers']);
-  const { baseStore, setBaseStore } = useFieldContext();
+export const PROPS_TO_SPLIT = ['error', 'errorMessage', 'formHandler', 'mode', 'children', 'triggers'] as const;
 
-  setBaseStore('props', (prev) => ({ ...prev, ...rest }));
+export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
+  props = mergeProps({ mode: 'input' as FieldByModeProps['mode'] }, props);
+  const { setBaseStore } = useFieldContext();
 
   /**
    * Helper method for setting the value to the form handler if no
@@ -38,27 +31,9 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
   };
 
   /**
-   * Extended onInput event.
-   */
-  const onInput: CommonFieldProps['onInput'] = (event) => {
-    //Form handler prop sets and validate the value onInput.
-    onValueChange(
-      event.currentTarget.value,
-      mergeProps({ htmlElement: event.currentTarget, validateOn: [event.type] }, props.onInputOptions)
-    );
-
-    //onInput prop is preserved
-    if (typeof props.onInput === 'function') {
-      props.onInput(event);
-    } else {
-      props.onInput?.[0](props.onInput?.[1], event);
-    }
-  };
-
-  /**
    * Extended onBlur event.
    */
-  const onBlur: CommonFieldProps['onBlur'] = (event) => {
+  const onBlur: FieldComponentProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
     onFieldBlur(props.onBlurOptions);
 
@@ -71,25 +46,13 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
   };
 
   /**
-   * Extended onChange event
-   */
-  const onChange = onInput;
-
-  /**
    * Set helper methods.
    */
   setBaseStore('helpers', 'onValueChange', () => onValueChange);
   setBaseStore('helpers', 'onFieldBlur', () => onFieldBlur);
 
   /**
-   * Initializes event methods according to the mode
-   */
-  if (props.mode === undefined) {
-    setBaseStore('props', 'onInput', () => onInput);
-  }
-
-  /**
-   * Initializes common event methods according to the mode
+   * Initializes common event methods.
    */
   setBaseStore('props', 'onBlur', () => onBlur);
 
@@ -126,13 +89,6 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
   });
 
   /**
-   * Initializes component's default value
-   */
-  createEffect(() => {
-    props.formHandler?.setFieldDefaultValue?.(props.name, props.value);
-  });
-
-  /**
    * Triggers dependant validations
    */
   createEffect(() => {
@@ -148,7 +104,12 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
 
   return (
     <Switch>
-      <Match when={props.mode === undefined}>{props.children(baseStore)}</Match>
+      <Match when={props.mode === 'input'}>
+        <InputField {...props}>{(field) => props.children(field)}</InputField>
+      </Match>
+      <Match when={props.mode === 'checkbox'}>
+        <CheckboxField {...props}>{(field) => props.children(field)}</CheckboxField>
+      </Match>
     </Switch>
   );
 });

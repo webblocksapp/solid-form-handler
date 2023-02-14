@@ -9,7 +9,7 @@ import { schema, Schema } from './mocks';
 const onChangeCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Radio with yup', () => {
+describe('Radio with zod', () => {
   let formHandler: FormHandler<Schema>;
   let radio: HTMLInputElement;
   let dom: Result;

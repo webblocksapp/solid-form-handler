@@ -5,8 +5,10 @@ export type FieldStore = {
     value?: any;
     id?: string;
     name?: string;
-    onInput?: CommonEvent;
     onBlur?: CommonEvent;
+    onChange?: CommonEvent;
+    onInput?: CommonEvent;
+    checked?: boolean;
   };
   helpers: {
     errorMessage: string;

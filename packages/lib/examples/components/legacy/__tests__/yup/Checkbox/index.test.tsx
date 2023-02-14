@@ -1,21 +1,21 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
 import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
-import { Checkbox } from '@components';
+import { Checkbox } from '@components/legacy';
 import { useFormHandler } from '@hooks';
-import { zodSchema } from '@utils';
+import { yupSchema } from '@utils';
 import { schema, Schema } from './mocks';
 
 const onChangeCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('Checkbox with zod', () => {
+describe('Checkbox with yup', () => {
   let formHandler: FormHandler<Schema>;
   let checkbox: HTMLInputElement;
   let dom: Result;
 
   beforeEach(() => {
-    formHandler = useFormHandler<Schema>(zodSchema(schema));
+    formHandler = useFormHandler<Schema>(yupSchema(schema));
     dom = render(() => <Checkbox label="Subscribed Label" name="subscribed" formHandler={formHandler} />);
     checkbox = dom.container.querySelector('[name="subscribed"]') as HTMLInputElement;
   });

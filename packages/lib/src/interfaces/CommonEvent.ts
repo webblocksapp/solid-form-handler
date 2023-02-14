@@ -1,1 +1,2 @@
-export type CommonEvent = ((event: any) => void) | [(data: any, event: any) => void, any];
+import { JSX } from 'solid-js';
+export type CommonEvent = JSX.EventHandlerUnion<any, any>;

@@ -9,7 +9,7 @@ import { schema, Schema } from './mocks';
 const onInputCallback = jest.fn(() => {});
 const onBlurCallback = jest.fn(() => {});
 
-describe('TextInput with yup', () => {
+describe('TextInput with zod', () => {
   let formHandler: FormHandler<Schema>;
   let textInput: HTMLInputElement;
   let dom: Result;

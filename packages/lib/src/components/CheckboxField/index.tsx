@@ -2,22 +2,23 @@ import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from 
 import { Component, createEffect, JSXElement, mergeProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
+import { FieldDefinition, FieldPropsToOmit } from '@lib-components';
 
-type CheckboxFieldStore = FieldStore & {
+type CheckboxFieldStore<TDef extends FieldDefinition = FieldDefinition> = FieldStore & {
   props: FieldStore['props'] & {
     onChange?: CommonEvent;
     checked?: boolean;
-  };
+  } & FieldPropsToOmit<TDef['props']>;
 };
 
-export interface CheckboxFieldProps extends CommonFieldProps {
+export type CheckboxFieldProps<TDef extends FieldDefinition = FieldDefinition> = CommonFieldProps & {
   mode: 'checkbox';
   onChange?: CommonEvent;
   onChangeOptions?: SetFieldValueOptions;
   checked?: boolean;
   uncheckedValue?: any;
-  render: (field: CheckboxFieldStore) => JSXElement;
-}
+  render: (field: CheckboxFieldStore<TDef>) => JSXElement;
+};
 
 export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
   const { baseStore } = useFieldContext();

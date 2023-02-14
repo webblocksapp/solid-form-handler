@@ -26,7 +26,7 @@ export const Select: Component<SelectProps> = (props) => {
   });
 
   return (
-    <Field
+    <Field<{ props: typeof rest }>
       {...rest}
       mode="input"
       render={(field) => (

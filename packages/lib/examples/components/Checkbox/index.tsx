@@ -13,7 +13,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
   const [local, rest] = splitProps(props, ['classList', 'label', 'display', 'uncheckedValue']);
 
   return (
-    <Field
+    <Field<{ props: typeof rest }>
       {...rest}
       mode="checkbox"
       uncheckedValue={local.uncheckedValue}

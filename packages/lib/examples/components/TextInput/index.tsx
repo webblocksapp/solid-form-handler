@@ -8,7 +8,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
   const [local, rest] = splitProps(props, ['classList', 'label']);
 
   return (
-    <Field
+    <Field<{ props: typeof rest }>
       {...rest}
       mode="input"
       render={(field) => (

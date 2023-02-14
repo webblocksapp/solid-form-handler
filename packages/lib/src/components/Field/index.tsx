@@ -1,15 +1,17 @@
-import { FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { Component, createEffect, createUniqueId, mergeProps, splitProps } from 'solid-js';
+import { CommonObject, FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { createEffect, createUniqueId, splitProps } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 import { CheckboxField, CheckboxFieldProps, InputField, InputFieldProps } from '@lib-components';
 
-type FieldByModeProps = InputFieldProps | CheckboxFieldProps;
+const FIELD_PROPS_TO_OMIT = ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode'] as const;
 
-export type FieldComponentProps = FieldProps & FieldByModeProps;
+export type FieldPropsToOmit<T> = Omit<T, typeof FIELD_PROPS_TO_OMIT[number]>;
+export type FieldDefinition = { props: CommonObject };
+export type FieldByModeProps<TDef extends FieldDefinition> = InputFieldProps<TDef> | CheckboxFieldProps<TDef>;
+export type FieldComponentProps<TDef extends FieldDefinition = FieldDefinition> = FieldProps & FieldByModeProps<TDef>;
 
-export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
-  props = mergeProps({ mode: 'input' as FieldComponentProps['mode'] }, props);
-  const [_, rest] = splitProps(props, ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode']);
+export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: FieldComponentProps<TDef>) => {
+  const [_, rest] = splitProps(props, FIELD_PROPS_TO_OMIT);
   const { setBaseStore } = useFieldContext();
 
   setBaseStore('props', (prev) => ({ ...prev, ...rest }));

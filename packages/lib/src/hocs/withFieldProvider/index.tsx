@@ -11,8 +11,8 @@ const FieldContext = createContext(
 );
 export const useFieldContext = () => useContext(FieldContext);
 
-export const withFieldProvider = (BaseComponent: Component<FieldComponentProps>) => {
-  return (props: FieldComponentProps) => {
+export const withFieldProvider = <T extends FieldComponentProps>(BaseComponent: Component<T>) => {
+  return (props: T) => {
     const [baseStore, setBaseStore] = createStore<FieldStore>({
       props: { id: '', name: '', value: '' },
       helpers: { error: false, errorMessage: '', onValueChange: () => {}, onFieldBlur: () => {} },

@@ -2,7 +2,6 @@ import { CommonEvent, CommonFieldProps, SetFieldValueOptions } from '@interfaces
 import { Component, createEffect, mergeProps, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
-import { PROPS_TO_SPLIT } from '@lib-components';
 
 export interface CheckboxFieldProps extends CommonFieldProps {
   onChange?: CommonEvent;
@@ -12,10 +11,7 @@ export interface CheckboxFieldProps extends CommonFieldProps {
 }
 
 export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
-  const { baseStore, setBaseStore } = useFieldContext();
-  const [_, rest] = splitProps(props, [...PROPS_TO_SPLIT, 'uncheckedValue'] as any);
-
-  setBaseStore('props', (prev) => ({ ...prev, ...rest }));
+  const { baseStore } = useFieldContext();
 
   /**
    * Helper method for getting the value when checked.

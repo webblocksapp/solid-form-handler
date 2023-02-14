@@ -2,7 +2,6 @@ import { CommonEvent, CommonFieldProps, SetFieldValueOptions } from '@interfaces
 import { Component, createEffect, mergeProps, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
-import { PROPS_TO_SPLIT } from '@lib-components';
 
 export interface InputFieldProps extends CommonFieldProps {
   onInput?: CommonEvent;
@@ -10,10 +9,7 @@ export interface InputFieldProps extends CommonFieldProps {
 }
 
 export const InputField: Component<InputFieldProps> = (props) => {
-  const { baseStore, setBaseStore } = useFieldContext();
-  const [_, rest] = splitProps(props, PROPS_TO_SPLIT as any);
-
-  setBaseStore('props', (prev) => ({ ...prev, ...rest }));
+  const { baseStore } = useFieldContext();
 
   /**
    * Extended onInput event.

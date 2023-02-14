@@ -10,10 +10,10 @@ export type CheckboxProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'typ
   };
 
 export const Checkbox: Component<CheckboxProps> = (props) => {
-  const [local, rest] = splitProps(props, ['classList', 'label', 'display']);
+  const [local, rest] = splitProps(props, ['classList', 'label', 'display', 'uncheckedValue']);
 
   return (
-    <Field {...rest} type="checkbox">
+    <Field {...rest} type="checkbox" uncheckedValue={local.uncheckedValue}>
       {(field) => (
         <div classList={local.classList}>
           <div

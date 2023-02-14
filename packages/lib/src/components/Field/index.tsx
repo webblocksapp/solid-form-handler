@@ -1,5 +1,5 @@
 import { FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { Component, createEffect, createUniqueId, Match, mergeProps, Switch } from 'solid-js';
+import { Component, createEffect, createUniqueId, Match, mergeProps, splitProps, Switch } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 import { CheckboxField, CheckboxFieldProps, InputField, InputFieldProps } from '@lib-components';
 
@@ -7,11 +7,12 @@ type FieldByModeProps = ({ type?: string } & InputFieldProps) | ({ type?: 'check
 
 export type FieldComponentProps = FieldProps & FieldByModeProps;
 
-export const PROPS_TO_SPLIT = ['error', 'errorMessage', 'formHandler', 'children', 'triggers'] as const;
-
 export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
   props = mergeProps({ mode: 'input' as FieldByModeProps['type'] }, props);
+  const [_, rest] = splitProps(props, ['error', 'errorMessage', 'formHandler', 'children', 'triggers']);
   const { setBaseStore } = useFieldContext();
+
+  setBaseStore('props', (prev) => ({ ...prev, ...rest }));
 
   /**
    * Helper method for setting the value to the form handler if no

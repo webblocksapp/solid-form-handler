@@ -8,8 +8,10 @@ export const TextInput: Component<TextInputProps> = (props) => {
   const [local, rest] = splitProps(props, ['classList', 'label']);
 
   return (
-    <Field {...rest}>
-      {(field) => (
+    <Field
+      {...rest}
+      mode="input"
+      render={(field) => (
         <div classList={local.classList}>
           {local.label && (
             <label class="form-label" for={field.props.id}>
@@ -20,6 +22,6 @@ export const TextInput: Component<TextInputProps> = (props) => {
           {field.helpers.error && <div class="invalid-feedback">{field.helpers.errorMessage}</div>}
         </div>
       )}
-    </Field>
+    />
   );
 };

@@ -1,15 +1,15 @@
 import { FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { Component, createEffect, createUniqueId, Match, mergeProps, splitProps, Switch } from 'solid-js';
+import { Component, createEffect, createUniqueId, mergeProps, splitProps } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 import { CheckboxField, CheckboxFieldProps, InputField, InputFieldProps } from '@lib-components';
 
-type FieldByModeProps = ({ type?: string } & InputFieldProps) | ({ type?: 'checkbox' } & CheckboxFieldProps);
+type FieldByModeProps = InputFieldProps | CheckboxFieldProps;
 
 export type FieldComponentProps = FieldProps & FieldByModeProps;
 
 export const Field: Component<FieldComponentProps> = withFieldProvider((props) => {
-  props = mergeProps({ mode: 'input' as FieldByModeProps['type'] }, props);
-  const [_, rest] = splitProps(props, ['error', 'errorMessage', 'formHandler', 'children', 'triggers']);
+  props = mergeProps({ mode: 'input' as FieldComponentProps['mode'] }, props);
+  const [_, rest] = splitProps(props, ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode']);
   const { setBaseStore } = useFieldContext();
 
   setBaseStore('props', (prev) => ({ ...prev, ...rest }));
@@ -103,11 +103,14 @@ export const Field: Component<FieldComponentProps> = withFieldProvider((props) =
     setBaseStore('props', 'name', props.name || '');
   });
 
-  return (
-    <Switch fallback={<InputField {...props}>{(field) => props.children(field)}</InputField>}>
-      <Match when={props.type === 'checkbox'}>
-        <CheckboxField {...props}>{(field) => props.children(field)}</CheckboxField>
-      </Match>
-    </Switch>
-  );
+  /**
+   * Discriminated unions don't work with SolidJS Switch component,
+   * for this reason is used normal JS switch.
+   */
+  switch (props.mode) {
+    case 'input':
+      return <InputField {...props} />;
+    case 'checkbox':
+      return <CheckboxField {...props} />;
+  }
 });

@@ -1,11 +1,19 @@
-import { CommonEvent, CommonFieldProps, SetFieldValueOptions } from '@interfaces';
-import { Component, createEffect, mergeProps, splitProps } from 'solid-js';
+import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from '@interfaces';
+import { Component, createEffect, JSXElement, mergeProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 
+type InputFieldStore = FieldStore & {
+  props: FieldStore['props'] & {
+    onInput?: CommonEvent;
+  };
+};
+
 export interface InputFieldProps extends CommonFieldProps {
+  mode: 'input';
   onInput?: CommonEvent;
   onInputOptions?: SetFieldValueOptions;
+  render: (field: InputFieldStore) => JSXElement;
 }
 
 export const InputField: Component<InputFieldProps> = (props) => {
@@ -36,8 +44,8 @@ export const InputField: Component<InputFieldProps> = (props) => {
     props.formHandler?.setFieldDefaultValue?.(props.name, props.value);
   });
 
-  const [store, setStore] = createStore(baseStore);
+  const [store, setStore] = createStore<InputFieldStore>(baseStore);
   setStore('props', (prev) => ({ ...prev, onInput }));
 
-  return props.children(store);
+  return props.render(store);
 };

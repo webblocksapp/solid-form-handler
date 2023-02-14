@@ -6,9 +6,6 @@ export type FieldStore = {
     id?: string;
     name?: string;
     onBlur?: CommonEvent;
-    onChange?: CommonEvent;
-    onInput?: CommonEvent;
-    checked?: boolean;
   };
   helpers: {
     errorMessage: string;

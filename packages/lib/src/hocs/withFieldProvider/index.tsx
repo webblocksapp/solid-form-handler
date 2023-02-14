@@ -3,10 +3,12 @@ import { FieldComponentProps } from '@lib-components';
 import { Component, createContext, useContext } from 'solid-js';
 import { createStore, SetStoreFunction } from 'solid-js/store';
 
-const FieldContext = createContext({ baseStore: { props: {}, helpers: {} } } as {
-  baseStore: FieldStore;
-  setBaseStore: SetStoreFunction<FieldStore>;
-});
+const FieldContext = createContext(
+  {} as {
+    baseStore: FieldStore;
+    setBaseStore: SetStoreFunction<FieldStore>;
+  }
+);
 export const useFieldContext = () => useContext(FieldContext);
 
 export const withFieldProvider = (BaseComponent: Component<FieldComponentProps>) => {

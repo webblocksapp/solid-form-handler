@@ -1,6 +1,6 @@
-import { FormHandler } from '@interfaces';
+import { CommonObject, FormHandler } from '@interfaces';
 
-export interface FieldProps {
+export type FieldProps = {
   id?: string;
   error?: boolean;
   errorMessage?: string;
@@ -8,4 +8,4 @@ export interface FieldProps {
   name?: string;
   triggers?: string[];
   value?: any;
-}
+};

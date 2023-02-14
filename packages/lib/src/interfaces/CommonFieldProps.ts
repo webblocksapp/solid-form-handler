@@ -1,8 +1,6 @@
-import { CommonEvent, FieldProps, FieldStore, ValidateFieldOptions } from '@interfaces';
-import { JSXElement } from 'solid-js';
+import { CommonEvent, FieldProps, ValidateFieldOptions } from '@interfaces';
 
 export interface CommonFieldProps extends FieldProps {
   onBlur?: CommonEvent;
   onBlurOptions?: ValidateFieldOptions;
-  children: (field: FieldStore) => JSXElement;
 }

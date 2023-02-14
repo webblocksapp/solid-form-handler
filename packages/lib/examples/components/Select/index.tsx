@@ -26,8 +26,10 @@ export const Select: Component<SelectProps> = (props) => {
   });
 
   return (
-    <Field {...rest}>
-      {(field) => (
+    <Field
+      {...rest}
+      mode="input"
+      render={(field) => (
         <div classList={local.classList}>
           {local.label && (
             <label class="form-label" for={field.props.id}>
@@ -46,6 +48,6 @@ export const Select: Component<SelectProps> = (props) => {
           {field.helpers.error && <div class="invalid-feedback">{field.helpers.errorMessage}</div>}
         </div>
       )}
-    </Field>
+    />
   );
 };

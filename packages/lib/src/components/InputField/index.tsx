@@ -39,6 +39,17 @@ export const InputField: Component<InputFieldProps> = (props) => {
   };
 
   /**
+   * Controls component's value.
+   */
+  createEffect(() => {
+    /**
+     * If formHandler is defined, value is controlled by
+     * the same component, if no, by the value prop.
+     */
+    setStore('props', 'value', props.formHandler ? props.formHandler?.getFieldValue?.(props.name) : props.value);
+  });
+
+  /**
    * Initializes component's default value
    */
   createEffect(() => {

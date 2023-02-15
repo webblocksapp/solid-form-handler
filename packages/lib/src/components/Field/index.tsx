@@ -1,13 +1,23 @@
 import { CommonObject, FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
 import { createEffect, createUniqueId, splitProps } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
-import { CheckboxField, CheckboxFieldProps, InputField, InputFieldProps } from '@lib-components';
+import {
+  CheckboxField,
+  CheckboxFieldProps,
+  InputField,
+  InputFieldProps,
+  RadioField,
+  RadioFieldProps,
+} from '@lib-components';
 
 const FIELD_PROPS_TO_OMIT = ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode'] as const;
 
 export type FieldPropsToOmit<T> = Omit<T, typeof FIELD_PROPS_TO_OMIT[number]>;
 export type FieldDefinition = { props: CommonObject };
-export type FieldByModeProps<TDef extends FieldDefinition> = InputFieldProps<TDef> | CheckboxFieldProps<TDef>;
+export type FieldByModeProps<TDef extends FieldDefinition> =
+  | InputFieldProps<TDef>
+  | CheckboxFieldProps<TDef>
+  | RadioFieldProps;
 export type FieldComponentProps<TDef extends FieldDefinition = FieldDefinition> = FieldProps & FieldByModeProps<TDef>;
 
 export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: FieldComponentProps<TDef>) => {
@@ -60,17 +70,6 @@ export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: Fie
   setBaseStore('props', 'onBlur', () => onBlur);
 
   /**
-   * Controls component's value.
-   */
-  createEffect(() => {
-    /**
-     * If formHandler is defined, value is controlled by
-     * the same component, if no, by the value prop.
-     */
-    setBaseStore('props', 'value', props.formHandler ? props.formHandler?.getFieldValue?.(props.name) : props.value);
-  });
-
-  /**
    * Updates error message signal according to the given prop or form handler state.
    */
   createEffect(() => {
@@ -114,5 +113,7 @@ export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: Fie
       return <InputField {...props} />;
     case 'checkbox':
       return <CheckboxField {...props} />;
+    case 'radio':
+      return <RadioField {...props} />;
   }
 });

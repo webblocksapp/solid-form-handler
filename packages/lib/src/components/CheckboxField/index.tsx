@@ -4,11 +4,14 @@ import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 import { FieldDefinition, FieldPropsToOmit } from '@lib-components';
 
-type CheckboxFieldStore<TDef extends FieldDefinition = FieldDefinition> = FieldStore & {
+type CheckboxFieldStore<TDef extends FieldDefinition = FieldDefinition> = Omit<FieldStore, 'props' | 'helpers'> & {
   props: FieldStore['props'] & {
     onChange?: CommonEvent;
     checked?: boolean;
   } & FieldPropsToOmit<TDef['props']>;
+  helpers: Omit<FieldStore['helpers'], 'onValueChange'> & {
+    onValueChange: (value: any, checked: boolean, options?: SetFieldValueOptions) => void;
+  };
 };
 
 export type CheckboxFieldProps<TDef extends FieldDefinition = FieldDefinition> = CommonFieldProps & {
@@ -22,6 +25,15 @@ export type CheckboxFieldProps<TDef extends FieldDefinition = FieldDefinition> =
 
 export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
   const { baseStore } = useFieldContext();
+
+  /**
+   * Helper method for setting the value to the form handler if no
+   * form field event attribute matches the expected interface.
+   */
+  const onValueChange = (value: any, checked: boolean, options?: SetFieldValueOptions) => {
+    baseStore.helpers.onValueChange(value, options);
+    setStore('props', 'checked', checked);
+  };
 
   /**
    * Helper method for getting the value when checked.
@@ -40,11 +52,11 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
    */
   const onChange: CheckboxFieldProps['onChange'] = (event) => {
     //Form handler prop sets and validate the value onChange.
-    baseStore.helpers.onValueChange(
+    onValueChange(
       getValue(event.currentTarget.checked),
+      event.currentTarget.checked,
       mergeProps({ validateOn: [event.type] }, props.onChangeOptions)
     );
-    setStore('props', 'checked', event.currentTarget.checked);
 
     //onChange prop is preserved
     if (typeof props.onChange === 'function') {
@@ -77,8 +89,11 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
     props.formHandler?.setFieldDefaultValue?.(props.name, getValue(props.checked));
   });
 
-  const [store, setStore] = createStore<CheckboxFieldStore>(baseStore);
-  setStore('props', (prev) => ({ ...prev, onChange }));
+  /**
+   * Base store is merged with checkbox field store.
+   */
+  const [store, setStore] = createStore(baseStore as unknown as CheckboxFieldStore);
+  setStore('props', (prev) => ({ ...prev, onChange, onValueChange }));
 
   return props.render(store);
 };

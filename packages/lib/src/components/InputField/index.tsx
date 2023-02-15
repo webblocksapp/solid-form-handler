@@ -4,7 +4,7 @@ import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 import { FieldDefinition, FieldPropsToOmit } from '@lib-components';
 
-type InputFieldStore<TDef extends FieldDefinition = FieldDefinition> = FieldStore & {
+type InputFieldStore<TDef extends FieldDefinition = FieldDefinition> = Omit<FieldStore, 'props'> & {
   props: FieldStore['props'] & {
     onInput?: CommonEvent;
   } & FieldPropsToOmit<TDef['props']>;

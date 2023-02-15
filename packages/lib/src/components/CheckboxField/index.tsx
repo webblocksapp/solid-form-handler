@@ -31,7 +31,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
    * form field event attribute matches the expected interface.
    */
   const onValueChange = (value: any, checked: boolean, options?: SetFieldValueOptions) => {
-    baseStore.helpers.onValueChange(value, options);
+    props.formHandler?.setFieldValue?.(props.name, value, options);
     setStore('props', 'checked', checked);
   };
 
@@ -93,7 +93,8 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
    * Base store is merged with checkbox field store.
    */
   const [store, setStore] = createStore(baseStore as unknown as CheckboxFieldStore);
-  setStore('props', (prev) => ({ ...prev, onChange, onValueChange }));
+  setStore('props', 'onChange', () => onChange);
+  setStore('helpers', 'onValueChange', () => onValueChange);
 
   return props.render(store);
 };

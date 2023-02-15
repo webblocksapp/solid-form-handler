@@ -4,6 +4,8 @@ import { useFieldContext, withFieldProvider } from '@hocs';
 import {
   CheckboxField,
   CheckboxFieldProps,
+  CheckboxGroupField,
+  CheckboxGroupFieldProps,
   InputField,
   InputFieldProps,
   RadioField,
@@ -17,7 +19,8 @@ export type FieldDefinition = { props: CommonObject };
 export type FieldByModeProps<TDef extends FieldDefinition> =
   | InputFieldProps<TDef>
   | CheckboxFieldProps<TDef>
-  | RadioFieldProps;
+  | CheckboxGroupFieldProps<TDef>
+  | RadioFieldProps<TDef>;
 export type FieldComponentProps<TDef extends FieldDefinition = FieldDefinition> = FieldProps & FieldByModeProps<TDef>;
 
 export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: FieldComponentProps<TDef>) => {
@@ -113,6 +116,8 @@ export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: Fie
       return <InputField {...props} />;
     case 'checkbox':
       return <CheckboxField {...props} />;
+    case 'checkbox-group':
+      return <CheckboxGroupField {...props} />;
     case 'radio':
       return <RadioField {...props} />;
   }

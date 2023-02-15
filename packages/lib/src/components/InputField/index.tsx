@@ -57,7 +57,7 @@ export const InputField: Component<InputFieldProps> = (props) => {
   });
 
   const [store, setStore] = createStore<InputFieldStore>(baseStore);
-  setStore('props', (prev) => ({ ...prev, onInput }));
+  setStore('props', 'onInput', () => onInput);
 
   return props.render(store);
 };

@@ -71,7 +71,7 @@ export const RadioField: Component<RadioFieldProps> = (props) => {
   });
 
   const [store, setStore] = createStore<RadioFieldStore>(baseStore);
-  setStore('props', (prev) => ({ ...prev, onChange }));
+  setStore('props', 'onChange', () => onChange);
 
   return props.render(store);
 };

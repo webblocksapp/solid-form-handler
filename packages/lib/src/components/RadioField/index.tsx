@@ -34,8 +34,6 @@ export const RadioField: Component<RadioFieldProps> = (props) => {
    * Extended onInput event.
    */
   const onChange: RadioFieldProps['onChange'] = (event) => {
-    console.log(event.currentTarget);
-
     //Form handler prop sets and validate the value onInput.
     baseStore.helpers.onValueChange(
       event.currentTarget.value,

@@ -10,6 +10,8 @@ import {
   InputFieldProps,
   RadioField,
   RadioFieldProps,
+  RadioGroupField,
+  RadioGroupFieldProps,
 } from '@lib-components';
 
 const FIELD_PROPS_TO_OMIT = ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode'] as const;
@@ -20,7 +22,8 @@ export type FieldByModeProps<TDef extends FieldDefinition> =
   | InputFieldProps<TDef>
   | CheckboxFieldProps<TDef>
   | CheckboxGroupFieldProps<TDef>
-  | RadioFieldProps<TDef>;
+  | RadioFieldProps<TDef>
+  | RadioGroupFieldProps<TDef>;
 export type FieldComponentProps<TDef extends FieldDefinition = FieldDefinition> = FieldProps & FieldByModeProps<TDef>;
 
 export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: FieldComponentProps<TDef>) => {
@@ -120,5 +123,7 @@ export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: Fie
       return <CheckboxGroupField {...props} />;
     case 'radio':
       return <RadioField {...props} />;
+    case 'radio-group':
+      return <RadioGroupField {...props} />;
   }
 });

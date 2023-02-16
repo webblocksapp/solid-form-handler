@@ -26,8 +26,8 @@ export const Select: Component<SelectProps> = (props) => {
   });
 
   return (
-    <Field<{ props: typeof rest }>
-      {...rest}
+    <Field
+      {...props}
       mode="input"
       render={(field) => (
         <div classList={local.classList}>
@@ -36,7 +36,7 @@ export const Select: Component<SelectProps> = (props) => {
               {local.label}
             </label>
           )}
-          <select {...field.props} classList={{ 'is-invalid': field.helpers.error, 'form-select': true }}>
+          <select {...rest} {...field.props} classList={{ 'is-invalid': field.helpers.error, 'form-select': true }}>
             <For each={options()}>
               {(option) => (
                 <option value={option.value} selected={option.value == field.props.value}>

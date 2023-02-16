@@ -13,10 +13,9 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
   const [local, rest] = splitProps(props, ['classList', 'label', 'display', 'uncheckedValue']);
 
   return (
-    <Field<{ props: typeof rest }>
-      {...rest}
+    <Field
+      {...props}
       mode="checkbox"
-      uncheckedValue={local.uncheckedValue}
       render={(field) => (
         <div classList={local.classList}>
           <div
@@ -27,6 +26,7 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
             }}
           >
             <input
+              {...rest}
               {...field.props}
               type="checkbox"
               classList={{ 'is-invalid': field.helpers.error, 'form-check-input': true }}

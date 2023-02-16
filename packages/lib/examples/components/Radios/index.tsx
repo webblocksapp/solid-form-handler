@@ -1,5 +1,5 @@
 import { FieldProps } from '@interfaces';
-import { Component, For, splitProps } from 'solid-js';
+import { Component, For } from 'solid-js';
 import { Radio } from '@components';
 import { Field } from '@lib-components';
 
@@ -13,17 +13,15 @@ export type RadiosProps = FieldProps & {
 };
 
 export const Radios: Component<RadiosProps> = (props) => {
-  const [local, rest] = splitProps(props, ['label', 'options']);
-
   return (
     <Field
-      {...rest}
+      {...props}
       mode="radio-group"
       render={(field) => (
         <div>
-          {local.label && <label>{local.label}</label>}
+          {props.label && <label>{props.label}</label>}
           <div classList={{ 'is-invalid': field.helpers.error }}>
-            <For each={local.options}>
+            <For each={props.options}>
               {(option, i) => (
                 <Radio
                   {...field.props}

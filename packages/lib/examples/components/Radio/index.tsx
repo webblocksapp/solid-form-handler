@@ -11,13 +11,14 @@ export const Radio: Component<RadioProps> = (props) => {
   const [local, rest] = splitProps(props, ['label', 'classList']);
 
   return (
-    <Field<{ props: typeof rest }>
-      {...rest}
+    <Field
+      {...props}
       mode="radio"
       render={(field) => (
         <div classList={local.classList}>
           <div classList={{ 'form-check': true, 'is-invalid': field.helpers.error }}>
             <input
+              {...rest}
               {...field.props}
               classList={{ 'form-check-input': true, 'is-invalid': field.helpers.error }}
               type="radio"

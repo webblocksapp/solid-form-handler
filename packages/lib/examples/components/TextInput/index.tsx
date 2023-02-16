@@ -8,8 +8,8 @@ export const TextInput: Component<TextInputProps> = (props) => {
   const [local, rest] = splitProps(props, ['classList', 'label']);
 
   return (
-    <Field<{ props: typeof rest }>
-      {...rest}
+    <Field
+      {...props}
       mode="input"
       render={(field) => (
         <div classList={local.classList}>
@@ -18,7 +18,7 @@ export const TextInput: Component<TextInputProps> = (props) => {
               {local.label}
             </label>
           )}
-          <input {...field.props} classList={{ 'is-invalid': field.helpers.error, 'form-control': true }} />
+          <input {...rest} {...field.props} classList={{ 'is-invalid': field.helpers.error, 'form-control': true }} />
           {field.helpers.error && <div class="invalid-feedback">{field.helpers.errorMessage}</div>}
         </div>
       )}

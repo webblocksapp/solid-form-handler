@@ -2,23 +2,22 @@ import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from 
 import { Component, createEffect, createSelector, JSXElement, mergeProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
-import { FieldDefinition, FieldPropsToOmit } from '@lib-components';
 
-type RadioGroupFieldStore<TDef extends FieldDefinition = FieldDefinition> = Omit<FieldStore, 'props' | 'helpers'> & {
+type RadioGroupFieldStore = Omit<FieldStore, 'props' | 'helpers'> & {
   props: FieldStore['props'] & {
     onChange?: CommonEvent;
     value: never[];
-  } & FieldPropsToOmit<TDef['props']>;
+  };
   helpers: FieldStore['helpers'] & {
     isChecked: (value: any) => boolean;
   };
 };
 
-export type RadioGroupFieldProps<TDef extends FieldDefinition = FieldDefinition> = CommonFieldProps & {
+export type RadioGroupFieldProps = CommonFieldProps & {
   mode: 'radio-group';
   onChange?: CommonEvent;
   onChangeOptions?: SetFieldValueOptions;
-  render: (field: RadioGroupFieldStore<TDef>) => JSXElement;
+  render: (field: RadioGroupFieldStore) => JSXElement;
 };
 
 export const RadioGroupField: Component<RadioGroupFieldProps> = (props) => {

@@ -2,19 +2,18 @@ import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from 
 import { Component, createEffect, JSXElement, mergeProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
-import { FieldDefinition, FieldPropsToOmit } from '@lib-components';
 
-type InputFieldStore<TDef extends FieldDefinition = FieldDefinition> = Omit<FieldStore, 'props'> & {
+type InputFieldStore = Omit<FieldStore, 'props'> & {
   props: FieldStore['props'] & {
     onInput?: CommonEvent;
-  } & FieldPropsToOmit<TDef['props']>;
+  };
 };
 
-export type InputFieldProps<TDef extends FieldDefinition = FieldDefinition> = CommonFieldProps & {
+export type InputFieldProps = CommonFieldProps & {
   mode: 'input';
   onInput?: CommonEvent;
   onInputOptions?: SetFieldValueOptions;
-  render: (field: InputFieldStore<TDef>) => JSXElement;
+  render: (field: InputFieldStore) => JSXElement;
 };
 
 export const InputField: Component<InputFieldProps> = (props) => {

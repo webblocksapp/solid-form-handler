@@ -1,4 +1,4 @@
-import { CommonObject, FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
+import { CommonEvent, FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
 import { createEffect, createUniqueId, splitProps } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 import {
@@ -15,22 +15,26 @@ import {
 } from '@lib-components';
 
 const FIELD_PROPS_TO_OMIT = ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode'] as const;
+const FIELD_PROPS_TO_PRESERVE = ['id', 'name', 'value', 'onInput', 'onChange'] as const;
 
-export type FieldPropsToOmit<T> = Omit<T, typeof FIELD_PROPS_TO_OMIT[number]>;
-export type FieldDefinition = { props: CommonObject };
-export type FieldByModeProps<TDef extends FieldDefinition> =
-  | InputFieldProps<TDef>
-  | CheckboxFieldProps<TDef>
-  | CheckboxGroupFieldProps<TDef>
-  | RadioFieldProps<TDef>
-  | RadioGroupFieldProps<TDef>;
-export type FieldComponentProps<TDef extends FieldDefinition = FieldDefinition> = FieldProps & FieldByModeProps<TDef>;
+export type FieldByModeProps =
+  | InputFieldProps
+  | CheckboxFieldProps
+  | CheckboxGroupFieldProps
+  | RadioFieldProps
+  | RadioGroupFieldProps;
+export type FieldComponentProps = FieldProps & FieldByModeProps;
+export type FieldPropsReturn = FieldProps & {
+  onInput?: CommonEvent;
+  onChange?: CommonEvent;
+};
 
-export const Field = withFieldProvider(<TDef extends FieldDefinition>(props: FieldComponentProps<TDef>) => {
+export const Field = withFieldProvider((props: FieldComponentProps) => {
   const [_, rest] = splitProps(props, FIELD_PROPS_TO_OMIT);
+  const [local] = splitProps(rest as any, FIELD_PROPS_TO_PRESERVE);
   const { setBaseStore } = useFieldContext();
 
-  setBaseStore('props', (prev) => ({ ...prev, ...rest }));
+  setBaseStore('props', local);
 
   /**
    * Helper method for setting the value to the form handler if no

@@ -1,14 +1,9 @@
 import { Component } from 'solid-js';
 import { useFormHandler } from '@hooks';
-import { zodSchema } from '@utils';
-import { z } from 'zod';
+import { ValidationSchema } from '@interfaces';
 
-const schema = z.object({
-  country: z.coerce.number().min(1, 'Country is required'),
-});
-
-export const SelectImpl: Component = () => {
-  const formHandler = useFormHandler(zodSchema(schema));
+export const SelectImpl: Component<{ schema: ValidationSchema<any> }> = (props) => {
+  const formHandler = useFormHandler(props.schema);
 
   return (
     <>

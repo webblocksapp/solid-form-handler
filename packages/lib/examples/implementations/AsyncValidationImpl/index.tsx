@@ -1,5 +1,5 @@
 import { Component, createEffect } from 'solid-js';
-import { TextInput } from '@components';
+import { TextInput } from '@example-components';
 import { useFormHandler } from '@hooks';
 import * as yup from 'yup';
 import { yupSchema } from '@utils';

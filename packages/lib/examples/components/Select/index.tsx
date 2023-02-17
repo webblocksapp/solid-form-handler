@@ -1,5 +1,5 @@
 import { FieldProps } from '@interfaces';
-import { Field } from '@lib-components';
+import { Field } from '@components';
 import { Component, createEffect, createSignal, For, JSX, splitProps } from 'solid-js';
 
 type SelectableOption = { value: string | number; label: string };

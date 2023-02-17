@@ -1,4 +1,4 @@
-import { Checkbox, TextInput } from '@components';
+import { Checkbox, TextInput } from '@example-components';
 import { useFormHandler } from '@hooks';
 import { ValidationSchema } from '@interfaces';
 import { Component, createEffect, Show } from 'solid-js';

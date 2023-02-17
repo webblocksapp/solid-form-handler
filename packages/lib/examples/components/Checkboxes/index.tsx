@@ -1,7 +1,7 @@
 import { FieldProps } from '@interfaces';
 import { Component, For, JSX } from 'solid-js';
-import { Checkbox } from '@components';
-import { Field } from '@lib-components';
+import { Checkbox } from '@example-components';
+import { Field } from '@components';
 
 type SelectableOption = { value: string | number; label: string };
 

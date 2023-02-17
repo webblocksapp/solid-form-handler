@@ -1,7 +1,7 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
 import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
-import { Select } from '@components/legacy';
+import { Select } from '@example-components/legacy';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { schema, Schema, COUNTRIES } from './mocks';

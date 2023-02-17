@@ -1,7 +1,7 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
 import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
-import { Radio } from '@components';
+import { Radio } from '@example-components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { schema, Schema } from './mocks';

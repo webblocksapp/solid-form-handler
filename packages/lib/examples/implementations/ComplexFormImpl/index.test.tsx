@@ -1,5 +1,5 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
-import { ComplexFormImpl } from '@implementations';
+import { ComplexFormImpl } from '.';
 
 describe('Complex Form implementation', () => {
   it('submit button is enabled after fill form', async () => {

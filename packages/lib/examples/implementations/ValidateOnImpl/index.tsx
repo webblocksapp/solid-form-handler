@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
-import { TextInput } from '@components';
+import { TextInput } from '@example-components';
 import * as yup from 'yup';
 
 export type Schema = { name: string; email: string };

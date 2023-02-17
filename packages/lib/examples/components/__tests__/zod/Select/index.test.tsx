@@ -1,7 +1,7 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
 import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
-import { Select } from '@components';
+import { Select } from '@example-components';
 import { useFormHandler } from '@hooks';
 import { zodSchema } from '@utils';
 import { schema, Schema, COUNTRIES } from './mocks';

@@ -1,7 +1,7 @@
 import { FieldProps } from '@interfaces';
 import { Component, For } from 'solid-js';
-import { Radio } from '@components';
-import { Field } from '@lib-components';
+import { Radio } from '@example-components';
+import { Field } from '@components';
 
 type SelectableOption = { value: string | number; label: string };
 

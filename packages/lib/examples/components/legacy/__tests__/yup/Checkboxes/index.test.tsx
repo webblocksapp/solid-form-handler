@@ -1,7 +1,7 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
 import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
-import { Checkboxes } from '@components/legacy';
+import { Checkboxes } from '@example-components/legacy';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { schema, Schema, FAVORITE_FOODS } from './mocks';

@@ -1,5 +1,5 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
-import { FormImpl } from '@implementations';
+import { FormImpl } from '.';
 
 describe('Form implementation', () => {
   it('must display all error validations on submit', async () => {

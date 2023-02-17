@@ -12,15 +12,14 @@
     "jsxImportSource": "solid-js",
     "target": "esnext",
     "paths": {
-      "@interfaces": ["src/interfaces"],
-      "@hooks": ["src/hooks"],
-      "@utils": ["src/utils"],
-      "@implementations": ["examples/implementations"],
-      "@components": ["examples/components"],
-      "@components/suid": ["examples/components/suid"],
-      "@components/legacy": ["examples/components/legacy"],
+      "@components": ["src/components"],
       "@hocs": ["src/hocs"],
-      "@lib-components": ["src/components"]
+      "@hooks": ["src/hooks"],
+      "@interfaces": ["src/interfaces"],
+      "@utils": ["src/utils"],
+      "@example-components": ["examples/components"],
+      "@example-components/suid": ["examples/components/suid"],
+      "@example-components/legacy": ["examples/components/legacy"]
     },
     "types": ["vite/client", "node", "@types/jest"]
   }

@@ -1,7 +1,7 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
 import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
-import { TextInput } from '@components/legacy';
+import { TextInput } from '@example-components/legacy';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { schema, Schema } from './mocks';

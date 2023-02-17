@@ -1,4 +1,4 @@
-import { Field } from '@lib-components';
+import { Field } from '@components';
 import { FieldProps } from '@interfaces';
 import { Component, JSX, splitProps } from 'solid-js';
 

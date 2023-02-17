@@ -1,5 +1,5 @@
 import { screen, render, fireEvent, waitFor } from 'solid-testing-library';
-import { FieldsetsFormImpl } from '@implementations';
+import { FieldsetsFormImpl } from '.';
 
 describe('FieldsetsFormImpl', () => {
   it('adds a fieldset', async () => {

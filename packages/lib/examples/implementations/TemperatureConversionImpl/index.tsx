@@ -1,4 +1,4 @@
-import { TextInput } from '@components';
+import { TextInput } from '@example-components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { Component } from 'solid-js';

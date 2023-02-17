@@ -1,5 +1,5 @@
 import { FieldStore } from '@interfaces';
-import { FieldComponentProps } from '@lib-components';
+import { FieldComponentProps } from '@components';
 import { Component, createContext, useContext } from 'solid-js';
 import { createStore, SetStoreFunction } from 'solid-js/store';
 

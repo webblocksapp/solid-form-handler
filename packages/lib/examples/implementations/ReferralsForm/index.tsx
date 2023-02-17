@@ -3,7 +3,7 @@ import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { referralsSchema } from './schema';
 import { Referrals } from './types';
-import { TextInput } from '@components';
+import { TextInput } from '@example-components';
 
 export const ReferralsForm: Component = () => {
   const formHandler = useFormHandler<Referrals>(yupSchema(referralsSchema));

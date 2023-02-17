@@ -1,5 +1,5 @@
 import { FieldProps } from '@interfaces';
-import { Field } from '@lib-components';
+import { Field } from '@components';
 import { Component, JSX, splitProps } from 'solid-js';
 
 export type CheckboxProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> &

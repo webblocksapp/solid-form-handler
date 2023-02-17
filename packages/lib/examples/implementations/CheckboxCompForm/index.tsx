@@ -2,7 +2,7 @@ import { Component } from 'solid-js';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import * as yup from 'yup';
-import { Checkbox } from '@components';
+import { Checkbox } from '@example-components';
 
 type Schema = {
   acceptPolicy: boolean;

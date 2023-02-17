@@ -12,7 +12,7 @@ import {
   RadioFieldProps,
   RadioGroupField,
   RadioGroupFieldProps,
-} from '@lib-components';
+} from '@components';
 
 const FIELD_PROPS_TO_OMIT = ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode'] as const;
 const FIELD_PROPS_TO_PRESERVE = ['id', 'name', 'value', 'onInput', 'onChange'] as const;

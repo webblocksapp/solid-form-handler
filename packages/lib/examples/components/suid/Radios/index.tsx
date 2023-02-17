@@ -1,6 +1,6 @@
 import { FormHandler } from '@interfaces';
 import { Component, createEffect, createSelector, createUniqueId, For, splitProps } from 'solid-js';
-import { Radio, RadioProps } from '@components/suid';
+import { Radio, RadioProps } from '@example-components/suid';
 import { createStore } from 'solid-js/store';
 import FormGroup from '@suid/material/FormGroup';
 import FormLabel from '@suid/material/FormLabel';

@@ -1,7 +1,8 @@
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import * as yup from 'yup';
+import { Field } from '@components';
 
 type Schema = {
   policy: boolean;
@@ -18,17 +19,23 @@ export const CheckboxImpl: Component = () => {
     <>
       <div>
         <h3>Checkbox implementation</h3>
-        <div style="display: flex; align-items: center">
-          <input
-            type="checkbox"
-            data-testid="test-checkbox"
-            id="policy"
-            name="policy"
-            onchange={({ currentTarget: { name, checked } }) => formHandler.setFieldValue(name, checked)}
-          />
-          <label for="policy">Accept terms and conditions</label>
-        </div>
-        <small style="color: red">{formHandler.getFieldError('policy')}</small>
+
+        <Field
+          formHandler={formHandler}
+          mode="checkbox"
+          name="policy"
+          render={(field) => (
+            <>
+              <div style="display: flex; align-items: center">
+                <input {...field.props} type="checkbox" data-testid="test-checkbox" />
+                <label for={field.props.id}>Accept terms and conditions</label>
+              </div>
+              <Show when={field.helpers.error}>
+                <small style="color: red">{field.helpers.errorMessage}</small>
+              </Show>
+            </>
+          )}
+        ></Field>
       </div>
     </>
   );

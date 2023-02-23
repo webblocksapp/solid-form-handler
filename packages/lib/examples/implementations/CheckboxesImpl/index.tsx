@@ -1,7 +1,8 @@
-import { Component, For } from 'solid-js';
+import { Component, For, Show } from 'solid-js';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import * as yup from 'yup';
+import { Field } from '@components';
 
 type SelectableOption = {
   value: number | string;
@@ -31,6 +32,7 @@ export const CheckboxesImpl: Component = () => {
   const submit = async (event: Event) => {
     event.preventDefault();
     try {
+      await formHandler.validateForm();
       alert('Data sent with success: ' + JSON.stringify(formData()));
       formHandler.resetForm();
     } catch (error) {
@@ -49,32 +51,32 @@ export const CheckboxesImpl: Component = () => {
   return (
     <form autocomplete="off" onSubmit={submit}>
       <div>
-        <For each={favoriteFoods}>
-          {(favoriteFood) => (
-            <div>
-              <label>{favoriteFood.label}</label>
-              <input
-                type="checkbox"
-                value={favoriteFood.value}
-                name="favoriteFoods"
-                checked={formHandler.getFieldValue('favoriteFoods').some((item: any) => item == favoriteFood.value)}
-                onChange={({ currentTarget: { name, checked, value } }) => {
-                  if (checked) {
-                    formHandler.setFieldValue(name, [...formHandler.getFieldValue('favoriteFoods'), value]);
-                  } else {
-                    formHandler.setFieldValue(
-                      name,
-                      formHandler.getFieldValue('favoriteFoods').filter((item: any) => value != item)
-                    );
-                  }
-                }}
-              />
-            </div>
+        <Field
+          mode="checkbox-group"
+          name="favoriteFoods"
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <For each={favoriteFoods}>
+                {(favoriteFood, i) => (
+                  <div>
+                    <label>{favoriteFood.label}</label>
+                    <input
+                      {...field.props}
+                      id={`${field.props.id}-${i()}`}
+                      type="checkbox"
+                      value={favoriteFood.value}
+                      checked={field.helpers.isChecked(favoriteFood.value)}
+                    />
+                  </div>
+                )}
+              </For>
+              <Show when={field.helpers.error}>
+                <div style={{ color: 'red' }}>{field.helpers.errorMessage}</div>
+              </Show>
+            </>
           )}
-        </For>
-        {formHandler.fieldHasError('favoriteFoods') && (
-          <div style={{ color: 'red' }}>{formHandler.getFieldError('favoriteFoods')}</div>
-        )}
+        ></Field>
       </div>
       <div>
         <button>Submit</button>

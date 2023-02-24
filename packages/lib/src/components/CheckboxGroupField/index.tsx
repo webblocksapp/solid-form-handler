@@ -1,8 +1,9 @@
 import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from '@interfaces';
-import { Component, createEffect, createSelector, JSXElement, mergeProps } from 'solid-js';
+import { Component, createEffect, createSelector, JSXElement, mergeProps, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 
+type CheckboxGroupFieldPropKey = keyof CheckboxGroupFieldStore['props'];
 type CheckboxGroupFieldStore = Omit<FieldStore, 'props' | 'helpers'> & {
   props: Omit<FieldStore['props'], 'value'> & {
     onChange?: CommonEvent;
@@ -11,6 +12,9 @@ type CheckboxGroupFieldStore = Omit<FieldStore, 'props' | 'helpers'> & {
   helpers: Omit<FieldStore['helpers'], 'onValueChange'> & {
     onValueChange: (value: any, checked: boolean, options?: SetFieldValueOptions) => void;
     isChecked: (value: any) => boolean;
+    getPropsExcept: (
+      keys: CheckboxGroupFieldPropKey[]
+    ) => Pick<CheckboxGroupFieldStore['props'], CheckboxGroupFieldPropKey>;
   };
 };
 
@@ -61,6 +65,14 @@ export const CheckboxGroupField: Component<CheckboxGroupFieldProps> = (props) =>
   };
 
   /**
+   * Helper function for removing unneeded props.
+   */
+  const getPropsExcept = (keys: CheckboxGroupFieldPropKey[]) => {
+    const [_, rest] = splitProps(store.props, keys);
+    return rest;
+  };
+
+  /**
    * Controls component's value.
    */
   createEffect(() => {
@@ -95,6 +107,7 @@ export const CheckboxGroupField: Component<CheckboxGroupFieldProps> = (props) =>
   setStore('props', 'onChange', () => onChange);
   setStore('helpers', 'isChecked', () => isChecked);
   setStore('helpers', 'onValueChange', () => onValueChange);
+  setStore('helpers', 'getPropsExcept', () => getPropsExcept);
 
   return props.render(store);
 };

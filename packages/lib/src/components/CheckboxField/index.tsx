@@ -1,8 +1,9 @@
 import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from '@interfaces';
-import { Component, createEffect, JSXElement, mergeProps } from 'solid-js';
+import { Component, createEffect, JSXElement, mergeProps, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 
+type CheckboxFieldPropKey = keyof CheckboxFieldStore['props'];
 type CheckboxFieldStore = Omit<FieldStore, 'props' | 'helpers'> & {
   props: FieldStore['props'] & {
     onChange?: CommonEvent;
@@ -10,6 +11,7 @@ type CheckboxFieldStore = Omit<FieldStore, 'props' | 'helpers'> & {
   };
   helpers: Omit<FieldStore['helpers'], 'onValueChange'> & {
     onValueChange: (value: any, checked: boolean, options?: SetFieldValueOptions) => void;
+    getPropsExcept: (keys: CheckboxFieldPropKey[]) => Pick<CheckboxFieldStore['props'], CheckboxFieldPropKey>;
   };
 };
 
@@ -66,6 +68,14 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
   };
 
   /**
+   * Helper function for removing unneeded props.
+   */
+  const getPropsExcept = (keys: CheckboxFieldPropKey[]) => {
+    const [_, rest] = splitProps(store.props, keys);
+    return rest;
+  };
+
+  /**
    * Computes the checked status.
    * - If value is provided, it's compared with form handler value.
    * - If no value prop is provided, it's used the boolean flag stored at form handler.
@@ -94,6 +104,7 @@ export const CheckboxField: Component<CheckboxFieldProps> = (props) => {
   const [store, setStore] = createStore(baseStore as unknown as CheckboxFieldStore);
   setStore('props', 'onChange', () => onChange);
   setStore('helpers', 'onValueChange', () => onValueChange);
+  setStore('helpers', 'getPropsExcept', () => getPropsExcept);
 
   return props.render(store);
 };

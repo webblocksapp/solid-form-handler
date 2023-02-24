@@ -1,11 +1,16 @@
 import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from '@interfaces';
-import { Component, createEffect, JSXElement, mergeProps } from 'solid-js';
+import { Component, createEffect, JSXElement, mergeProps, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 
+type InputFieldPropKey = keyof InputFieldStore['props'];
 type InputFieldStore = Omit<FieldStore, 'props'> & {
   props: FieldStore['props'] & {
     onInput?: CommonEvent;
+  };
+  helpers: FieldStore['helpers'] & {
+    getPropsExcept: (keys: InputFieldPropKey[]) => Pick<InputFieldStore['props'], InputFieldPropKey>;
+    matches: (value: any) => boolean;
   };
 };
 
@@ -38,6 +43,23 @@ export const InputField: Component<InputFieldProps> = (props) => {
   };
 
   /**
+   * Helper function for removing unneeded props.
+   */
+  const getPropsExcept = (keys: InputFieldPropKey[]) => {
+    const [_, rest] = splitProps(store.props, keys);
+    return rest;
+  };
+
+  /**
+   * Helper function for check if the value matches the store value.
+   */
+  const matches = (value: any) => {
+    if (store.props.value === undefined) return false;
+    if (Array.isArray(store.props.value)) return store.props.value.some((item) => item == value);
+    return value == store.props.value;
+  };
+
+  /**
    * Controls component's value.
    */
   createEffect(() => {
@@ -55,8 +77,10 @@ export const InputField: Component<InputFieldProps> = (props) => {
     props.formHandler?.setFieldDefaultValue?.(props.name, props.value);
   });
 
-  const [store, setStore] = createStore<InputFieldStore>(baseStore);
+  const [store, setStore] = createStore(baseStore as unknown as InputFieldStore);
   setStore('props', 'onInput', () => onInput);
+  setStore('helpers', 'getPropsExcept', () => getPropsExcept);
+  setStore('helpers', 'matches', () => matches);
 
   return props.render(store);
 };

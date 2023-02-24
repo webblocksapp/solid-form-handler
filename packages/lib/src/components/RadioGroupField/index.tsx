@@ -1,8 +1,9 @@
 import { CommonEvent, CommonFieldProps, FieldStore, SetFieldValueOptions } from '@interfaces';
-import { Component, createEffect, createSelector, JSXElement, mergeProps } from 'solid-js';
+import { Component, createEffect, createSelector, JSXElement, mergeProps, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useFieldContext } from '@hocs';
 
+type RadioGroupFieldPropKey = keyof RadioGroupFieldStore['props'];
 type RadioGroupFieldStore = Omit<FieldStore, 'props' | 'helpers'> & {
   props: FieldStore['props'] & {
     onChange?: CommonEvent;
@@ -10,6 +11,7 @@ type RadioGroupFieldStore = Omit<FieldStore, 'props' | 'helpers'> & {
   };
   helpers: FieldStore['helpers'] & {
     isChecked: (value: any) => boolean;
+    getPropsExcept: (keys: RadioGroupFieldPropKey[]) => Pick<RadioGroupFieldStore['props'], RadioGroupFieldPropKey>;
   };
 };
 
@@ -42,6 +44,14 @@ export const RadioGroupField: Component<RadioGroupFieldProps> = (props) => {
   };
 
   /**
+   * Helper function for removing unneeded props.
+   */
+  const getPropsExcept = (keys: RadioGroupFieldPropKey[]) => {
+    const [_, rest] = splitProps(store.props, keys);
+    return rest;
+  };
+
+  /**
    * Controls component's value.
    */
   createEffect(() => {
@@ -59,7 +69,7 @@ export const RadioGroupField: Component<RadioGroupFieldProps> = (props) => {
     props.formHandler?.setFieldDefaultValue?.(props.name, props.value);
   });
 
-  const [store, setStore] = createStore(baseStore as RadioGroupFieldStore);
+  const [store, setStore] = createStore(baseStore as unknown as RadioGroupFieldStore);
 
   /**
    * Radio is checked
@@ -69,6 +79,7 @@ export const RadioGroupField: Component<RadioGroupFieldProps> = (props) => {
   setStore('props', 'value', []);
   setStore('props', 'onChange', () => onChange);
   setStore('helpers', 'isChecked', () => isChecked);
+  setStore('helpers', 'getPropsExcept', () => getPropsExcept);
 
   return props.render(store);
 };

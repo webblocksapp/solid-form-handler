@@ -30,3 +30,5 @@ export const triggersSchema = z
       });
     }
   });
+
+export const countriesSchema = z.object({ countries: z.array(z.number()).min(2) });

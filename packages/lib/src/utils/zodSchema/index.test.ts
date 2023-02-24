@@ -249,4 +249,16 @@ describe('zodSchema', () => {
       });
     }
   });
+
+  it('validateAt CASE-4', async () => {
+    const validationSchema = zodSchema(z.object({ key1: z.array(z.number()).min(2) }));
+
+    let data = { key1: [1] };
+
+    try {
+      await validationSchema.validateAt('key1', data);
+    } catch (error) {
+      expect(error).toMatchObject({ path: 'key1', message: 'Array must contain at least 2 element(s)' });
+    }
+  });
 });

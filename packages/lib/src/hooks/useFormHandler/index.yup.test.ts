@@ -1,6 +1,15 @@
 import { useFormHandler } from '@hooks';
+import { FormFieldError } from '@interfaces';
 import { FormErrorsException, yupSchema } from '@utils';
-import { personSchema, contactSchema, personsSchema, referralsSchema, triggersSchema } from './mocks.yup';
+import {
+  personSchema,
+  contactSchema,
+  personsSchema,
+  referralsSchema,
+  triggersSchema,
+  countriesSchema,
+  countriesObjSchema,
+} from './mocks.yup';
 
 describe('useFormHandler with yup', () => {
   it('formHandler object must be defined', () => {
@@ -710,5 +719,52 @@ describe('useFormHandler with yup', () => {
         validating: false,
       },
     });
+  });
+
+  it('form must fail expecting 2 primitives', async () => {
+    const formHandler = useFormHandler(yupSchema(countriesSchema));
+    await formHandler.setFieldValue('countries', [1]);
+
+    try {
+      await formHandler.validateForm();
+    } catch (error) {
+      if (error instanceof FormErrorsException) {
+        expect(error.validationResult).toEqual(
+          expect.arrayContaining([
+            {
+              path: 'countries',
+              errorMessage: 'Array must contain at least 2 element(s)',
+            },
+          ])
+        );
+      }
+    }
+
+    expect(formHandler.isFormInvalid()).toBe(true);
+  });
+
+  it('form must fail expecting 2 objects', async () => {
+    let validationResult: FormFieldError[] = [];
+    const formHandler = useFormHandler(yupSchema(countriesObjSchema));
+    await formHandler.setFieldValue('countries', [{ name: 'Colombia' }]);
+
+    try {
+      await formHandler.validateForm();
+    } catch (error) {
+      if (error instanceof FormErrorsException) {
+        validationResult = error.validationResult;
+      }
+    }
+
+    console.log(formHandler.getFormState());
+
+    expect(validationResult).toEqual(
+      expect.arrayContaining([
+        {
+          path: 'countries',
+          errorMessage: 'Array must contain at least 2 element(s)',
+        },
+      ])
+    );
   });
 });

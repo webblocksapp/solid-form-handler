@@ -7,6 +7,7 @@ import {
   FormFieldError,
   FormHandlerOptions,
   ValidateFieldOptions,
+  CommonObject,
 } from '@interfaces';
 import {
   equals,
@@ -336,7 +337,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const validate = async (options?: { throwException?: boolean; force?: boolean; delay?: 0 }) => {
     const promises: Promise<void>[] = [];
-    Object.keys(flattenObject(formData.data)).forEach((path) => {
+
+    //Form data is not flattened but the whole data tree will be iterated recursively by validateField.
+    Object.keys(formData.data as CommonObject).forEach((path) => {
       promises.push(validateField(path, { force: options?.force, delay: options?.delay, omitTriggers: true }));
     });
 

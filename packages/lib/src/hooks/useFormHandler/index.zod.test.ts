@@ -1,6 +1,13 @@
 import { useFormHandler } from '@hooks';
 import { FormErrorsException, zodSchema } from '@utils';
-import { personSchema, contactSchema, personsSchema, referralsSchema, triggersSchema } from './mocks.zod';
+import {
+  personSchema,
+  contactSchema,
+  personsSchema,
+  referralsSchema,
+  triggersSchema,
+  countriesSchema,
+} from './mocks.zod';
 
 describe('useFormHandler with zod', () => {
   it('formHandler object must be defined', () => {
@@ -710,5 +717,26 @@ describe('useFormHandler with zod', () => {
         validating: false,
       },
     });
+  });
+
+  it('form must fail expecting 2 primitives', async () => {
+    const formHandler = useFormHandler(zodSchema(countriesSchema));
+    await formHandler.setFieldValue('countries', [1]);
+
+    try {
+      await formHandler.validateForm();
+    } catch (error) {
+      expect(formHandler.isFormInvalid()).toBe(true);
+      if (error instanceof FormErrorsException) {
+        expect(error.validationResult).toEqual(
+          expect.arrayContaining([
+            {
+              path: 'countries',
+              errorMessage: 'Array must contain at least 2 element(s)',
+            },
+          ])
+        );
+      }
+    }
   });
 });

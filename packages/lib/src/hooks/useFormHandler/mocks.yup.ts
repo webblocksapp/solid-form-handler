@@ -15,6 +15,14 @@ export type Contact = {
   contact: Person;
 };
 
+export type Schema1 = {
+  countries: number[];
+};
+
+export type Schema2 = {
+  countries: { name: string }[];
+};
+
 export const contactSchema: SchemaOf<Contact> = yup.object().shape({
   contact: personSchema,
 });
@@ -57,4 +65,9 @@ export const triggersSchema = yup.object({
       },
       message: "Password doesn't match",
     }),
+});
+
+export const countriesSchema: SchemaOf<Schema1> = yup.object({ countries: yup.array(yup.number().required()).min(2) });
+export const countriesObjSchema: SchemaOf<Schema2> = yup.object({
+  countries: yup.array(yup.object({ name: yup.string().required() }).required()).min(2),
 });

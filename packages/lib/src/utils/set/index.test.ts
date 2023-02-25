@@ -32,4 +32,8 @@ describe('set', () => {
   it('CASE-8', () => {
     expect(set(undefined, 'name.0', { isValid: false })).toMatchObject({ name: [{ isValid: false }] });
   });
+
+  it('CASE-9', () => {
+    expect(set([{ name: 'John' }], '1.name', 'Laura')).toMatchObject([{ name: 'John' }, { name: 'Laura' }]);
+  });
 });

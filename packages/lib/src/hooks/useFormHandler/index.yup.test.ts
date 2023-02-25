@@ -1,5 +1,5 @@
 import { useFormHandler } from '@hooks';
-import { FormFieldError } from '@interfaces';
+import { FieldState, FormFieldError } from '@interfaces';
 import { FormErrorsException, yupSchema } from '@utils';
 import {
   personSchema,
@@ -94,31 +94,55 @@ describe('useFormHandler with yup', () => {
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 60 });
   });
 
+  it('field state is updated as expected', () => {
+    const formHandler = useFormHandler(yupSchema(personSchema));
+    formHandler._.setFieldState('name', (fieldState: FieldState) => ({ ...fieldState, dirty: true }));
+    expect(formHandler._.getFieldState('name')).toEqual(
+      expect.objectContaining({
+        dirty: true,
+      })
+    );
+  });
+
+  it('field state is updated when added a fieldset', () => {
+    const formHandler = useFormHandler(yupSchema(personsSchema));
+    formHandler.addFieldset();
+    expect(formHandler._.getFieldState('1.name')).toEqual(
+      expect.objectContaining({
+        isInvalid: true,
+      })
+    );
+  });
+
   it('form state match object when form is filled', async () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
     await formHandler.fillForm({ name: 'George', age: 60 });
-    expect(formHandler.getFormState()).toMatchObject({
-      name: {
-        __state: true,
-        isInvalid: false,
-        errorMessage: '',
-        currentValue: 'George',
-        initialValue: 'George',
-        defaultValue: '',
-        touched: false,
-        dirty: false,
-      },
-      age: {
-        __state: true,
-        isInvalid: false,
-        errorMessage: '',
-        currentValue: 60,
-        initialValue: 60,
-        defaultValue: '',
-        touched: false,
-        dirty: false,
-      },
-    });
+    expect(formHandler.getFormState()).toEqual(
+      expect.objectContaining({
+        name: expect.objectContaining({
+          state: expect.objectContaining({
+            isInvalid: false,
+            errorMessage: '',
+            currentValue: 'George',
+            initialValue: 'George',
+            defaultValue: '',
+            touched: false,
+            dirty: false,
+          }),
+        }),
+        age: expect.objectContaining({
+          state: expect.objectContaining({
+            isInvalid: false,
+            errorMessage: '',
+            currentValue: 60,
+            initialValue: 60,
+            defaultValue: '',
+            touched: false,
+            dirty: false,
+          }),
+        }),
+      })
+    );
   });
 
   it('Schema with nested objects: form state match object when form is filled', async () => {
@@ -311,6 +335,7 @@ describe('useFormHandler with yup', () => {
         { name: '', age: '' },
       ],
     });
+    console.log(formHandler.getFormState());
     expect(formHandler._.getFieldState('referrals.0')).toMatchObject({
       name: {
         __state: true,

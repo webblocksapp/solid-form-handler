@@ -127,6 +127,10 @@ export const VanillaCompFormImpl: Component = () => {
       <pre>
         <code>{JSON.stringify(formData(), null, 2)}</code>
       </pre>
+
+      <pre>
+        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+      </pre>
     </form>
   );
 };

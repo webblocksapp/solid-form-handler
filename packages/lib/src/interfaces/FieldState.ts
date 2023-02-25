@@ -1,5 +1,4 @@
 export type FieldState = {
-  __state?: true;
   dataType: string;
   errorMessage: string;
   isInvalid: boolean;

@@ -1,5 +1,8 @@
 import { FieldState } from '@interfaces';
 
 export type FormState = {
-  [x: string]: FieldState & { [x: string]: FormState };
+  [x: string]: {
+    state: FieldState;
+    children: FormState | Array<FormState>;
+  };
 };

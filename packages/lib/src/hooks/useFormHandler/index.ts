@@ -10,9 +10,11 @@ import {
   CommonObject,
 } from '@interfaces';
 import {
+  buildFieldStatePath,
+  buildFormStatePaths,
+  createStore,
   equals,
-  flattenObject,
-  formatObjectPath,
+  objectPaths,
   FormErrorsException,
   get,
   isNumber,
@@ -21,7 +23,6 @@ import {
   ValidationError,
 } from '@utils';
 import { createSignal, createUniqueId, untrack } from 'solid-js';
-import { createStore } from 'solid-js/store';
 
 /**
  * Creates a reactive formHandler object that simplifies forms manipulation.
@@ -47,7 +48,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     options = { mapValue: (value) => value, ...options };
     value = options?.mapValue?.(parseValue(path, value));
     path = path ? `data.${path}` : 'data';
-    setFormData(...(formatObjectPath(path).split('.') as []), value);
+    setFormData(path, value);
   };
 
   /**
@@ -65,32 +66,22 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       options = { mapValue: (value) => value, ...options };
 
       /**
-       * Recursion is necessary if the field value is not a primitive.
+       * If the field currently has data, it's prioritized, otherwise,
+       * default value is set as initial field data.
        */
-      if (fieldState.__state === undefined) {
-        Object.keys(flattenObject(defaultValue)).forEach((key) => {
-          const finalPath = `${path}.${key}`;
-          setFieldDefaultValue(finalPath, get(defaultValue, key));
-        });
-      } else {
-        /**
-         * If the field currently has data, it's prioritized, otherwise,
-         * default value is set as initial field data.
-         */
-        const currentValue = computeDefaultValue(getFieldValue(path), defaultValue);
-        setFieldData(path, currentValue, { mapValue: options?.mapValue });
+      const currentValue = computeDefaultValue(getFieldValue(path), defaultValue);
+      setFieldData(path, currentValue, { mapValue: options?.mapValue });
 
-        /**
-         * Stores the default value at field state. Which will be used as new
-         * default value when form is reset.
-         */
-        setFieldState(path, {
-          ...fieldState,
-          currentValue: options?.mapValue?.(parseValue(path, currentValue)),
-          initialValue: defaultValue,
-          defaultValue: defaultValue,
-        });
-      }
+      /**
+       * Stores the default value at field state. Which will be used as new
+       * default value when form is reset.
+       */
+      setFieldState(path, {
+        ...fieldState,
+        currentValue: options?.mapValue?.(parseValue(path, currentValue)),
+        initialValue: defaultValue,
+        defaultValue: defaultValue,
+      });
     });
   };
 
@@ -115,36 +106,24 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * validates the field.
    */
   const setFieldValue = async (path: string = '', value: any, options?: SetFieldValueOptions) => {
-    if (!path) return;
-
     const fieldState = getFieldState(path);
     options = { touch: true, dirty: true, validate: true, mapValue: (value) => value, ...options };
 
     if (fieldState === undefined) return;
 
-    /**
-     * fieldState.__state is undefined when it's a nested object.
-     */
-    if (fieldState.__state === undefined) {
-      const data = get(formData.data, path);
-      const promises: Promise<any>[] = [];
-      Object.keys(flattenObject(data)).forEach((key) => {
-        const finalPath = `${path}.${key}`;
-        promises.push(setFieldValue(finalPath, get(value, key), options));
-      });
-      return Promise.all(promises);
-    } else {
-      setFieldData(path, value, { mapValue: options.mapValue });
-      setFieldState(path, (fieldState: FieldState) => ({
-        ...fieldState,
-        currentValue: options?.mapValue?.(parseValue(path, value)),
-      }));
-      const promises = Promise.all([options?.validate && validateField(path, options)]);
-      options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
-      options?.dirty && dirtyField(path);
-      options?.touch && touchField(path);
-      return promises;
-    }
+    setFieldData(path, value, { mapValue: options.mapValue });
+    setFieldState(path, (fieldState: FieldState) => ({
+      ...fieldState,
+      currentValue: options?.mapValue?.(parseValue(path, value)),
+    }));
+
+    const promises = Promise.all([options?.validate && validateField(path, options)]);
+
+    options?.htmlElement && fieldHtmlElement(path, options.htmlElement);
+    options?.dirty && dirtyField(path);
+    options?.touch && touchField(path);
+
+    return promises;
   };
 
   /**
@@ -159,8 +138,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the field state inside the formState store.
    */
   const setFieldState = (path: string = '', value: any) => {
-    path = path ? `data.${path}` : 'data';
-    setFormState(...(formatObjectPath(path).split('.') as []), value);
+    path = path ? `data.${buildFieldStatePath(path)}` : 'data';
+    setFormState(path, value);
   };
 
   /**
@@ -169,9 +148,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * which is rewritten with the current when this function is run.
    */
   const abortValidation = (path: string = '') => {
-    if (!path) return false;
-
     const fieldState = getFieldState(path);
+
+    if (fieldState === undefined) return;
+
     const currentValue = getFieldValue(path);
     const result = equals(fieldState?.cachedValue, currentValue);
 
@@ -188,16 +168,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       setTimeout(async () => {
         const fieldState = getFieldState(path);
         if (fieldState === undefined) return;
-        if (fieldState.__state === undefined) {
-          const promises: Promise<unknown>[] = [];
-          Object.keys(fieldState).forEach((key) => {
-            promises.push(setFieldTriggers(`${path}.${key}`));
-          });
-          resolve(await Promise.all(promises));
-        } else {
-          setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, triggers: paths }));
-          resolve(undefined);
-        }
+        setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, triggers: paths }));
+        resolve(undefined);
       });
     });
   };
@@ -256,68 +228,61 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const fieldState = getFieldState(path);
 
     if (fieldState === undefined) return;
-    if (fieldState.__state === undefined) {
-      const promises: Promise<void>[] = [];
-      Object.keys(fieldState).forEach((key) => {
-        promises.push(validateField(`${path}.${key}`, options));
-      });
-      await Promise.all(promises);
-    } else {
-      let validationId = createUniqueId();
 
-      options = {
-        ...options,
-        silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
-        validateOn: options?.validateOn || formHandlerOptions.validateOn,
-        delay: options?.delay ?? formHandlerOptions.delay,
-      };
+    let validationId = createUniqueId();
 
-      if (!validationSchema.isFieldFromSchema(path) || !path) return;
-      if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
-      if (options?.force !== true && fieldState?.__state && abortValidation(path)) return;
+    options = {
+      ...options,
+      silentValidation: options?.silentValidation || formHandlerOptions.silentValidation,
+      validateOn: options?.validateOn || formHandlerOptions.validateOn,
+      delay: options?.delay ?? formHandlerOptions.delay,
+    };
 
-      await new Promise((resolve) => {
-        setValidationId(path, validationId);
-        setTimeout(resolve, options?.delay) as unknown as number;
-      });
+    if (!validationSchema.isFieldFromSchema(path) || !path) return;
+    if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
+    if (options?.force !== true && abortValidation(path)) return;
 
-      if (getValidationId(path) !== validationId) return;
+    await new Promise((resolve) => {
+      setValidationId(path, validationId);
+      setTimeout(resolve, options?.delay) as unknown as number;
+    });
 
-      /**
-       * Field is invalidated before is validated again, specially for
-       * async validations that can take time.
-       */
+    if (getValidationId(path) !== validationId) return;
+
+    /**
+     * Field is invalidated before is validated again, specially for
+     * async validations that can take time.
+     */
+    setFieldState(path, (fieldState: FieldState) => ({
+      ...fieldState,
+      isInvalid: true,
+      validating: true,
+    }));
+
+    try {
+      await Promise.all([
+        validationSchema.validateAt(path, formData.data),
+        options?.omitTriggers !== true && runFieldTriggers(path),
+      ]);
+
       setFieldState(path, (fieldState: FieldState) => ({
         ...fieldState,
-        isInvalid: true,
-        validating: true,
+        isInvalid: false,
+        validating: false,
+        errorMessage: '',
       }));
-
-      try {
-        await Promise.all([
-          validationSchema.validateAt(path, formData.data),
-          options?.omitTriggers !== true && runFieldTriggers(path),
-        ]);
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        const errorMessage = options?.silentValidation ? '' : error.message;
 
         setFieldState(path, (fieldState: FieldState) => ({
           ...fieldState,
-          isInvalid: false,
+          isInvalid: true,
           validating: false,
-          errorMessage: '',
+          errorMessage,
         }));
-      } catch (error) {
-        if (error instanceof ValidationError) {
-          const errorMessage = options?.silentValidation ? '' : error.message;
-
-          setFieldState(path, (fieldState: FieldState) => ({
-            ...fieldState,
-            isInvalid: true,
-            validating: false,
-            errorMessage,
-          }));
-        } else {
-          console.error(error);
-        }
+      } else {
+        console.error(error);
       }
     }
   };
@@ -363,24 +328,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Gets the field value from formData store.
    */
   const getFieldDefaultValue = (path: string = '') => {
-    return path && findFieldDefaultValue(path);
-  };
-
-  /**
-   * Finds recursively the default value of a field.
-   */
-  const findFieldDefaultValue = (path: string = '', defaultValue?: any) => {
     const fieldState = getFieldState(path);
-    if (fieldState === undefined) return;
-    if (fieldState?.__state === undefined) {
-      defaultValue = Array.isArray(fieldState) ? [] : {};
-      Object.keys(fieldState).forEach((key) => {
-        set(defaultValue, key, findFieldDefaultValue(`${path}.${key}`, defaultValue));
-      });
-      return defaultValue;
-    } else {
-      return fieldState.defaultValue;
-    }
+    return fieldState?.defaultValue;
   };
 
   /**
@@ -401,24 +350,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Extracts the error message from the fieldState according to the given path.
    */
   const getFieldError = (path: string = ''): string => {
-    return path && findErrorMessages(path).join(', ').replace(/,\s$/, '').replace(/^,\s/, '');
-  };
-
-  /**
-   * Finds the error message if the field is a nested object or a primitive
-   */
-  const findErrorMessages = (path: string, errorMessages: string[] = []) => {
     const fieldState = getFieldState(path);
-    if (fieldState === undefined) return errorMessages;
-    if (fieldState.__state === undefined) {
-      Object.keys(fieldState).forEach((key) => {
-        errorMessages = findErrorMessages(`${path}.${key}`, errorMessages);
-      });
-    } else {
-      errorMessages.push(fieldState.errorMessage);
-    }
-
-    return errorMessages;
+    return (fieldState?.errorMessage || '').replace(/,\s$/, '').replace(/^,\s/, '');
   };
 
   /**
@@ -434,7 +367,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const getFormErrors = () => {
     const errors: FormFieldError[] = [];
 
-    for (let path in flattenObject(formData.data)) {
+    for (let path in objectPaths(formData.data)) {
       getFieldError(path) && errors.push({ path, errorMessage: getFieldError(path) });
     }
 
@@ -445,19 +378,17 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Generates the whole form state object metadata
    */
   const generateFormState = async (options?: { reset?: boolean; fill?: boolean; silentValidation?: boolean }) => {
-    const flattenedObject = flattenObject(formData.data);
+    const { formStatePaths, paths } = buildFormStatePaths(formData.data);
     const state = Array.isArray(formData.data) ? [] : {};
 
-    Object.keys(flattenedObject).forEach((path) => {
+    formStatePaths.forEach((formStatePath) => {
+      const path = formStatePath.replace('.state', '');
       const fieldState = getFieldState(path);
       const defaultValue = parseValue(path, fieldState?.defaultValue);
-      /**
-       * Initial value is very different to default value. It refers first value
-       * the field takes when the form is initialized or filled. It's used to check if
-       * the field is dirty (had a change).
-       */
-      path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
-      set(state, path, { ...buildFieldState(path, { reset: options?.reset, fill: options?.fill }) });
+
+      set(state, formStatePath, {
+        ...buildFieldState(path, { reset: options?.reset, fill: options?.fill }),
+      });
 
       /**
        * When form reset, field data is updated with pre-configured default value.
@@ -468,8 +399,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     setFormState('data', state);
 
     const promises: Promise<void>[] = [];
-    Object.keys(flattenedObject).forEach((path) => {
-      path = valueIsArrayOfPrimitives(path) ? prevPath(path) : path;
+    paths.forEach((path) => {
       promises.push(
         validateField(path, {
           silentValidation: options?.silentValidation ?? true,
@@ -484,22 +414,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
-   * Checks if the field value is an array of primitives
-   */
-  const valueIsArrayOfPrimitives = (path: string) => {
-    return Array.isArray(getFieldValue(prevPath(path))) && getFieldValue(path) !== 'object';
-  };
-
-  /**
-   * Gets field previous path
-   */
-  const prevPath = (path: string) => {
-    const prevPathArr = path.split('.');
-    prevPathArr.pop();
-    return prevPathArr.join('.');
-  };
-
-  /**
    * Initializes a default or existing state of a field.
    */
   const buildFieldState = (path: string, options?: { reset?: boolean; fill?: boolean }) => {
@@ -509,7 +423,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     return {
       ...fieldState,
-      __state: true,
       dataType: validationSchema.getFieldDataType(path),
       isInvalid: options.reset ? true : fieldState?.isInvalid || true,
       errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
@@ -528,24 +441,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Retrieves a boolean flag for the given field path to check if it's invalid.
    */
   const isFieldInvalid = (path: string) => {
-    return findInvalidFlags(path).includes(true);
-  };
-
-  /**
-   * Finds the invalid flag if the field is a nested object or a primitive
-   */
-  const findInvalidFlags = (path: string, invalidFlags: boolean[] = []) => {
     const fieldState = getFieldState(path);
-    if (fieldState === undefined) return invalidFlags;
-    if (fieldState.__state === undefined) {
-      Object.keys(fieldState).forEach((key) => {
-        invalidFlags = findInvalidFlags(`${path}.${key}`, invalidFlags);
-      });
-    } else {
-      invalidFlags.push(fieldState.isInvalid);
-    }
-
-    return invalidFlags;
+    return fieldState?.isInvalid || false;
   };
 
   /**
@@ -605,8 +502,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Returns the state of an specific form field
    */
-  const getFieldState = (path: string) => {
-    const fieldState = get<FieldState | undefined>(formState.data, path);
+  const getFieldState = (path: string = '') => {
+    if (!path) return undefined;
+
+    const fieldState = get<FieldState | undefined>(formState.data, buildFieldStatePath(path));
     return typeof fieldState === 'object' ? fieldState : undefined;
   };
 
@@ -614,7 +513,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Returns a boolean flag when the form field is being validated.
    */
   const isFieldValidating = (path: string = '') => {
-    return path && getFieldState(path)?.validating;
+    return getFieldState(path)?.validating;
   };
 
   /**
@@ -622,7 +521,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * If yes the form is invalid.
    */
   const isFormInvalid = () => {
-    for (let key in flattenObject(formData.data)) {
+    for (let key in objectPaths(formData.data)) {
       if (isFieldInvalid(key)) {
         return true;
       }
@@ -644,13 +543,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const touchField = (path: string = '') => {
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return;
-    if (fieldState.__state === undefined) {
-      Object.keys(fieldState).forEach((key) => {
-        touchField(`${path}.${key}`);
-      });
-    } else {
-      setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
-    }
+    setFieldState(path, (fieldState: FieldState) => ({ ...fieldState, touched: true }));
   };
 
   /**
@@ -674,7 +567,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Checks if the form has changes when is found a dirty field.
    */
   const formHasChanges = () => {
-    for (let key in flattenObject(formData.data)) {
+    for (let key in objectPaths(formData.data)) {
       const fieldState = getFieldState(key);
       if (fieldState && fieldState.dirty) {
         return true;
@@ -716,11 +609,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Initializes the fieldset state at formState store.
    */
   const addFieldsetState = (basePath: string, defaultData: any) => {
-    const flattenedObject = flattenObject(defaultData);
-    setFieldState(basePath, {});
-    Object.keys(flattenedObject).forEach((key) => {
+    const paths = objectPaths(defaultData);
+    paths.forEach((key) => {
       const path = `${basePath}.${key}`;
-      setFieldState(path, { ...buildFieldState(path), defaultValue: flattenedObject[key] });
+      setFieldState(path, { ...buildFieldState(path), defaultValue: get(defaultData, key) });
     });
   };
 
@@ -800,8 +692,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       addFieldsetState,
       buildFieldState,
       dirtyField,
-      findInvalidFlags,
-      findErrorMessages,
       generateFormState,
       getFieldState,
       hasEventTypes,

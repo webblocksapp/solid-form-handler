@@ -382,7 +382,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const state = Array.isArray(formData.data) ? [] : {};
 
     formStatePaths.forEach((formStatePath) => {
-      const path = formStatePath.replace('.state', '');
+      const path = formStatePath.replace(/(\.state|\.children)/gi, '');
       const fieldState = getFieldState(path);
       const defaultValue = parseValue(path, fieldState?.defaultValue);
 

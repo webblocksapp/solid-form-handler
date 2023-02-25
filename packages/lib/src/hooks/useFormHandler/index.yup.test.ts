@@ -148,32 +148,50 @@ describe('useFormHandler with yup', () => {
   it('Schema with nested objects: form state match object when form is filled', async () => {
     const formHandler = useFormHandler(yupSchema(contactSchema));
     await formHandler.fillForm({ contact: { name: 'John', age: 28 } });
-    expect(formHandler.getFormState()).toMatchObject({
-      contact: {
-        name: {
-          __state: true,
-          dataType: 'string',
-          isInvalid: false,
-          errorMessage: '',
-          currentValue: 'John',
-          initialValue: 'John',
-          defaultValue: '',
-          touched: false,
-          dirty: false,
-        },
-        age: {
-          __state: true,
-          dataType: 'number',
-          isInvalid: false,
-          errorMessage: '',
-          currentValue: 28,
-          initialValue: 28,
-          defaultValue: '',
-          touched: false,
-          dirty: false,
-        },
-      },
-    });
+    expect(formHandler.getFormState()).toEqual(
+      expect.objectContaining({
+        contact: expect.objectContaining({
+          children: expect.objectContaining({
+            name: expect.objectContaining({
+              state: expect.objectContaining({
+                dataType: 'string',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: 'John',
+                initialValue: 'John',
+                defaultValue: '',
+                touched: false,
+                dirty: false,
+              }),
+            }),
+            age: expect.objectContaining({
+              state: expect.objectContaining({
+                dataType: 'number',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: 28,
+                initialValue: 28,
+                defaultValue: '',
+                touched: false,
+                dirty: false,
+              }),
+            }),
+          }),
+          state: expect.objectContaining({
+            dataType: 'object',
+            isInvalid: false,
+            errorMessage: '',
+            cachedValue: undefined,
+            currentValue: expect.objectContaining({ name: 'John', age: 28 }),
+            defaultValue: expect.objectContaining({ name: '', age: '' }),
+            initialValue: expect.objectContaining({ name: 'John', age: 28 }),
+            touched: false,
+            dirty: false,
+            validating: false,
+          }),
+        }),
+      })
+    );
   });
 
   it('Schema with nested objects: form state match object when field value is set', async () => {

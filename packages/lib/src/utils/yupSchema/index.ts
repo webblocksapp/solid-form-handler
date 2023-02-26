@@ -1,7 +1,8 @@
-import { ValidationSchema } from '@interfaces';
+import { ErrorMap, ValidationSchema } from '@interfaces';
 import { flattenObject, set, get, ValidationError } from '@utils';
 import { SchemaOf, reach, ValidationError as YupValidationError } from 'yup';
 import * as yup from 'yup';
+import { AnyObject, ValidateOptions } from 'yup/lib/types';
 
 /**
  * Yup schema adapter for solid form handler.
@@ -25,16 +26,26 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
   /**
    * Validates a single field of the form.
    */
-  const validateAt: ValidationSchema<T>['validateAt'] = async (path, data) => {
+  const validateAt: ValidationSchema<T>['validateAt'] = async (path, data, options) => {
     try {
-      await schema.validateAt(path, data);
+      await schema.validateAt(path, data, options);
     } catch (error) {
       if (error instanceof YupValidationError) {
-        throw new ValidationError(path, error.message);
+        const children = buildErrorMap(error.inner);
+        throw new ValidationError(path, error.message, children);
       } else {
         console.error(error);
       }
     }
+  };
+
+  const buildErrorMap = (errors: YupValidationError['inner'], errorMap: ErrorMap = []) => {
+    errors?.forEach((error) => {
+      errorMap.push({ path: error.path as string, message: error.errors[0] });
+      if (error.inner.length) buildErrorMap(error.inner, errorMap);
+    });
+
+    return errorMap;
   };
 
   /**

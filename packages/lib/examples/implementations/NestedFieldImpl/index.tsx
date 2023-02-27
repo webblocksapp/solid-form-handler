@@ -31,6 +31,10 @@ export const NestedFieldImpl: Component = () => {
     formHandler.setFieldValue('contact', {});
   };
 
+  const setContactDefaultValue = () => {
+    formHandler.setFieldDefaultValue('contact', { email: 'xxx@mail.com', phone: '311 111 11 11' });
+  };
+
   const fillForm = () => {
     formHandler.fillForm({
       contact: { email: 'test@mail.com', phone: '311 454 43 23' },
@@ -94,8 +98,11 @@ export const NestedFieldImpl: Component = () => {
           <small style="color: red">{formHandler.getFieldError('contact')}</small>
           <br />
           <small data-testId="contact-status">{formHandler.isFieldInvalid('contact') ? 'Invalid' : 'Valid'}</small>
-          <button data-testid="fill" type="button" onClick={setContact}>
+          <button type="button" onClick={setContact}>
             Set Contact
+          </button>
+          <button type="button" onClick={setContactDefaultValue}>
+            Set Contact Default Value
           </button>
         </fieldset>
         <div style="border: 1px solid black; padding: 10px; overflow: auto; height: 400px; margin-left: 30px; min-width: 600px">

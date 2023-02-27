@@ -11,6 +11,7 @@ import {
   FormStateUpdateBehavior,
   ErrorMap,
   ValidateFieldBehavior,
+  SetFieldDefaultValueOptions,
 } from '@interfaces';
 import {
   buildFieldStatePath,
@@ -59,7 +60,12 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the default field value which will be used
    * when it's initialized or reset. No validation is triggered.
    */
-  const setFieldDefaultValue = (path: string = '', defaultValue: any, options?: { mapValue?: (value: any) => any }) => {
+  const setFieldDefaultValue = (
+    path: string = '',
+    defaultValue: any,
+    options?: SetFieldDefaultValueOptions,
+    _?: FormStateUpdateBehavior
+  ) => {
     untrack(() => {
       if (!path || defaultValue === undefined || formIsFilling() || formIsResetting()) return;
 
@@ -73,8 +79,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      const currentValue = computeDefaultValue(getFieldValue(path), defaultValue);
-      setFieldData(path, currentValue, { mapValue: options?.mapValue });
+      const computedDefaultValue = computeDefaultValue(getFieldValue(path), defaultValue);
+      setFieldData(path, computedDefaultValue, { mapValue: options?.mapValue });
 
       /**
        * Stores the default value at field state. Which will be used as new
@@ -82,9 +88,58 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        */
       setFieldState(path, {
         ...fieldState,
-        currentValue: options?.mapValue?.(parseValue(path, currentValue)),
+        currentValue: options?.mapValue?.(parseValue(path, computedDefaultValue)),
         initialValue: defaultValue,
         defaultValue: defaultValue,
+      });
+
+      _?.updateParent !== false && setParentFieldDefaultValue(path, computedDefaultValue, options);
+      _?.updateChild !== false && setChildFieldDefaultValue(path, computedDefaultValue, options);
+    });
+  };
+
+  /**
+   * For nested fields, updates the parent default value upside the tree. For example:
+   * If this path is given: key1.key2.key3, this function updates key1.key2 and key1 value recursively.
+   */
+  const setParentFieldDefaultValue = (
+    path: string = '',
+    value: any,
+    options?: SetFieldDefaultValueOptions,
+    _?: FormStateUpdateBehavior
+  ) => {
+    const result = buildParentValue(path, value);
+
+    if (result === undefined) return;
+    const { parentPath, parentValue } = result;
+
+    setFieldDefaultValue(parentPath, parentValue, options, {
+      ..._,
+      updateParent: true,
+      updateChild: false,
+    });
+  };
+
+  /**
+   * For a field with children, updates the default value downside the tree. For example:
+   * If this path is given: key1, and this contains nested paths key1.key2 and key1.key2.key3, values
+   * are updated recursively.
+   */
+  const setChildFieldDefaultValue = async (
+    path: string = '',
+    value: any,
+    options?: SetFieldDefaultValueOptions,
+    _?: FormStateUpdateBehavior
+  ) => {
+    const fieldChildren = getFieldChildren(path);
+    if (fieldChildren === undefined) return;
+
+    Object.keys(fieldChildren).forEach((key) => {
+      const { childPath, childValue } = buildChildValue(path, key, value);
+      setFieldDefaultValue(childPath, childValue, options, {
+        ..._,
+        updateParent: false,
+        updateChild: true,
       });
     });
   };
@@ -94,6 +149,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const computeDefaultValue = (currentValue: any, defaultValue: any) => {
     if (Array.isArray(defaultValue) && Array.isArray(currentValue) && defaultValue.length && !currentValue.length) {
+      return defaultValue;
+    } else if (typeof defaultValue === 'object' && !Array.isArray(defaultValue)) {
       return defaultValue;
     } else if (currentValue === false && defaultValue === undefined) {
       return currentValue;
@@ -149,13 +206,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     options?: SetFieldValueOptions,
     _?: FormStateUpdateBehavior
   ) => {
-    const arrPath = path.split('.');
-    if (arrPath.length <= 1) return;
+    const result = buildParentValue(path, value);
 
-    const lastKey = arrPath.pop() as string;
-    const parentPath = arrPath.join('.');
-    let parentValue = get(clone(formData.data), parentPath);
-    parentValue = set(parentValue, lastKey, parseValue(path, value));
+    if (result === undefined) return;
+    const { parentPath, parentValue } = result;
 
     return setFieldValue(parentPath, parentValue, options, {
       ..._,
@@ -166,7 +220,22 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
-   * For nested fields, updates the parent value downside the tree. For example:
+   * Helper function for building the parent field path and value.
+   */
+  const buildParentValue = (path: string = '', value: any) => {
+    const arrPath = path.split('.');
+    if (arrPath.length <= 1) return;
+
+    const lastKey = arrPath.pop() as string;
+    const parentPath = arrPath.join('.');
+    let parentValue = get(clone(formData.data), parentPath);
+    parentValue = set(parentValue, lastKey, parseValue(path, value));
+
+    return { parentPath, parentValue };
+  };
+
+  /**
+   * For a field with children, updates the value downside the tree. For example:
    * If this path is given: key1, and this contains nested paths key1.key2 and key1.key2.key3, values
    * are updated recursively.
    */
@@ -181,20 +250,21 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     const promises: Promise<any>[] = [];
     Object.keys(fieldChildren).forEach((key) => {
-      const currentPath = `${path}.${key}`;
-      let childValue = typeof value === 'object' ? get(clone(value), key) : clone(value);
+      const { childPath, childValue } = buildChildValue(path, key, value);
       const forceValidate = childValue === undefined && true;
-      childValue = parseValue(path, childValue);
 
       /**
        * Cached value is passed to child to avoid revalidation - The parent object assumes the whole child validation,
        * so children doesn't need to be re-validated (granular validation).
        */
-      setFieldState(currentPath, (fieldState: FieldState) => ({ ...fieldState, cachedValue: childValue }));
+      setFieldState(childPath, (fieldState: FieldState) => ({
+        ...fieldState,
+        cachedValue: parseValue(path, childValue),
+      }));
 
       promises.push(
         setFieldValue(
-          currentPath,
+          childPath,
           childValue,
           { ...options, forceValidate },
           {
@@ -207,6 +277,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     });
 
     return Promise.all(promises);
+  };
+
+  /**
+   * Helper function for building the child field path and value.
+   */
+  const buildChildValue = (path: string, key: string, value: any) => {
+    const childPath = `${path}.${key}`;
+    let childValue = typeof value === 'object' ? get(clone(value), key) : clone(value);
+
+    return { childPath, childValue };
   };
 
   /**
@@ -805,10 +885,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     removeFieldset,
     resetForm,
     setFieldTriggers,
-    setFieldValue,
+    setFieldValue: setFieldValue as (
+      path: string | undefined,
+      value: any,
+      options?: SetFieldValueOptions
+    ) => Promise<any>,
     setFieldDefaultValue,
     touchField,
-    validateField,
+    validateField: validateField as (path?: string, options?: ValidateFieldOptions) => Promise<void>,
     validateForm,
     _: {
       addFieldsetState,

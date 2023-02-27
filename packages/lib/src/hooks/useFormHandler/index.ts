@@ -27,6 +27,7 @@ import {
   ValidationError,
   clone,
   buildFieldChildrenPath,
+  isEmpty,
 } from '@utils';
 import { createSignal, createUniqueId, untrack } from 'solid-js';
 
@@ -80,8 +81,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      const computedDefaultValue = computeDefaultValue(getFieldValue(path), defaultValue);
-      setFieldData(path, computedDefaultValue, { mapValue: options?.mapValue });
+      let currentValue = fieldState.currentValue;
+      defaultValue = options?.mapValue?.(parseValue(path, defaultValue)) || defaultValue;
+
+      if (isEmpty(currentValue)) {
+        setFieldData(path, defaultValue, { mapValue: options?.mapValue });
+        currentValue = defaultValue;
+      }
 
       /**
        * Stores the default value at field state. Which will be used as new
@@ -89,15 +95,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        */
       setFieldState(path, {
         ...fieldState,
-        currentValue: options?.mapValue?.(parseValue(path, computedDefaultValue)),
+        currentValue,
         initialValue: defaultValue,
-        defaultValue: defaultValue,
+        defaultValue,
       });
 
       options.validate && validateField(path, options);
 
-      _?.updateParent !== false && setParentFieldDefaultValue(path, computedDefaultValue, options);
-      _?.updateChild !== false && setChildFieldDefaultValue(path, computedDefaultValue, options);
+      _?.updateParent !== false && setParentFieldDefaultValue(path, defaultValue, options);
+      _?.updateChild !== false && setChildFieldDefaultValue(path, defaultValue, options);
     });
   };
 
@@ -139,29 +145,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     Object.keys(fieldChildren).forEach((key) => {
       const { childPath, childValue } = buildChildValue(path, key, value);
+
       setFieldDefaultValue(childPath, childValue, options, {
         ..._,
         updateParent: false,
         updateChild: true,
       });
     });
-  };
-
-  /**
-   * Computes the default value according to the given scenarios.
-   */
-  const computeDefaultValue = (currentValue: any, defaultValue: any) => {
-    if (Array.isArray(defaultValue) && Array.isArray(currentValue) && defaultValue.length && !currentValue.length) {
-      return defaultValue;
-    } else if (typeof defaultValue === 'object' && !Array.isArray(defaultValue)) {
-      return defaultValue;
-    } else if (currentValue === false && defaultValue === undefined) {
-      return currentValue;
-    } else if (defaultValue === undefined) {
-      return currentValue;
-    } else {
-      return currentValue || defaultValue;
-    }
   };
 
   /**

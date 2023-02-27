@@ -36,7 +36,9 @@ export const NestedFieldArrImpl: Component = () => {
   };
 
   const setContactsDefaultValue = () => {
-    formHandler.setFieldDefaultValue('contacts', [{ email: 'xxx@mail.com', phone: '311 111 11 11' }]);
+    formHandler.setFieldDefaultValue('contacts', [{ email: 'xxx@mail.com', phone: '311 111 11 11' }], {
+      validate: true,
+    });
   };
 
   const fillForm = () => {
@@ -73,7 +75,7 @@ export const NestedFieldArrImpl: Component = () => {
 
   return (
     <form>
-      <h3>Nested Field Implementation</h3>
+      <h3>Nested Array Field Implementation</h3>
       <div style="display: flex">
         <div>
           <For each={formData().contacts}>

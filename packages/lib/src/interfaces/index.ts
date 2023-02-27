@@ -12,5 +12,6 @@ export * from './FormHandlerOptions';
 export * from './FormState';
 export * from './FormStateUpdateBehavior';
 export * from './SetFieldValueOptions';
+export * from './ValidateFieldBehavior';
 export * from './ValidateFieldOptions';
 export * from './ValidationSchema';

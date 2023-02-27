@@ -26,6 +26,7 @@ import {
   set,
   ValidationError,
   clone,
+  buildFieldChildrenPath,
 } from '@utils';
 import { createSignal, createUniqueId, untrack } from 'solid-js';
 
@@ -303,7 +304,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the field state inside the formState store.
    */
   const setFieldState = (path: string = '', value: any) => {
-    path = path ? `data.${buildFieldStatePath(path)}` : 'data';
+    const fieldStatePath = buildFieldStatePath(path);
+    if (fieldStatePath === undefined) return;
+    path = path ? `data.${fieldStatePath}` : 'data';
     setFormState(path, value);
   };
 
@@ -582,10 +585,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       const path = formStatePath.replace(/(\.state|\.children)/gi, '');
       const fieldState = getFieldState(path);
       const defaultValue = parseValue(path, fieldState?.defaultValue);
+      const builtFieldState = buildFieldState(path, { reset: options?.reset, fill: options?.fill });
 
-      set(state, formStatePath, {
-        ...buildFieldState(path, { reset: options?.reset, fill: options?.fill }),
-      });
+      set(state, formStatePath, builtFieldState);
 
       /**
        * When form reset, field data is updated with pre-configured default value.
@@ -703,7 +705,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const getFieldState = (path: string = '') => {
     if (!path) return undefined;
-    return get<FieldState | undefined>(formState.data, buildFieldStatePath(path));
+    const fieldStatePath = buildFieldStatePath(path);
+    if (fieldStatePath === undefined) return;
+    return get<FieldState | undefined>(formState.data, fieldStatePath);
   };
 
   /**
@@ -711,8 +715,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const getFieldChildren = (path: string = '') => {
     if (!path) return undefined;
-    path = buildFieldStatePath(path).replace(/\.state$/, '.children');
-    return get<FieldState | undefined>(formState.data, path);
+    const childrenPath = buildFieldChildrenPath(path);
+    if (childrenPath === undefined) return;
+    return get<FieldState | undefined>(formState.data, childrenPath);
   };
 
   /**
@@ -858,7 +863,11 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (oldIndex === undefined || newIndex === undefined) return;
     setFieldState(
       basePath,
-      reorderArray(get<FormState[]>(formState, basePath ? `data.${basePath}` : 'data'), oldIndex, newIndex)
+      reorderArray(
+        get<FormState[]>(formState, basePath ? `data.${buildFieldChildrenPath(basePath)}` : 'data'),
+        oldIndex,
+        newIndex
+      )
     );
   };
 

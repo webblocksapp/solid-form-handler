@@ -10,10 +10,10 @@ describe('buildFieldStatePath', () => {
   });
 
   it('CASE-3', () => {
-    expect(buildFieldStatePath('0.1.2')).toBe('0.1.2');
+    expect(buildFieldStatePath('0.1.2')).toBe(undefined);
   });
 
   it('CASE-4', () => {
-    expect(buildFieldStatePath('key1.0')).toBe('key1.children.0');
+    expect(buildFieldStatePath('key1.0')).toBe(undefined);
   });
 });

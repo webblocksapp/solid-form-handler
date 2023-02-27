@@ -4,8 +4,8 @@ export const clone = <T>(data: T): T | undefined => {
   let obj: any = undefined;
   if (data === undefined) return obj;
   if (typeof data !== 'object') return data;
-  if (Array.isArray(obj)) obj = [];
-  if (!Array.isArray(obj)) obj = {};
+  if (Array.isArray(data)) obj = [];
+  if (!Array.isArray(data)) obj = {};
 
   const flattenedObject = flattenObject(data);
 

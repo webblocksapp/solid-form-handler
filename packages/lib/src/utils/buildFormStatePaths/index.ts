@@ -10,8 +10,8 @@ export const buildFormStatePaths = (data: any) => {
   paths.forEach((path) => {
     const formStatePath = buildFieldStatePath(path);
 
-    if (formStatePath.match(/\.state$/)) {
-      formStatePaths.push(buildFieldStatePath(path));
+    if (formStatePath?.match(/\.state$/)) {
+      formStatePaths.push(formStatePath);
     }
   });
 

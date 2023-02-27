@@ -21,5 +21,5 @@ export const buildFieldStatePath = (path: string) => {
     }
   }
 
-  return builtPath;
+  if (builtPath.match(/\.state$/)) return builtPath;
 };

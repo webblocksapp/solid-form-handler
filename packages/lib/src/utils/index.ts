@@ -1,6 +1,7 @@
 export * from './FormErrorsException';
 export * from './ValidationError';
 export * from './buildFieldStatePath';
+export * from './buildFieldChildrenPath';
 export * from './buildFormStatePaths';
 export * from './clone';
 export * from './createStore';

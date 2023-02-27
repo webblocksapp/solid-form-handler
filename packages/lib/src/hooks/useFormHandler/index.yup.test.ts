@@ -205,8 +205,8 @@ describe('useFormHandler with yup', () => {
           isInvalid: false,
           errorMessage: '',
           currentValue: expect.objectContaining({ name: 'John', age: 28 }),
-          initialValue: '',
-          defaultValue: '',
+          initialValue: { name: '', age: '' },
+          defaultValue: { name: '', age: '' },
           touched: true,
           dirty: true,
         }),
@@ -368,47 +368,51 @@ describe('useFormHandler with yup', () => {
         { name: '', age: '' },
       ],
     });
-    console.log(formHandler.getFormState());
-    expect(formHandler._.getFieldState('referrals.0')).toMatchObject({
-      name: {
-        __state: true,
-        dataType: 'string',
-        isInvalid: true,
-        errorMessage: '',
-        currentValue: 'John',
-        initialValue: 'John',
-        defaultValue: 'John',
-        touched: false,
-        dirty: false,
-      },
-      age: {
-        __state: true,
-        dataType: 'number',
-        isInvalid: true,
-        errorMessage: '',
-        currentValue: 18,
-        initialValue: 18,
-        defaultValue: 18,
-        touched: false,
-        dirty: false,
-      },
-    });
+    expect(formHandler._.getFieldState('referrals.0')).toEqual(
+      expect.objectContaining({
+        age: expect.objectContaining({
+          state: expect.objectContaining({
+            dataType: 'number',
+            isInvalid: true,
+            errorMessage: '',
+            currentValue: '',
+            initialValue: '',
+            defaultValue: '',
+            touched: false,
+            dirty: false,
+          }),
+        }),
+        name: expect.objectContaining({
+          state: expect.objectContaining({
+            dataType: 'string',
+            isInvalid: true,
+            errorMessage: '',
+            currentValue: '',
+            initialValue: '',
+            defaultValue: '',
+            touched: false,
+            dirty: false,
+          }),
+        }),
+      })
+    );
   });
 
   it('buildFieldState without default field value.', () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
     formHandler._.buildFieldState('name');
-    expect(formHandler._.getFieldState('name')).toMatchObject({
-      __state: true,
-      isInvalid: true,
-      dataType: 'string',
-      errorMessage: '',
-      currentValue: '',
-      initialValue: '',
-      defaultValue: '',
-      touched: false,
-      dirty: false,
-    });
+    expect(formHandler._.getFieldState('name')).toEqual(
+      expect.objectContaining({
+        isInvalid: true,
+        dataType: 'string',
+        errorMessage: '',
+        currentValue: '',
+        initialValue: '',
+        defaultValue: '',
+        touched: false,
+        dirty: false,
+      })
+    );
   });
 
   it('buildFieldState with default field value.', () => {
@@ -432,32 +436,18 @@ describe('useFormHandler with yup', () => {
     const formHandler = useFormHandler(yupSchema(referralsSchema));
     formHandler.setFieldDefaultValue('referrals', [{ name: 'Laura', age: 18 }]);
     formHandler._.buildFieldState('referrals');
-    expect(formHandler._.getFieldState('referrals')).toMatchObject([
-      {
-        name: {
-          __state: true,
-          dataType: 'string',
-          isInvalid: true,
-          errorMessage: '',
-          currentValue: 'Laura',
-          initialValue: 'Laura',
-          defaultValue: 'Laura',
-          touched: false,
-          dirty: false,
-        },
-        age: {
-          __state: true,
-          dataType: 'number',
-          isInvalid: true,
-          errorMessage: '',
-          currentValue: 18,
-          initialValue: 18,
-          defaultValue: 18,
-          touched: false,
-          dirty: false,
-        },
-      },
-    ]);
+    expect(formHandler._.getFieldState('referrals')).toEqual(
+      expect.objectContaining({
+        dataType: 'array',
+        isInvalid: true,
+        errorMessage: '',
+        currentValue: expect.arrayContaining([expect.objectContaining({ name: 'Laura', age: 18 })]),
+        initialValue: expect.arrayContaining([expect.objectContaining({ name: 'Laura', age: 18 })]),
+        defaultValue: expect.arrayContaining([expect.objectContaining({ name: 'Laura', age: 18 })]),
+        touched: false,
+        dirty: false,
+      })
+    );
   });
 
   it('Setting field default value predominates after fillForm', async () => {

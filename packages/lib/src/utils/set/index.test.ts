@@ -36,4 +36,8 @@ describe('set', () => {
   it('CASE-9', () => {
     expect(set([{ name: 'John' }], '1.name', 'Laura')).toMatchObject([{ name: 'John' }, { name: 'Laura' }]);
   });
+
+  it('CASE-10', () => {
+    expect(set({}, 'key1.state', ['Laura'])).toMatchObject({ key1: { state: ['Laura'] } });
+  });
 });

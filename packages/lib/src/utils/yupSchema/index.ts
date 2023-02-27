@@ -1,5 +1,5 @@
 import { ErrorMap, ValidationSchema } from '@interfaces';
-import { flattenObject, set, get, ValidationError } from '@utils';
+import { flattenObject, set, get, ValidationError, formatObjectPath } from '@utils';
 import { SchemaOf, reach, ValidationError as YupValidationError } from 'yup';
 import * as yup from 'yup';
 import { AnyObject, ValidateOptions } from 'yup/lib/types';
@@ -41,7 +41,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
 
   const buildErrorMap = (errors: YupValidationError['inner'], errorMap: ErrorMap = []) => {
     errors?.forEach((error) => {
-      errorMap.push({ path: error.path as string, message: error.errors[0] });
+      errorMap.push({ path: formatObjectPath(error.path as string), message: error.errors[0] });
       if (error.inner.length) buildErrorMap(error.inner, errorMap);
     });
 

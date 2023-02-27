@@ -32,7 +32,7 @@ export const NestedFieldImpl: Component = () => {
   };
 
   const setContactDefaultValue = () => {
-    formHandler.setFieldDefaultValue('contact', { email: 'xxx@mail.com', phone: '311 111 11 11' });
+    formHandler.setFieldDefaultValue('contact', { email: 'xxx@mail.com', phone: '311 111 11 11' }, { validate: true });
   };
 
   const fillForm = () => {

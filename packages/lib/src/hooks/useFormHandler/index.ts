@@ -93,6 +93,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         defaultValue: defaultValue,
       });
 
+      options.validate && validateField(path, options);
+
       _?.updateParent !== false && setParentFieldDefaultValue(path, computedDefaultValue, options);
       _?.updateChild !== false && setChildFieldDefaultValue(path, computedDefaultValue, options);
     });
@@ -422,7 +424,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const hasChildren = recursive ? Boolean(getFieldChildren(path)) : false;
     const validationOptions = hasChildren ? { abortEarly: false, recursive } : undefined;
     //The path parameter is used as base path for nested keys.
-    const paths = hasChildren ? objectPaths(get(formData.data, path)).map((item) => `${path}.${item}`) : [path];
+    const paths = hasChildren ? objectPaths(get(formData.data, path)).map((item) => `${path}.${item}`) : [];
+    paths.unshift(path);
 
     try {
       await Promise.all([
@@ -561,7 +564,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const getFormErrors = () => {
     const errors: FormFieldError[] = [];
 
-    for (let path in objectPaths(formData.data)) {
+    for (let path of objectPaths(formData.data)) {
       getFieldError(path) && errors.push({ path, errorMessage: getFieldError(path) });
     }
 
@@ -637,6 +640,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const isFieldInvalid = (path: string) => {
     const fieldState = getFieldState(path);
+
     return fieldState?.isInvalid || false;
   };
 
@@ -723,7 +727,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * If yes the form is invalid.
    */
   const isFormInvalid = () => {
-    for (let key in objectPaths(formData.data)) {
+    for (let key of objectPaths(formData.data)) {
       if (isFieldInvalid(key)) {
         return true;
       }
@@ -769,7 +773,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Checks if the form has changes when is found a dirty field.
    */
   const formHasChanges = () => {
-    for (let key in objectPaths(formData.data)) {
+    for (let key of objectPaths(formData.data)) {
       const fieldState = getFieldState(key);
       if (fieldState && fieldState.dirty) {
         return true;
@@ -890,7 +894,11 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       value: any,
       options?: SetFieldValueOptions
     ) => Promise<any>,
-    setFieldDefaultValue,
+    setFieldDefaultValue: setFieldDefaultValue as (
+      path: string | undefined,
+      defaultValue: any,
+      options?: SetFieldDefaultValueOptions
+    ) => void,
     touchField,
     validateField: validateField as (path?: string, options?: ValidateFieldOptions) => Promise<void>,
     validateForm,

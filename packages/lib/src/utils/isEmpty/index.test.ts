@@ -52,4 +52,8 @@ describe('isEmpty', () => {
   it('CASE-13', () => {
     expect(isEmpty({ name: 'Laura', age: '' })).toBe(false);
   });
+
+  it('CASE-14', () => {
+    expect(isEmpty('Hello')).toBe(false);
+  });
 });

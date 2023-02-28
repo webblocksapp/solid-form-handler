@@ -32,11 +32,21 @@ export const NestedFieldArrImpl: Component = () => {
   };
 
   const setContacts = () => {
-    formHandler.setFieldValue('contacts', []);
+    formHandler.setFieldValue('contacts', [{ email: 'xxx@mail.com', phone: '311 111 11 11' }]);
   };
 
   const setContactsDefaultValue = () => {
     formHandler.setFieldDefaultValue('contacts', [{ email: 'xxx@mail.com', phone: '311 111 11 11' }], {
+      validate: true,
+    });
+  };
+
+  const setEmail = () => {
+    formHandler.setFieldValue('contacts.0.email', 'xxx@mail.com');
+  };
+
+  const setEmailDefaultValue = () => {
+    formHandler.setFieldDefaultValue('contacts.0.email', 'xxx@mail.com', {
       validate: true,
     });
   };
@@ -119,6 +129,12 @@ export const NestedFieldArrImpl: Component = () => {
             </button>
             <button type="button" onClick={setContactsDefaultValue}>
               Set Contacts Default Value
+            </button>
+            <button type="button" onClick={setEmail}>
+              setEmail
+            </button>
+            <button type="button" onClick={setEmailDefaultValue}>
+              setEmailDefaultValue
             </button>
           </div>
         </div>

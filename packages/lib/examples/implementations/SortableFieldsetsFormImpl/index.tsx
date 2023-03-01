@@ -8,12 +8,15 @@ type Schema = {
   age: number;
 };
 
-const schema: yup.SchemaOf<Schema[]> = yup.array().of(
-  yup.object().shape({
-    name: yup.string().required(),
-    age: yup.number().required().typeError('Invalid age value'),
-  })
-);
+const schema: yup.SchemaOf<Schema[]> = yup
+  .array()
+  .of(
+    yup.object().shape({
+      name: yup.string().required(),
+      age: yup.number().required().typeError('Invalid age value'),
+    })
+  )
+  .min(2);
 
 export const SortableFieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(yupSchema(schema));

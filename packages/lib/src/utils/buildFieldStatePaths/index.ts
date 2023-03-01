@@ -1,3 +1,4 @@
+import { ENDS_WITH_DOT_STATE_REGEXP } from '@constants';
 import { buildFieldStatePath, objectPaths } from '@utils';
 
 /**
@@ -10,7 +11,7 @@ export const buildFieldStatePaths = (data: any) => {
   paths.forEach((path) => {
     const fieldStatePath = buildFieldStatePath(path);
 
-    if (fieldStatePath?.match(/\.state$/)) {
+    if (fieldStatePath?.match(ENDS_WITH_DOT_STATE_REGEXP)) {
       fieldStatePaths.push(fieldStatePath);
     }
   });

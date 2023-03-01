@@ -1,12 +1,15 @@
 import { buildFieldChildrenPath } from '@utils';
+import { CHILDREN_KEY, FIELDSETS_KEY } from '@constants';
 
 describe('buildFieldChildrenPath', () => {
   it('CASE-1', () => {
-    expect(buildFieldChildrenPath('key1.key2.key3')).toBe('key1.children.key2.children.key3.children');
+    expect(buildFieldChildrenPath('key1.key2.key3')).toBe(
+      `key1.${CHILDREN_KEY}.key2.${CHILDREN_KEY}.key3.${CHILDREN_KEY}`
+    );
   });
 
   it('CASE-2', () => {
-    expect(buildFieldChildrenPath('0.1.key1')).toBe('0.1.key1.children');
+    expect(buildFieldChildrenPath('0.1.key1')).toBe(`${FIELDSETS_KEY}.${CHILDREN_KEY}.0.1.key1.${CHILDREN_KEY}`);
   });
 
   it('CASE-3', () => {

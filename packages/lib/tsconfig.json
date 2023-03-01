@@ -13,6 +13,7 @@
     "target": "esnext",
     "paths": {
       "@components": ["src/components"],
+      "@constants": ["src/constants"],
       "@hocs": ["src/hocs"],
       "@hooks": ["src/hooks"],
       "@interfaces": ["src/interfaces"],

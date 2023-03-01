@@ -12,7 +12,7 @@ export const objectPaths = (data: any, path: string = '', paths: Array<string> =
         objectPaths(data[key], nextPath, paths);
       }
 
-      paths.push(nextPath);
+      paths.unshift(nextPath);
     });
   }
 

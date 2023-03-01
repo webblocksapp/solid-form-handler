@@ -6,7 +6,7 @@ describe('buildFieldStatePath', () => {
   });
 
   it('CASE-2', () => {
-    expect(buildFieldStatePath('0.1.key1')).toBe('0.1.key1.state');
+    expect(buildFieldStatePath('0.1.key1')).toBe('fieldsets.children.0.1.key1.state');
   });
 
   it('CASE-3', () => {
@@ -15,5 +15,9 @@ describe('buildFieldStatePath', () => {
 
   it('CASE-4', () => {
     expect(buildFieldStatePath('key1.0')).toBe(undefined);
+  });
+
+  it('CASE-5', () => {
+    expect(buildFieldStatePath('')).toBe('fieldsets.state');
   });
 });

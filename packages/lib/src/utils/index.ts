@@ -2,7 +2,7 @@ export * from './FormErrorsException';
 export * from './ValidationError';
 export * from './buildFieldChildrenPath';
 export * from './buildFieldStatePath';
-export * from './buildFormStatePaths';
+export * from './buildFieldStatePaths';
 export * from './clone';
 export * from './createStore';
 export * from './equals';

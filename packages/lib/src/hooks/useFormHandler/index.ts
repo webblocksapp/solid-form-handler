@@ -15,7 +15,7 @@ import {
 } from '@interfaces';
 import {
   buildFieldStatePath,
-  buildFormStatePaths,
+  buildFieldStatePaths,
   createStore,
   equals,
   objectPaths,
@@ -42,7 +42,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const formHandlerOptions = { delay: 0, ...options };
   const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
-    data: validationSchema.buildDefault(),
+    data: {},
   });
   const [formIsResetting, setFormIsResetting] = createSignal<boolean>(false);
   const [formIsFilling, setFormIsFilling] = createSignal<boolean>(false);
@@ -81,7 +81,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      let currentValue = fieldState.currentValue;
+      let currentValue = getFieldValue(path);
       defaultValue = options?.mapValue?.(parseValue(path, defaultValue)) || defaultValue;
 
       if (isEmpty(currentValue)) {
@@ -93,7 +93,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
        */
-      setCurrentValue(path, currentValue);
       setInitialValue(path, defaultValue);
       setDefaultValue(path, defaultValue);
 
@@ -173,7 +172,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (fieldState === undefined) return;
 
     setFieldData(path, value, { mapValue: options.mapValue });
-    setCurrentValue(path, get(formData.data, path));
 
     const promises = Promise.all([
       options?.validate && validateField(path, { ...options, force: options?.forceValidate }, _?.validateFieldBehavior),
@@ -319,13 +317,23 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
-   * Sets the field state inside the formState store.
+   * Sets the field state inside the formState store for matching paths .state
    */
   const setFieldState = (path: string = '', value: Partial<FieldState>) => {
     const fieldStatePath = buildFieldStatePath(path);
     if (fieldStatePath === undefined) return;
-    path = path ? `data.${fieldStatePath}` : 'data';
+    path = `data.${fieldStatePath}`;
     setFormState(path, (prev: FieldState) => ({ ...prev, ...value }));
+  };
+
+  /**
+   * Sets the field state inside the formState store for matching paths .children
+   */
+  const setFieldChildren = (path: string = '', value: ((items: FormState[]) => FormState[]) | FormState[]) => {
+    const fieldChildrenPath = buildFieldChildrenPath(path);
+    if (fieldChildrenPath === undefined) return;
+    path = `data.${fieldChildrenPath}`;
+    setFormState(path, value);
   };
 
   /**
@@ -412,15 +420,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const setCachedValue = (path: string = '', value: any) => {
     setFieldState(path, {
       cachedValue: clone(value),
-    });
-  };
-
-  /**
-   * Sets the field state current value.
-   */
-  const setCurrentValue = (path: string = '', value: any) => {
-    setFieldState(path, {
-      currentValue: value,
     });
   };
 
@@ -626,21 +625,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Generates the whole form state object metadata
    */
   const generateFormState = async (options?: { reset?: boolean; fill?: boolean; silentValidation?: boolean }) => {
-    const { formStatePaths } = buildFormStatePaths(formData.data);
-    const state = Array.isArray(formData.data) ? [] : {};
+    const { fieldStatePaths } = buildFieldStatePaths(formData.data);
+    const state = {};
 
-    formStatePaths.forEach((formStatePath) => {
-      const path = formStatePath.replace(/(\.state|\.children)/gi, '');
-      const fieldState = getFieldState(path);
-      const defaultValue = parseValue(path, fieldState?.defaultValue);
+    fieldStatePaths.forEach((fieldStatePath) => {
+      const path = fieldStatePath.replace(/(\.state|\.children)/gi, '');
       const builtFieldState = buildFieldState(path, { reset: options?.reset, fill: options?.fill });
-
-      set(state, formStatePath, builtFieldState);
-
-      /**
-       * When form reset, field data is updated with pre-configured default value.
-       */
-      options?.reset && defaultValue !== undefined && setFieldData(path, defaultValue);
+      set(state, fieldStatePath, builtFieldState);
     });
 
     setFormState('data', state);
@@ -665,19 +656,32 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Initializes a default or existing state of a field.
    */
   const buildFieldState = (path: string, options?: { reset?: boolean; fill?: boolean }) => {
+    const isFieldset = Boolean(path.match(/^fieldsets/)?.length);
+    const schemaPath = isFieldset ? path.replace(/^fieldsets/, '') : path;
     const fieldState = getFieldState(path);
-    const value = getFieldValue(path);
+
+    /**
+     * If the form data is an array, it's considered a fieldsets structure, so the library
+     * will create in the state a path called fieldsets.
+     */
+    const value = path === 'fieldsets' ? formData.data : getFieldValue(path);
     options = { reset: false, ...options };
+
+    /**
+     * When form reset, field data is updated with pre-configured default value.
+     */
+    if (options?.reset && fieldState?.defaultValue !== undefined) {
+      setFieldData(path, fieldState?.defaultValue);
+    }
 
     return {
       ...fieldState,
-      dataType: validationSchema.getFieldDataType(path),
+      dataType: validationSchema.getFieldDataType(schemaPath),
       isInvalid: options.reset ? true : fieldState?.isInvalid || true,
       errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
       cachedValue: undefined,
-      currentValue: options.reset ? clone(fieldState?.defaultValue) : clone(value),
       defaultValue: options.reset || options?.fill ? clone(fieldState?.defaultValue) : clone(value),
-      initialValue: options.fill ? value : clone(fieldState?.defaultValue) ?? clone(value),
+      initialValue: options.fill ? clone(value) : clone(fieldState?.defaultValue) ?? clone(value),
       touched: options.reset ? false : fieldState?.touched || false,
       dirty: options.reset ? false : fieldState?.dirty || false,
       triggers: fieldState?.triggers,
@@ -810,7 +814,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const dirtyField = (path: string) => {
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return;
-    const dirty = equals(fieldState.currentValue, fieldState.initialValue) ? false : true;
+    const dirty = equals(getFieldValue(path), fieldState.initialValue) ? false : true;
     setFieldState(path, { ...fieldState, dirty });
   };
 
@@ -881,8 +885,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Use path for removing a fieldset inside a nested array from an object.
    */
   const removeFieldsetState = (index: number, basePath?: string) => {
-    alert('Needs refactor');
-    //setFieldState(basePath, (items: FormState[]) => items.filter((_, i) => i !== index));
+    setFieldChildren(basePath, (items: FormState[]) => items.filter((_, i) => i !== index));
   };
 
   /**
@@ -902,15 +905,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const moveFieldsetState = (oldIndex?: number, newIndex?: number, basePath?: string) => {
     if (oldIndex === undefined || newIndex === undefined) return;
-    alert('Needs refactor');
-    // setFieldState(
-    //   basePath,
-    //   reorderArray(
-    //     get<FormState[]>(formState, basePath ? `data.${buildFieldChildrenPath(basePath)}` : 'data'),
-    //     oldIndex,
-    //     newIndex
-    //   )
-    // );
+    setFieldChildren(
+      basePath,
+      reorderArray(
+        get<FormState[]>(formState, basePath ? `data.${buildFieldChildrenPath(basePath)}` : 'data'),
+        oldIndex,
+        newIndex
+      )
+    );
   };
 
   /**
@@ -965,6 +967,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       removeFieldsetState,
       setFieldData,
       setFieldState,
+      setFieldChildren,
       validate,
     },
   };

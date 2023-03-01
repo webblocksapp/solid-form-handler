@@ -96,7 +96,7 @@ describe('useFormHandler with yup', () => {
 
   it('field state is updated as expected', () => {
     const formHandler = useFormHandler(yupSchema(personSchema));
-    formHandler._.setFieldState('name', (fieldState: FieldState) => ({ ...fieldState, dirty: true }));
+    formHandler._.setFieldState('name', { dirty: true });
     expect(formHandler._.getFieldState('name')).toEqual(
       expect.objectContaining({
         dirty: true,

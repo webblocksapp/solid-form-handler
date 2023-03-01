@@ -6,7 +6,6 @@ export type FieldState = {
   defaultValue: any;
   initialValue: any;
   cachedValue: any;
-  currentValue: any;
   touched: boolean;
   dirty: boolean;
   triggers: string[];

@@ -41,6 +41,17 @@ export const FieldsetsFormImpl: Component = () => {
     formHandler.addFieldset();
   };
 
+  const setFieldset1DefaultValue = () => {
+    formHandler.setFieldDefaultValue('0', {
+      name: 'Laura',
+      age: 22,
+    });
+  };
+
+  const setFieldset2DefaultValue = () => {
+    formHandler.setFieldDefaultValue('1.name', 'Matt');
+  };
+
   onMount(() => {
     fillForm();
   });
@@ -82,6 +93,12 @@ export const FieldsetsFormImpl: Component = () => {
       </button>
       <button onClick={() => formHandler.resetForm()} type="button">
         Reset form
+      </button>
+      <button onClick={setFieldset1DefaultValue} type="button">
+        Set FS1 def. value
+      </button>
+      <button onClick={setFieldset2DefaultValue} type="button">
+        Set FS2 def. value
       </button>
       <pre>
         <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>

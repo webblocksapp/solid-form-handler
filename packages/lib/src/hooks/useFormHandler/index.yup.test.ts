@@ -1,3 +1,4 @@
+import { CHILDREN_KEY, STATE_KEY } from '@constants';
 import { useFormHandler } from '@hooks';
 import { FormFieldError } from '@interfaces';
 import { FormErrorsException } from '@utils';
@@ -122,7 +123,7 @@ const testSuite = ({
     expect(formHandler.getFormState()).toEqual(
       expect.objectContaining({
         name: expect.objectContaining({
-          state: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
             isInvalid: false,
             errorMessage: '',
             initialValue: 'George',
@@ -132,7 +133,7 @@ const testSuite = ({
           }),
         }),
         age: expect.objectContaining({
-          state: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
             isInvalid: false,
             errorMessage: '',
             initialValue: 60,
@@ -154,9 +155,9 @@ const testSuite = ({
     expect(formHandler.getFormState()).toEqual(
       expect.objectContaining({
         contact: expect.objectContaining({
-          children: expect.objectContaining({
+          [CHILDREN_KEY]: expect.objectContaining({
             name: expect.objectContaining({
-              state: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
                 dataType: 'string',
                 isInvalid: false,
                 errorMessage: '',
@@ -167,7 +168,7 @@ const testSuite = ({
               }),
             }),
             age: expect.objectContaining({
-              state: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
                 dataType: 'number',
                 isInvalid: false,
                 errorMessage: '',
@@ -178,7 +179,7 @@ const testSuite = ({
               }),
             }),
           }),
-          state: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
             dataType: 'object',
             isInvalid: false,
             errorMessage: '',
@@ -202,7 +203,7 @@ const testSuite = ({
     expect(formHandler.getFieldValue('contact.age')).toBe(28);
     expect(formHandler.getFormState()).toMatchObject({
       contact: expect.objectContaining({
-        state: expect.objectContaining({
+        [STATE_KEY]: expect.objectContaining({
           dataType: 'object',
           isInvalid: false,
           errorMessage: '',
@@ -211,9 +212,9 @@ const testSuite = ({
           touched: true,
           dirty: true,
         }),
-        children: expect.objectContaining({
+        [CHILDREN_KEY]: expect.objectContaining({
           name: expect.objectContaining({
-            state: expect.objectContaining({
+            [STATE_KEY]: expect.objectContaining({
               dataType: 'string',
               isInvalid: false,
               errorMessage: '',
@@ -224,7 +225,7 @@ const testSuite = ({
             }),
           }),
           age: expect.objectContaining({
-            state: expect.objectContaining({
+            [STATE_KEY]: expect.objectContaining({
               dataType: 'number',
               isInvalid: false,
               errorMessage: '',
@@ -350,6 +351,16 @@ const testSuite = ({
     const formHandler = useFormHandler(referralsSchema);
     formHandler.addFieldset({ basePath: 'referrals' });
     formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
+    expect(formHandler.formData()).toMatchObject({
+      referrals: [
+        { name: '', age: '' },
+        { name: 'John', age: 18 },
+      ],
+    });
+    expect(formHandler.getFieldDefaultValue('referrals')).toMatchObject([
+      { name: '', age: '' },
+      { name: 'John', age: 18 },
+    ]);
     formHandler.removeFieldset(0, 'referrals');
     expect(formHandler.formData()).toMatchObject({
       referrals: [{ name: 'John', age: 18 }],
@@ -370,7 +381,7 @@ const testSuite = ({
     expect(formHandler._.getFieldState('referrals.0')).toEqual(
       expect.objectContaining({
         age: expect.objectContaining({
-          state: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
             dataType: 'number',
             isInvalid: true,
             errorMessage: '',
@@ -382,7 +393,7 @@ const testSuite = ({
           }),
         }),
         name: expect.objectContaining({
-          state: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
             dataType: 'string',
             isInvalid: true,
             errorMessage: '',
@@ -419,7 +430,7 @@ const testSuite = ({
     formHandler.setFieldDefaultValue('name', 'Laura');
     formHandler._.buildFieldState('name');
     expect(formHandler._.getFieldState('name')).toMatchObject({
-      __state: true,
+      [STATE_KEY]: true,
       dataType: 'string',
       isInvalid: true,
       errorMessage: '',
@@ -456,7 +467,7 @@ const testSuite = ({
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
     expect(formHandler.getFormState()).toMatchObject({
       name: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'string',
         isInvalid: false,
         errorMessage: '',
@@ -467,7 +478,7 @@ const testSuite = ({
         dirty: false,
       },
       age: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'number',
         isInvalid: false,
         errorMessage: '',
@@ -489,7 +500,7 @@ const testSuite = ({
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
     expect(formHandler.getFormState()).toMatchObject({
       name: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'string',
         isInvalid: false,
         errorMessage: '',
@@ -500,7 +511,7 @@ const testSuite = ({
         dirty: false,
       },
       age: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'number',
         isInvalid: false,
         errorMessage: '',
@@ -583,7 +594,7 @@ const testSuite = ({
     formHandler.setFieldDefaultValue('age', 22);
     await formHandler.resetForm();
     expect(formHandler._.getFieldState('age')).toMatchObject({
-      __state: true,
+      [STATE_KEY]: true,
       dataType: 'number',
       isInvalid: false,
       errorMessage: '',
@@ -703,7 +714,7 @@ const testSuite = ({
     formHandler.touchField('contact');
     expect(formHandler._.getFieldState('contact')).toMatchObject({
       age: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'number',
         isInvalid: true,
         errorMessage: '',
@@ -717,7 +728,7 @@ const testSuite = ({
         validating: false,
       },
       name: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'string',
         isInvalid: true,
         errorMessage: '',
@@ -738,7 +749,7 @@ const testSuite = ({
     await formHandler.setFieldTriggers('contact', []);
     expect(formHandler._.getFieldState('contact')).toMatchObject({
       age: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'number',
         isInvalid: true,
         errorMessage: '',
@@ -752,7 +763,7 @@ const testSuite = ({
         validating: false,
       },
       name: {
-        __state: true,
+        [STATE_KEY]: true,
         dataType: 'string',
         isInvalid: true,
         errorMessage: '',
@@ -802,8 +813,6 @@ const testSuite = ({
         validationResult = error.validationResult;
       }
     }
-
-    console.log(formHandler.getFormState());
 
     expect(validationResult).toEqual(
       expect.arrayContaining([

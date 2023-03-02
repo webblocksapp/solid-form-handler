@@ -326,10 +326,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Sets the field state inside the formState store for matching paths .state
    */
-  const setFieldState = (path: string = '', value: Partial<FieldState>) => {
+  const setFieldState = (
+    path: string = '',
+    value: Partial<FieldState>,
+    options?: { stateKey?: `${keyof FieldState}${string}` }
+  ) => {
     const fieldStatePath = buildFieldStatePath(path);
+    const stateKey = options?.stateKey ? `.${options.stateKey}` : '';
     if (fieldStatePath === undefined) return;
-    path = `data.${fieldStatePath}`;
+    path = `data.${fieldStatePath}${stateKey}`;
     setFormState(path, (prev: FieldState) => ({ ...prev, ...value }));
   };
 
@@ -414,27 +419,22 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the field state default value.
    */
   const setDefaultValue = (path: string = '', value: any) => {
-    setFieldState(path, {
-      defaultValue: clone(value),
-    });
+    setFieldState(path, clone(value), { stateKey: `defaultValue.${path}` });
   };
 
   /**
    * Sets the field state cached value.
    */
   const setCachedValue = (path: string = '', value: any) => {
-    setFieldState(path, {
-      cachedValue: clone(value),
-    });
+    if (path === FIELDSETS_KEY) setFieldState(path, { cachedValue: clone(value) });
+    if (path! === FIELDSETS_KEY) setFieldState(path, clone(value), { stateKey: `cachedValue.${path}` });
   };
 
   /**
    * Sets the field state initial value.
    */
   const setInitialValue = (path: string = '', value: any) => {
-    setFieldState(path, {
-      initialValue: clone(value),
-    });
+    setFieldState(path, clone(value), { stateKey: `initialValue.${path}` });
   };
 
   /**

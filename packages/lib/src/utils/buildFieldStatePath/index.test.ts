@@ -15,7 +15,7 @@ describe('buildFieldStatePath', () => {
   });
 
   it('CASE-4', () => {
-    expect(buildFieldStatePath('key1.0')).toBe(undefined);
+    expect(buildFieldStatePath('key1.0')).toBe(`key1.${STATE_KEY}`);
   });
 
   it('CASE-5', () => {

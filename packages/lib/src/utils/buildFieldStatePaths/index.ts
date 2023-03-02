@@ -11,7 +11,7 @@ export const buildFieldStatePaths = (data: any) => {
   paths.forEach((path) => {
     const fieldStatePath = buildFieldStatePath(path);
 
-    if (fieldStatePath?.match(ENDS_WITH_DOT_STATE_REGEXP)) {
+    if (fieldStatePath?.match(ENDS_WITH_DOT_STATE_REGEXP) && !fieldStatePaths.includes(fieldStatePath)) {
       fieldStatePaths.push(fieldStatePath);
     }
   });

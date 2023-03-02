@@ -1,4 +1,11 @@
-import { ENDS_WITH_DOT_STATE_OR_DOT_CHILDREN_REGEXP, FIELDSETS_KEY, STARTS_WITH_FIELDSETS_REGEXP } from '@constants';
+import {
+  ENDS_WITH_DOT_STATE_OR_DOT_CHILDREN_REGEXP,
+  IS_ROOT_KEY_DOT_STATE_REGEXP,
+  MATCHES_CHILDREN_KEY_REGEXP,
+  ROOT_KEY,
+  STARTS_WITH_ROOT_KEY_DOT_CHILDREN_REGEXP,
+  STATE_KEY,
+} from '@constants';
 import {
   Flatten,
   FormState,
@@ -42,7 +49,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const formHandlerOptions = { delay: 0, ...options };
   const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
-  const [formState, setFormState] = createStore<{ data: FormState | FormState[] }>({
+  const [formState, setFormState] = createStore<{ data: FormState }>({
     data: {},
   });
   const [formIsResetting, setFormIsResetting] = createSignal<boolean>(false);
@@ -53,6 +60,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the field value inside the form data store.
    */
   const setFieldData = (path: string = '', value: any, options?: { mapValue?: (value: any) => any }) => {
+    if (path === ROOT_KEY) return;
     options = { mapValue: (value) => value, ...options };
     value = options?.mapValue?.(parseValue(path, value));
     path = path ? `data.${path}` : 'data';
@@ -168,10 +176,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     _?: FormStateUpdateBehavior
   ): Promise<any> => {
     const fieldState = getFieldState(path);
-    options = { touch: true, dirty: true, validate: true, mapValue: (value) => value, ...options };
-
     if (fieldState === undefined) return;
-    if (path !== FIELDSETS_KEY) setFieldData(path, value, { mapValue: options.mapValue });
+
+    options = { touch: true, dirty: true, validate: true, mapValue: (value) => value, ...options };
+    setFieldData(path, value, { mapValue: options.mapValue });
 
     const promises = Promise.all([
       options?.validate && validateField(path, { ...options, force: options?.forceValidate }, _?.validateFieldBehavior),
@@ -196,16 +204,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     _?: FormStateUpdateBehavior
   ) => {
     const parentField = getParentField(path);
-
     if (parentField === undefined) return;
-    let { parentPath, parentValue } = parentField;
 
-    /**
-     * Particular scenario when the form data is an array.
-     * When the given path of 2 slices starts with an array index like "0.key1",
-     * it's considered a root fieldsets.
-     */
-    if (!parentPath) parentPath = FIELDSETS_KEY;
+    let { parentPath, parentValue } = parentField;
 
     return setFieldValue(
       parentPath,
@@ -225,7 +226,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const getParentField = (path: string = '') => {
     const arrPath = path.split('.');
-    if (arrPath.length <= 1) return;
+    if (path === ROOT_KEY) return;
+    /**
+     * If the path matches the following scenarios:
+     * key1 --> ${ROOT_KEY}.key1
+     * 0 --> ${ROOT_KEY}.0
+     * The root key is unshift for updating the root state.
+     */
+    if (arrPath.length <= 1) arrPath.unshift(ROOT_KEY);
 
     const lastKey = arrPath.pop() as string;
     const [prevLastKey] = arrPath.slice(-1);
@@ -266,7 +274,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        * Cached value is passed to child to avoid revalidation - The parent object assumes the whole child validation,
        * so children doesn't need to be re-validated (granular validation).
        */
-      setCachedValue(child.path, parseValue(child.path, child.value));
+      setCurrentValue(child.path, parseValue(child.path, child.value));
 
       promises.push(
         setFieldValue(
@@ -326,15 +334,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Sets the field state inside the formState store for matching paths .state
    */
-  const setFieldState = (
-    path: string = '',
-    value: Partial<FieldState>,
-    options?: { stateKey?: `${keyof FieldState}${string}` }
-  ) => {
+  const setFieldState = (path: string = '', value: Partial<FieldState>) => {
     const fieldStatePath = buildFieldStatePath(path);
-    const stateKey = options?.stateKey ? `.${options.stateKey}` : '';
     if (fieldStatePath === undefined) return;
-    path = `data.${fieldStatePath}${stateKey}`;
+    path = `data.${fieldStatePath}`;
     setFormState(path, (prev: FieldState) => ({ ...prev, ...value }));
   };
 
@@ -349,17 +352,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
-   * Aborts the validation if the field cached value is
-   * equals to current value. Cached value is the prev value,
-   * which is rewritten with the current when this function is run.
+   * Aborts the validation if the field state current value is
+   * equals to the form data value.
    */
   const abortValidation = (path: string = '') => {
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return;
 
     const currentValue = getFieldValue(path);
-    const result = equals(fieldState?.cachedValue, currentValue);
-    setCachedValue(path, currentValue);
+    const result = equals(fieldState?.currentValue, currentValue);
+    setCurrentValue(path, currentValue);
     return result;
   };
 
@@ -419,22 +421,24 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the field state default value.
    */
   const setDefaultValue = (path: string = '', value: any) => {
-    setFieldState(path, clone(value), { stateKey: `defaultValue.${path}` });
+    const fieldStatePath = buildFieldStatePath(path);
+    fieldStatePath && setFormState(`data.${fieldStatePath}.defaultValue`, clone(value));
   };
 
   /**
-   * Sets the field state cached value.
+   * Sets the field state current value.
    */
-  const setCachedValue = (path: string = '', value: any) => {
-    if (path === FIELDSETS_KEY) setFieldState(path, { cachedValue: clone(value) });
-    if (path! === FIELDSETS_KEY) setFieldState(path, clone(value), { stateKey: `cachedValue.${path}` });
+  const setCurrentValue = (path: string = '', value: any) => {
+    const fieldStatePath = buildFieldStatePath(path);
+    fieldStatePath && setFormState(`data.${fieldStatePath}.currentValue`, clone(value));
   };
 
   /**
    * Sets the field state initial value.
    */
   const setInitialValue = (path: string = '', value: any) => {
-    setFieldState(path, clone(value), { stateKey: `initialValue.${path}` });
+    const fieldStatePath = buildFieldStatePath(path);
+    fieldStatePath && setFormState(`data.${fieldStatePath}.initialValue`, clone(value));
   };
 
   /**
@@ -574,8 +578,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const getFieldValue = (path: string = '', mapValue = (value: any) => value) => {
     if (!path) return;
-    //If path matches the reserved key FIELDSETS_KEY, it's because the whole form data is an array.
-    if (path === FIELDSETS_KEY) return formData.data;
+    //If path matches the reserved key ROOT_KEY, it's because the whole form data is an array.
+    if (path === ROOT_KEY) return formData.data;
     return mapValue(get(formData.data, path));
   };
 
@@ -665,10 +669,19 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
+   * Returns a boolean flag if the path matches the root state key.
+   */
+  const isRootStateKey = (path: string) => path === `${ROOT_KEY}.${STATE_KEY}`;
+
+  /**
    * Initializes a default or existing state of a field.
    */
   const buildFieldState = (path: string, options?: { reset?: boolean; fill?: boolean }) => {
-    const schemaPath = path.replace(STARTS_WITH_FIELDSETS_REGEXP, '');
+    const fieldPath = path
+      .replace(STARTS_WITH_ROOT_KEY_DOT_CHILDREN_REGEXP, '')
+      .replace(IS_ROOT_KEY_DOT_STATE_REGEXP, ROOT_KEY)
+      .replace(MATCHES_CHILDREN_KEY_REGEXP, '');
+
     const fieldState = getFieldState(path);
 
     /**
@@ -679,18 +692,18 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     }
 
     /**
-     * If the form data is an array, it's considered a fieldsets structure, so the library
-     * will create in the state a path called fieldsets.
+     * The library checks if the path is the root state key for creating the root
+     * for storing the state of the whole form data structure.
      */
-    const value = path === FIELDSETS_KEY ? formData.data : getFieldValue(schemaPath);
+    const value = isRootStateKey(path) ? formData.data : getFieldValue(fieldPath);
     options = { reset: false, ...options };
 
     return {
       ...fieldState,
-      dataType: validationSchema.getFieldDataType(schemaPath),
+      dataType: validationSchema.getFieldDataType(fieldPath),
       isInvalid: options.reset ? true : fieldState?.isInvalid || true,
       errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
-      cachedValue: undefined,
+      currentValue: undefined,
       defaultValue: options.reset || options?.fill ? clone(fieldState?.defaultValue) : clone(value),
       initialValue: options.fill ? clone(value) : clone(fieldState?.defaultValue) ?? clone(value),
       touched: options.reset ? false : fieldState?.touched || false,
@@ -899,9 +912,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const validateFieldsets = (path?: string) => {
     /**
      * path is given for nested fieldsets, if no is assumed that
-     * root fieldsets (FIELDSETS_KEY) needs to be validated.
+     * root fieldsets (ROOT_KEY) needs to be validated.
      */
-    validateField(path || FIELDSETS_KEY);
+    validateField(path || ROOT_KEY);
   };
 
   /**

@@ -2,7 +2,7 @@ import {
   CHILDREN_KEY,
   ENDS_WITH_DOT_CHILDREN_REGEXP,
   ENDS_WITH_DOT_STATE_REGEXP,
-  FIELDSETS_KEY,
+  ROOT_KEY,
   STARTS_WITH_NUMBER_DOT_REGEXP,
   STATE_KEY,
 } from '@constants';
@@ -13,32 +13,32 @@ import { isInteger } from '@utils';
  */
 export const buildFieldStatePath = (path: string) => {
   const arrPath = path.split('.');
-  let builtPath = '';
+  let builtPath = `${ROOT_KEY}.${CHILDREN_KEY}`;
 
-  if (path === '' || isInteger(path)) return `${FIELDSETS_KEY}.${STATE_KEY}`;
+  //${ROOT_KEY} ==> ${ROOT_KEY}.${STATE_KEY}
+  if (path === ROOT_KEY) return `${ROOT_KEY}.${STATE_KEY}`;
 
   for (let i = 0; i < arrPath.length; i++) {
-    const dot = builtPath ? '.' : '';
     const currentPath = arrPath[i];
     const nextPath = arrPath[i + 1];
 
-    //key1.0 ==> key1.${STATE_KEY}
+    //key1.0 ==> ${ROOT_KEY}.${CHILDREN_KEY}.key1.${STATE_KEY}
     if (nextPath === undefined && isInteger(currentPath)) {
-      builtPath = builtPath.replace(ENDS_WITH_DOT_CHILDREN_REGEXP, `${dot}${STATE_KEY}`);
-      //key1.key2 ==> key1.${CHILDREN_KEY}.key2.${STATE_KEY}
+      builtPath = builtPath.replace(ENDS_WITH_DOT_CHILDREN_REGEXP, `.${STATE_KEY}`);
+      //key1.key2 ==> ${ROOT_KEY}.${CHILDREN_KEY}.key1.${CHILDREN_KEY}.key2.${STATE_KEY}
     } else if (nextPath === undefined && !isInteger(currentPath)) {
-      builtPath = `${builtPath}${dot}${currentPath}.${STATE_KEY}`;
+      builtPath = `${builtPath}.${currentPath}.${STATE_KEY}`;
     } else if (nextPath && !isInteger(currentPath)) {
-      builtPath = `${builtPath}${dot}${currentPath}.${CHILDREN_KEY}`;
+      builtPath = `${builtPath}.${currentPath}.${CHILDREN_KEY}`;
     } else {
-      builtPath = `${builtPath}${dot}${currentPath}`;
+      builtPath = `${builtPath}.${currentPath}`;
     }
   }
 
   if (isInteger(builtPath)) {
-    builtPath = `${FIELDSETS_KEY}.${STATE_KEY}`;
+    builtPath = `${ROOT_KEY}.${STATE_KEY}`;
   } else if (builtPath.match(STARTS_WITH_NUMBER_DOT_REGEXP)) {
-    builtPath = `${FIELDSETS_KEY}.${CHILDREN_KEY}.${builtPath}`;
+    builtPath = `${ROOT_KEY}.${CHILDREN_KEY}.${builtPath}`;
   }
 
   if (builtPath.match(ENDS_WITH_DOT_STATE_REGEXP)) return builtPath;

@@ -1,5 +1,5 @@
 import { buildFieldStatePaths } from '@utils';
-import { CHILDREN_KEY, FIELDSETS_KEY, STATE_KEY } from '@constants';
+import { CHILDREN_KEY, STATE_KEY } from '@constants';
 
 describe('buildFieldStatePaths', () => {
   it('CASE-1', () => {

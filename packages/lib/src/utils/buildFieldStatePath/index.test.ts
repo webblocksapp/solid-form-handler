@@ -1,5 +1,5 @@
 import { buildFieldStatePath } from '@utils';
-import { CHILDREN_KEY, FIELDSETS_KEY, STATE_KEY } from '@constants';
+import { CHILDREN_KEY, ROOT_KEY, STATE_KEY } from '@constants';
 
 describe('buildFieldStatePath', () => {
   it('CASE-1', () => {
@@ -7,7 +7,7 @@ describe('buildFieldStatePath', () => {
   });
 
   it('CASE-2', () => {
-    expect(buildFieldStatePath('0.1.key1')).toBe(`${FIELDSETS_KEY}.${CHILDREN_KEY}.0.1.key1.${STATE_KEY}`);
+    expect(buildFieldStatePath('0.1.key1')).toBe(`${ROOT_KEY}.${CHILDREN_KEY}.0.1.key1.${STATE_KEY}`);
   });
 
   it('CASE-3', () => {
@@ -19,6 +19,6 @@ describe('buildFieldStatePath', () => {
   });
 
   it('CASE-5', () => {
-    expect(buildFieldStatePath('')).toBe(`${FIELDSETS_KEY}.${STATE_KEY}`);
+    expect(buildFieldStatePath(ROOT_KEY)).toBe(`${ROOT_KEY}.${STATE_KEY}`);
   });
 });

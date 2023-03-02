@@ -1,4 +1,4 @@
-import { CHILDREN_KEY, STATE_KEY } from '@constants';
+import { CHILDREN_KEY, ROOT_KEY, STATE_KEY } from '@constants';
 import { useFormHandler } from '@hooks';
 import { FormFieldError } from '@interfaces';
 import { FormErrorsException } from '@utils';
@@ -183,7 +183,7 @@ const testSuite = ({
             dataType: 'object',
             isInvalid: false,
             errorMessage: '',
-            cachedValue: undefined,
+            currentValue: undefined,
             defaultValue: expect.objectContaining({ name: '', age: '' }),
             initialValue: expect.objectContaining({ name: 'John', age: 28 }),
             touched: false,
@@ -718,8 +718,7 @@ const testSuite = ({
         dataType: 'number',
         isInvalid: true,
         errorMessage: '',
-        cachedValue: undefined,
-        currentValue: '',
+        currentValue: undefined,
         defaultValue: '',
         initialValue: '',
         touched: true,
@@ -732,8 +731,7 @@ const testSuite = ({
         dataType: 'string',
         isInvalid: true,
         errorMessage: '',
-        cachedValue: undefined,
-        currentValue: '',
+        currentValue: undefined,
         defaultValue: '',
         initialValue: '',
         touched: true,
@@ -753,8 +751,7 @@ const testSuite = ({
         dataType: 'number',
         isInvalid: true,
         errorMessage: '',
-        cachedValue: undefined,
-        currentValue: '',
+        currentValue: undefined,
         defaultValue: '',
         initialValue: '',
         touched: false,
@@ -767,8 +764,7 @@ const testSuite = ({
         dataType: 'string',
         isInvalid: true,
         errorMessage: '',
-        cachedValue: undefined,
-        currentValue: '',
+        currentValue: undefined,
         defaultValue: '',
         initialValue: '',
         touched: false,
@@ -821,6 +817,78 @@ const testSuite = ({
           errorMessage: 'Array must contain at least 2 element(s)',
         },
       ])
+    );
+  });
+
+  it('Form state: form state matches the expected object on every operation', async () => {
+    const formHandler = useFormHandler(personSchema);
+    expect(formHandler.getFormState()).toEqual(
+      expect.objectContaining({
+        [ROOT_KEY]: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
+            dataType: 'object',
+            isInvalid: true,
+            errorMessage: '',
+            defaultValue: {
+              name: '',
+              age: '',
+            },
+            initialValue: {
+              name: '',
+              age: '',
+            },
+            touched: false,
+            dirty: false,
+            validating: false,
+          }),
+          [CHILDREN_KEY]: expect.objectContaining({
+            age: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'number',
+                isInvalid: true,
+                errorMessage: '',
+                defaultValue: '',
+                initialValue: '',
+                touched: false,
+                dirty: false,
+                validating: false,
+              }),
+            }),
+            name: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'string',
+                isInvalid: true,
+                errorMessage: '',
+                defaultValue: '',
+                initialValue: '',
+                touched: false,
+                dirty: false,
+                validating: false,
+              }),
+            }),
+          }),
+        }),
+      })
+    );
+    await formHandler.setFieldValue('name', 'Laura');
+    expect(formHandler.getFormState()).toEqual(
+      expect.objectContaining({
+        [ROOT_KEY]: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
+            currentValue: {
+              name: 'Laura',
+              age: '',
+            },
+          }),
+          [CHILDREN_KEY]: expect.objectContaining({
+            name: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                currentValue: 'Laura',
+              }),
+            }),
+          }),
+        }),
+      })
     );
   });
 };

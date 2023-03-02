@@ -1,5 +1,5 @@
 import { buildFieldChildrenPath } from '@utils';
-import { CHILDREN_KEY, FIELDSETS_KEY } from '@constants';
+import { CHILDREN_KEY, ROOT_KEY } from '@constants';
 
 describe('buildFieldChildrenPath', () => {
   it('CASE-1', () => {
@@ -9,7 +9,7 @@ describe('buildFieldChildrenPath', () => {
   });
 
   it('CASE-2', () => {
-    expect(buildFieldChildrenPath('0.1.key1')).toBe(`${FIELDSETS_KEY}.${CHILDREN_KEY}.0.1.key1.${CHILDREN_KEY}`);
+    expect(buildFieldChildrenPath('0.1.key1')).toBe(`${ROOT_KEY}.${CHILDREN_KEY}.0.1.key1.${CHILDREN_KEY}`);
   });
 
   it('CASE-3', () => {

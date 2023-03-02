@@ -5,7 +5,7 @@ export type FieldState = {
   htmlElement?: HTMLElement;
   defaultValue: any;
   initialValue: any;
-  cachedValue: any;
+  currentValue: any;
   touched: boolean;
   dirty: boolean;
   triggers: string[];

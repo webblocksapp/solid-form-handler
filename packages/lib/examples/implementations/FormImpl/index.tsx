@@ -82,7 +82,7 @@ export const FormImpl: Component = () => {
         <code>{JSON.stringify(formData(), null, 2)}</code>
       </pre>
       <pre>
-        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+        <code>{JSON.stringify(formHandler._.getFormState(), null, 2)}</code>
       </pre>
     </form>
   );

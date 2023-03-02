@@ -72,7 +72,7 @@ export const FieldsetsFormStress1: Component = () => {
         Reset form
       </button>
       <pre>
-        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+        <code>{JSON.stringify(formHandler._.getFormState(), null, 2)}</code>
       </pre>
     </form>
   );

@@ -81,7 +81,7 @@ export const CheckboxCompForm: Component = () => {
         <code>{JSON.stringify(formData(), null, 2)}</code>
       </pre>
       <pre class="mt-3 border bg-light p-3">
-        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+        <code>{JSON.stringify(formHandler._.getFormState(), null, 2)}</code>
       </pre>
     </form>
   );

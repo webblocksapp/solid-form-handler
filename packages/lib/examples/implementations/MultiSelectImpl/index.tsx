@@ -63,7 +63,7 @@ export const MultiSelectImpl: Component = () => {
       <div>
         <pre>
           <code>{JSON.stringify(formHandler.formData(), null, 2)}</code>
-          <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+          <code>{JSON.stringify(formHandler._.getFormState(), null, 2)}</code>
         </pre>
       </div>
     </form>

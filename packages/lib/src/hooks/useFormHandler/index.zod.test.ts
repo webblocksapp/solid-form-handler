@@ -95,7 +95,7 @@ describe('useFormHandler with zod', () => {
   it('form state match object when form is filled', async () => {
     const formHandler = useFormHandler(zodSchema(personSchema));
     await formHandler.fillForm({ name: 'George', age: 60 });
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       name: {
         __state: true,
         isInvalid: false,
@@ -122,7 +122,7 @@ describe('useFormHandler with zod', () => {
   it('Schema with nested objects: form state match object when form is filled', async () => {
     const formHandler = useFormHandler(zodSchema(contactSchema));
     await formHandler.fillForm({ contact: { name: 'John', age: 28 } });
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       contact: {
         name: {
           __state: true,
@@ -153,7 +153,7 @@ describe('useFormHandler with zod', () => {
   it('Schema with nested objects: form state match object when field value is set', async () => {
     const formHandler = useFormHandler(zodSchema(contactSchema));
     await formHandler.setFieldValue('contact', { name: 'John', age: 28 });
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       contact: {
         name: {
           __state: true,
@@ -405,7 +405,7 @@ describe('useFormHandler with zod', () => {
     await formHandler.fillForm({ name: 'George', age: 19 });
     formHandler.setFieldDefaultValue('name', 'Laura');
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       name: {
         __state: true,
         dataType: 'string',
@@ -438,7 +438,7 @@ describe('useFormHandler with zod', () => {
     formHandler.resetForm();
     await formHandler.fillForm({ name: 'George', age: 19 });
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       name: {
         __state: true,
         dataType: 'string',

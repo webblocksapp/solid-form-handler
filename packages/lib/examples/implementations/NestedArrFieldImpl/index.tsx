@@ -140,7 +140,7 @@ export const NestedFieldArrImpl: Component = () => {
         </div>
         <div style="border: 1px solid black; padding: 10px; overflow: auto; height: 400px; margin-left: 30px; min-width: 600px">
           <pre>
-            <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
+            <code>{JSON.stringify(formHandler._.getFormState(), null, 2)}</code>
           </pre>
         </div>
       </div>

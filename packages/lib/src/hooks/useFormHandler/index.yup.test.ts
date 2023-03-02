@@ -120,7 +120,7 @@ const testSuite = ({
     await formHandler.fillForm({ name: 'George', age: 60 });
     expect(formHandler.getFieldValue('name')).toBe('George');
     expect(formHandler.getFieldValue('age')).toBe(60);
-    expect(formHandler.getFormState()).toEqual(
+    expect(formHandler._.getFormState()).toEqual(
       expect.objectContaining({
         name: expect.objectContaining({
           [STATE_KEY]: expect.objectContaining({
@@ -152,7 +152,7 @@ const testSuite = ({
     expect(formHandler.getFieldValue('contact')).toMatchObject({ name: 'John', age: 28 });
     expect(formHandler.getFieldValue('contact.name')).toBe('John');
     expect(formHandler.getFieldValue('contact.age')).toBe(28);
-    expect(formHandler.getFormState()).toEqual(
+    expect(formHandler._.getFormState()).toEqual(
       expect.objectContaining({
         contact: expect.objectContaining({
           [CHILDREN_KEY]: expect.objectContaining({
@@ -201,7 +201,7 @@ const testSuite = ({
     expect(formHandler.getFieldValue('contact')).toMatchObject({ name: 'John', age: 28 });
     expect(formHandler.getFieldValue('contact.name')).toBe('John');
     expect(formHandler.getFieldValue('contact.age')).toBe(28);
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       contact: expect.objectContaining({
         [STATE_KEY]: expect.objectContaining({
           dataType: 'object',
@@ -465,7 +465,7 @@ const testSuite = ({
     await formHandler.fillForm({ name: 'George', age: 19 });
     formHandler.setFieldDefaultValue('name', 'Laura');
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       name: {
         [STATE_KEY]: true,
         dataType: 'string',
@@ -498,7 +498,7 @@ const testSuite = ({
     formHandler.resetForm();
     await formHandler.fillForm({ name: 'George', age: 19 });
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
-    expect(formHandler.getFormState()).toMatchObject({
+    expect(formHandler._.getFormState()).toMatchObject({
       name: {
         [STATE_KEY]: true,
         dataType: 'string',
@@ -822,7 +822,7 @@ const testSuite = ({
 
   it('Form state: form state matches the expected object on every operation', async () => {
     const formHandler = useFormHandler(personSchema);
-    expect(formHandler.getFormState()).toEqual(
+    expect(formHandler._.getFormState()).toEqual(
       expect.objectContaining({
         [ROOT_KEY]: expect.objectContaining({
           [STATE_KEY]: expect.objectContaining({
@@ -871,7 +871,7 @@ const testSuite = ({
       })
     );
     await formHandler.setFieldValue('name', 'Laura');
-    expect(formHandler.getFormState()).toEqual(
+    expect(formHandler._.getFormState()).toEqual(
       expect.objectContaining({
         [ROOT_KEY]: expect.objectContaining({
           [STATE_KEY]: expect.objectContaining({

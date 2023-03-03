@@ -6,7 +6,6 @@ export * from './FieldProps';
 export * from './FieldState';
 export * from './FieldStore';
 export * from './Flatten';
-export * from './FormFieldError';
 export * from './FormHandler';
 export * from './FormHandlerOptions';
 export * from './FormState';

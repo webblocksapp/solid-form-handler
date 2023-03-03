@@ -34,7 +34,7 @@ export const FormImpl: Component = () => {
       if (error instanceof FormErrorsException) {
         setError(
           JSON.stringify(
-            error.validationResult.map((item) => item.errorMessage),
+            error.validationResult.map((item) => item.message),
             null,
             2
           )
@@ -42,6 +42,8 @@ export const FormImpl: Component = () => {
       }
     }
   };
+
+  formHandler.setFieldValue('name', '');
 
   return (
     <form>

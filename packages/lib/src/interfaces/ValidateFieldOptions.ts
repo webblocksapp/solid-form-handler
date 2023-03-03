@@ -4,4 +4,5 @@ export type ValidateFieldOptions = {
   force?: boolean;
   delay?: number;
   omitTriggers?: boolean;
+  throwException?: boolean;
 };

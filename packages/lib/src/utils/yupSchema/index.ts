@@ -36,7 +36,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
   const validateAt: ValidationSchema<T>['validateAt'] = async (path, data, options) => {
     try {
       path === ROOT_KEY
-        ? await schema.validate(data, { abortEarly: false, recursive: false })
+        ? await schema.validate(data, { recursive: false, ...options })
         : await schema.validateAt(path, data, options);
     } catch (error) {
       if (error instanceof YupValidationError) {

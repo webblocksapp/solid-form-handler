@@ -12,7 +12,6 @@ import {
   FieldState,
   SetFieldValueOptions,
   ValidationSchema,
-  FormFieldError,
   FormHandlerOptions,
   ValidateFieldOptions,
   FormStateUpdateBehavior,
@@ -46,7 +45,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Form handler main states.
    */
-  const formHandlerOptions = { delay: 0, ...options };
+  const formHandlerOptions = { ...options };
   const [formData, setFormData] = createStore<{ data: T }>({ data: validationSchema.buildDefault() });
   const [formState, setFormState] = createStore<{ data: FormState }>({
     data: {},
@@ -125,8 +124,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     _?: FormStateUpdateBehavior
   ) => {
     const parentField = getParentField(path);
-
     if (parentField === undefined) return;
+
+    delete options?.mapValue;
     let { parentPath, currentPath, parentDefaultValue } = parentField;
     parentDefaultValue = set(clone(parentDefaultValue), currentPath, parseValue(path, value));
 
@@ -155,6 +155,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   ) => {
     const fieldChildren = getFieldChildren(path);
     if (fieldChildren === undefined) return;
+
+    delete options?.mapValue;
     const children = buildChildrenValues(path, value);
     const promises: Array<Promise<void>> = [];
 
@@ -213,12 +215,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const parentField = getParentField(path);
     if (parentField === undefined) return;
 
+    delete options?.mapValue;
     let { parentPath, parentValue } = parentField;
 
     return setFieldValue(
       parentPath,
       parentValue,
-      { ...options, silentValidation: true },
+      { ...options, silentValidation: true, touch: false },
       {
         ..._,
         updateParent: true,
@@ -271,6 +274,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   ) => {
     const fieldChildren = getFieldChildren(path);
     if (fieldChildren === undefined) return;
+
+    delete options?.mapValue;
     const promises: Promise<any>[] = [];
     const children = buildChildrenValues(path, value);
 
@@ -287,7 +292,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         setFieldValue(
           child.path,
           child.value,
-          { ...options, forceValidate },
+          { ...options, touch: false, forceValidate },
           {
             ..._,
             updateParent: false,
@@ -462,7 +467,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const validateField = async (path: string = '', options?: ValidateFieldOptions, _?: ValidateFieldBehavior) => {
     const fieldState = getFieldState(path);
     if (fieldState === undefined) return;
-
     let validationId = createUniqueId();
 
     options = {
@@ -474,14 +478,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     if (!validationSchema.isFieldFromSchema(path) || !path) return;
     if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
-    if (options?.force !== true && abortValidation(path)) return;
 
     await new Promise((resolve) => {
       setValidationId(path, validationId);
       setTimeout(resolve, options?.delay) as unknown as number;
     });
 
-    if (getValidationId(path) !== validationId) return;
+    if (options?.force !== true && getValidationId(path) !== validationId) return;
+    if (options?.force !== true && abortValidation(path)) return;
+    if (_?.fill === true) setCurrentValue(path, getFieldValue(path));
 
     /**
      * Field is invalidated before is validated again, specially for
@@ -489,11 +494,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
      */
     setFieldAsInvalid(path, { validating: true });
 
-    const recursive = _?.recursive ?? true;
-    const hasChildren = recursive ? Boolean(getFieldChildren(path)) : false;
-    const validationOptions = hasChildren ? { abortEarly: false, recursive } : undefined;
+    const recursive = _?.recursive;
+    const validationOptions = recursive ? { abortEarly: false, recursive } : undefined;
     //The path parameter is used as base path for nested keys.
-    const paths = hasChildren ? objectPaths(get(formData.data, path)).map((item) => `${path}.${item}`) : [];
+    const paths = recursive ? objectPaths(get(formData.data, path)).map((item) => `${path}.${item}`) : [];
     paths.unshift(path);
 
     try {
@@ -508,7 +512,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     } catch (error) {
       if (error instanceof ValidationError) {
         const errors: ErrorMap = [...error.children, { path, message: error.message }];
-        const pathsWithError = error.children.map((item) => item.path);
+        const pathsWithError = errors.map((item) => item.path);
 
         //Extracts the paths without error to mark children fields as valid.
         const pathsWithoutError = paths.filter((item) => !pathsWithError.includes(item));
@@ -523,6 +527,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
             errorMessage: options?.silentValidation ? '' : error.message,
           });
         });
+
+        if (options.throwException) throw errors;
       } else {
         console.error(error);
       }
@@ -555,18 +561,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * catchError: throws an error exception if form is invalid.
    */
   const validateForm = async () => {
-    setFormIsValidating(true);
-    await validate({ force: true, delay: 0 });
-    setFormIsValidating(false);
-  };
-
-  /**
-   * Validates the whole form data.
-   */
-  const validate = async (options?: { force?: boolean; delay?: 0 }) => {
-    await validateField(ROOT_KEY, { force: options?.force, delay: options?.delay, omitTriggers: true });
-    const formErrors = getFormErrors();
-    if (formErrors.length) throw new FormErrorsException(formErrors);
+    try {
+      setFormIsValidating(true);
+      await validateField(ROOT_KEY, { force: true, omitTriggers: true, throwException: true }, { recursive: true });
+    } catch (error) {
+      throw new FormErrorsException(error as ErrorMap);
+    } finally {
+      setFormIsValidating(false);
+    }
   };
 
   /**
@@ -620,10 +622,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Gets all the form fields errors
    */
   const getFormErrors = () => {
-    const errors: FormFieldError[] = [];
+    const errors: ErrorMap = [];
 
     for (let path of objectPaths(formData.data)) {
-      getFieldError(path) && errors.push({ path, errorMessage: getFieldError(path) });
+      getFieldError(path) && errors.push({ path, message: getFieldError(path) });
     }
 
     return errors;
@@ -656,7 +658,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
             delay: 0,
             omitTriggers: true,
           },
-          { recursive: false }
+          { recursive: false, fill: options?.fill }
         )
       );
     });
@@ -755,22 +757,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     } else {
       return value;
     }
-  };
-
-  /**
-   * Refresh the form field initial state
-   */
-  const refreshFormField = async (path: string = '') => {
-    if (formIsFilling() || formIsResetting()) return;
-
-    const fieldState = getFieldState(path);
-    await setFieldValue(path, get(formData.data, path), {
-      validate: true,
-      touch: fieldState?.touched,
-      forceValidate: true,
-      delay: 0,
-    });
-    fieldState?.touched === false && setFieldState(path, { ...fieldState, errorMessage: '' });
   };
 
   /**
@@ -920,7 +906,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
      * path is given for nested fieldsets, if no is assumed that
      * root fieldsets (ROOT_KEY) needs to be validated.
      */
-    validateField(path || ROOT_KEY);
+    validateField(path || ROOT_KEY, { silentValidation: true, force: true });
   };
 
   /**
@@ -976,7 +962,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     isFieldValidating,
     isFormInvalid,
     moveFieldset,
-    refreshFormField,
     removeFieldset,
     resetForm,
     setFieldTriggers,
@@ -1007,7 +992,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       setFieldData,
       setFieldState,
       setFieldChildren,
-      validate,
     },
   };
 };

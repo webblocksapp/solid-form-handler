@@ -7,6 +7,7 @@ export const TWO_COUNTRIES_EXPECTED = 'countries field must have at least 2 item
 export const AGE_IS_REQUIRED = 'age is a required field';
 export const NAME_IS_REQUIRED = 'name is a required field';
 export const PASSWORD_NOT_MATCH = `Password doesn't match`;
+export const TWO_ERRORS_OCURRED = '2 errors occurred';
 
 type Person = {
   name: string;

@@ -17,6 +17,6 @@ describe('buildFieldChildrenPath', () => {
   });
 
   it('CASE-4', () => {
-    expect(buildFieldChildrenPath('key1.0')).toBe(`key1.${CHILDREN_KEY}`);
+    expect(buildFieldChildrenPath('key1.0')).toBe(undefined);
   });
 });

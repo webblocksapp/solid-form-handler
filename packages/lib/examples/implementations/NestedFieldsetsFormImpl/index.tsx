@@ -22,7 +22,7 @@ const schema: yup.SchemaOf<Schema> = yup.object({
 });
 
 export const NestedFieldsetsFormImpl: Component = () => {
-  const formHandler = useFormHandler<Schema>(yupSchema(schema));
+  const formHandler = useFormHandler<Schema>(yupSchema(schema), { delay: 200 });
   const { formData } = formHandler;
 
   const onInput = (event: Event) => {
@@ -31,7 +31,12 @@ export const NestedFieldsetsFormImpl: Component = () => {
   };
 
   const submit = async () => {
-    alert(JSON.stringify(formData()));
+    try {
+      await formHandler.validateForm();
+      alert(JSON.stringify(formData()));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const fillForm = () => {
@@ -83,7 +88,7 @@ export const NestedFieldsetsFormImpl: Component = () => {
         )}
       </For>
 
-      <button onClick={submit} disabled={formHandler.isFormInvalid()} type="button">
+      <button onClick={submit} type="button">
         Submit
       </button>
       <button data-testid="add" onClick={addFieldset} type="button">

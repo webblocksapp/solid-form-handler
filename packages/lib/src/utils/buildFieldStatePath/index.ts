@@ -22,9 +22,9 @@ export const buildFieldStatePath = (path: string) => {
     const currentPath = arrPath[i];
     const nextPath = arrPath[i + 1];
 
-    //key1.0 ==> ${ROOT_KEY}.${CHILDREN_KEY}.key1.${STATE_KEY}
+    //key1.0 ==> undefined
     if (nextPath === undefined && isInteger(currentPath)) {
-      builtPath = builtPath.replace(ENDS_WITH_DOT_CHILDREN_REGEXP, `.${STATE_KEY}`);
+      return undefined;
       //key1.key2 ==> ${ROOT_KEY}.${CHILDREN_KEY}.key1.${CHILDREN_KEY}.key2.${STATE_KEY}
     } else if (nextPath === undefined && !isInteger(currentPath)) {
       builtPath = `${builtPath}.${currentPath}.${STATE_KEY}`;

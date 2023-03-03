@@ -1,8 +1,15 @@
 import { CHILDREN_KEY, ROOT_KEY, STATE_KEY } from '@constants';
 import { useFormHandler } from '@hooks';
-import { FormFieldError } from '@interfaces';
+import { ErrorMap } from '@interfaces';
 import { FormErrorsException } from '@utils';
-import { yupSchemas, ValidationSchemas, TWO_COUNTRIES_EXPECTED, AGE_IS_REQUIRED, NAME_IS_REQUIRED } from './mocks';
+import {
+  yupSchemas,
+  ValidationSchemas,
+  TWO_COUNTRIES_EXPECTED,
+  AGE_IS_REQUIRED,
+  NAME_IS_REQUIRED,
+  TWO_ERRORS_OCURRED,
+} from './mocks';
 
 const testSuite = ({
   personSchema,
@@ -49,11 +56,11 @@ const testSuite = ({
           expect.arrayContaining([
             {
               path: 'age',
-              errorMessage: AGE_IS_REQUIRED,
+              message: AGE_IS_REQUIRED,
             },
             {
               path: 'name',
-              errorMessage: NAME_IS_REQUIRED,
+              message: NAME_IS_REQUIRED,
             },
           ])
         );
@@ -126,6 +133,7 @@ const testSuite = ({
           dataType: 'object',
           isInvalid: false,
           errorMessage: '',
+          currentValue: { age: 60, name: 'George' },
           defaultValue: { age: '', name: '' },
           initialValue: { age: 60, name: 'George' },
           touched: false,
@@ -137,6 +145,7 @@ const testSuite = ({
             [STATE_KEY]: expect.objectContaining({
               isInvalid: false,
               errorMessage: '',
+              currentValue: 'George',
               initialValue: 'George',
               defaultValue: '',
               touched: false,
@@ -147,6 +156,7 @@ const testSuite = ({
             [STATE_KEY]: expect.objectContaining({
               isInvalid: false,
               errorMessage: '',
+              currentValue: 60,
               initialValue: 60,
               defaultValue: '',
               touched: false,
@@ -156,6 +166,7 @@ const testSuite = ({
         }),
       }),
     });
+    expect(formHandler.formData()).toMatchObject({ age: 60, name: 'George' });
   });
 
   it('Schema with nested objects: form state match object when form is filled', async () => {
@@ -164,44 +175,62 @@ const testSuite = ({
     expect(formHandler.getFieldValue('contact')).toMatchObject({ name: 'John', age: 28 });
     expect(formHandler.getFieldValue('contact.name')).toBe('John');
     expect(formHandler.getFieldValue('contact.age')).toBe(28);
+
     expect(formHandler._.getFormState()).toEqual(
       expect.objectContaining({
-        contact: expect.objectContaining({
-          [CHILDREN_KEY]: expect.objectContaining({
-            name: expect.objectContaining({
-              [STATE_KEY]: expect.objectContaining({
-                dataType: 'string',
-                isInvalid: false,
-                errorMessage: '',
-                initialValue: 'John',
-                defaultValue: '',
-                touched: false,
-                dirty: false,
-              }),
-            }),
-            age: expect.objectContaining({
-              [STATE_KEY]: expect.objectContaining({
-                dataType: 'number',
-                isInvalid: false,
-                errorMessage: '',
-                initialValue: 28,
-                defaultValue: '',
-                touched: false,
-                dirty: false,
-              }),
-            }),
-          }),
+        [ROOT_KEY]: expect.objectContaining({
           [STATE_KEY]: expect.objectContaining({
             dataType: 'object',
             isInvalid: false,
             errorMessage: '',
-            currentValue: undefined,
-            defaultValue: expect.objectContaining({ name: '', age: '' }),
-            initialValue: expect.objectContaining({ name: 'John', age: 28 }),
+            currentValue: expect.objectContaining({ contact: { name: 'John', age: 28 } }),
+            defaultValue: expect.objectContaining({ contact: { name: '', age: '' } }),
+            initialValue: expect.objectContaining({ contact: { name: 'John', age: 28 } }),
             touched: false,
             dirty: false,
             validating: false,
           }),
+          [CHILDREN_KEY]: {
+            contact: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'object',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: expect.objectContaining({ name: 'John', age: 28 }),
+                defaultValue: expect.objectContaining({ name: '', age: '' }),
+                initialValue: expect.objectContaining({ name: 'John', age: 28 }),
+                touched: false,
+                dirty: false,
+                validating: false,
+              }),
+              [CHILDREN_KEY]: expect.objectContaining({
+                name: expect.objectContaining({
+                  [STATE_KEY]: expect.objectContaining({
+                    dataType: 'string',
+                    isInvalid: false,
+                    errorMessage: '',
+                    currentValue: 'John',
+                    initialValue: 'John',
+                    defaultValue: '',
+                    touched: false,
+                    dirty: false,
+                  }),
+                }),
+                age: expect.objectContaining({
+                  [STATE_KEY]: expect.objectContaining({
+                    dataType: 'number',
+                    isInvalid: false,
+                    errorMessage: '',
+                    currentValue: 28,
+                    initialValue: 28,
+                    defaultValue: '',
+                    touched: false,
+                    dirty: false,
+                  }),
+                }),
+              }),
+            }),
+          },
         }),
       })
     );
@@ -213,43 +242,64 @@ const testSuite = ({
     expect(formHandler.getFieldValue('contact')).toMatchObject({ name: 'John', age: 28 });
     expect(formHandler.getFieldValue('contact.name')).toBe('John');
     expect(formHandler.getFieldValue('contact.age')).toBe(28);
-    expect(formHandler._.getFormState()).toMatchObject({
-      contact: expect.objectContaining({
-        [STATE_KEY]: expect.objectContaining({
-          dataType: 'object',
-          isInvalid: false,
-          errorMessage: '',
-          initialValue: { name: '', age: '' },
-          defaultValue: { name: '', age: '' },
-          touched: true,
-          dirty: true,
-        }),
-        [CHILDREN_KEY]: expect.objectContaining({
-          name: expect.objectContaining({
-            [STATE_KEY]: expect.objectContaining({
-              dataType: 'string',
-              isInvalid: false,
-              errorMessage: '',
-              initialValue: '',
-              defaultValue: '',
-              touched: true,
-              dirty: true,
-            }),
+    expect(formHandler._.getFormState()).toMatchObject(
+      expect.objectContaining({
+        [ROOT_KEY]: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
+            dataType: 'object',
+            isInvalid: false,
+            errorMessage: '',
+            currentValue: expect.objectContaining({ contact: { name: 'John', age: 28 } }),
+            defaultValue: expect.objectContaining({ contact: { name: '', age: '' } }),
+            initialValue: expect.objectContaining({ contact: { name: '', age: '' } }),
+            touched: false,
+            dirty: true,
+            validating: false,
           }),
-          age: expect.objectContaining({
-            [STATE_KEY]: expect.objectContaining({
-              dataType: 'number',
-              isInvalid: false,
-              errorMessage: '',
-              initialValue: '',
-              defaultValue: '',
-              touched: true,
-              dirty: true,
+          [CHILDREN_KEY]: {
+            contact: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'object',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: expect.objectContaining({ name: 'John', age: 28 }),
+                defaultValue: expect.objectContaining({ name: '', age: '' }),
+                initialValue: expect.objectContaining({ name: '', age: '' }),
+                touched: true,
+                dirty: true,
+                validating: false,
+              }),
+              [CHILDREN_KEY]: expect.objectContaining({
+                name: expect.objectContaining({
+                  [STATE_KEY]: expect.objectContaining({
+                    dataType: 'string',
+                    isInvalid: false,
+                    errorMessage: '',
+                    currentValue: 'John',
+                    initialValue: '',
+                    defaultValue: '',
+                    touched: false,
+                    dirty: true,
+                  }),
+                }),
+                age: expect.objectContaining({
+                  [STATE_KEY]: expect.objectContaining({
+                    dataType: 'number',
+                    isInvalid: false,
+                    errorMessage: '',
+                    currentValue: 28,
+                    initialValue: '',
+                    defaultValue: '',
+                    touched: false,
+                    dirty: true,
+                  }),
+                }),
+              }),
             }),
-          }),
+          },
         }),
-      }),
-    });
+      })
+    );
   });
 
   it('Fieldsets: default form data must be an array of 1 record', () => {
@@ -369,10 +419,12 @@ const testSuite = ({
         { name: 'John', age: 18 },
       ],
     });
-    expect(formHandler.getFieldDefaultValue('referrals')).toMatchObject([
-      { name: '', age: '' },
-      { name: 'John', age: 18 },
-    ]);
+    expect(formHandler.getFieldDefaultValue('referrals')).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: '', age: '' }),
+        expect.objectContaining({ name: 'John', age: 18 }),
+      ])
+    );
     formHandler.removeFieldset(0, 'referrals');
     expect(formHandler.formData()).toMatchObject({
       referrals: [{ name: 'John', age: 18 }],
@@ -510,30 +562,49 @@ const testSuite = ({
     formHandler.resetForm();
     await formHandler.fillForm({ name: 'George', age: 19 });
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
-    expect(formHandler._.getFormState()).toMatchObject({
-      name: {
-        [STATE_KEY]: true,
-        dataType: 'string',
-        isInvalid: false,
-        errorMessage: '',
-        currentValue: 'George',
-        initialValue: 'George',
-        defaultValue: 'Laura',
-        touched: false,
-        dirty: false,
-      },
-      age: {
-        [STATE_KEY]: true,
-        dataType: 'number',
-        isInvalid: false,
-        errorMessage: '',
-        currentValue: 19,
-        initialValue: 19,
-        defaultValue: '',
-        touched: false,
-        dirty: false,
-      },
-    });
+    expect(formHandler._.getFormState()).toEqual(
+      expect.objectContaining({
+        [ROOT_KEY]: expect.objectContaining({
+          [STATE_KEY]: expect.objectContaining({
+            dataType: 'object',
+            isInvalid: false,
+            errorMessage: '',
+            currentValue: { age: 19, name: 'George' },
+            defaultValue: { age: '', name: 'Laura' },
+            initialValue: { age: 19, name: 'George' },
+            touched: false,
+            dirty: false,
+            validating: false,
+          }),
+          [CHILDREN_KEY]: expect.objectContaining({
+            name: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'string',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: 'George',
+                initialValue: 'George',
+                defaultValue: 'Laura',
+                touched: false,
+                dirty: false,
+              }),
+            }),
+            age: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'number',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: 19,
+                initialValue: 19,
+                defaultValue: '',
+                touched: false,
+                dirty: false,
+              }),
+            }),
+          }),
+        }),
+      })
+    );
   });
 
   it('Value is mapped after automatic parse on setting value', async () => {
@@ -546,21 +617,27 @@ const testSuite = ({
 
   it('Value is mapped after automatic parse on setting default value', async () => {
     const formHandler = useFormHandler(personSchema);
-    formHandler.setFieldDefaultValue('age', 2e3);
-    expect(formHandler.getFieldValue('age')).toBe(2000);
     formHandler.setFieldDefaultValue('age', 2e3, { mapValue: (value) => value.toExponential() });
     expect(expect(formHandler.getFieldValue('age')).toBe('2e+3'));
   });
 
-  it('Validation result is an empty array when silent validation is active', async () => {
+  it('Validation result contains errors despite silent validation is active', async () => {
     const formHandler = useFormHandler(personSchema, { silentValidation: true });
+    let errors: ErrorMap = [];
     try {
       await formHandler.validateForm();
     } catch (error) {
       if (error instanceof FormErrorsException) {
-        expect(error.validationResult).toMatchObject([]);
+        errors = error.validationResult;
       }
     }
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ path: 'name', message: NAME_IS_REQUIRED }),
+        expect.objectContaining({ path: 'age', message: AGE_IS_REQUIRED }),
+        expect.objectContaining({ path: ROOT_KEY, message: TWO_ERRORS_OCURRED }),
+      ])
+    );
   });
 
   it('No error message is generated when silent validation is active', async () => {
@@ -582,7 +659,7 @@ const testSuite = ({
     await formHandler.setFieldValue('name', '');
     expect(formHandler.getFieldError('name')).toBe(NAME_IS_REQUIRED);
     await formHandler.setFieldValue('name', '', { validateOn: ['input'] });
-    expect(formHandler.getFieldError('name')).toBe(AGE_IS_REQUIRED);
+    expect(formHandler.getFieldError('name')).toBe(NAME_IS_REQUIRED);
     await formHandler.setFieldValue('age', '', { validateOn: ['noRegisteredEvent'] });
     expect(formHandler.getFieldError('age')).toBe('');
   });
@@ -619,25 +696,33 @@ const testSuite = ({
 
   it('Validates the whole form despite the given event types', async () => {
     const formHandler = useFormHandler(personSchema, { validateOn: ['input'] });
+    let errors: ErrorMap = [];
+
     try {
       await formHandler.validateForm();
     } catch (error) {
       expect(formHandler.isFormInvalid()).toBe(true);
       if (error instanceof FormErrorsException) {
-        expect(error.validationResult).toEqual(
-          expect.arrayContaining([
-            {
-              path: 'age',
-              errorMessage: AGE_IS_REQUIRED,
-            },
-            {
-              path: 'name',
-              errorMessage: NAME_IS_REQUIRED,
-            },
-          ])
-        );
+        errors = error.validationResult;
       }
     }
+
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: 'age',
+          message: AGE_IS_REQUIRED,
+        }),
+        expect.objectContaining({
+          path: 'name',
+          message: NAME_IS_REQUIRED,
+        }),
+        expect.objectContaining({
+          path: ROOT_KEY,
+          message: TWO_ERRORS_OCURRED,
+        }),
+      ])
+    );
   });
 
   it('Triggers are set as expected', async () => {
@@ -749,28 +834,34 @@ const testSuite = ({
 
   it('form must fail expecting 2 primitives', async () => {
     const formHandler = useFormHandler(countriesSchema);
+    let errors: ErrorMap = [];
     await formHandler.setFieldValue('countries', [1]);
 
     try {
       await formHandler.validateForm();
     } catch (error) {
       if (error instanceof FormErrorsException) {
-        expect(error.validationResult).toEqual(
-          expect.arrayContaining([
-            {
-              path: 'countries',
-              errorMessage: TWO_COUNTRIES_EXPECTED,
-            },
-          ])
-        );
+        errors = error.validationResult;
       }
     }
 
+    expect(errors).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: 'countries',
+          message: TWO_COUNTRIES_EXPECTED,
+        }),
+        expect.objectContaining({
+          path: ROOT_KEY,
+          message: TWO_COUNTRIES_EXPECTED,
+        }),
+      ])
+    );
     expect(formHandler.isFormInvalid()).toBe(true);
   });
 
   it('form must fail expecting 2 objects', async () => {
-    let validationResult: FormFieldError[] = [];
+    let validationResult: ErrorMap = [];
     const formHandler = useFormHandler(countriesObjSchema);
     await formHandler.setFieldValue('countries', [{ name: 'Colombia' }]);
 
@@ -786,7 +877,7 @@ const testSuite = ({
       expect.arrayContaining([
         {
           path: 'countries',
-          errorMessage: 'countries field must have at least 2 items',
+          message: 'countries field must have at least 2 items',
         },
       ])
     );

@@ -16,7 +16,7 @@ export const buildFieldStatePath = (path: string) => {
   let builtPath = `${ROOT_KEY}.${CHILDREN_KEY}`;
 
   //${ROOT_KEY} ==> ${ROOT_KEY}.${STATE_KEY}
-  if (path === ROOT_KEY) return `${ROOT_KEY}.${STATE_KEY}`;
+  if (path === ROOT_KEY || path === '') return `${ROOT_KEY}.${STATE_KEY}`;
 
   for (let i = 0; i < arrPath.length; i++) {
     const currentPath = arrPath[i];

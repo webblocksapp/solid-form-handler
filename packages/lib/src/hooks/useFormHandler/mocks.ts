@@ -3,6 +3,11 @@ import { yupSchema } from '@utils';
 import * as yup from 'yup';
 import { SchemaOf } from 'yup';
 
+export const TWO_COUNTRIES_EXPECTED = 'countries field must have at least 2 items';
+export const AGE_IS_REQUIRED = 'age is a required field';
+export const NAME_IS_REQUIRED = 'name is a required field';
+export const PASSWORD_NOT_MATCH = `Password doesn't match`;
+
 type Person = {
   name: string;
   age: number;
@@ -45,11 +50,11 @@ export type ValidationSchemas = {
  * ----------- Yup shapes -----------
  * ==================================
  */
-const yupPersonShape: SchemaOf<Person> = yup.object().shape({
-  name: yup.string().required(),
-  age: yup.number().required().typeError('age is a required field'),
+const yupPersonShape: SchemaOf<Person> = yup.object({
+  name: yup.string().required(NAME_IS_REQUIRED),
+  age: yup.number().required(AGE_IS_REQUIRED).typeError(AGE_IS_REQUIRED),
 });
-const yupContactShape: SchemaOf<Contact> = yup.object().shape({
+const yupContactShape: SchemaOf<Contact> = yup.object({
   contact: yupPersonShape,
 });
 const yupPersonsShape: SchemaOf<Person[]> = yup.array(yupPersonShape);
@@ -71,7 +76,7 @@ const yupTriggersShape: SchemaOf<Triggers> = yup.object({
       test: (value, context) => {
         return value == context.parent['passwordConfirm'];
       },
-      message: "Password doesn't match",
+      message: PASSWORD_NOT_MATCH,
     }),
   passwordConfirm: yup
     .string()
@@ -81,12 +86,12 @@ const yupTriggersShape: SchemaOf<Triggers> = yup.object({
       test: (value, context) => {
         return value == context.parent['password'];
       },
-      message: "Password doesn't match",
+      message: PASSWORD_NOT_MATCH,
     }),
 });
 const yupCountriesShape: SchemaOf<Schema1> = yup.object({ countries: yup.array(yup.number().required()).min(2) });
 const yupCountriesObjShape: SchemaOf<Schema2> = yup.object({
-  countries: yup.array(yup.object({ name: yup.string().required() }).required()).min(2),
+  countries: yup.array(yup.object({ name: yup.string().required() }).required()).min(2, TWO_COUNTRIES_EXPECTED),
 });
 
 export const yupSchemas: ValidationSchemas = {

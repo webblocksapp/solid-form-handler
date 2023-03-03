@@ -1,4 +1,4 @@
-import { ENDS_WITH_DOT_STATE_REGEXP, ROOT_KEY, STATE_KEY } from '@constants';
+import { ENDS_WITH_DOT_STATE_REGEXP, ROOT_KEY } from '@constants';
 import { buildFieldStatePath, objectPaths } from '@utils';
 
 /**
@@ -6,7 +6,8 @@ import { buildFieldStatePath, objectPaths } from '@utils';
  */
 export const buildFieldStatePaths = (data: any) => {
   const paths = objectPaths(data);
-  const fieldStatePaths: string[] = [`${ROOT_KEY}.${STATE_KEY}`];
+  paths.unshift(ROOT_KEY);
+  const fieldStatePaths: string[] = [];
 
   paths.forEach((path) => {
     const fieldStatePath = buildFieldStatePath(path);

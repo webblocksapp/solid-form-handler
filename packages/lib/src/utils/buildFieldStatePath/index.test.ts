@@ -21,4 +21,8 @@ describe('buildFieldStatePath', () => {
   it('CASE-5', () => {
     expect(buildFieldStatePath(ROOT_KEY)).toBe(`${ROOT_KEY}.${STATE_KEY}`);
   });
+
+  it('CASE-6', () => {
+    expect(buildFieldStatePath('')).toBe(`${ROOT_KEY}.${STATE_KEY}`);
+  });
 });

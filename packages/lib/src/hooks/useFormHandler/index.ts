@@ -15,7 +15,6 @@ import {
   FormFieldError,
   FormHandlerOptions,
   ValidateFieldOptions,
-  CommonObject,
   FormStateUpdateBehavior,
   ErrorMap,
   ValidateFieldBehavior,
@@ -71,13 +70,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the default field value which will be used
    * when it's initialized or reset. No validation is triggered.
    */
-  const setFieldDefaultValue = (
+  const setFieldDefaultValue = async (
     path: string = '',
     defaultValue: any,
     options?: SetFieldDefaultValueOptions,
     _?: FormStateUpdateBehavior
   ) => {
-    untrack(() => {
+    await untrack(async () => {
       if (!path || defaultValue === undefined || formIsFilling() || formIsResetting()) return;
 
       //Avoids to overwrite filled data with default data
@@ -105,10 +104,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       setInitialValue(path, defaultValue);
       setDefaultValue(path, defaultValue);
 
-      options.validate && validateField(path, options);
+      const promises = [
+        options.validate && validateField(path, options),
+        _?.updateParent !== false && setParentFieldDefaultValue(path, defaultValue, options),
+        _?.updateChild !== false && setChildFieldDefaultValue(path, defaultValue, options),
+      ];
 
-      _?.updateParent !== false && setParentFieldDefaultValue(path, defaultValue, options);
-      _?.updateChild !== false && setChildFieldDefaultValue(path, defaultValue, options);
+      return Promise.all(promises);
     });
   };
 
@@ -116,7 +118,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * For nested fields, updates the parent default value upside the tree. For example:
    * If this path is given: key1.key2.key3, this function updates key1.key2 and key1 value recursively.
    */
-  const setParentFieldDefaultValue = (
+  const setParentFieldDefaultValue = async (
     path: string = '',
     value: any,
     options?: SetFieldDefaultValueOptions,
@@ -128,7 +130,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     let { parentPath, currentPath, parentDefaultValue } = parentField;
     parentDefaultValue = set(clone(parentDefaultValue), currentPath, parseValue(path, value));
 
-    setFieldDefaultValue(
+    await setFieldDefaultValue(
       parentPath,
       parentDefaultValue,
       { ...options, silentValidation: true },
@@ -154,14 +156,19 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const fieldChildren = getFieldChildren(path);
     if (fieldChildren === undefined) return;
     const children = buildChildrenValues(path, value);
+    const promises: Array<Promise<void>> = [];
 
     children.forEach((child) => {
-      setFieldDefaultValue(child.path, child.value, options, {
-        ..._,
-        updateParent: false,
-        updateChild: true,
-      });
+      promises.push(
+        setFieldDefaultValue(child.path, child.value, options, {
+          ..._,
+          updateParent: false,
+          updateChild: true,
+        })
+      );
     });
+
+    return Promise.all(promises);
   };
 
   /**
@@ -549,28 +556,17 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const validateForm = async () => {
     setFormIsValidating(true);
-    await validate({ throwException: true, force: true, delay: 0 });
+    await validate({ force: true, delay: 0 });
     setFormIsValidating(false);
   };
 
   /**
    * Validates the whole form data.
    */
-  const validate = async (options?: { throwException?: boolean; force?: boolean; delay?: 0 }) => {
-    const promises: Promise<void>[] = [];
-
-    //Form data is not flattened but the whole data tree will be iterated recursively by validateField.
-    Object.keys(formData.data as CommonObject).forEach((path) => {
-      promises.push(validateField(path, { force: options?.force, delay: options?.delay, omitTriggers: true }));
-    });
-
-    await Promise.all(promises);
-
-    if (options?.throwException && isFormInvalid()) {
-      throw new FormErrorsException(getFormErrors());
-    }
-
-    return !isFormInvalid();
+  const validate = async (options?: { force?: boolean; delay?: 0 }) => {
+    await validateField(ROOT_KEY, { force: options?.force, delay: options?.delay, omitTriggers: true });
+    const formErrors = getFormErrors();
+    if (formErrors.length) throw new FormErrorsException(formErrors);
   };
 
   /**
@@ -671,31 +667,31 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Returns a boolean flag if the path matches the root state key.
    */
-  const isRootStateKey = (path: string) => path === `${ROOT_KEY}.${STATE_KEY}`;
+  const isRootStatePath = (path: string) => path === `${ROOT_KEY}.${STATE_KEY}`;
 
   /**
    * Initializes a default or existing state of a field.
    */
-  const buildFieldState = (path: string, options?: { reset?: boolean; fill?: boolean }) => {
-    const fieldPath = path
+  const buildFieldState = (statePath: string, options?: { reset?: boolean; fill?: boolean }) => {
+    const fieldPath = statePath
       .replace(STARTS_WITH_ROOT_KEY_DOT_CHILDREN_REGEXP, '')
       .replace(IS_ROOT_KEY_DOT_STATE_REGEXP, ROOT_KEY)
       .replace(MATCHES_CHILDREN_KEY_REGEXP, '');
 
-    const fieldState = getFieldState(path);
+    const fieldState = getFieldState(fieldPath);
 
     /**
      * When form reset, field data is updated with pre-configured default value.
      */
     if (options?.reset && fieldState?.defaultValue !== undefined) {
-      setFieldData(path, fieldState?.defaultValue);
+      setFieldData(fieldPath, fieldState?.defaultValue);
     }
 
     /**
      * The library checks if the path is the root state key for creating the root
      * for storing the state of the whole form data structure.
      */
-    const value = isRootStateKey(path) ? formData.data : getFieldValue(fieldPath);
+    const value = isRootStatePath(statePath) ? formData.data : getFieldValue(fieldPath);
     options = { reset: false, ...options };
 
     return {
@@ -717,8 +713,26 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Retrieves a boolean flag for the given field path to check if it's invalid.
    */
   const isFieldInvalid = (path: string) => {
+    return findInvalidFlags(path).includes(true) ? true : false;
+  };
+
+  /**
+   * Recursively iterates the field and its children to determine if it's invalid.
+   */
+  const findInvalidFlags = (path: string, flags: Array<boolean> = []) => {
     const fieldState = getFieldState(path);
-    return fieldState?.isInvalid || false;
+    if (fieldState === undefined) return flags;
+    const fieldChildren = getFieldChildren(path);
+    flags.push(fieldState?.isInvalid || false);
+
+    if (fieldChildren) {
+      Object.keys(fieldChildren).forEach((childPath) => {
+        const builtPath = path === ROOT_KEY ? childPath : `${path}.${childPath}`;
+        findInvalidFlags(`${builtPath}`, flags);
+      });
+    }
+
+    return flags;
   };
 
   /**
@@ -806,15 +820,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Checks on all the fields if there is an invalidated field.
    * If yes the form is invalid.
    */
-  const isFormInvalid = () => {
-    for (let key of objectPaths(formData.data)) {
-      if (isFieldInvalid(key)) {
-        return true;
-      }
-    }
-
-    return false;
-  };
+  const isFormInvalid = () => isFieldInvalid(ROOT_KEY);
 
   /**
    * Stores the html element at form state
@@ -983,7 +989,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       path: string | undefined,
       defaultValue: any,
       options?: SetFieldDefaultValueOptions
-    ) => void,
+    ) => Promise<void>,
     touchField,
     validateField: validateField as (path?: string, options?: ValidateFieldOptions) => Promise<void>,
     validateForm,

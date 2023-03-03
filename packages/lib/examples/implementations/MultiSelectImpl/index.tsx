@@ -1,13 +1,13 @@
 import { Field } from '@components';
 import { useFormHandler } from '@hooks';
-import { zodSchema } from '@utils';
+import { yupSchema } from '@utils';
 import { Component, For, Show } from 'solid-js';
-import { z } from 'zod';
+import * as yup from 'yup';
 
-const schema = z.object({ countries: z.array(z.number()).min(2) });
+const schema = yup.object({ countries: yup.array(yup.number()).min(2) });
 
 export const MultiSelectImpl: Component = () => {
-  const formHandler = useFormHandler(zodSchema(schema));
+  const formHandler = useFormHandler(yupSchema(schema));
 
   const submit = async (event: Event) => {
     event.preventDefault();

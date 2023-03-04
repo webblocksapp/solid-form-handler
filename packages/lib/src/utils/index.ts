@@ -9,6 +9,7 @@ export * from './equals';
 export * from './flattenObject';
 export * from './formatObjectPath';
 export * from './get';
+export * from './getFieldsPaths';
 export * from './isEmpty';
 export * from './isInteger';
 export * from './isNumber';

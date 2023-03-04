@@ -8,6 +8,8 @@ export const createStore = <T extends Object>(data: T): [T, (path: string, value
     const arrPath = formatObjectPath(path).split('.');
     let builtPath = '';
 
+    if (arrPath.length === 0) return;
+
     for (let i = 0; i < arrPath.length; i++) {
       const dot = builtPath ? '.' : '';
       const currentKey = arrPath[i];

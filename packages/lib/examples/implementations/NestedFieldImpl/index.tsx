@@ -28,7 +28,7 @@ export const NestedFieldImpl: Component = () => {
   };
 
   const setContact = () => {
-    formHandler.setFieldValue('contact', {});
+    formHandler.setFieldValue('contact', { email: 'aaa@mail.com', phone: '322 222 22 22' });
   };
 
   const setContactDefaultValue = () => {
@@ -55,7 +55,7 @@ export const NestedFieldImpl: Component = () => {
       if (error instanceof FormErrorsException) {
         setError(
           JSON.stringify(
-            error.validationResult.map((item) => item.errorMessage),
+            error.validationResult.map((item) => item.message),
             null,
             2
           )

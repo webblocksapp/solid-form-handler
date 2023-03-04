@@ -43,7 +43,11 @@ export const FormImpl: Component = () => {
     }
   };
 
-  formHandler.setFieldValue('name', '');
+  const fill = () => {
+    formHandler.fillForm({ name: 'John', age: 20 });
+  };
+
+  formHandler.fillForm({ name: 'George', age: 60 });
 
   return (
     <form>
@@ -75,6 +79,9 @@ export const FormImpl: Component = () => {
       <br />
       <button data-testid="submit" type="button" onClick={submit}>
         Submit
+      </button>
+      <button data-testid="submit" type="button" onClick={fill}>
+        Fill
       </button>
       <br />
       <pre style="color: red">

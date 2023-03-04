@@ -354,7 +354,7 @@ const testSuite = ({
   it('Fieldsets sort: form data matches the expected object', async () => {
     const formHandler = useFormHandler(personsSchema);
     formHandler.addFieldset();
-    formHandler.setFieldDefaultValue('1', { name: 'John', age: 18 });
+    await formHandler.setFieldDefaultValue('1', { name: 'John', age: 18 });
     formHandler.moveFieldset(1, 0);
     expect(formHandler.formData()).toMatchObject([
       { name: 'John', age: 18 },

@@ -1,5 +1,7 @@
 import {
+  ENDS_WITH_DOT_NUMBER_REGEXP,
   ENDS_WITH_DOT_STATE_OR_DOT_CHILDREN_REGEXP,
+  IS_INTEGER_REGEXP,
   IS_ROOT_KEY_DOT_STATE_REGEXP,
   MATCHES_CHILDREN_KEY_REGEXP,
   ROOT_KEY,
@@ -13,6 +15,7 @@ import {
   SetFieldValueOptions,
   ValidationSchema,
   FormHandlerOptions,
+  ValidateOptions,
   ValidateFieldOptions,
   FormStateUpdateBehavior,
   ErrorMap,
@@ -34,6 +37,7 @@ import {
   clone,
   buildFieldChildrenPath,
   isEmpty,
+  isInteger,
 } from '@utils';
 import { createSignal, createUniqueId, untrack } from 'solid-js';
 
@@ -79,9 +83,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       if (!path || defaultValue === undefined || formIsFilling() || formIsResetting()) return;
 
       //Avoids to overwrite filled data with default data
-      const fieldState = getFieldState(path);
-      if (fieldState === undefined) return;
-
       options = { mapValue: (value) => value, ...options };
 
       /**
@@ -184,8 +185,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     options?: SetFieldValueOptions,
     _?: FormStateUpdateBehavior
   ): Promise<any> => {
-    const fieldState = getFieldState(path);
-    if (fieldState === undefined) return;
+    if (!path) return;
 
     options = { touch: true, dirty: true, validate: true, mapValue: (value) => value, ...options };
     setFieldData(path, value, { mapValue: options.mapValue });
@@ -280,19 +280,11 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const children = buildChildrenValues(path, value);
 
     children.forEach((child) => {
-      const forceValidate = child.value === undefined && true;
-
-      /**
-       * Cached value is passed to child to avoid revalidation - The parent object assumes the whole child validation,
-       * so children doesn't need to be re-validated (granular validation).
-       */
-      setCurrentValue(child.path, parseValue(child.path, child.value));
-
       promises.push(
         setFieldValue(
           child.path,
           child.value,
-          { ...options, touch: false, forceValidate },
+          { ...options, touch: false },
           {
             ..._,
             updateParent: false,
@@ -313,22 +305,35 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const fieldChildren = getFieldChildren(path);
     if (fieldChildren === undefined) return [];
 
-    Object.keys(fieldChildren).forEach((key) => {
-      const keys = [];
+    const childrenKeys = Object.keys(fieldChildren);
+
+    childrenKeys.forEach((childKey) => {
+      const obtainedChildrenKeys = [];
 
       if (Array.isArray(fieldChildren)) {
-        Object.keys(fieldChildren[key as unknown as number]).forEach((childKey) => {
-          keys.push(`${key}.${childKey}`);
+        const index = childKey as unknown as number;
+        Object.keys(fieldChildren[index]).forEach((childKey) => {
+          obtainedChildrenKeys.push(childKey);
         });
       } else {
-        keys.push(key);
+        obtainedChildrenKeys.push(childKey);
       }
 
-      keys.forEach((key) => {
-        data.push({
-          path: `${path}.${key}`,
-          value: typeof value === 'object' ? get(value, key) : value,
-        });
+      obtainedChildrenKeys.forEach((childKey) => {
+        if (Array.isArray(value)) {
+          const items = value;
+          items.forEach((value, index) => {
+            data.push({
+              path: `${path}.${index}.${childKey}`,
+              value: typeof value === 'object' ? get(value, `${childKey}.${index}`) : value,
+            });
+          });
+        } else {
+          data.push({
+            path: `${path}.${childKey}`,
+            value: typeof value === 'object' ? get(value, childKey) : value,
+          });
+        }
       });
     });
 
@@ -369,8 +374,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    */
   const abortValidation = (path: string = '') => {
     const fieldState = getFieldState(path);
-    if (fieldState === undefined) return;
-
     const currentValue = getFieldValue(path);
     const result = equals(fieldState?.currentValue, currentValue);
     setCurrentValue(path, currentValue);
@@ -384,8 +387,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     return new Promise((resolve) => {
       //Timeout required for dynamic fieldsets.
       setTimeout(async () => {
-        const fieldState = getFieldState(path);
-        if (fieldState === undefined) return;
         setFieldState(path, { triggers: paths });
         resolve(undefined);
       });
@@ -430,27 +431,35 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
+   * Helper function for building field state path.
+   */
+  const fieldStatePath = (path: string, key: keyof FieldState) => {
+    const fieldStatePath = buildFieldStatePath(path);
+    if (fieldStatePath === undefined) return '';
+    const index = path.split('.').pop();
+    const dotIndex = isInteger(index) ? `.${index}` : '';
+    return `data.${fieldStatePath}.${key}${dotIndex}`;
+  };
+
+  /**
    * Sets the field state default value.
    */
   const setDefaultValue = (path: string = '', value: any) => {
-    const fieldStatePath = buildFieldStatePath(path);
-    fieldStatePath && setFormState(`data.${fieldStatePath}.defaultValue`, clone(value));
+    setFormState(fieldStatePath(path, 'defaultValue'), clone(value));
   };
 
   /**
    * Sets the field state current value.
    */
   const setCurrentValue = (path: string = '', value: any) => {
-    const fieldStatePath = buildFieldStatePath(path);
-    fieldStatePath && setFormState(`data.${fieldStatePath}.currentValue`, clone(value));
+    setFormState(fieldStatePath(path, 'currentValue'), clone(value));
   };
 
   /**
    * Sets the field state initial value.
    */
   const setInitialValue = (path: string = '', value: any) => {
-    const fieldStatePath = buildFieldStatePath(path);
-    fieldStatePath && setFormState(`data.${fieldStatePath}.initialValue`, clone(value));
+    setFormState(fieldStatePath(path, 'initialValue'), clone(value));
   };
 
   /**
@@ -465,8 +474,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Validates a single field of the form.
    */
   const validateField = async (path: string = '', options?: ValidateFieldOptions, _?: ValidateFieldBehavior) => {
-    const fieldState = getFieldState(path);
-    if (fieldState === undefined) return;
     let validationId = createUniqueId();
 
     options = {
@@ -560,10 +567,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Validates the whole form data. It receives as options:
    * catchError: throws an error exception if form is invalid.
    */
-  const validateForm = async () => {
+  const validateForm = async (options?: ValidateOptions, _?: ValidateFieldBehavior) => {
     try {
       setFormIsValidating(true);
-      await validateField(ROOT_KEY, { force: true, omitTriggers: true, throwException: true }, { recursive: true });
+      await validateField(
+        ROOT_KEY,
+        { force: true, omitTriggers: true, throwException: true, ...options },
+        { ..._, recursive: true }
+      );
     } catch (error) {
       throw new FormErrorsException(error as ErrorMap);
     } finally {
@@ -635,7 +646,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Generates the whole form state object metadata
    */
   const generateFormState = async (options?: { reset?: boolean; fill?: boolean; silentValidation?: boolean }) => {
-    const { fieldStatePaths, paths } = buildFieldStatePaths(formData.data);
+    const { fieldStatePaths, fieldsPaths } = buildFieldStatePaths(formData.data);
     const state = {};
 
     fieldStatePaths.forEach((fieldStatePath) => {
@@ -648,7 +659,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     const promises: Promise<void>[] = [];
 
-    paths.forEach((path) => {
+    fieldsPaths.forEach((path) => {
       promises.push(
         validateField(
           path,
@@ -665,11 +676,6 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     await Promise.all(promises);
   };
-
-  /**
-   * Returns a boolean flag if the path matches the root state key.
-   */
-  const isRootStatePath = (path: string) => path === `${ROOT_KEY}.${STATE_KEY}`;
 
   /**
    * Initializes a default or existing state of a field.
@@ -693,7 +699,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
      * The library checks if the path is the root state key for creating the root
      * for storing the state of the whole form data structure.
      */
-    const value = isRootStatePath(statePath) ? formData.data : getFieldValue(fieldPath);
+    const value = statePath === `${ROOT_KEY}.${STATE_KEY}` ? formData.data : getFieldValue(fieldPath);
     options = { reset: false, ...options };
 
     return {
@@ -722,13 +728,33 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Recursively iterates the field and its children to determine if it's invalid.
    */
   const findInvalidFlags = (path: string, flags: Array<boolean> = []) => {
+    /**
+     * The following paths will be replaced as follows:
+     * 0 ---> ${ROOT_KEY}
+     * 0.key1.0 ---> 0.key1
+     */
+    path = path.replace(IS_INTEGER_REGEXP, '').replace(ENDS_WITH_DOT_NUMBER_REGEXP, '');
+    if (path === '') path = ROOT_KEY;
+
     const fieldState = getFieldState(path);
-    if (fieldState === undefined) return flags;
     const fieldChildren = getFieldChildren(path);
     flags.push(fieldState?.isInvalid || false);
 
-    if (fieldChildren) {
+    if (fieldChildren === undefined) return flags;
+
+    if (Array.isArray(fieldChildren)) {
+      Object.keys(fieldChildren).forEach((index) => {
+        Object.keys(fieldChildren[index as unknown as number]).forEach((childPath) => {
+          const builtPath = `${index}.${childPath}`;
+          findInvalidFlags(`${builtPath}`, flags);
+        });
+      });
+    }
+
+    if (!Array.isArray(fieldChildren)) {
       Object.keys(fieldChildren).forEach((childPath) => {
+        //ROOT_KEY only is passed for checking if the whole form is invalid and the
+        //children of the root is an object.
         const builtPath = path === ROOT_KEY ? childPath : `${path}.${childPath}`;
         findInvalidFlags(`${builtPath}`, flags);
       });
@@ -792,7 +818,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (!path) return undefined;
     const childrenPath = buildFieldChildrenPath(path);
     if (childrenPath === undefined) return;
-    return get<FieldState | undefined>(formState.data, childrenPath);
+    return get<FormState | FormState[] | undefined>(formState.data, childrenPath);
   };
 
   /**
@@ -818,19 +844,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Marks a field as touched when the user interacted with it.
    */
-  const touchField = (path: string = '') => {
-    const fieldState = getFieldState(path);
-    if (fieldState === undefined) return;
-    setFieldState(path, { touched: true });
-  };
+  const touchField = (path: string = '') => setFieldState(path, { touched: true });
 
   /**
    * Marks a field as dirty if initial value is different from current value.
    */
   const dirtyField = (path: string) => {
     const fieldState = getFieldState(path);
-    if (fieldState === undefined) return;
-    const dirty = equals(getFieldValue(path), fieldState.initialValue) ? false : true;
+    const dirty = equals(getFieldValue(path), fieldState?.initialValue) ? false : true;
     setFieldState(path, { ...fieldState, dirty });
   };
 

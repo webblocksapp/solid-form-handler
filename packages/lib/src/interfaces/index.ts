@@ -14,4 +14,5 @@ export * from './SetFieldDefaultValueOptions';
 export * from './SetFieldValueOptions';
 export * from './ValidateFieldBehavior';
 export * from './ValidateFieldOptions';
+export * from './ValidateOptions';
 export * from './ValidationSchema';

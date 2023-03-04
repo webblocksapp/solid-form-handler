@@ -50,6 +50,13 @@ export const NestedFieldsetsFormImpl: Component = () => {
     });
   };
 
+  const setNested = () => {
+    formHandler.setFieldValue('nested', [
+      { name: 'Laura', age: 28 },
+      { name: 'Jorge', age: 34 },
+    ]);
+  };
+
   const addFieldset = () => {
     formHandler.addFieldset({ basePath: 'nested' });
   };
@@ -88,8 +95,11 @@ export const NestedFieldsetsFormImpl: Component = () => {
         )}
       </For>
 
-      <button onClick={submit} type="button">
+      <button onClick={submit} disabled={formHandler.isFormInvalid()} type="button">
         Submit
+      </button>
+      <button onClick={setNested} type="button">
+        Set Nested
       </button>
       <button data-testid="add" onClick={addFieldset} type="button">
         Add
@@ -102,6 +112,9 @@ export const NestedFieldsetsFormImpl: Component = () => {
       </button>
       <pre>
         <code>{JSON.stringify(formHandler._.getFormState(), null, 2)}</code>
+      </pre>
+      <pre>
+        <code>{JSON.stringify(formHandler.formData(), null, 2)}</code>
       </pre>
     </form>
   );

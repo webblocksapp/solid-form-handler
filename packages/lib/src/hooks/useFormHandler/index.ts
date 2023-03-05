@@ -94,14 +94,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
       if (isEmpty(currentValue)) {
         setFieldData(path, defaultValue, { mapValue: options?.mapValue });
-        currentValue = defaultValue;
+        setInitialValue(path, defaultValue);
       }
 
       /**
        * Stores the default value at field state. Which will be used as new
        * default value when form is reset.
        */
-      setInitialValue(path, defaultValue);
       setDefaultValue(path, defaultValue);
 
       const promises = [

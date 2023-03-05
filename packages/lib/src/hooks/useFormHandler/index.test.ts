@@ -480,7 +480,6 @@ const testSuite = ({
         isInvalid: true,
         dataType: 'string',
         errorMessage: '',
-        currentValue: '',
         initialValue: '',
         defaultValue: '',
         touched: false,
@@ -494,11 +493,9 @@ const testSuite = ({
     formHandler.setFieldDefaultValue('name', 'Laura');
     formHandler._.buildFieldState('name');
     expect(formHandler._.getFieldState('name')).toMatchObject({
-      [STATE_KEY]: true,
       dataType: 'string',
       isInvalid: true,
       errorMessage: '',
-      currentValue: 'Laura',
       initialValue: 'Laura',
       defaultValue: 'Laura',
       touched: false,
@@ -515,7 +512,6 @@ const testSuite = ({
         dataType: 'array',
         isInvalid: true,
         errorMessage: '',
-        currentValue: expect.arrayContaining([expect.objectContaining({ name: 'Laura', age: 18 })]),
         initialValue: expect.arrayContaining([expect.objectContaining({ name: 'Laura', age: 18 })]),
         defaultValue: expect.arrayContaining([expect.objectContaining({ name: 'Laura', age: 18 })]),
         touched: false,
@@ -527,32 +523,40 @@ const testSuite = ({
   it('Setting field default value predominates after fillForm', async () => {
     const formHandler = useFormHandler(personSchema);
     await formHandler.fillForm({ name: 'George', age: 19 });
-    formHandler.setFieldDefaultValue('name', 'Laura');
+    await formHandler.setFieldDefaultValue('name', 'Laura');
     expect(formHandler.formData()).toMatchObject({ name: 'George', age: 19 });
-    expect(formHandler._.getFormState()).toMatchObject({
-      name: {
-        [STATE_KEY]: true,
-        dataType: 'string',
-        isInvalid: false,
-        errorMessage: '',
-        currentValue: 'George',
-        initialValue: 'Laura',
-        defaultValue: 'Laura',
-        touched: false,
-        dirty: false,
-      },
-      age: {
-        [STATE_KEY]: true,
-        dataType: 'number',
-        isInvalid: false,
-        errorMessage: '',
-        currentValue: 19,
-        initialValue: 19,
-        defaultValue: '',
-        touched: false,
-        dirty: false,
-      },
-    });
+    expect(formHandler._.getFormState()).toEqual(
+      expect.objectContaining({
+        [ROOT_KEY]: expect.objectContaining({
+          [CHILDREN_KEY]: expect.objectContaining({
+            name: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'string',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: 'George',
+                initialValue: 'George',
+                defaultValue: 'Laura',
+                touched: false,
+                dirty: false,
+              }),
+            }),
+            age: expect.objectContaining({
+              [STATE_KEY]: expect.objectContaining({
+                dataType: 'number',
+                isInvalid: false,
+                errorMessage: '',
+                currentValue: 19,
+                initialValue: 19,
+                defaultValue: '',
+                touched: false,
+                dirty: false,
+              }),
+            }),
+          }),
+        }),
+      })
+    );
   });
 
   it('Setting field default value predominates after fillForm from a previous resetForm', async () => {

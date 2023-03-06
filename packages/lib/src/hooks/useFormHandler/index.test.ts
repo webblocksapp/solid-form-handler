@@ -1,4 +1,4 @@
-import { CHILDREN_KEY, ROOT_KEY, STATE_KEY } from '@constants';
+import { CHILDREN_KEY, DATA_CONTAINS_ERRORS, ROOT_KEY, STATE_KEY } from '@constants';
 import { useFormHandler } from '@hooks';
 import { ErrorMap } from '@interfaces';
 import { FormErrorsException } from '@utils';
@@ -8,7 +8,6 @@ import {
   TWO_COUNTRIES_EXPECTED,
   AGE_IS_REQUIRED,
   NAME_IS_REQUIRED,
-  TWO_ERRORS_OCURRED,
   zodSchemas,
 } from './mocks';
 
@@ -630,7 +629,7 @@ const testSuite = ({
       expect.arrayContaining([
         expect.objectContaining({ path: 'name', message: NAME_IS_REQUIRED }),
         expect.objectContaining({ path: 'age', message: AGE_IS_REQUIRED }),
-        expect.objectContaining({ path: ROOT_KEY, message: TWO_ERRORS_OCURRED }),
+        expect.objectContaining({ path: ROOT_KEY, message: DATA_CONTAINS_ERRORS }),
       ])
     );
   });
@@ -714,7 +713,7 @@ const testSuite = ({
         }),
         expect.objectContaining({
           path: ROOT_KEY,
-          message: TWO_ERRORS_OCURRED,
+          message: DATA_CONTAINS_ERRORS,
         }),
       ])
     );
@@ -848,7 +847,7 @@ const testSuite = ({
         }),
         expect.objectContaining({
           path: ROOT_KEY,
-          message: TWO_COUNTRIES_EXPECTED,
+          message: DATA_CONTAINS_ERRORS,
         }),
       ])
     );

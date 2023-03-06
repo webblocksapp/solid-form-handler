@@ -3,7 +3,7 @@ import {
   ENDS_WITH_DOT_STATE_OR_DOT_CHILDREN_REGEXP,
   IS_INTEGER_REGEXP,
   IS_ROOT_KEY_DOT_STATE_REGEXP,
-  MATCHES_CHILDREN_KEY_REGEXP,
+  MATCHES_DOT_CHILDREN_DOT_KEY_REGEXP,
   ROOT_KEY,
   STARTS_WITH_ROOT_KEY_DOT_CHILDREN_REGEXP,
   STATE_KEY,
@@ -350,11 +350,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Sets the field state inside the formState store for matching paths .state
    */
-  const setFieldState = (path: string = '', value: Partial<FieldState>) => {
+  const setFieldState = (path: string = '', value: Partial<FieldState> | ((prev: FieldState) => FieldState)) => {
     const fieldStatePath = buildFieldStatePath(path);
     if (fieldStatePath === undefined) return;
     path = `data.${fieldStatePath}`;
-    setFormState(path, (prev: FieldState) => ({ ...prev, ...value }));
+
+    if (typeof value === 'function') {
+      setFormState(path, value);
+    } else {
+      setFormState(path, (prev: FieldState) => ({ ...prev, ...value }));
+    }
   };
 
   /**
@@ -545,9 +550,17 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets field state values which defines it as invalid.
    */
   const setFieldAsInvalid = (path: string, options: { errorMessage?: string; validating?: boolean }) => {
-    setFieldState(path, {
-      ...options,
-      isInvalid: true,
+    setFieldState(path, (prev) => {
+      const validating = options?.validating || false;
+      const errorMessage =
+        prev.errorMessage && options?.errorMessage === '' ? prev.errorMessage : options?.errorMessage || '';
+
+      return {
+        ...prev,
+        validating,
+        errorMessage,
+        isInvalid: true,
+      };
     });
   };
 
@@ -683,7 +696,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const fieldPath = statePath
       .replace(STARTS_WITH_ROOT_KEY_DOT_CHILDREN_REGEXP, '')
       .replace(IS_ROOT_KEY_DOT_STATE_REGEXP, ROOT_KEY)
-      .replace(MATCHES_CHILDREN_KEY_REGEXP, '');
+      .replace(MATCHES_DOT_CHILDREN_DOT_KEY_REGEXP, '.');
 
     const fieldState = getFieldState(fieldPath);
 

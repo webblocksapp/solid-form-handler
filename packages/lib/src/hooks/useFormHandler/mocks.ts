@@ -7,6 +7,9 @@ import { SchemaOf } from 'yup';
 export const TWO_COUNTRIES_EXPECTED = 'countries field must have at least 2 items';
 export const AGE_IS_REQUIRED = 'age is a required field';
 export const NAME_IS_REQUIRED = 'name is a required field';
+export const HOSTNAME_IS_REQUIRED = 'hostname is a required field';
+export const PASSWORD_IS_REQUIRED = 'password is a required field';
+export const PASSWORD_CONFIRM_IS_REQUIRED = 'password confirm is a required field';
 export const PASSWORD_NOT_MATCH = `Password doesn't match`;
 export const TWO_ERRORS_OCURRED = '2 errors occurred';
 
@@ -61,7 +64,7 @@ const yupContactShape: SchemaOf<Contact> = yup.object({
 });
 const yupPersonsShape: SchemaOf<Person[]> = yup.array(yupPersonShape);
 const yupReferralsShape: SchemaOf<Referrals> = yup.object({
-  hostName: yup.string().required(),
+  hostName: yup.string().required(HOSTNAME_IS_REQUIRED),
   referrals: yup.array(
     yup.object().shape({
       name: yup.string().required(),
@@ -103,8 +106,8 @@ const yupCountriesObjShape: SchemaOf<Schema2> = yup.object({
  */
 
 const zodPersonShape = z.object({
-  name: z.string().min(1, 'name is a required field'),
-  age: z.coerce.number().gte(1, 'age is a required field'),
+  name: z.string().min(1, NAME_IS_REQUIRED),
+  age: z.coerce.number().gte(1, AGE_IS_REQUIRED),
 });
 
 const zodContactShape = z.object({
@@ -114,26 +117,32 @@ const zodContactShape = z.object({
 const zodPersonsShape = z.array(zodPersonShape);
 
 const zodReferralsShape = z.object({
-  hostName: z.string().min(1, 'hostName is a required field'),
+  hostName: z.string().min(1, HOSTNAME_IS_REQUIRED),
   referrals: z.array(zodPersonShape),
 });
 
 const zodTriggersShape = z
   .object({
-    password: z.string().min(1, 'password is a required field'),
-    passwordConfirm: z.string().min(1, 'passwordConfirm is a required field'),
+    password: z.string().min(1, PASSWORD_IS_REQUIRED),
+    passwordConfirm: z.string().min(1, PASSWORD_CONFIRM_IS_REQUIRED),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.passwordConfirm) {
       ctx.addIssue({
         code: 'custom',
-        path: ['password', 'passwordConfirm'],
-        message: "Password doesn't match",
+        path: ['password'],
+        message: PASSWORD_NOT_MATCH,
+      });
+
+      ctx.addIssue({
+        code: 'custom',
+        path: ['passwordConfirm'],
+        message: PASSWORD_NOT_MATCH,
       });
     }
   });
 
-const zodCountriesShape = z.object({ countries: z.array(z.number()).min(2) });
+const zodCountriesShape = z.object({ countries: z.array(z.number()).min(2, TWO_COUNTRIES_EXPECTED) });
 const zodCountriesObjShape = z.object({
   countries: z.array(z.object({ name: z.string().min(1) })).min(2, TWO_COUNTRIES_EXPECTED),
 });

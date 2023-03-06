@@ -8,4 +8,4 @@ export const IS_ROOT_KEY_DOT_STATE_REGEXP = new RegExp(`^${ROOT_KEY}\.${STATE_KE
 export const STARTS_WITH_NUMBER_DOT_REGEXP = new RegExp(`^\\d+\.`);
 export const IS_INTEGER_REGEXP = new RegExp(`^[-]?\\d+\$`);
 export const ENDS_WITH_DOT_NUMBER_REGEXP = new RegExp(`\\.\\d+\$`);
-export const MATCHES_CHILDREN_KEY_REGEXP = new RegExp(`${CHILDREN_KEY}`, 'g');
+export const MATCHES_DOT_CHILDREN_DOT_KEY_REGEXP = new RegExp(`\\.${CHILDREN_KEY}\\.`, 'g');

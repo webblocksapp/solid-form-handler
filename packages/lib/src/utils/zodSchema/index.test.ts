@@ -100,6 +100,7 @@ describe('zodSchema', () => {
         name: z.string(),
         age: z.number(),
         contacts: z.array(z.object({ name: z.string(), age: z.number() })),
+        referral: z.object({ name: z.string() }),
       })
     );
     expect(validationSchema.getFieldDataType('name')).toBe('string');
@@ -109,6 +110,7 @@ describe('zodSchema', () => {
     expect(validationSchema.getFieldDataType('contacts.1.name')).toBe('string');
     expect(validationSchema.getFieldDataType('contacts.0.age')).toBe('number');
     expect(validationSchema.getFieldDataType('contacts.1.age')).toBe('number');
+    expect(validationSchema.getFieldDataType('referral.name')).toBe('string');
   });
 
   it('buildDefault CASE-9', () => {

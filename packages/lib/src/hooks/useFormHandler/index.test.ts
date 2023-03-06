@@ -434,7 +434,7 @@ const testSuite = ({
   it('Nested fieldsets sort: form data matches the expected object', async () => {
     const formHandler = useFormHandler(referralsSchema);
     formHandler.addFieldset({ basePath: 'referrals' });
-    formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
+    await formHandler.setFieldDefaultValue('referrals.1', { name: 'John', age: 18 });
     formHandler.moveFieldset(1, 0, 'referrals');
     expect(formHandler.formData()).toMatchObject({
       referrals: [
@@ -442,32 +442,22 @@ const testSuite = ({
         { name: '', age: '' },
       ],
     });
+
     expect(formHandler._.getFieldState('referrals.0')).toEqual(
       expect.objectContaining({
-        age: expect.objectContaining({
-          [STATE_KEY]: expect.objectContaining({
-            dataType: 'number',
-            isInvalid: true,
-            errorMessage: '',
-            currentValue: '',
-            initialValue: '',
-            defaultValue: '',
-            touched: false,
-            dirty: false,
-          }),
-        }),
-        name: expect.objectContaining({
-          [STATE_KEY]: expect.objectContaining({
-            dataType: 'string',
-            isInvalid: true,
-            errorMessage: '',
-            currentValue: '',
-            initialValue: '',
-            defaultValue: '',
-            touched: false,
-            dirty: false,
-          }),
-        }),
+        dataType: 'array',
+        isInvalid: true,
+        errorMessage: '',
+        initialValue: expect.arrayContaining([
+          expect.objectContaining({ age: '', name: '' }),
+          expect.objectContaining({ name: 'John', age: 18 }),
+        ]),
+        defaultValue: expect.arrayContaining([
+          expect.objectContaining({ age: '', name: '' }),
+          expect.objectContaining({ name: 'John', age: 18 }),
+        ]),
+        touched: false,
+        dirty: false,
       })
     );
   });

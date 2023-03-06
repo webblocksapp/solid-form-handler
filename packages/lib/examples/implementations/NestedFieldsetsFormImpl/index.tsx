@@ -61,6 +61,13 @@ export const NestedFieldsetsFormImpl: Component = () => {
     formHandler.addFieldset({ basePath: 'nested' });
   };
 
+  const setFieldset0DefaultValue = () => {
+    formHandler.setFieldDefaultValue('nested.0', {
+      name: 'Laura',
+      age: 22,
+    });
+  };
+
   onMount(() => {
     fillForm();
   });
@@ -109,6 +116,9 @@ export const NestedFieldsetsFormImpl: Component = () => {
       </button>
       <button onClick={() => formHandler.resetForm()} type="button">
         Reset form
+      </button>
+      <button onClick={setFieldset0DefaultValue} type="button">
+        Set FS0 def. value
       </button>
       <pre>
         <code>{JSON.stringify(formHandler._.getFormState(), null, 2)}</code>

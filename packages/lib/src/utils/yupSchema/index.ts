@@ -48,6 +48,9 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
     }
   };
 
+  /**
+   * Returns an array with the field path and error message.
+   */
   const buildErrorMap = (errors: YupValidationError['inner'], errorMap: ErrorMap = []) => {
     errors?.forEach((error) => {
       errorMap.push({ path: formatObjectPath(error.path as string), message: error.errors[0] });

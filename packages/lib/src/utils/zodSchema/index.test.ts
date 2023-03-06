@@ -1,4 +1,5 @@
-import { zodSchema } from '@utils';
+import { ROOT_KEY } from '@constants';
+import { ValidationError, zodSchema } from '@utils';
 import { z } from 'zod';
 
 describe('zodSchema', () => {
@@ -149,18 +150,23 @@ describe('zodSchema', () => {
     );
 
     const data = { name: '', age: 0 };
+    let result: unknown;
 
     try {
       await validationSchema.validateAt('name', data);
     } catch (error) {
-      expect(error).toMatchObject({ path: 'name', message: 'String must contain at least 1 character(s)' });
+      result = error;
     }
+
+    expect(result).toMatchObject({ path: 'name', message: 'String must contain at least 1 character(s)' });
 
     try {
       await validationSchema.validateAt('age', data);
     } catch (error) {
-      expect(error).toMatchObject({ path: 'age', message: 'Number must be greater than or equal to 1' });
+      result = error;
     }
+
+    expect(result).toMatchObject({ path: 'age', message: 'Number must be greater than or equal to 1' });
   });
 
   it('validateAt CASE-2', async () => {
@@ -185,26 +191,33 @@ describe('zodSchema', () => {
     );
 
     let data = { password: 'A', passwordConfirm: '' };
+    let result: unknown;
 
     try {
       await validationSchema.validateAt('password', data);
     } catch (error) {
-      expect(error).toMatchObject({ path: 'password', message: "Password doesn't match" });
+      result = error;
     }
+
+    expect(result).toMatchObject({ path: 'password', message: "Password doesn't match" });
 
     try {
       await validationSchema.validateAt('passwordConfirm', data);
     } catch (error) {
-      expect(error).toMatchObject({ path: 'passwordConfirm', message: 'passwordConfirm is a required field' });
+      result = error;
     }
+
+    expect(result).toMatchObject({ path: 'passwordConfirm', message: 'passwordConfirm is a required field' });
 
     data = { password: 'ABCD', passwordConfirm: '' };
 
     try {
       await validationSchema.validateAt('password', data);
     } catch (error) {
-      expect(error).toMatchObject({ path: 'password', message: "password can't be greater than 3 characters" });
+      result = error;
     }
+
+    expect(result).toMatchObject({ path: 'password', message: "password can't be greater than 3 characters" });
   });
 
   it('validateAt CASE-3', async () => {
@@ -233,32 +246,69 @@ describe('zodSchema', () => {
     );
 
     let data = { key1: { key2: { password: 'A', passwordConfirm: '' } } };
+    let result: unknown;
 
     try {
       await validationSchema.validateAt('key1.key2.password', data);
     } catch (error) {
-      expect(error).toMatchObject({ path: 'key1.key2.password', message: "Password doesn't match" });
+      result = error;
     }
+
+    expect(result).toMatchObject({ path: 'key1.key2.password', message: "Password doesn't match" });
 
     try {
       await validationSchema.validateAt('key1.key2.passwordConfirm', data);
     } catch (error) {
-      expect(error).toMatchObject({
-        path: 'key1.key2.passwordConfirm',
-        message: 'passwordConfirm is a required field',
-      });
+      result = error;
     }
+
+    expect(result).toMatchObject({
+      path: 'key1.key2.passwordConfirm',
+      message: 'passwordConfirm is a required field',
+    });
   });
 
   it('validateAt CASE-4', async () => {
     const validationSchema = zodSchema(z.object({ key1: z.array(z.number()).min(2) }));
 
     let data = { key1: [1] };
+    let result: unknown;
 
     try {
       await validationSchema.validateAt('key1', data);
     } catch (error) {
-      expect(error).toMatchObject({ path: 'key1', message: 'Array must contain at least 2 element(s)' });
+      result = error;
     }
+
+    expect(result).toMatchObject({ path: 'key1', message: 'Array must contain at least 2 element(s)' });
+  });
+
+  it('validateAt CASE-5', async () => {
+    const validationSchema = zodSchema(
+      z.object({
+        key1: z.string().min(1),
+        key2: z.number().min(1),
+        key3: z.object({ key4: z.string().min(1), key5: z.number().min(1) }),
+      })
+    );
+
+    let data = { key1: '', key2: 0, key3: { key4: '', key5: 0 } };
+    let result: ValidationError | undefined;
+
+    try {
+      await validationSchema.validateAt(ROOT_KEY, data);
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        result = error;
+      }
+    }
+
+    expect(result).toMatchObject({ path: ROOT_KEY, message: 'Data is invalid' });
+    expect(result?.children).toMatchObject([
+      { message: 'String must contain at least 1 character(s)', path: 'key1' },
+      { message: 'Number must be greater than or equal to 1', path: 'key2' },
+      { message: 'String must contain at least 1 character(s)', path: 'key3.key4' },
+      { message: 'Number must be greater than or equal to 1', path: 'key3.key5' },
+    ]);
   });
 });

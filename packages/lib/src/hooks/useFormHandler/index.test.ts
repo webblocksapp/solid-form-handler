@@ -9,6 +9,7 @@ import {
   AGE_IS_REQUIRED,
   NAME_IS_REQUIRED,
   TWO_ERRORS_OCURRED,
+  zodSchemas,
 } from './mocks';
 
 const testSuite = ({
@@ -981,4 +982,8 @@ const testSuite = ({
 
 describe('useFormHandler with yup', () => {
   testSuite(yupSchemas);
+});
+
+describe('useFormHandler with zod', () => {
+  testSuite(zodSchemas);
 });

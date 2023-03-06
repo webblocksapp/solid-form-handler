@@ -7,6 +7,11 @@ const config: Config.InitialOptions = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>',
   }),
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+    },
+  },
   transform: {
     '\\.[jt]sx?$': 'babel-jest',
   },

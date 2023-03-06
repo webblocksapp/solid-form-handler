@@ -1,6 +1,7 @@
-import { ValidationSchema } from '@interfaces';
+import { ROOT_KEY } from '@constants';
+import { ErrorMap, ValidationSchema } from '@interfaces';
 import { set, get, ValidationError } from '@utils';
-import { ZodArray, ZodEffects, ZodError, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
+import { ZodArray, ZodEffects, ZodError, ZodIssue, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
 
 export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
   /**
@@ -17,6 +18,22 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
    * Validates a single field of the form.
    */
   const validateAt: ValidationSchema<T>['validateAt'] = async (path, data) => {
+    /**
+     * If ROOT_KEY is given, the whole data is validated.
+     */
+    if (path === ROOT_KEY) {
+      try {
+        await schema.parseAsync(data);
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const children = buildErrorMap(error.errors);
+          throw new ValidationError(path, 'Data is invalid', children);
+        }
+      }
+
+      return;
+    }
+
     /**
      * A portion of the schema is reached to avoid re-validating the whole schema. If it
      * contains a superRefine, it will get the closest parent effect for doing
@@ -80,6 +97,16 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
         }
       }
     }
+  };
+
+  /**
+   * Returns an array with the field path and error message.
+   */
+  const buildErrorMap = (error: ZodError['errors'], errorMap: ErrorMap = []) => {
+    error?.forEach((error) => {
+      errorMap.push({ path: error.path.join('.'), message: error.message });
+    });
+    return errorMap;
   };
 
   /**

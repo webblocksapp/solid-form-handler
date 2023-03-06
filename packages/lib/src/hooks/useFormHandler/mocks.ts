@@ -1,5 +1,6 @@
 import { ValidationSchema } from '@interfaces';
-import { yupSchema } from '@utils';
+import { yupSchema, zodSchema } from '@utils';
+import { z } from 'zod';
 import * as yup from 'yup';
 import { SchemaOf } from 'yup';
 
@@ -95,6 +96,51 @@ const yupCountriesObjShape: SchemaOf<Schema2> = yup.object({
   countries: yup.array(yup.object({ name: yup.string().required() }).required()).min(2, TWO_COUNTRIES_EXPECTED),
 });
 
+/**
+ * ==================================
+ * ----------- zod shapes -----------
+ * ==================================
+ */
+
+const zodPersonShape = z.object({
+  name: z.string().min(1, 'name is a required field'),
+  age: z.coerce.number().gte(1, 'age is a required field'),
+});
+
+const zodContactShape = z.object({
+  contact: zodPersonShape,
+});
+
+const zodPersonsShape = z.array(zodPersonShape);
+
+const zodReferralsShape = z.object({
+  hostName: z.string().min(1, 'hostName is a required field'),
+  referrals: z.array(zodPersonShape),
+});
+
+const zodTriggersShape = z
+  .object({
+    password: z.string().min(1, 'password is a required field'),
+    passwordConfirm: z.string().min(1, 'passwordConfirm is a required field'),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.passwordConfirm) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['password', 'passwordConfirm'],
+        message: "Password doesn't match",
+      });
+    }
+  });
+
+const zodCountriesShape = z.object({ countries: z.array(z.number()).min(2) });
+const zodCountriesObjShape = z.object({
+  countries: z.array(z.object({ name: z.string().min(1) })).min(2, TWO_COUNTRIES_EXPECTED),
+});
+
+/**
+ * Exports
+ */
 export const yupSchemas: ValidationSchemas = {
   personSchema: yupSchema<Person>(yupPersonShape),
   contactSchema: yupSchema<Contact>(yupContactShape),
@@ -103,4 +149,14 @@ export const yupSchemas: ValidationSchemas = {
   triggersSchema: yupSchema<Triggers>(yupTriggersShape),
   countriesSchema: yupSchema<Schema1>(yupCountriesShape),
   countriesObjSchema: yupSchema<Schema2>(yupCountriesObjShape),
+};
+
+export const zodSchemas: ValidationSchemas = {
+  personSchema: zodSchema<Person>(zodPersonShape),
+  contactSchema: zodSchema<Contact>(zodContactShape),
+  personsSchema: zodSchema<Person[]>(zodPersonsShape),
+  referralsSchema: zodSchema<Referrals>(zodReferralsShape),
+  triggersSchema: zodSchema<Triggers>(zodTriggersShape),
+  countriesSchema: zodSchema<Schema1>(zodCountriesShape),
+  countriesObjSchema: zodSchema<Schema2>(zodCountriesObjShape),
 };

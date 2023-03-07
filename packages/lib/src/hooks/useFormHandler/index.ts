@@ -39,6 +39,7 @@ import {
   isEmpty,
   isInteger,
   buildFieldParentPath,
+  flattenObject,
 } from '@utils';
 import { createSignal, createUniqueId, untrack } from 'solid-js';
 
@@ -288,37 +289,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     const fieldChildren = getFieldChildren(path);
     if (fieldChildren === undefined) return [];
 
-    const childrenKeys = Object.keys(fieldChildren);
+    const flattenedObject = flattenObject(value);
 
-    childrenKeys.forEach((childKey) => {
-      const obtainedChildrenKeys = [];
-
-      if (Array.isArray(fieldChildren)) {
-        const index = childKey as unknown as number;
-        Object.keys(fieldChildren[index]).forEach((childKey) => {
-          obtainedChildrenKeys.push(childKey);
-        });
-      } else {
-        obtainedChildrenKeys.push(childKey);
-      }
-
-      obtainedChildrenKeys.forEach((childKey) => {
-        if (Array.isArray(value)) {
-          const items = value;
-          items.forEach((value, index) => {
-            data.push({
-              path: `${path}.${index}.${childKey}`,
-              value: typeof value === 'object' ? get(value, `${childKey}.${index}`) : value,
-            });
-          });
-        } else {
-          data.push({
-            path: `${path}.${childKey}`,
-            value: typeof value === 'object' ? get(value, childKey) : value,
-          });
-        }
+    for (const [childPath, value] of Object.entries(flattenedObject)) {
+      data.push({
+        path: `${path}.${childPath}`,
+        value,
       });
-    });
+    }
 
     return data;
   };

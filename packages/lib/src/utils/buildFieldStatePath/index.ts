@@ -30,6 +30,8 @@ export const buildFieldStatePath = (path: string) => {
       builtPath = `${builtPath}.${currentPath}.${STATE_KEY}`;
     } else if (nextPath && !isInteger(currentPath)) {
       builtPath = `${builtPath}.${currentPath}.${CHILDREN_KEY}`;
+    } else if (isInteger(currentPath) && isInteger(nextPath)) {
+      return undefined;
     } else {
       builtPath = `${builtPath}.${currentPath}`;
     }

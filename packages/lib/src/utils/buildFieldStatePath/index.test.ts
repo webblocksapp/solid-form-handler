@@ -9,7 +9,7 @@ describe('buildFieldStatePath', () => {
   });
 
   it('CASE-2', () => {
-    expect(buildFieldStatePath('0.1.key1')).toBe(`${ROOT_KEY}.${CHILDREN_KEY}.0.1.key1.${STATE_KEY}`);
+    expect(buildFieldStatePath('0.1.key1')).toBe(undefined);
   });
 
   it('CASE-3', () => {

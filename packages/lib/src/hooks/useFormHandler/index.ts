@@ -38,6 +38,7 @@ import {
   buildFieldChildrenPath,
   isEmpty,
   isInteger,
+  buildFieldParentPath,
 } from '@utils';
 import { createSignal, createUniqueId, untrack } from 'solid-js';
 
@@ -127,8 +128,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (parentField === undefined) return;
 
     delete options?.mapValue;
-    let { parentPath, currentPath, parentDefaultValue } = parentField;
-    parentDefaultValue = set(clone(parentDefaultValue), currentPath, parseValue(path, value));
+    let { parentPath, parentDefaultValue } = parentField;
+    parentDefaultValue = set(clone(parentDefaultValue), path, parseValue(path, value));
 
     await setFieldDefaultValue(
       parentPath,
@@ -234,30 +235,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Helper function for getting the parent field.
    */
   const getParentField = (path: string = '') => {
-    const arrPath = path.split('.');
     if (path === ROOT_KEY) return;
-    /**
-     * If the path matches the following scenarios:
-     * key1 --> ${ROOT_KEY}.key1
-     * 0 --> ${ROOT_KEY}.0
-     * The root key is unshift for updating the root state.
-     */
-    if (arrPath.length <= 1) arrPath.unshift(ROOT_KEY);
 
-    const lastKey = arrPath.pop() as string;
-    const [prevLastKey] = arrPath.slice(-1);
-    let currentPath = lastKey;
-
-    if (isNumber(prevLastKey)) {
-      arrPath.pop();
-      currentPath = `${prevLastKey}.${lastKey}`;
-    }
-
-    const parentPath = arrPath.join('.');
+    const parentPath = buildFieldParentPath(path);
     const parentValue = getFieldValue(parentPath);
     const parentDefaultValue = getFieldDefaultValue(parentPath);
 
-    return { parentPath, currentPath, parentValue, parentDefaultValue };
+    return { parentPath, parentValue, parentDefaultValue };
   };
 
   /**

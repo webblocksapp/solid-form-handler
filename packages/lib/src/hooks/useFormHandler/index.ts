@@ -93,11 +93,12 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        * If the field currently has data, it's prioritized, otherwise,
        * default value is set as initial field data.
        */
-      let currentValue = getFieldValue(path);
+      let currentValue = getCurrentValue(path);
       defaultValue = options?.mapValue?.(parseValue(path, defaultValue)) || defaultValue;
 
       if (isEmpty(currentValue)) {
         setFieldData(path, defaultValue, { mapValue: options?.mapValue });
+        setCurrentValue(path, defaultValue);
         setInitialValue(path, defaultValue);
       }
 
@@ -610,6 +611,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const getFieldDefaultValue = (path: string = '') => {
     const fieldState = getFieldState(handleFieldPath(path));
     return fieldState?.defaultValue;
+  };
+
+  /**
+   * Gets the boolean flag to check if the field is a fieldset.
+   */
+  const getCurrentValue = (path: string = '') => {
+    const fieldState = getFieldState(path);
+    return fieldState?.currentValue;
   };
 
   /**

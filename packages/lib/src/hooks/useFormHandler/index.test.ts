@@ -420,10 +420,7 @@ const testSuite = ({
       ],
     });
     expect(formHandler.getFieldDefaultValue('referrals')).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ name: '', age: '' }),
-        expect.objectContaining({ name: 'John', age: 18 }),
-      ])
+      expect.arrayContaining([expect.objectContaining({ name: 'John', age: 18 })])
     );
     formHandler.removeFieldset(0, 'referrals');
     expect(formHandler.formData()).toMatchObject({
@@ -448,14 +445,8 @@ const testSuite = ({
         dataType: 'array',
         isInvalid: true,
         errorMessage: '',
-        initialValue: expect.arrayContaining([
-          expect.objectContaining({ age: '', name: '' }),
-          expect.objectContaining({ name: 'John', age: 18 }),
-        ]),
-        defaultValue: expect.arrayContaining([
-          expect.objectContaining({ age: '', name: '' }),
-          expect.objectContaining({ name: 'John', age: 18 }),
-        ]),
+        initialValue: expect.arrayContaining([expect.objectContaining({ name: 'John', age: 18 })]),
+        defaultValue: expect.arrayContaining([expect.objectContaining({ name: 'John', age: 18 })]),
         touched: false,
         dirty: false,
       })

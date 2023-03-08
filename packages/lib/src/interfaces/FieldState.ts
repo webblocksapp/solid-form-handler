@@ -1,6 +1,7 @@
 export type FieldState = {
   dataType: string;
   errorMessage: string;
+  isFieldset: boolean;
   isInvalid: boolean;
   htmlElement?: HTMLElement;
   defaultValue: any;

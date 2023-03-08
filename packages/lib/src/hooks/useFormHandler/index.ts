@@ -1,10 +1,12 @@
 import {
+  CONTAINS_DOT_NUMBER_DOT_REGEXP,
   ENDS_WITH_DOT_NUMBER_REGEXP,
   ENDS_WITH_DOT_STATE_OR_DOT_CHILDREN_REGEXP,
   IS_INTEGER_REGEXP,
   IS_ROOT_KEY_DOT_STATE_REGEXP,
   MATCHES_DOT_CHILDREN_DOT_KEY_REGEXP,
   ROOT_KEY,
+  STARTS_WITH_NUMBER_DOT_REGEXP,
   STARTS_WITH_ROOT_KEY_DOT_CHILDREN_REGEXP,
   STATE_KEY,
 } from '@constants';
@@ -129,8 +131,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (parentField === undefined) return;
 
     delete options?.mapValue;
-    let { parentPath, parentDefaultValue } = parentField;
-    parentDefaultValue = set(clone(parentDefaultValue), path, parseValue(path, value));
+    let { parentPath, currentPath, parentDefaultValue } = parentField;
+
+    if (getIsFieldset(parentPath)) {
+      path = replacePathIndexesByZero(path);
+      currentPath = replacePathIndexesByZero(currentPath);
+    }
+
+    parentDefaultValue = set(clone(parentDefaultValue), currentPath, parseValue(path, value));
 
     await setFieldDefaultValue(
       parentPath,
@@ -238,11 +246,21 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const getParentField = (path: string = '') => {
     if (path === ROOT_KEY) return;
 
+    const arrPath = path.split('.');
+    const lastKey = arrPath.pop() as string;
+    const [prevLastKey] = arrPath.slice(-1);
+    let currentPath = lastKey;
+
+    if (isNumber(prevLastKey)) {
+      arrPath.pop();
+      currentPath = `${prevLastKey}.${lastKey}`;
+    }
+
     const parentPath = buildFieldParentPath(path);
     const parentValue = getFieldValue(parentPath);
     const parentDefaultValue = getFieldDefaultValue(parentPath);
 
-    return { parentPath, parentValue, parentDefaultValue };
+    return { parentPath, currentPath, parentValue, parentDefaultValue };
   };
 
   /**
@@ -411,6 +429,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the field state default value.
    */
   const setDefaultValue = (path: string = '', value: any) => {
+    path = handleFieldPath(path);
     setFormState(fieldStatePath(path, 'defaultValue'), clone(value));
   };
 
@@ -425,7 +444,26 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets the field state initial value.
    */
   const setInitialValue = (path: string = '', value: any) => {
+    path = handleFieldPath(path);
     setFormState(fieldStatePath(path, 'initialValue'), clone(value));
+  };
+
+  /**
+   * Util function for formatting the path on different scenarios.
+   */
+  const handleFieldPath = (path: string = '') => {
+    if (getIsFieldset(path)) {
+      return path.replace(ENDS_WITH_DOT_NUMBER_REGEXP, '.0');
+    }
+
+    return path;
+  };
+
+  /**
+   * Util function for converting all array indexes into zero for fieldsets.
+   */
+  const replacePathIndexesByZero = (path: string = '') => {
+    return path.replace(STARTS_WITH_NUMBER_DOT_REGEXP, '0.').replace(CONTAINS_DOT_NUMBER_DOT_REGEXP, '.0.');
   };
 
   /**
@@ -570,8 +608,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Gets the field value from formData store.
    */
   const getFieldDefaultValue = (path: string = '') => {
-    const fieldState = getFieldState(path);
+    const fieldState = getFieldState(handleFieldPath(path));
     return fieldState?.defaultValue;
+  };
+
+  /**
+   * Gets the boolean flag to check if the field is a fieldset.
+   */
+  const getIsFieldset = (path: string = '') => {
+    const fieldState = getFieldState(path);
+    return fieldState?.isFieldset;
   };
 
   /**
@@ -673,15 +719,22 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
      * The library checks if the path is the root state key for creating the root
      * for storing the state of the whole form data structure.
      */
-    const value = statePath === `${ROOT_KEY}.${STATE_KEY}` ? formData.data : getFieldValue(fieldPath);
+    let value = statePath === `${ROOT_KEY}.${STATE_KEY}` ? formData.data : getFieldValue(fieldPath);
     options = { reset: false, ...options };
+
+    /**
+     * If the field is a fieldset, only will be taken the first array index value for building
+     * the default and initial values of the field state.
+     */
+    const isFieldset = checkIsFieldset(fieldPath, value);
 
     return {
       ...fieldState,
+      isFieldset,
       dataType: validationSchema.getFieldDataType(fieldPath),
       isInvalid: options.reset ? true : fieldState?.isInvalid || true,
       errorMessage: options.reset ? '' : fieldState?.errorMessage || '',
-      currentValue: undefined,
+      currentValue: undefined, // Will be populated when the user interacts with the form or is filled programmatically.
       defaultValue: options.reset || options?.fill ? clone(fieldState?.defaultValue) : clone(value),
       initialValue: options.fill ? clone(value) : clone(fieldState?.defaultValue) ?? clone(value),
       touched: options.reset ? false : fieldState?.touched || false,
@@ -854,6 +907,17 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
+   * Checks if the field is a fieldset by it's path and value:
+   * Given an array index --> 0
+   * Nested fieldset      --> key1.key2...key9.0
+   */
+  const checkIsFieldset = (path: string = '', value: any) => {
+    if (isInteger(path) || path.match(ENDS_WITH_DOT_NUMBER_REGEXP)?.length) return true;
+    if (Array.isArray(value) && !Array.isArray(value[0]) && typeof value[0] === 'object') return true;
+    return false;
+  };
+
+  /**
    * Adds a fieldset.
    * Use path for adding a fieldset inside a nested array from an object.
    */
@@ -865,10 +929,10 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       ? get<any[]>(formData.data, options.basePath).length
       : (formData.data as unknown as any[]).length;
     const builtPath = options?.basePath ? `${options?.basePath}.${length}` : `${length}`;
-    const data = defaultData[0];
+    const data = { ...defaultData[0], ...getFieldDefaultValue(builtPath)[0] };
 
-    addFieldsetState(builtPath, data);
     setFieldData(builtPath, data);
+    addFieldsetState(builtPath, data);
     validateFieldsets(options?.basePath);
   };
 

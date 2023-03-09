@@ -96,10 +96,13 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       let currentValue = getCurrentValue(path);
       defaultValue = options?.mapValue?.(parseValue(path, defaultValue)) || defaultValue;
 
+      const promises = [];
+
       if (isEmpty(currentValue)) {
         setFieldData(path, defaultValue, { mapValue: options?.mapValue });
         setCurrentValue(path, defaultValue);
         setInitialValue(path, defaultValue);
+        promises.push(validateField(path, { silentValidation: true }));
       }
 
       /**
@@ -108,11 +111,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
        */
       setDefaultValue(path, defaultValue);
 
-      const promises = [
-        options.validate && validateField(path, options),
-        _?.updateParent !== false && setParentFieldDefaultValue(path, defaultValue, options),
-        _?.updateChild !== false && setChildFieldDefaultValue(path, defaultValue, options),
-      ];
+      _?.updateParent !== false && promises.push(setParentFieldDefaultValue(path, defaultValue, options));
+      _?.updateChild !== false && promises.push(setChildFieldDefaultValue(path, defaultValue, options));
 
       return Promise.all(promises);
     });
@@ -141,16 +141,11 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     parentDefaultValue = set(clone(parentDefaultValue), currentPath, parseValue(path, value));
 
-    await setFieldDefaultValue(
-      parentPath,
-      parentDefaultValue,
-      { ...options, silentValidation: true },
-      {
-        ..._,
-        updateParent: true,
-        updateChild: false,
-      }
-    );
+    await setFieldDefaultValue(parentPath, parentDefaultValue, options, {
+      ..._,
+      updateParent: true,
+      updateChild: false,
+    });
   };
 
   /**
@@ -930,7 +925,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Adds a fieldset.
    * Use path for adding a fieldset inside a nested array from an object.
    */
-  const addFieldset = (options?: { basePath?: string }) => {
+  const addFieldset = async (options?: { basePath?: string }) => {
     let defaultData: Array<any> = options?.basePath
       ? get(validationSchema.buildDefault(), options.basePath)
       : validationSchema.buildDefault();
@@ -953,6 +948,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     paths.forEach((key) => {
       const path = `${basePath}.${key}`;
       setFieldState(path, { ...buildFieldState(path), defaultValue: get(defaultData, key) });
+      validateField(path, { silentValidation: true });
     });
   };
 
@@ -974,7 +970,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
      * path is given for nested fieldsets, if no is assumed that
      * root fieldsets (ROOT_KEY) needs to be validated.
      */
-    validateField(path || ROOT_KEY, { silentValidation: true, force: true });
+    validateField(path || ROOT_KEY, { silentValidation: true });
   };
 
   /**

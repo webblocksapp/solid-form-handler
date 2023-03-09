@@ -16,7 +16,7 @@ const schema: yup.SchemaOf<Schema[]> = yup
       age: yup.number().required().typeError('Invalid age value'),
     })
   )
-  .min(2);
+  .min(1);
 
 export const FieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(yupSchema(schema));

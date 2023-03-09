@@ -443,7 +443,7 @@ const testSuite = ({
     expect(formHandler._.getFieldState('referrals.0')).toEqual(
       expect.objectContaining({
         dataType: 'array',
-        isInvalid: true,
+        isInvalid: false,
         errorMessage: '',
         initialValue: expect.arrayContaining([expect.objectContaining({ name: 'John', age: 18 })]),
         defaultValue: expect.arrayContaining([expect.objectContaining({ name: 'John', age: 18 })]),

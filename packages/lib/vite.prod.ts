@@ -9,7 +9,7 @@ const { peerDependencies, devDependencies } = packageJson;
 const external = [...Object.keys(peerDependencies), ...Object.keys(devDependencies)];
 
 export default defineConfig({
-  plugins: [solidPlugin({ babel: { presets: ['solid'] } }), tsconfigPaths({ root: __dirname }), dts()],
+  plugins: [dts(), solidPlugin(), tsconfigPaths({ root: __dirname })],
   build: {
     lib: {
       entry: 'src/index.ts',

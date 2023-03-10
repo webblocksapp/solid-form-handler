@@ -1,9 +1,8 @@
 import { useFormHandler } from '@hooks';
 import { FormErrorsException } from '@utils';
 import { Component, createSignal } from 'solid-js';
-import { yupSchema, zodSchema } from '@utils';
+import { yupSchema } from '@utils';
 import * as yup from 'yup';
-import { z } from 'zod';
 
 type Person = {
   name: string;
@@ -15,16 +14,10 @@ const yupPersonShape: yup.SchemaOf<Person> = yup.object().shape({
   age: yup.number().required().typeError('Age is required'),
 });
 
-const zodPersonShape = z.object({
-  name: z.string().min(1),
-  age: z.number().min(1),
-});
-
 const yupPersonSchema = yupSchema(yupPersonShape);
-const zodPersonSchema = zodSchema(zodPersonShape);
 
 export const FormImpl: Component = () => {
-  const formHandler = useFormHandler(zodPersonSchema);
+  const formHandler = useFormHandler(yupPersonSchema);
   const [error, setError] = createSignal('');
   const { formData } = formHandler;
 
@@ -87,7 +80,7 @@ export const FormImpl: Component = () => {
       <button data-testid="submit" type="button" onClick={submit}>
         Submit
       </button>
-      <button data-testid="submit" type="button" onClick={fill}>
+      <button type="button" onClick={fill}>
         Fill
       </button>
       <br />

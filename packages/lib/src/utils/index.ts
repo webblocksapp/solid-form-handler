@@ -15,6 +15,7 @@ export * from './isEmpty';
 export * from './isInteger';
 export * from './isNumber';
 export * from './objectPaths';
+export * from './objectValueExists';
 export * from './reorderArray';
 export * from './set';
 export * from './yupSchema';

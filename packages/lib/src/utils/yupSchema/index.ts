@@ -1,5 +1,5 @@
 import { ErrorMap, ValidationSchema } from '@interfaces';
-import { flattenObject, set, get, ValidationError, formatObjectPath, clone } from '@utils';
+import { flattenObject, set, get, ValidationError, formatObjectPath, objectValueExists } from '@utils';
 import { SchemaOf, reach, ValidationError as YupValidationError } from 'yup';
 import * as yup from 'yup';
 import { DATA_CONTAINS_ERRORS, ROOT_KEY } from '@constants';
@@ -35,9 +35,11 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
    */
   const validateAt: ValidationSchema<T>['validateAt'] = async (path, data, options) => {
     try {
-      path === ROOT_KEY
-        ? await schema.validate(data, { recursive: false, ...options })
-        : await schema.validateAt(path, data, options);
+      if (path === ROOT_KEY) {
+        await schema.validate(data, { recursive: false, ...options });
+      } else {
+        objectValueExists(data, path) && (await schema.validateAt(path, data, options));
+      }
     } catch (error) {
       if (error instanceof YupValidationError) {
         const children = buildErrorMap(error.inner);

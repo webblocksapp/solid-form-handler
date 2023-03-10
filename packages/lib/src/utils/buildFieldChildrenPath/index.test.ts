@@ -4,7 +4,7 @@ import { CHILDREN_KEY, ROOT_KEY } from '@constants';
 describe('buildFieldChildrenPath', () => {
   it('CASE-1', () => {
     expect(buildFieldChildrenPath('key1.key2.key3')).toBe(
-      `key1.${CHILDREN_KEY}.key2.${CHILDREN_KEY}.key3.${CHILDREN_KEY}`
+      `${ROOT_KEY}.${CHILDREN_KEY}.key1.${CHILDREN_KEY}.key2.${CHILDREN_KEY}.key3.${CHILDREN_KEY}`
     );
   });
 
@@ -17,6 +17,6 @@ describe('buildFieldChildrenPath', () => {
   });
 
   it('CASE-4', () => {
-    expect(buildFieldChildrenPath('key1.0')).toBe(`key1.${CHILDREN_KEY}`);
+    expect(buildFieldChildrenPath('key1.0')).toBe(`${ROOT_KEY}.${CHILDREN_KEY}.key1.${CHILDREN_KEY}`);
   });
 });

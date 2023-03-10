@@ -76,7 +76,6 @@ export const Radio: Component<RadioProps> = (props) => {
    */
   const getValue = (checked?: boolean) => {
     if (checked) return rest.value;
-    return '';
   };
 
   /**

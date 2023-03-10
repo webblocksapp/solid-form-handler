@@ -36,9 +36,7 @@ export const NestedFieldArrImpl: Component = () => {
   };
 
   const setContactsDefaultValue = () => {
-    formHandler.setFieldDefaultValue('contacts', [{ email: 'xxx@mail.com', phone: '311 111 11 11' }], {
-      validate: true,
-    });
+    formHandler.setFieldDefaultValue('contacts', [{ email: 'xxx@mail.com', phone: '311 111 11 11' }], {});
   };
 
   const setEmail = () => {
@@ -46,9 +44,7 @@ export const NestedFieldArrImpl: Component = () => {
   };
 
   const setEmailDefaultValue = () => {
-    formHandler.setFieldDefaultValue('contacts.0.email', 'xxx@mail.com', {
-      validate: true,
-    });
+    formHandler.setFieldDefaultValue('contacts.0.email', 'xxx@mail.com');
   };
 
   const fillForm = () => {
@@ -74,7 +70,7 @@ export const NestedFieldArrImpl: Component = () => {
       if (error instanceof FormErrorsException) {
         setError(
           JSON.stringify(
-            error.validationResult.map((item) => item.errorMessage),
+            error.validationResult.map((item) => item.message),
             null,
             2
           )

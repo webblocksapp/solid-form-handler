@@ -63,7 +63,7 @@ export const ComplexFormImpl: Component = () => {
       if (error instanceof FormErrorsException) {
         setError(
           JSON.stringify(
-            error.validationResult.map((item) => item.errorMessage),
+            error.validationResult.map((item) => item.message),
             null,
             2
           )
@@ -71,6 +71,8 @@ export const ComplexFormImpl: Component = () => {
       }
     }
   };
+
+  formHandler.setFieldTriggers('hasHouse', ['houseAddress']);
 
   return (
     <form>
@@ -130,7 +132,6 @@ export const ComplexFormImpl: Component = () => {
           checked={formData().hasHouse}
           onInput={(event) => {
             formHandler.setFieldValue('hasHouse', event.currentTarget.checked);
-            formHandler.refreshFormField('houseAddress');
           }}
         ></input>
         <br />

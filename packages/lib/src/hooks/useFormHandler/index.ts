@@ -102,7 +102,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
         setFieldData(path, defaultValue, { mapValue: options?.mapValue });
         setCurrentValue(path, defaultValue);
         setInitialValue(path, defaultValue);
-        promises.push(validateField(path, { silentValidation: true }));
+        promises.push(validateField(path, { silentValidation: true, force: true }));
       }
 
       /**
@@ -546,6 +546,15 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
    * Sets field state values which defines it as invalid.
    */
   const setFieldAsInvalid = (path: string, options: { errorMessage?: string; validating?: boolean }) => {
+    /**
+     * This check needs to be done to prevent async processes crash the application
+     * when the same fieldset is added and removed when it's validating, as f.e:
+     *
+     * formHandler.addFieldset(); //Added to index 1 of an array
+     * formHandler.removeFieldset(1); //Removed from index 1 of an array
+     */
+    if (!fieldHasState(path)) return;
+
     setFieldState(path, (prev) => {
       const validating = options?.validating || false;
       const errorMessage =
@@ -843,6 +852,11 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   };
 
   /**
+   * Returns a boolean flag for determining if the field has a state.
+   */
+  const fieldHasState = (path: string = '') => Boolean(getFieldState(path));
+
+  /**
    * Returns the children of an specific form field
    */
   const getFieldChildren = (path: string = '') => {
@@ -948,7 +962,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     paths.forEach((key) => {
       const path = `${basePath}.${key}`;
       setFieldState(path, { ...buildFieldState(path), defaultValue: get(defaultData, key) });
-      validateField(path, { silentValidation: true });
+      validateField(path, { silentValidation: true, force: true });
     });
   };
 

@@ -1,4 +1,4 @@
-import { ROOT_KEY } from '@constants';
+import { DATA_CONTAINS_ERRORS, ROOT_KEY } from '@constants';
 import { ValidationError, zodSchema } from '@utils';
 import { z } from 'zod';
 
@@ -305,7 +305,7 @@ describe('zodSchema', () => {
       }
     }
 
-    expect(result).toMatchObject({ path: ROOT_KEY, message: 'Data is invalid' });
+    expect(result).toMatchObject({ path: ROOT_KEY, message: DATA_CONTAINS_ERRORS });
     expect(result?.children).toMatchObject([
       { message: 'String must contain at least 1 character(s)', path: 'key1' },
       { message: 'Number must be greater than or equal to 1', path: 'key2' },

@@ -30,7 +30,6 @@ export const RadioField: Component<RadioFieldProps> = (props) => {
    */
   const getValue = (checked?: boolean) => {
     if (checked) return props.value;
-    return '';
   };
 
   /**

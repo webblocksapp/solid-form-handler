@@ -17,7 +17,7 @@ type Schema = {
 
 const schema: yup.SchemaOf<Schema> = yup.object().shape({
   name: yup.string().required(),
-  age: yup.number().required(),
+  age: yup.number().required().min(1),
   country: yup.number().required(),
   subscribed: yup.boolean().required().oneOf([true]),
   status: yup.mixed().required().oneOf(['active', 'inactive']),

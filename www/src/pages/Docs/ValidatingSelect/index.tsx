@@ -9,11 +9,9 @@ export const ValidatingSelect: Component = () => (
     <h2 class="mb-4 border-bottom">Validating Select</h2>
     <p>
       Native HTML select elements can have the same treatment as{' '}
-      <Link href="../validating-text-input">native HTML text inputs</Link>. The
-      same form handler methods can be implemented for <code>onInput</code> and{' '}
-      <code>onBlur</code>. Value is controlled by the <code>getFieldValue</code>{' '}
-      method and error rendering is handled by the methods{' '}
-      <code>fieldHasError</code> and <code>getFieldError</code>.
+      <Link href="../validating-text-input">native HTML text inputs</Link>. For
+      controlling it you need to use the <code>&lt;Field /&gt;</code> component
+      in <code>input</code> mode as well.
     </p>
     <Tabs
       tabs={[
@@ -41,7 +39,7 @@ export const ValidatingSelect: Component = () => (
     />
     <p>
       You can check the full implementation in the code tab. For doing select
-      validation more legible, this logic can be abstracted into a{' '}
+      validation reusable, this logic can be abstracted into a{' '}
       <Link href="/docs/select">Select.tsx</Link> component.
     </p>
     <Tabs

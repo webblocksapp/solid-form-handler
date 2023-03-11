@@ -1,5 +1,5 @@
-import { Component, For } from 'solid-js';
-import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { Component, For, Show } from 'solid-js';
+import { Field, useFormHandler, zodSchema } from 'solid-form-handler';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -40,31 +40,37 @@ export const Form: Component = () => {
     <form autocomplete="off" onSubmit={submit}>
       <h4 class="mb-3">Using zod schema</h4>
       <div class="mb-3">
-        <label class="form-label">Country</label>
-        <select
-          class="form-select"
-          classList={{ 'is-invalid': formHandler.fieldHasError('country') }}
+        <Field
+          mode="input"
           name="country"
-          value={formHandler.getFieldValue('country')}
-          onInput={({ currentTarget: { name, value } }) =>
-            formHandler.setFieldValue(name, value)
-          }
-          onBlur={({ currentTarget: { name } }) => {
-            formHandler.validateField(name);
-            formHandler.touchField(name);
-          }}
-        >
-          <For each={countries}>
-            {(country) => (
-              <option value={country.value}>{country.label}</option>
-            )}
-          </For>
-        </select>
-        {formHandler.fieldHasError('country') && (
-          <div class="invalid-feedback">
-            {formHandler.getFieldError('country')}
-          </div>
-        )}
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <label class="form-label" for={field.props.id}>
+                Country
+              </label>
+              <select
+                {...field.props}
+                class="form-select"
+                classList={{ 'is-invalid': field.helpers.error }}
+              >
+                <For each={countries}>
+                  {(country) => (
+                    <option
+                      value={country.value}
+                      selected={country.value == field.props.value}
+                    >
+                      {country.label}
+                    </option>
+                  )}
+                </For>
+              </select>
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
+          )}
+        />
       </div>
       <div class="mb-3">
         <button class="btn btn-primary me-2">Submit</button>

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
+import { Field, useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
 
 // ...
 
@@ -7,26 +7,34 @@ const formHandler = useFormHandler(__VALIDATOR__Schema(schema));
 
 // ...
 
-<div>
-  <label>Country</label>
-  <select
-    name="country"
-    value={formHandler.getFieldValue('country')}
-    onInput={({ currentTarget: { name, value } }) =>
-      //Sets and validates the field value inside the form handler.
-      formHandler.setFieldValue(name, value)
-    }
-    onBlur={({ currentTarget: { name } }) => {
-      //Field is validated and touched.
-      formHandler.validateField(name);
-      formHandler.touchField(name);
-    }}
-  >
-    <For each={countries}>
-      {(country) => <option value={country.value}>{country.label}</option>}
-    </For>
-  </select>
-  {formHandler.fieldHasError('country') && (
-    <small>{formHandler.getFieldError('country')}</small>
+<Field
+  mode="input"
+  name="country"
+  formHandler={formHandler}
+  render={(field) => (
+    <>
+      <label class="form-label" for={field.props.id}>
+        Country
+      </label>
+      <select
+        {...field.props}
+        class="form-select"
+        classList={{ 'is-invalid': field.helpers.error }}
+      >
+        <For each={countries}>
+          {(country) => (
+            <option
+              value={country.value}
+              selected={country.value == field.props.value}
+            >
+              {country.label}
+            </option>
+          )}
+        </For>
+      </select>
+      <Show when={field.helpers.error}>
+        <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+      </Show>
+    </>
   )}
-</div>;
+/>;

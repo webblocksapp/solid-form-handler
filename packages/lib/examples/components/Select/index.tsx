@@ -12,7 +12,7 @@ export type SelectProps = JSX.SelectHTMLAttributes<HTMLSelectElement> &
   };
 
 export const Select: Component<SelectProps> = (props) => {
-  const [local, rest] = splitProps(props, ['placeholder', 'options', 'label', 'classList']);
+  const [local, rest] = splitProps(props, ['placeholder', 'options', 'label', 'classList', 'class']);
   const [options, setOptions] = createSignal<SelectableOption[]>([]);
 
   /**
@@ -30,13 +30,13 @@ export const Select: Component<SelectProps> = (props) => {
       {...props}
       mode="input"
       render={(field) => (
-        <div classList={local.classList}>
+        <div class={local.class} classList={local.classList}>
           {local.label && (
             <label class="form-label" for={field.props.id}>
               {local.label}
             </label>
           )}
-          <select {...rest} {...field.props} classList={{ 'is-invalid': field.helpers.error, 'form-select': true }}>
+          <select {...rest} {...field.props} class="form-select" classList={{ 'is-invalid': field.helpers.error }}>
             <For each={options()}>
               {(option) => (
                 <option value={option.value} selected={option.value == field.props.value}>

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
+import { Field, useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
 
 // ...
 
@@ -12,7 +12,9 @@ const formHandler = useFormHandler(__VALIDATOR__Schema(schema));
   formHandler={formHandler}
   render={(field) => (
     <>
-      <label class="form-label">Email</label>
+      <label class="form-label" for={field.props.id}>
+        Email
+      </label>
       <input
         {...field.props}
         class="form-control"

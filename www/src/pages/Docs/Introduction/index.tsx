@@ -19,13 +19,6 @@ export const Introduction: Component = () => (
       <b>zod</b>, however other validators will be supported in the future.
     </p>
     <p>
-      As a big difference from other form validation libraries, it won't provide
-      built-in components like <b>&lt;Form /&gt;</b>, or magic methods/utilities
-      that append the reactivity and error reporting at form field components,
-      because integrating with third-party UI libraries can become tricky or
-      simply doesn't work.
-    </p>
-    <p>
       <b>solid-form-handler</b> helps you during development to build/extend{' '}
       <Link href="/docs/components">form components</Link> by using the
       library's reactive APIs. This documentation contains implementation

@@ -8,6 +8,6 @@ runs:
       shell: bash
       working-directory: ./packages/lib
     - name: Tests
-      run: yarn test
+      run: pnpm test
       shell: bash
       working-directory: ./packages/lib

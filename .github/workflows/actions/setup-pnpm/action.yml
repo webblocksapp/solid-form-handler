@@ -1,0 +1,9 @@
+name: Setup pnpm
+description: Setups pnpm to specified version.
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: '7.27.0'

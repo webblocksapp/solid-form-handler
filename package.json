@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-docs": "pnpm --filter www start",
+    "www": "pnpm --filter www start",
     "storybook": "pnpm --filter solid-form-handler storybook",
     "build": "pnpm --filter solid-form-handler build",
     "test": "pnpm --filter solid-form-handler test"

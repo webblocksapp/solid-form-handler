@@ -1,5 +1,5 @@
-import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { Component, Show } from 'solid-js';
+import { Field, useFormHandler, yupSchema } from 'solid-form-handler';
 import * as yup from 'yup';
 
 type Schema = {
@@ -37,25 +37,24 @@ export const Form: Component = () => {
     <form autocomplete="off" onSubmit={submit}>
       <h4 class="mb-3">Using yup schema</h4>
       <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input
-          class="form-control"
-          classList={{ 'is-invalid': formHandler.fieldHasError('email') }}
+        <Field
+          mode="input"
           name="email"
-          value={formHandler.getFieldValue('email')}
-          onInput={({ currentTarget: { name, value } }) =>
-            formHandler.setFieldValue(name, value)
-          }
-          onBlur={({ currentTarget: { name } }) => {
-            formHandler.validateField(name);
-            formHandler.touchField(name);
-          }}
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <label class="form-label">Email</label>
+              <input
+                {...field.props}
+                class="form-control"
+                classList={{ 'is-invalid': field.helpers.error }}
+              />
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
+          )}
         />
-        {formHandler.fieldHasError('email') && (
-          <div class="invalid-feedback">
-            {formHandler.getFieldError('email')}
-          </div>
-        )}
       </div>
       <div class="mb-3">
         <button class="btn btn-primary me-2">Submit</button>

@@ -3,13 +3,13 @@
 }
 
 .code-snippet pre {
-  padding: 20px;
   margin-bottom: 0px;
 }
 
 .code-snippet pre code {
   font-size: 16px;
   line-height: 26px;
+  padding: 20px;
 }
 
 .code-snippet.no-border {

@@ -1,5 +1,5 @@
 {
-  "name": "solid-form-handler",
+  "name": "www",
   "description": "A SolidJS library for simplifying form building and validations.",
   "version": "1.0.0",
   "author": {
@@ -26,8 +26,9 @@
     "bootstrap": "^5.1.3",
     "bootstrap-icons": "^1.8.3",
     "font-awesome": "^4.7.0",
-    "shiki": "^0.10.1",
+    "highlight.js": "^11.7.0",
     "solid-form-handler": "^1.0.0-alpha.7",
+    "solid-highlight": "^0.1.12",
     "solid-js": "^1.6.10",
     "yup": "^0.32.11",
     "zod": "^3.20.2"

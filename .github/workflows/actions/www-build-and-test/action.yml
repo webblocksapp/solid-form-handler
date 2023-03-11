@@ -4,10 +4,10 @@ runs:
   using: composite
   steps:
     - name: Install dependencies and build
-      run: yarn && yarn build
+      run: pnpm && pnpm build
       shell: bash
       working-directory: ./www
     - name: Tests
-      run: yarn test
+      run: pnpm test
       shell: bash
       working-directory: ./www

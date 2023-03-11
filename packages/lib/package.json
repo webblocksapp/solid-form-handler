@@ -18,8 +18,8 @@
   },
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
-  "module": "./dist/index.es.js",
-  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "files": [
     "dist",
     "README.md"
@@ -27,13 +27,13 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "node": "./dist/index.cjs.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "node": "./dist/index.cjs"
     }
   },
   "scripts": {
-    "build": "vite build --config=vite.prod.ts && tsc-alias && yarn copy",
+    "build": "vite build --config=vite.prod.ts && tsc-alias && pnpm copy",
     "copy": "cp ../../README.md .",
     "test": "jest --coverage",
     "storybook": "storybook dev -p 6006",

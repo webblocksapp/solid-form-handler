@@ -1,12 +1,6 @@
-import {
-  Component,
-  createEffect,
-  createSignal,
-  onMount,
-  JSX,
-  splitProps,
-} from 'solid-js';
-import { useCodeHighlightContext } from '@components';
+import { Component, onMount, JSX, splitProps, createSignal } from 'solid-js';
+import Highlight from 'solid-highlight';
+import 'highlight.js/styles/atom-one-light.css';
 import './index.css';
 
 export interface CodeProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -18,12 +12,7 @@ export interface CodeProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Code: Component<CodeProps> = (props) => {
-  const [code, setCode] = createSignal<string>();
-  const [mapReplace, setMapReplace] = createSignal<{
-    [matchText: string]: string;
-  }>({});
-  const { highlighter, loading } = useCodeHighlightContext();
-  let codeRef: HTMLDivElement | undefined;
+  const [code, setCode] = createSignal('');
   const [local, rest] = splitProps(props, [
     'language',
     'content',
@@ -32,25 +21,12 @@ export const Code: Component<CodeProps> = (props) => {
     'noBorder',
   ]);
 
-  const setInnerHTML = async () => {
-    if (codeRef && loading() === false) {
-      codeRef.innerHTML =
-        highlighter()?.codeToHtml(
-          formatCode(code() as string) || (rest.children as string) || '',
-          {
-            lang: local.language || 'tsx',
-          }
-        ) || '';
-    }
-  };
-
-  const formatCode = (code: string) => {
-    if (code === undefined) return;
-
-    Object.keys(mapReplace()).forEach((matchText) => {
-      const newValue = mapReplace()[matchText];
-      code = code.replace(new RegExp(`${matchText}`, 'ig'), newValue);
-    });
+  const formatCode = (code: string = '') => {
+    local.mapReplace &&
+      Object.keys(local.mapReplace).forEach((matchText) => {
+        const newValue = local.mapReplace![matchText];
+        code = code.replace(new RegExp(`${matchText}`, 'ig'), newValue);
+      });
 
     if (code.match('//@ts-nocheck')) {
       code = code.replace('//@ts-nocheck', '');
@@ -60,30 +36,21 @@ export const Code: Component<CodeProps> = (props) => {
     }
   };
 
-  createEffect(() => loading() !== undefined && setInnerHTML());
-
   onMount(async () => {
-    setCode(local.content || '');
-    setMapReplace(local.mapReplace || {});
-    rest.children && setInnerHTML();
+    const code = formatCode(((local.content || rest.children) as string) || '');
+    setCode(code);
   });
 
   return (
     <div {...rest}>
-      {loading() && (
-        <div
-          style={{ 'min-height': '120px' }}
-          class="code-loading my-3 d-flex p-3 flex-column justify-content-center align-items-center border bg-light"
-        >
-          Loading code snippet...
-          <div class="mt-2 spinner-border text-secondary" />
-        </div>
-      )}
       <div
         class={`code-snippet border ${local.codeClass || ''}`}
-        classList={{ 'd-none': loading(), 'no-border': local.noBorder }}
-        ref={codeRef}
-      ></div>
+        classList={{ 'no-border': local.noBorder }}
+      >
+        <Highlight autoDetect={false} language={local.language || 'tsx'}>
+          {code()}
+        </Highlight>
+      </div>
     </div>
   );
 };

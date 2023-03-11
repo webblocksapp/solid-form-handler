@@ -30,22 +30,6 @@ export default defineConfig(({ mode }) => {
       viteStaticCopy({
         targets: [
           {
-            src: 'node_modules/shiki/themes/github-light.json',
-            dest: 'shiki/themes',
-          },
-          {
-            src: 'node_modules/shiki/languages/tsx.tmLanguage.json',
-            dest: 'shiki/languages',
-          },
-          {
-            src: 'node_modules/shiki/languages/typescript.tmLanguage.json',
-            dest: 'shiki/languages',
-          },
-          {
-            src: 'node_modules/shiki/dist/onig.wasm',
-            dest: 'shiki/dist',
-          },
-          {
             src: 'src/assets/images/solid-form-handler.png',
             dest: 'images',
           },

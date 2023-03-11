@@ -1,9 +1,14 @@
 {
   "name": "solidjs-form-handler",
   "version": "1.0.0",
-  "scripts": {},
-  "devDependencies": {
-    "lerna": "^4.0.0"
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-docs": "pnpm --filter www start",
+    "storybook": "pnpm --filter solid-form-handler storybook",
+    "build": "pnpm --filter solid-form-handler build"
   },
-  "license": "MIT"
+  "keywords": [],
+  "author": "Mauricio Rivera",
+  "license": "ISC"
 }

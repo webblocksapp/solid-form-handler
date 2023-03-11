@@ -8,18 +8,16 @@
 
 **solid-form-handler** is a fully equipped library for building form components and validating forms with them. Under the hood, it works with the built-in granular reactivity of [SolidJS stores](https://www.solidjs.com/docs/latest/api#stores).
 
-It uses as a third-party library the yup object schema for data assertion however other validators will be supported in the future.
-
-As a big difference from other form validation libraries, it won't provide built-in components like **\<Form \/>**, or magic methods/utilities that append the reactivity and error reporting at form field components, because integrating with third-party UI libraries can become tricky or simply doesn't work.
+It supports the following data assertion libraries: yup and zod, however other validators will be supported in the future.
 
 ## Advantages of using solid-form-handler:
 
 - Gives full control of your form components definition.
-- Integrated with yup to ease form schema definition - Other validators will be supported in the future.
+- Integrated with yup and zod to ease form schema definition - Other validators will be supported in the future.
 - Full reactivity during form input, validation, and submission.
 - Simple manipulation of fieldsets (array of fields or dynamic forms).
 - Simple validation of complex data structures.
-  Very intuitive APIs.
+- Very intuitive APIs.
 - Can be used on any SolidJS UI library or CSS framework.
 
 ## Quick start:

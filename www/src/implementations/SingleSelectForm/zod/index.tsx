@@ -81,12 +81,6 @@ export const Form: Component = () => {
       <pre class="mt-3 border bg-light p-3">
         <code>{JSON.stringify(formData(), null, 2)}</code>
       </pre>
-      <p>
-        <b>Form state:</b>
-      </p>
-      <pre class="mt-3 border bg-light p-3">
-        <code>{JSON.stringify(formHandler.getFormState(), null, 2)}</code>
-      </pre>
     </form>
   );
 };

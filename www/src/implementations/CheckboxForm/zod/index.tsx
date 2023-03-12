@@ -1,11 +1,14 @@
-import { Component } from 'solid-js';
-import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { Component, Show } from 'solid-js';
+import { Field, useFormHandler, zodSchema } from 'solid-form-handler';
 import { z } from 'zod';
 
 const schema = z.object({
   acceptPolicy: z.literal(true, {
     errorMap: () => ({ message: 'Policy must be accepted' }),
   }),
+  accountStatus: z
+    .string()
+    .refine((value) => ['active', 'inactive'].some((item) => item === value)),
 });
 
 export const Form: Component = () => {
@@ -28,45 +31,77 @@ export const Form: Component = () => {
   };
 
   const fill = () => {
-    formHandler.fillForm({ acceptPolicy: true });
+    formHandler.fillForm({ acceptPolicy: true, accountStatus: 'active' });
   };
 
   return (
     <form autocomplete="off" onSubmit={submit}>
       <h4 class="mb-3">Using zod schema</h4>
       <div class="mb-3">
-        <div
-          class="form-check"
-          classList={{
-            'is-invalid': formHandler.fieldHasError('acceptPolicy'),
-          }}
-        >
-          <input
-            class="form-check-input"
-            id="acceptPolicy"
-            type="checkbox"
-            classList={{
-              'is-invalid': formHandler.fieldHasError('acceptPolicy'),
-            }}
-            name="acceptPolicy"
-            checked={formHandler.getFieldValue('acceptPolicy')}
-            onChange={({ currentTarget: { name, checked } }) => {
-              formHandler.setFieldValue(name, checked);
-            }}
-            onBlur={({ currentTarget: { name } }) => {
-              formHandler.validateField(name);
-              formHandler.touchField(name);
-            }}
-          />
-          <label for="acceptPolicy" class="form-check-label">
-            Accept policy.
-          </label>
-        </div>
-        {formHandler.fieldHasError('acceptPolicy') && (
-          <div class="invalid-feedback">
-            {formHandler.getFieldError('acceptPolicy')}
-          </div>
-        )}
+        <Field
+          name="acceptPolicy"
+          mode="checkbox"
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <div
+                class="form-check"
+                classList={{
+                  'is-invalid': field.helpers.error,
+                }}
+              >
+                <input
+                  {...field.props}
+                  type="checkbox"
+                  class="form-check-input"
+                  classList={{
+                    'is-invalid': field.helpers.error,
+                  }}
+                />
+                <label class="form-check-label" for={field.props.id}>
+                  Accept policy.
+                </label>
+              </div>
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
+          )}
+        />
+      </div>
+      <div class="mb-3">
+        <Field
+          name="accountStatus"
+          mode="checkbox"
+          value="active"
+          uncheckedValue="inactive"
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <div
+                class="form-check"
+                classList={{
+                  'is-invalid': field.helpers.error,
+                }}
+              >
+                <input
+                  {...field.props}
+                  type="checkbox"
+                  class="form-check-input"
+                  classList={{
+                    'is-invalid': field.helpers.error,
+                  }}
+                />
+                <label class="form-check-label" for={field.props.id}>
+                  Account status: {formHandler.getFieldValue('accountStatus')}
+                </label>
+              </div>
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
+          )}
+        />
       </div>
       <div class="mb-3">
         <button class="btn btn-primary me-2">Submit</button>

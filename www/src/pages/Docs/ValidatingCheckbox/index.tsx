@@ -8,22 +8,12 @@ export const ValidatingCheckbox: Component = () => (
   <>
     <h2 class="mb-4 border-bottom">Validating Checkbox</h2>
     <p>
-      A single checkbox can be treated as a <code>boolean</code> primitive. So
-      here <code>onChange</code> event is used for setting the value at the form
-      handler which captures the <code>checked</code> status.{' '}
-      <code>onBlur</code> event is implemented on the same way as{' '}
-      <Link href="../validating-select">select</Link> or{' '}
-      <Link href="../validating-text-input">text input</Link> html components.
-      Error rendering is handled by the methods <code>fieldHasError</code> and{' '}
-      <code>getFieldError</code>.
+      For controlling a single checkbox you need to use the{' '}
+      <code>&lt;Field /&gt;</code> component in <code>checkbox</code> mode.
     </p>
     <p>
-      <code>getFieldValue</code> method is used for controlling the{' '}
-      <code>checked</code> prop because a single checkbox lacks a value due to
-      its toggleable <code>boolean</code> flag. For some edge cases, a single
-      checkbox can handle a <code>string | number</code> primitive where a value
-      prop needs to be set, for this scenario is better to build a custom{' '}
-      <Link href="../single-checkbox">&lt;Checkbox /&gt;</Link> component.
+      The current code snippet shows how to treat a checkbox field as a boolean
+      switch
     </p>
     <Tabs
       tabs={[
@@ -50,8 +40,25 @@ export const ValidatingCheckbox: Component = () => (
       ]}
     />
     <p>
+      The <code>&lt;Field /&gt;</code> component also offers the option to treat
+      a checkbox as a value pair when passing <code>value</code> and{' '}
+      <code>uncheckedValue</code> props.
+    </p>
+    <Tabs
+      tabs={[
+        {
+          text: 'yup',
+          children: <Code noBorder content={getRaw('ValidatingCheckbox2')} />,
+        },
+        {
+          text: 'zod',
+          children: <Code noBorder content={getRaw('ValidatingCheckbox2')} />,
+        },
+      ]}
+    />
+    <p>
       You can check the full implementation in the code tab. For doing checkbox
-      validation more legible, this logic can be abstracted into a{' '}
+      validation reusable, this logic can be abstracted into a{' '}
       <Link href="../single-checkbox">Checkbox.tsx</Link> component.
     </p>
     <Tabs

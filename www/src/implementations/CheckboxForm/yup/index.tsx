@@ -1,9 +1,10 @@
-import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { Component, Show } from 'solid-js';
+import { Field, useFormHandler, yupSchema } from 'solid-form-handler';
 import * as yup from 'yup';
 
 type Schema = {
   acceptPolicy: boolean;
+  accountStatus: 'active' | 'inactive';
 };
 
 const schema: yup.SchemaOf<Schema> = yup.object({
@@ -12,6 +13,11 @@ const schema: yup.SchemaOf<Schema> = yup.object({
     .required()
     .oneOf([true], 'Policy must be accepted')
     .typeError('Accept policy is required'),
+  accountStatus: yup
+    .mixed()
+    .oneOf(['active', 'inactive'])
+    .required()
+    .default('inactive'),
 });
 
 export const Form: Component = () => {
@@ -34,45 +40,77 @@ export const Form: Component = () => {
   };
 
   const fill = () => {
-    formHandler.fillForm({ acceptPolicy: true });
+    formHandler.fillForm({ acceptPolicy: true, accountStatus: 'active' });
   };
 
   return (
     <form autocomplete="off" onSubmit={submit}>
       <h4 class="mb-3">Using yup schema</h4>
       <div class="mb-3">
-        <div
-          class="form-check"
-          classList={{
-            'is-invalid': formHandler.fieldHasError('acceptPolicy'),
-          }}
-        >
-          <input
-            class="form-check-input"
-            id="acceptPolicy"
-            type="checkbox"
-            classList={{
-              'is-invalid': formHandler.fieldHasError('acceptPolicy'),
-            }}
-            name="acceptPolicy"
-            checked={formHandler.getFieldValue('acceptPolicy')}
-            onChange={({ currentTarget: { name, checked } }) => {
-              formHandler.setFieldValue(name, checked);
-            }}
-            onBlur={({ currentTarget: { name } }) => {
-              formHandler.validateField(name);
-              formHandler.touchField(name);
-            }}
-          />
-          <label for="acceptPolicy" class="form-check-label">
-            Accept policy.
-          </label>
-        </div>
-        {formHandler.fieldHasError('acceptPolicy') && (
-          <div class="invalid-feedback">
-            {formHandler.getFieldError('acceptPolicy')}
-          </div>
-        )}
+        <Field
+          name="acceptPolicy"
+          mode="checkbox"
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <div
+                class="form-check"
+                classList={{
+                  'is-invalid': field.helpers.error,
+                }}
+              >
+                <input
+                  {...field.props}
+                  type="checkbox"
+                  class="form-check-input"
+                  classList={{
+                    'is-invalid': field.helpers.error,
+                  }}
+                />
+                <label class="form-check-label" for={field.props.id}>
+                  Accept policy.
+                </label>
+              </div>
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
+          )}
+        />
+      </div>
+      <div class="mb-3">
+        <Field
+          name="accountStatus"
+          mode="checkbox"
+          value="active"
+          uncheckedValue="inactive"
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <div
+                class="form-check"
+                classList={{
+                  'is-invalid': field.helpers.error,
+                }}
+              >
+                <input
+                  {...field.props}
+                  type="checkbox"
+                  class="form-check-input"
+                  classList={{
+                    'is-invalid': field.helpers.error,
+                  }}
+                />
+                <label class="form-check-label" for={field.props.id}>
+                  Account status: {formHandler.getFieldValue('accountStatus')}
+                </label>
+              </div>
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
+          )}
+        />
       </div>
       <div class="mb-3">
         <button class="btn btn-primary me-2">Submit</button>

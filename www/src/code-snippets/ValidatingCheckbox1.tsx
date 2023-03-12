@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
+import { Field, useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
 
 // ...
 
@@ -7,26 +7,33 @@ const formHandler = useFormHandler(__VALIDATOR__Schema(schema));
 
 // ...
 
-<div>
-  <div>
-    <input
-      type="checkbox"
-      id="acceptPolicy"
-      name="acceptPolicy"
-      checked={formHandler.getFieldValue('acceptPolicy')}
-      onChange={({ currentTarget: { name, checked } }) => {
-        //Checked status is taken as a value and stored at form handler.
-        formHandler.setFieldValue(name, checked);
-      }}
-      onBlur={({ currentTarget: { name } }) => {
-        //Field is validated and touched.
-        formHandler.validateField(name);
-        formHandler.touchField(name);
-      }}
-    />
-    <label for="acceptPolicy">Accept policy.</label>
-  </div>
-  {formHandler.fieldHasError('acceptPolicy') && (
-    <small>{formHandler.getFieldError('acceptPolicy')}</small>
+<Field
+  name="acceptPolicy"
+  mode="checkbox"
+  formHandler={formHandler}
+  render={(field) => (
+    <>
+      <div
+        class="form-check"
+        classList={{
+          'is-invalid': field.helpers.error,
+        }}
+      >
+        <input
+          {...field.props}
+          type="checkbox"
+          class="form-check-input"
+          classList={{
+            'is-invalid': field.helpers.error,
+          }}
+        />
+        <label class="form-check-label" for={field.props.id}>
+          Accept policy.
+        </label>
+      </div>
+      <Show when={field.helpers.error}>
+        <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+      </Show>
+    </>
   )}
-</div>;
+/>;

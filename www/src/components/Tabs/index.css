@@ -6,6 +6,10 @@
   padding-top: 17px;
 }
 
+.tabs-wrapper .tabs-wrapper.mb-4 {
+  margin-bottom: 0 !important;
+}
+
 .tabs .nav-tabs {
   flex-wrap: nowrap;
 }

@@ -102,7 +102,7 @@ export const Form: Component = () => {
                   }}
                 />
                 <label class="form-check-label" for={field.props.id}>
-                  Account status: {formHandler.getFieldValue('accountStatus')}
+                  Account status: {formHandler.getFieldValue(field.props.name)}
                 </label>
               </div>
               <Show when={field.helpers.error}>

@@ -37,6 +37,7 @@ export const Code: Component<CodeProps> = (props) => {
   };
 
   onMount(async () => {
+    console.log(local.content);
     const code = formatCode(((local.content || rest.children) as string) || '');
     setCode(code);
   });

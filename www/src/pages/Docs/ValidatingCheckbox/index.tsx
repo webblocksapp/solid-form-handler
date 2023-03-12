@@ -13,7 +13,7 @@ export const ValidatingCheckbox: Component = () => (
     </p>
     <p>
       The current code snippet shows how to treat a checkbox field as a boolean
-      switch
+      switch.
     </p>
     <Tabs
       tabs={[

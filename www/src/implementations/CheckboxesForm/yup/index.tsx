@@ -1,5 +1,5 @@
-import { Component, For } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { Component, For, Show } from 'solid-js';
+import { Field, useFormHandler, yupSchema } from 'solid-form-handler';
 import * as yup from 'yup';
 
 type SelectableOption = {
@@ -50,53 +50,46 @@ export const Form: Component = () => {
     <form autocomplete="off" onSubmit={submit}>
       <h4 class="mb-3">Using yup schema</h4>
       <div class="mb-3">
-        <For each={favoriteFoods}>
-          {(favoriteFood, i) => (
-            <div
-              class="form-check"
-              classList={{
-                'is-invalid': formHandler.fieldHasError('favoriteFoods'),
-              }}
-            >
-              <input
-                class="form-check-input"
-                id={`favoriteFoods-${i()}`}
-                type="checkbox"
-                value={favoriteFood.value}
-                classList={{
-                  'is-invalid': formHandler.fieldHasError('favoriteFoods'),
-                }}
-                name="favoriteFoods"
-                checked={formHandler
-                  .getFieldValue('favoriteFoods')
-                  .some((item: any) => item == favoriteFood.value)}
-                onChange={({ currentTarget: { name, checked, value } }) => {
-                  if (checked) {
-                    formHandler.setFieldValue(name, [
-                      ...formHandler.getFieldValue('favoriteFoods'),
-                      value,
-                    ]);
-                  } else {
-                    formHandler.setFieldValue(
-                      name,
-                      formHandler
-                        .getFieldValue('favoriteFoods')
-                        .filter((item: any) => value != item)
-                    );
-                  }
-                }}
-              />
-              <label for={`favoriteFoods-${i()}`} class="form-check-label">
-                {favoriteFood.label}
-              </label>
-            </div>
+        <Field
+          mode="checkbox-group"
+          name="favoriteFoods"
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <For each={favoriteFoods}>
+                {(favoriteFood, i) => (
+                  <div
+                    class="form-check"
+                    classList={{
+                      'is-invalid': field.helpers.error,
+                    }}
+                  >
+                    <input
+                      {...field.props}
+                      class="form-check-input"
+                      id={`${field.props.id}-${i()}`}
+                      checked={field.helpers.isChecked(favoriteFood.value)}
+                      classList={{
+                        'is-invalid': field.helpers.error,
+                      }}
+                      type="checkbox"
+                      value={favoriteFood.value}
+                    />
+                    <label
+                      for={`${field.props.id}-${i()}`}
+                      class="form-check-label"
+                    >
+                      {favoriteFood.label}
+                    </label>
+                  </div>
+                )}
+              </For>
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
           )}
-        </For>
-        {formHandler.fieldHasError('favoriteFoods') && (
-          <div class="invalid-feedback">
-            {formHandler.getFieldError('favoriteFoods')}
-          </div>
-        )}
+        />
       </div>
       <div class="mb-3">
         <button class="btn btn-primary me-2">Submit</button>

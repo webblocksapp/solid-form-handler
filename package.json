@@ -7,7 +7,8 @@
     "www": "pnpm --filter www start",
     "storybook": "pnpm --filter solid-form-handler storybook",
     "build": "pnpm --filter solid-form-handler build",
-    "test": "pnpm --filter solid-form-handler test"
+    "test": "pnpm --filter solid-form-handler test",
+    "test-core": "pnpm --filter solid-form-handler test-core"
   },
   "keywords": [],
   "author": "Mauricio Rivera",

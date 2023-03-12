@@ -36,6 +36,7 @@
     "build": "vite build --config=vite.prod.ts && tsc-alias && pnpm copy",
     "copy": "cp ../../README.md .",
     "test": "jest --coverage",
+    "test-core": "jest -- src/hooks/useFormHandler/index.test.ts --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -58,6 +59,7 @@
     "@suid/material": "^0.6.3",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.0.0",
+    "@types/jest": "^29.4.0",
     "babel-jest": "^29.5.0",
     "babel-loader": "^8.2.5",
     "babel-preset-solid": "^1.6.10",

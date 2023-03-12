@@ -22,6 +22,6 @@
       "@example-components/suid": ["examples/components/suid"],
       "@example-components/legacy": ["examples/components/legacy"]
     },
-    "types": ["vite/client", "node", "@jest/types"]
+    "types": ["vite/client", "node", "@types/jest"]
   }
 }

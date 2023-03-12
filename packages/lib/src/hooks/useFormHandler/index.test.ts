@@ -887,7 +887,6 @@ const testSuite = ({
             },
             touched: false,
             dirty: false,
-            validating: false,
           }),
           [CHILDREN_KEY]: expect.objectContaining({
             age: expect.objectContaining({
@@ -899,7 +898,6 @@ const testSuite = ({
                 initialValue: '',
                 touched: false,
                 dirty: false,
-                validating: false,
               }),
             }),
             name: expect.objectContaining({
@@ -911,7 +909,6 @@ const testSuite = ({
                 initialValue: '',
                 touched: false,
                 dirty: false,
-                validating: false,
               }),
             }),
           }),

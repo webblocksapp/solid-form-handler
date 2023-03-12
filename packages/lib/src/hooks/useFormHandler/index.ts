@@ -485,20 +485,21 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
     if (!validationSchema.isFieldFromSchema(path) || !path) return;
     if (options?.force !== true && !hasEventTypes(options?.validateOn)) return;
-
-    await new Promise((resolve) => {
-      setValidationId(path, validationId);
-      setTimeout(resolve, options?.delay) as unknown as number;
-    });
-
-    if (options?.force !== true && getValidationId(path) !== validationId) return;
     if (options?.force !== true && abortValidation(path)) return;
     if (_?.fill === true) setCurrentValue(path, getFieldValue(path));
 
-    /**
-     * Field is invalidated before is validated again, specially for
-     * async validations that can take time.
-     */
+    setFieldAsInvalid(path);
+
+    await new Promise((resolve) => {
+      setValidationId(path, validationId);
+      setTimeout(() => {
+        resolve(undefined);
+      }, options?.delay);
+    });
+
+    if (options?.force !== true && getValidationId(path) !== validationId) return;
+
+    //Field validating process starts.
     setFieldAsInvalid(path, { validating: true });
 
     const recursive = _?.recursive;
@@ -545,7 +546,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   /**
    * Sets field state values which defines it as invalid.
    */
-  const setFieldAsInvalid = (path: string, options: { errorMessage?: string; validating?: boolean }) => {
+  const setFieldAsInvalid = (path: string, options?: { errorMessage?: string; validating?: boolean }) => {
     /**
      * This check needs to be done to prevent async processes crash the application
      * when the same fieldset is added and removed when it's validating, as f.e:
@@ -554,6 +555,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
      * formHandler.removeFieldset(1); //Removed from index 1 of an array
      */
     if (!fieldHasState(path)) return;
+
+    options = { errorMessage: '', ...options };
 
     setFieldState(path, (prev) => {
       const validating = options?.validating || false;
@@ -631,6 +634,14 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const getIsFieldset = (path: string = '') => {
     const fieldState = getFieldState(path);
     return fieldState?.isFieldset;
+  };
+
+  /**
+   * Gets the boolean flag to check if the field is a fieldset.
+   */
+  const getIsInvalid = (path: string = '') => {
+    const fieldState = getFieldState(path);
+    return fieldState?.isInvalid;
   };
 
   /**

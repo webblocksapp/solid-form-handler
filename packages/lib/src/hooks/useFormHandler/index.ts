@@ -488,15 +488,28 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     if (options?.force !== true && abortValidation(path)) return;
     if (_?.fill === true) setCurrentValue(path, getFieldValue(path));
 
+    /**
+     * All fields are marked as invalid before the validating process starts or
+     * when a delayed validation occurs.
+     */
     setFieldAsInvalid(path);
 
     await new Promise((resolve) => {
+      /**
+       * Unique validation id is changed before promise is resolved
+       * to abort current validation when delay is applied, preventing
+       * running the same validation multiple times.
+       */
       setValidationId(path, validationId);
       setTimeout(() => {
         resolve(undefined);
       }, options?.delay);
     });
 
+    /**
+     * Prevents continuing the validation process for a delayed validation
+     * when it's executed multiple times, prevailing only the last.
+     */
     if (options?.force !== true && getValidationId(path) !== validationId) return;
 
     //Field validating process starts.

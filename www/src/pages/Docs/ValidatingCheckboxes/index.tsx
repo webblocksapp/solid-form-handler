@@ -16,7 +16,7 @@ export const ValidatingCheckboxes: Component = () => (
     <Code content={getRaw('ValidatingCheckboxes1')} />
     <p>
       You can check the full implementation in the code tab. For doing checkbox
-      validation reusable, this logic can be abstracted into a{' '}
+      group validation reusable, this logic can be abstracted into a{' '}
       <Link href="../checkboxes">Checkboxes.tsx</Link> component.
     </p>
     <Tabs

@@ -1,5 +1,5 @@
-import { Component, For } from 'solid-js';
-import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { Component, For, Show } from 'solid-js';
+import { Field, useFormHandler, zodSchema } from 'solid-form-handler';
 import { z } from 'zod';
 
 type SelectableOption = {
@@ -45,41 +45,46 @@ export const Form: Component = () => {
     <form autocomplete="off" onSubmit={submit}>
       <h4>Using zod schema</h4>
       <div class="mb-3">
-        <For each={ageRanges}>
-          {(ageRange, i) => (
-            <div
-              class="form-check"
-              classList={{
-                'is-invalid': formHandler.fieldHasError('ageRange'),
-              }}
-            >
-              <input
-                class="form-check-input"
-                id={`ageRange-${i()}`}
-                type="radio"
-                value={ageRange.value}
-                classList={{
-                  'is-invalid': formHandler.fieldHasError('ageRange'),
-                }}
-                name="ageRange"
-                checked={
-                  formHandler.getFieldValue('ageRange') == ageRange.value
-                }
-                onChange={({ currentTarget: { name, value } }) =>
-                  formHandler.setFieldValue(name, value)
-                }
-              />
-              <label for={`ageRange-${i()}`} class="form-check-label">
-                {ageRange.label}
-              </label>
-            </div>
+        <Field
+          mode="radio-group"
+          name="ageRange"
+          formHandler={formHandler}
+          render={(field) => (
+            <>
+              <For each={ageRanges}>
+                {(ageRange, i) => (
+                  <div
+                    class="form-check"
+                    classList={{
+                      'is-invalid': field.helpers.error,
+                    }}
+                  >
+                    <input
+                      {...field.props}
+                      checked={field.helpers.isChecked(ageRange.value)}
+                      class="form-check-input"
+                      classList={{
+                        'is-invalid': field.helpers.error,
+                      }}
+                      id={`${field.props.id}-${i()}`}
+                      value={ageRange.value}
+                      type="radio"
+                    />
+                    <label
+                      for={`${field.props.id}-${i()}`}
+                      class="form-check-label"
+                    >
+                      {ageRange.label}
+                    </label>
+                  </div>
+                )}
+              </For>
+              <Show when={field.helpers.error}>
+                <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+              </Show>
+            </>
           )}
-        </For>
-        {formHandler.fieldHasError('ageRange') && (
-          <div class="invalid-feedback">
-            {formHandler.getFieldError('ageRange')}
-          </div>
-        )}
+        />
       </div>
       <div class="mb-3">
         <button class="btn btn-primary me-2">Submit</button>

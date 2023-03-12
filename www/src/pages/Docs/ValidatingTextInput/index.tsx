@@ -11,7 +11,7 @@ export const ValidatingTextInput: Component = () => (
   <>
     <h2 class="mb-4 border-bottom">Validating Text Input</h2>
     <p>
-      For controlling text inputs you need to use the{' '}
+      For controlling a text input you need to use the{' '}
       <code>&lt;Field /&gt;</code> component in <code>input</code> mode.
     </p>
     <Tabs

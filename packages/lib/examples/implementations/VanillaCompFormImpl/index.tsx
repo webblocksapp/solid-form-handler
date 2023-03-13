@@ -1,4 +1,4 @@
-import { TextInput, Select, Checkbox, Checkboxes, Radio, Radios } from '@example-components';
+import { TextInput, Select, Checkbox, Checkboxes, Radios } from '@example-components';
 import { useFormHandler } from '@hooks';
 import { yupSchema } from '@utils';
 import { Component } from 'solid-js';
@@ -11,7 +11,6 @@ type Schema = {
   subscribed: boolean;
   status: 'active' | 'inactive';
   favoriteFoods: number[];
-  accountStatus: 'active' | 'inactive';
   gender: 'male' | 'female' | 'other';
 };
 
@@ -22,7 +21,6 @@ const schema: yup.SchemaOf<Schema> = yup.object().shape({
   subscribed: yup.boolean().required().oneOf([true]),
   status: yup.mixed().required().oneOf(['active', 'inactive']),
   favoriteFoods: yup.array(yup.number().required()).min(2),
-  accountStatus: yup.mixed().required().oneOf(['active', 'inactive']),
   gender: yup.mixed().required().oneOf(['male', 'female', 'other']),
 });
 
@@ -92,9 +90,6 @@ export const VanillaCompFormImpl: Component = () => {
         />
       </div>
       <br />
-      <div>
-        <Radio label="Account status" name="accountStatus" value="active" formHandler={formHandler} />
-      </div>
       <div>
         <Radios
           label="Gender"

@@ -1,6 +1,6 @@
 import { FormHandler } from '@interfaces';
 import { Component, createEffect, createSelector, createUniqueId, For, JSX, splitProps } from 'solid-js';
-import { Radio } from '@example-components';
+import { Radio } from '@example-components/legacy';
 import { createStore } from 'solid-js/store';
 
 type SelectableOption = { value: string | number; label: string };

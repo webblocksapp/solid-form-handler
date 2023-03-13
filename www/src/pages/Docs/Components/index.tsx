@@ -6,19 +6,13 @@ export const Components: Component = () => (
     <h2 class="mb-4 border-bottom">Components</h2>
     <p>
       For doing code forms more legible and shorter is recommended you abstract
-      each validation logic into <i>SolidJS</i> components. The following
+      each validation logic into <i>SolidJS</i> components with the help of the{' '}
+      form handler <code>&lt;Field /&gt;</code> component. The following
       definitions are the suggested examples to follow and can be adapted for
       your preferable CSS framework or UI library.
     </p>
     <p>
-      It's recommended you know how to build your own form components for taking
-      advantage of the <b>solid-form-handler</b> library. This library doesn't
-      offer built-in form components because is impossible to match every form
-      UI brand design. You can use the following code snippets as a base to
-      build your own.
-    </p>
-    <p>
-      Again we will define the most common UI form components as <i>SolidJS</i>{' '}
+      Here we will define the most common UI form components as <i>SolidJS</i>{' '}
       components:
     </p>
     <ul>

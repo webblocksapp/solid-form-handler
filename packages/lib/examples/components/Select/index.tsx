@@ -1,5 +1,4 @@
-import { FieldProps } from '@interfaces';
-import { Field } from '@components';
+import { FieldProps, Field } from 'solid-form-handler';
 import { Component, createEffect, createSignal, For, JSX, splitProps } from 'solid-js';
 
 type SelectableOption = { value: string | number; label: string };
@@ -12,7 +11,7 @@ export type SelectProps = JSX.SelectHTMLAttributes<HTMLSelectElement> &
   };
 
 export const Select: Component<SelectProps> = (props) => {
-  const [local, rest] = splitProps(props, ['placeholder', 'options', 'label', 'classList', 'class']);
+  const [local, rest] = splitProps(props, ['placeholder', 'options', 'label', 'classList', 'class', 'formHandler']);
   const [options, setOptions] = createSignal<SelectableOption[]>([]);
 
   /**

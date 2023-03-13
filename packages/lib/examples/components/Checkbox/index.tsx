@@ -1,5 +1,4 @@
-import { FieldProps } from '@interfaces';
-import { Field } from '@components';
+import { FieldProps, Field } from 'solid-form-handler';
 import { Component, JSX, splitProps } from 'solid-js';
 
 export type CheckboxProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type'> &
@@ -10,7 +9,7 @@ export type CheckboxProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'typ
   };
 
 export const Checkbox: Component<CheckboxProps> = (props) => {
-  const [local, rest] = splitProps(props, ['classList', 'label', 'display', 'uncheckedValue']);
+  const [local, rest] = splitProps(props, ['classList', 'label', 'display', 'uncheckedValue', 'formHandler']);
 
   return (
     <Field

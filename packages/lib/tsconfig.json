@@ -20,7 +20,8 @@
       "@utils": ["src/utils"],
       "@example-components": ["examples/components"],
       "@example-components/suid": ["examples/components/suid"],
-      "@example-components/legacy": ["examples/components/legacy"]
+      "@example-components/legacy": ["examples/components/legacy"],
+      "solid-form-handler": ["src"]
     },
     "types": ["vite/client", "node", "@types/jest"]
   }

@@ -1,5 +1,4 @@
-import { FieldProps } from '@interfaces';
-import { Field } from '@components';
+import { FieldProps, Field } from 'solid-form-handler';
 import { Component, JSX, splitProps } from 'solid-js';
 
 export type RadioProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type' | 'value'> &
@@ -8,7 +7,7 @@ export type RadioProps = Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'type' 
   };
 
 export const Radio: Component<RadioProps> = (props) => {
-  const [local, rest] = splitProps(props, ['label', 'classList']);
+  const [local, rest] = splitProps(props, ['label', 'classList', 'formHandler']);
 
   return (
     <Field

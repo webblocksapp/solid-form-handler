@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { Implementation, Tabs } from '@components';
+import { Code, Implementation, Tabs } from '@components';
 import { getRaw } from '@utils';
 import { YupCheckboxCompForm, ZodCheckboxCompForm } from '@implementations';
 
@@ -7,43 +7,27 @@ export const Checkbox: Component = () => (
   <>
     <h2 class="mb-4 border-bottom">Checkbox</h2>
     <p>
-      You can take a look at the component definition <code>Checkbox.tsx</code>{' '}
-      which is inside the code tab. Here will inherit the{' '}
-      <code>CheckboxProps</code> from the <code>HTMLInputElement</code> to avoid
-      redefining all the props of a vanilla HTML checkbox. If you will use a{' '}
-      <i>SolidJS</i> UI library that provides a predefined <code>Checkbox</code>{' '}
-      component, the same approach can be done by extending the{' '}
-      <code>CheckboxProps</code> from the <code>UILibraryCheckboxProps</code>{' '}
-      interface.
+      You can build your own <code>&lt;Checkbox /&gt;</code> component around
+      the form handler <code>&lt;Field /&gt;</code> component in{' '}
+      <code>checkbox</code> mode. To avoid redefining the checkbox props, you
+      can extend from the <code>HTMLInputElement</code> signature if you are
+      building from a native html checkbox. In case you are building from any{' '}
+      <i>SolidJS</i> ui library, you may extend from the respective{' '}
+      <code>UILibraryCheckboxProps</code> signature. Finally, you need to make
+      use of the <code>FieldProps</code> signature which contains the needed
+      props for the <code>&lt;Field /&gt;</code> component.
     </p>
+    <Code content={getRaw('components/Checkbox')} />
     <p>
-      At <code>CheckboxProps</code> the <code>formHandler</code> is defined as
-      an optional prop to preserve the original nature of a checkbox which is
-      not dependent on a <code>formHandler</code> prop. The{' '}
-      <code>onChange</code> event was extended by the method{' '}
-      <code>onChange</code> which is defined inside the component. This method
-      implements the <code>formHandler</code> and also preserves the{' '}
-      <code>onChange</code> prop execution when it's defined. Checkbox value can
-      be treated as a <code>boolean</code> or a <code>string | number</code>{' '}
-      primitive.
-    </p>
-    <p>
-      As a result, we will have a shorter implementation at{' '}
-      <code>Form.tsx</code> by only passing the field name and the{' '}
-      <code>formHandler</code> object to the <code>&lt;Checkbox /&gt;</code>{' '}
-      component for handling form data validations.
+      The following is an implementation of the built{' '}
+      <code>&lt;Checkbox /&gt;</code> component.
     </p>
     <Tabs
       tabs={[
         {
           text: 'yup',
           children: (
-            <Implementation
-              codeTabs={[
-                { name: 'Form.tsx', code: getRaw('CheckboxCompForm/yup') },
-                { name: 'Checkbox.tsx', code: getRaw('components/Checkbox') },
-              ]}
-            >
+            <Implementation code={getRaw('CheckboxCompForm/yup')}>
               <YupCheckboxCompForm />
             </Implementation>
           ),
@@ -51,12 +35,7 @@ export const Checkbox: Component = () => (
         {
           text: 'zod',
           children: (
-            <Implementation
-              codeTabs={[
-                { name: 'Form.tsx', code: getRaw('CheckboxCompForm/zod') },
-                { name: 'Checkbox.tsx', code: getRaw('components/Checkbox') },
-              ]}
-            >
+            <Implementation code={getRaw('CheckboxCompForm/zod')}>
               <ZodCheckboxCompForm />
             </Implementation>
           ),

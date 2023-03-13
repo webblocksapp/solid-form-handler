@@ -5,6 +5,7 @@ import {
   createSignal,
   For,
   JSX,
+  Show,
   splitProps,
 } from 'solid-js';
 
@@ -44,11 +45,11 @@ export const Select: Component<SelectProps> = (props) => {
       mode="input"
       render={(field) => (
         <div class={local.class} classList={local.classList}>
-          {local.label && (
+          <Show when={local.label}>
             <label class="form-label" for={field.props.id}>
               {local.label}
             </label>
-          )}
+          </Show>
           <select
             {...rest}
             {...field.props}
@@ -66,9 +67,9 @@ export const Select: Component<SelectProps> = (props) => {
               )}
             </For>
           </select>
-          {field.helpers.error && (
+          <Show when={field.helpers.error}>
             <div class="invalid-feedback">{field.helpers.errorMessage}</div>
-          )}
+          </Show>
         </div>
       )}
     />

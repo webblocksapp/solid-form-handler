@@ -17,7 +17,9 @@ export const Radios: Component<RadiosProps> = (props) => {
       mode="radio-group"
       render={(field) => (
         <div>
-          {props.label && <label>{props.label}</label>}
+          <Show when={props.label}>
+            <label>{props.label}</label>
+          </Show>
           <div classList={{ 'is-invalid': field.helpers.error }}>
             <For each={props.options}>
               {(option, i) => (

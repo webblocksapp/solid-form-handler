@@ -1,5 +1,5 @@
 import { FieldProps, Field } from 'solid-form-handler';
-import { Component, JSX, splitProps } from 'solid-js';
+import { Component, JSX, Show, splitProps } from 'solid-js';
 
 export type CheckboxProps = Omit<
   JSX.InputHTMLAttributes<HTMLInputElement>,
@@ -42,15 +42,15 @@ export const Checkbox: Component<CheckboxProps> = (props) => {
                 'form-check-input': true,
               }}
             />
-            {local.label && (
+            <Show when={local.label}>
               <label class="form-check-label" for={field.props.id}>
                 {local.label}
               </label>
-            )}
+            </Show>
           </div>
-          {field.helpers.error && (
+          <Show when={field.helpers.error}>
             <div class="invalid-feedback">{field.helpers.errorMessage}</div>
-          )}
+          </Show>
         </div>
       )}
     />

@@ -1,5 +1,5 @@
 import { FieldProps, Field } from 'solid-form-handler';
-import { Component, createEffect, createSignal, For, JSX, splitProps } from 'solid-js';
+import { Component, createEffect, createSignal, For, JSX, Show, splitProps } from 'solid-js';
 
 type SelectableOption = { value: string | number; label: string };
 
@@ -30,11 +30,11 @@ export const Select: Component<SelectProps> = (props) => {
       mode="input"
       render={(field) => (
         <div class={local.class} classList={local.classList}>
-          {local.label && (
+          <Show when={local.label}>
             <label class="form-label" for={field.props.id}>
               {local.label}
             </label>
-          )}
+          </Show>
           <select {...rest} {...field.props} class="form-select" classList={{ 'is-invalid': field.helpers.error }}>
             <For each={options()}>
               {(option) => (
@@ -44,7 +44,9 @@ export const Select: Component<SelectProps> = (props) => {
               )}
             </For>
           </select>
-          {field.helpers.error && <div class="invalid-feedback">{field.helpers.errorMessage}</div>}
+          <Show when={field.helpers.error}>
+            <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+          </Show>
         </div>
       )}
     />

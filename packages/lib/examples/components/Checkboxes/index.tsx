@@ -1,5 +1,5 @@
 import { FieldProps, Field } from 'solid-form-handler';
-import { Component, For, JSX } from 'solid-js';
+import { Component, For, JSX, Show } from 'solid-js';
 import { Checkbox } from '@example-components';
 
 type SelectableOption = { value: string | number; label: string };
@@ -21,7 +21,9 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
       mode="checkbox-group"
       render={(field) => (
         <div>
-          {props.label && <label>{props.label}</label>}
+          <Show when={props.label}>
+            <label>{props.label}</label>
+          </Show>
           <div classList={{ 'is-invalid': field.helpers.error }}>
             <For each={props.options}>
               {(option, i) => (
@@ -37,7 +39,9 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
               )}
             </For>
           </div>
-          {field.helpers.error && <div class="invalid-feedback">{field.helpers.errorMessage}</div>}
+          <Show when={field.helpers.error}>
+            <div class="invalid-feedback">{field.helpers.errorMessage}</div>
+          </Show>
         </div>
       )}
     />

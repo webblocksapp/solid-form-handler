@@ -1,6 +1,5 @@
 import { FieldProps, Field } from 'solid-form-handler';
-import { Component, For } from 'solid-js';
-import { Radio } from '@components';
+import { Component, For, Show } from 'solid-js';
 
 type SelectableOption = { value: string | number; label: string };
 
@@ -18,24 +17,42 @@ export const Radios: Component<RadiosProps> = (props) => {
       mode="radio-group"
       render={(field) => (
         <div>
-          {props.label && <label>{props.label}</label>}
+          <Show when={props.label}>
+            <label>{props.label}</label>
+          </Show>
           <div classList={{ 'is-invalid': field.helpers.error }}>
             <For each={props.options}>
               {(option, i) => (
-                <Radio
-                  {...field.props}
-                  id={`${field.props.id}-${i()}`}
-                  label={option.label}
-                  value={option.value}
-                  error={field.helpers.error}
-                  checked={field.helpers.isChecked(option.value)}
-                />
+                <div
+                  classList={{
+                    'form-check': true,
+                    'is-invalid': field.helpers.error,
+                  }}
+                >
+                  <input
+                    {...field.props}
+                    id={`${field.props.id}-${i()}`}
+                    checked={field.helpers.isChecked(option.value)}
+                    value={option.value}
+                    class="form-check-input"
+                    classList={{ 'is-invalid': field.helpers.error }}
+                    type="radio"
+                  />
+                  <Show when={option.label}>
+                    <label
+                      class="form-check-label"
+                      for={`${field.props.id}-${i()}`}
+                    >
+                      {option.label}
+                    </label>
+                  </Show>
+                </div>
               )}
             </For>
           </div>
-          {field.helpers.error && (
+          <Show when={field.helpers.error}>
             <div class="invalid-feedback">{field.helpers.errorMessage}</div>
-          )}
+          </Show>
         </div>
       )}
     />

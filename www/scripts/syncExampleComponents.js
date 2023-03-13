@@ -26,7 +26,6 @@ const writeComponents = async (initialPath, targetPath) => {
   const components = [
     'Checkbox',
     'Checkboxes',
-    'Radio',
     'Radios',
     'Select',
     'TextInput',

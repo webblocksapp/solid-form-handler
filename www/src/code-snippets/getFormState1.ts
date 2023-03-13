@@ -1,2 +1,0 @@
-//@ts-nocheck
-formHandler.getFormState();

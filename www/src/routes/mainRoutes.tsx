@@ -22,7 +22,6 @@ import {
   GetFieldError,
   GetFieldValue,
   GetFormErrors,
-  GetFormState,
   Introduction,
   IsFieldInvalid,
   IsFieldValidating,
@@ -32,7 +31,6 @@ import {
   NestedFormValidation,
   QuickStart,
   Radios,
-  RefreshFormField,
   RemoveFieldset,
   ResetForm,
   Select,
@@ -220,10 +218,6 @@ export const mainRoutes: RouteDefinition[] = [
             component: GetFormErrors,
           },
           {
-            path: 'get-form-state',
-            component: GetFormState,
-          },
-          {
             path: 'is-field-invalid',
             component: IsFieldInvalid,
           },
@@ -234,10 +228,6 @@ export const mainRoutes: RouteDefinition[] = [
           {
             path: 'move-fieldset',
             component: MoveFieldset,
-          },
-          {
-            path: 'refresh-form-field',
-            component: RefreshFormField,
           },
           {
             path: 'remove-fieldset',

@@ -54,11 +54,11 @@ export const DOCS_MENU: TreeMenuItem[] = [
       },
     ],
   },
-  {
-    text: 'Integrations',
-    section: true,
-    children: [{ text: 'Material UI', route: 'material-ui' }],
-  },
+  // {
+  //   text: 'Integrations',
+  //   section: true,
+  //   children: [{ text: 'Material UI', route: 'material-ui' }],
+  // },
 ];
 
 export const API_MENU: TreeMenuItem[] = [
@@ -74,7 +74,6 @@ export const API_MENU: TreeMenuItem[] = [
       { text: 'formData', route: 'form-data' },
       { text: 'getFormErrors', route: 'get-form-errors' },
       { text: 'isFormInvalid', route: 'is-form-invalid' },
-      { text: 'getFormState', route: 'get-form-state' },
       { text: 'setFieldValue', route: 'set-field-value' },
       { text: 'setFieldDefaultValue', route: 'set-field-default-value' },
       { text: 'setFieldTriggers', route: 'set-field-triggers' },
@@ -84,7 +83,6 @@ export const API_MENU: TreeMenuItem[] = [
       { text: 'getFieldError', route: 'get-field-error' },
       { text: 'getFieldValue', route: 'get-field-value' },
       { text: 'getFieldDefaultValue', route: 'get-field-default-value' },
-      { text: 'refreshFormField', route: 'refresh-form-field' },
       { text: 'formHasChanges', route: 'form-has-changes' },
       { text: 'validateField', route: 'validate-field' },
       { text: 'touchField', route: 'touch-field' },

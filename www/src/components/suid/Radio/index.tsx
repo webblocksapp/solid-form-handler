@@ -1,4 +1,4 @@
-import { FormHandler } from 'solid-form-handler';
+import { FormHandler } from '@interfaces';
 import { Component, createEffect, createUniqueId, splitProps } from 'solid-js';
 import SuidRadio, { RadioProps as SuidRadioProps } from '@suid/material/Radio';
 import { createStore } from 'solid-js/store';

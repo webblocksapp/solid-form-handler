@@ -37,10 +37,7 @@ const writeComponents = async (initialPath, targetPath) => {
       path.join(initialPath, component, 'index.tsx'),
       'utf8'
     );
-    code = code.replace(
-      "import { FormHandler } from '@interfaces';",
-      "import { FormHandler } from 'solid-form-handler';"
-    );
+    code = code.replace('@example-components', '@components');
 
     fs.writeFileSync(
       path.join(targetPath, component, 'index.tsx'),

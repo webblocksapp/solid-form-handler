@@ -1,4 +1,4 @@
-import { FormHandler } from 'solid-form-handler';
+import { FormHandler } from '@interfaces';
 import SuidCheckbox, { CheckboxTypeMap } from '@suid/material/Checkbox';
 import { Component, createEffect, createUniqueId, splitProps } from 'solid-js';
 import { createStore } from 'solid-js/store';

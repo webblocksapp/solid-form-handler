@@ -4,7 +4,7 @@ runs:
   using: composite
   steps:
     - name: Install dependencies and build
-      run: pnpm && pnpm build
+      run: pnpm install && pnpm build
       shell: bash
       working-directory: ./www
     - name: Tests

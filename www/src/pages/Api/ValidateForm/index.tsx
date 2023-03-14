@@ -23,7 +23,7 @@ export const ValidateForm: Component = () => (
         <code>path:</code> field's name.
       </li>
       <li>
-        <code>errorMessage:</code> field's validation error message.
+        <code>message:</code> field's validation error message.
       </li>
     </ul>
   </>

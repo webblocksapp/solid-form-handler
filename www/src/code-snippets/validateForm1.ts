@@ -9,11 +9,11 @@ try {
      * [
      *  {
      *    path: 'name',
-     *    errorMessage: 'name is a required field'
+     *    message: 'name is a required field'
      *  },
      *  {
      *    path: 'age',
-     *    errorMessage: 'age is a required field'
+     *    message: 'age is a required field'
      *  },
      * ]
      */

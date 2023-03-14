@@ -38,3 +38,25 @@ body {
   font-family: Gordita;
   min-height: 100vh;
 }
+
+@media (min-width: 991px) and (max-width: 1200px) {
+  .table-scrollable {
+    overflow-x: auto;
+    max-width: 680px;
+  }
+
+  .table-scrollable table {
+    min-width: 680px;
+  }
+}
+
+@media (max-width: 725px) {
+  .table-scrollable {
+    overflow-x: auto;
+    max-width: 680px;
+  }
+
+  .table-scrollable table {
+    min-width: 680px;
+  }
+}

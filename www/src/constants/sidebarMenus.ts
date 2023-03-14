@@ -93,6 +93,12 @@ export const API_MENU: TreeMenuItem[] = [
       { text: 'removeFieldset', route: 'remove-fieldset' },
     ],
   },
+  {
+    text: 'Field',
+    route: 'field',
+    section: true,
+    children: [{ text: 'Input mode', route: 'field-input' }],
+  },
 ];
 
 export const EXAMPLES_MENU: TreeMenuItem[] = [];

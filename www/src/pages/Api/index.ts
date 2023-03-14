@@ -1,4 +1,5 @@
 export * from './AddFieldset';
+export * from './Field';
 export * from './FieldHasError';
 export * from './FillForm';
 export * from './FormData';

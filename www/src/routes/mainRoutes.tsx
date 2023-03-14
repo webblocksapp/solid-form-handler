@@ -10,6 +10,7 @@ import {
   DependantValidations,
   DynamicForm,
   DynamicNestedForm,
+  Field,
   FieldHasError,
   FillForm,
   FormData,
@@ -277,6 +278,10 @@ export const mainRoutes: RouteDefinition[] = [
           {
             path: 'is-field-validating',
             component: IsFieldValidating,
+          },
+          {
+            path: 'field',
+            component: Field,
           },
         ],
       },

@@ -35,6 +35,7 @@
   "scripts": {
     "build": "vite build --config=vite.prod.ts && tsc-alias && pnpm copy",
     "copy": "cp ../../README.md .",
+    "publish-lib": "pnpm build && npm publish",
     "test": "jest --coverage",
     "test-core": "jest -- src/hooks/useFormHandler/index.test.ts --coverage",
     "storybook": "storybook dev -p 6006",

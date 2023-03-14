@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "www": "pnpm --filter www start",
+    "publish-lib": "pnpm --filter solid-form-handler publish-lib",
     "storybook": "pnpm --filter solid-form-handler storybook",
     "build": "pnpm --filter solid-form-handler build",
     "test": "pnpm --filter solid-form-handler test",

@@ -4,7 +4,7 @@ runs:
   using: composite
   steps:
     - name: Install dependencies and build
-      run: pnpm install && pnpm build
+      run: pnpm install --no-frozen-lockfile && pnpm build
       shell: bash
       working-directory: ./packages/lib
     - name: Tests

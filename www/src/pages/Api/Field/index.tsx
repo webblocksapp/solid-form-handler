@@ -8,7 +8,7 @@ export const Field: Component = () => (
     <p>
       Reusable form field component that contains the form handler reactivity.
     </p>
-    <Code content={getRaw('FieldApi')} />
+    <Code content={getRaw('ComponentFieldApi')} />
     <p>
       <b>Modes:</b>
     </p>
@@ -79,6 +79,36 @@ export const Field: Component = () => (
           </tr>
         </tbody>
       </table>
+      <p>
+        <code>FieldProps</code> is composed by:
+      </p>
+      <ul>
+        <li>
+          <code>id:</code> html id attribute.
+        </li>
+        <li>
+          <code>error:</code> boolean flag when the field has error.
+        </li>
+        <li>
+          <code>errorMessage:</code> string prop to display the field error
+          message.
+        </li>
+        <li>
+          <code>formHandler:</code> prop for receiving the form handler
+          instance.
+        </li>
+        <li>
+          <code>name:</code> html name attribute.
+        </li>
+        <li>
+          <code>triggers:</code> array of strings with field names for dependant
+          validations.
+        </li>
+        <li>
+          <code>value:</code> default value for fields controlled by the form
+          handler.
+        </li>
+      </ul>
     </div>
   </>
 );

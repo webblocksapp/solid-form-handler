@@ -1,4 +1,4 @@
-import { CommonObject, FormHandler } from '@interfaces';
+import { FormHandler } from '@interfaces';
 
 export type FieldProps = {
   id?: string;

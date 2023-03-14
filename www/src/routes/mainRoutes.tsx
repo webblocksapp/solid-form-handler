@@ -11,7 +11,11 @@ import {
   DynamicForm,
   DynamicNestedForm,
   Field,
+  FieldCheckboxGroupMode,
+  FieldCheckboxMode,
   FieldHasError,
+  FieldInputMode,
+  FieldRadioGroupMode,
   FillForm,
   FormData,
   FormHasChanges,
@@ -280,8 +284,24 @@ export const mainRoutes: RouteDefinition[] = [
             component: IsFieldValidating,
           },
           {
-            path: 'field',
+            path: 'component-field',
             component: Field,
+          },
+          {
+            path: 'field-input',
+            component: FieldInputMode,
+          },
+          {
+            path: 'field-single-checkbox',
+            component: FieldCheckboxMode,
+          },
+          {
+            path: 'field-checkbox-group',
+            component: FieldCheckboxGroupMode,
+          },
+          {
+            path: 'field-radio-group',
+            component: FieldRadioGroupMode,
           },
         ],
       },

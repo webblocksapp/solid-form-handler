@@ -95,9 +95,14 @@ export const API_MENU: TreeMenuItem[] = [
   },
   {
     text: 'Field',
-    route: 'field',
+    route: 'component-field',
     section: true,
-    children: [{ text: 'Input mode', route: 'field-input' }],
+    children: [
+      { text: 'Input Mode', route: 'field-input' },
+      { text: 'Checkbox Mode', route: 'field-single-checkbox' },
+      { text: 'Checkbox Group Mode', route: 'field-checkbox-group' },
+      { text: 'Radio Group Mode', route: 'field-radio-group' },
+    ],
   },
 ];
 

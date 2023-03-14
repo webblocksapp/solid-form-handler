@@ -21,7 +21,11 @@ export const SidebarMenu: Component<TreeMenuProps> = (props) => {
             <li class="nav-item">
               {item.route ? (
                 <NavLink
-                  class={`px-0 nav-link ${item.section && 'section-item'}`}
+                  classList={{
+                    'px-0': true,
+                    'nav-link': true,
+                    'section-item': item.section,
+                  }}
                   href={item.route}
                   noScroll={props.noScroll}
                   onClick={() => {

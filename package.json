@@ -8,7 +8,9 @@
     "publish-lib": "pnpm --filter solid-form-handler publish-lib",
     "storybook": "pnpm --filter solid-form-handler storybook",
     "build": "pnpm --filter solid-form-handler build",
+    "build-www": "pnpm --filter www build",
     "test": "pnpm --filter solid-form-handler test",
+    "test-www": "pnpm --filter www test",
     "test-core": "pnpm --filter solid-form-handler test-core",
     "sync-components": "pnpm --filter www sync-components"
   },

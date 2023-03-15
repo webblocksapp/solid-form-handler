@@ -11,12 +11,9 @@
   },
   "scripts": {
     "build": "vite build && cp .htaccess dist",
-    "build:watch": "yarn build --watch",
     "start": "vite",
     "sync-components": "node scripts/syncExampleComponents.js",
     "test": "jest",
-    "link-lib": "yarn link solid-form-handler",
-    "unlink-lib": "yarn unlink solid-form-handler",
     "preview": "vite preview"
   },
   "dependencies": {

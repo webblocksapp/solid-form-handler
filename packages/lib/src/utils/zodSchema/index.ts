@@ -1,7 +1,7 @@
 import { DATA_CONTAINS_ERRORS, ROOT_KEY } from '@constants';
 import { ErrorMap, ValidationSchema } from '@interfaces';
 import { set, get, ValidationError } from '@utils';
-import { ZodArray, ZodEffects, ZodError, ZodIssue, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
+import { ZodArray, ZodEffects, ZodError, ZodObject, ZodSchema, ZodTypeDef } from 'zod';
 
 export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
   /**

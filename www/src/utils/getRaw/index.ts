@@ -19,8 +19,10 @@ const modules = {
 };
 
 export const getRaw = (path: string) => {
+  path = path.replace(/^\//, '');
+
   for (let key in modules) {
-    if (key.match(path)) {
+    if (key.match(`/${path}`)) {
       return modules[key] as unknown as string;
     }
   }

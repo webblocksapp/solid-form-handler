@@ -6,6 +6,7 @@
   "scripts": {
     "www": "pnpm --filter www start",
     "publish-lib": "pnpm --filter solid-form-handler publish-lib",
+    "local-publish-lib": "pnpm --filter solid-form-handler local-publish-lib",
     "storybook": "pnpm --filter solid-form-handler storybook",
     "build": "pnpm --filter solid-form-handler build",
     "build-www": "pnpm --filter www build",

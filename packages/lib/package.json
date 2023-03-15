@@ -1,7 +1,7 @@
 {
   "name": "solid-form-handler",
   "description": "A SolidJS library for simplifying form validations.",
-  "version": "1.1.0-alpha.1",
+  "version": "1.2.0-alpha.1",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -58,6 +58,7 @@
     "build": "node --loader ts-node/esm bundle.ts && tsc-alias && pnpm copy",
     "copy": "cp ../../README.md .",
     "publish-lib": "pnpm build && npm publish",
+    "local-publish-lib": "pnpm build && npm publish --registry http://localhost:4873",
     "test": "jest --coverage",
     "test-core": "jest -- src/hooks/useFormHandler/index.test.ts --coverage",
     "storybook": "storybook dev -p 6006",

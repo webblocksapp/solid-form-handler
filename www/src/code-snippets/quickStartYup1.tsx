@@ -1,5 +1,6 @@
 //@ts-nocheck
-import { useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
+import { useFormHandler } from 'solid-form-handler';
+import { __VALIDATOR__Schema } from 'solid-form-handler/__VALIDATOR__';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 import * as yup from 'yup';
 

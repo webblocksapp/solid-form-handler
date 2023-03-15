@@ -1,5 +1,6 @@
 //@ts-nocheck
-import { Field, useFormHandler, __VALIDATOR__Schema } from 'solid-form-handler';
+import { Field, useFormHandler } from 'solid-form-handler';
+import { __VALIDATOR__Schema } from 'solid-form-handler/__VALIDATOR__';
 
 // ...
 

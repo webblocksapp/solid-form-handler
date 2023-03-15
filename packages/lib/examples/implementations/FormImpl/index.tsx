@@ -1,7 +1,7 @@
 import { useFormHandler } from '@hooks';
 import { FormErrorsException } from '@utils';
 import { Component, createSignal } from 'solid-js';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import * as yup from 'yup';
 
 type Person = {

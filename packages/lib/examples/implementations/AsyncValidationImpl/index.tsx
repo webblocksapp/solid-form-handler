@@ -2,7 +2,7 @@ import { Component, createEffect } from 'solid-js';
 import { TextInput } from '@example-components';
 import { useFormHandler } from '@hooks';
 import * as yup from 'yup';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import { createStore } from 'solid-js/store';
 
 const asyncSchema = yup.object({

@@ -3,7 +3,7 @@ import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
 import { TextInput } from '@example-components/legacy';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import { schema, Schema } from './mocks';
 
 const onInputCallback = jest.fn(() => {});

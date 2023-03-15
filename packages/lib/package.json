@@ -24,16 +24,38 @@
     "dist",
     "README.md"
   ],
+  "typesVersions": {
+    "*": {
+      "yup": [
+        "./dist/adapters/yupSchema/index.d.ts"
+      ],
+      "zod": [
+        "./dist/adapters/zodSchema/index.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js",
       "node": "./dist/index.cjs.js"
+    },
+    "./yup": {
+      "types": "./dist/adapters/yupSchema/index.d.ts",
+      "import": "./dist/adapters/yupSchema/index.es.js",
+      "require": "./dist/adapters/yupSchema/index.cjs.js",
+      "node": "./dist/adapters/yupSchema/index.cjs.js"
+    },
+    "./zod": {
+      "types": "./dist/adapters/zodSchema/index.d.ts",
+      "import": "./dist/adapters/zodSchema/index.es.js",
+      "require": "./dist/adapters/zodSchema/index.cjs.js",
+      "node": "./dist/adapters/zodSchema/index.cjs.js"
     }
   },
   "scripts": {
-    "build": "vite build --config=vite.prod.ts && tsc-alias && pnpm copy",
+    "build": "node --loader ts-node/esm bundle.ts && tsc-alias && pnpm copy",
     "copy": "cp ../../README.md .",
     "publish-lib": "pnpm build && npm publish",
     "test": "jest --coverage",

@@ -39,7 +39,7 @@ importers:
       storybook-solidjs: ^1.0.0-beta.1
       storybook-solidjs-vite: ^1.0.0-beta.1
       ts-jest: ^29.0.5
-      ts-node: ^10.7.0
+      ts-node: ^10.9.1
       tsc-alias: ^1.6.11
       typescript: ^4.6.4
       vite: ^4.1.1

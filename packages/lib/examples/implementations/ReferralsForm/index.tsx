@@ -1,6 +1,6 @@
 import { Component, For } from 'solid-js';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import { referralsSchema } from './schema';
 import { Referrals } from './types';
 import { TextInput } from '@example-components';

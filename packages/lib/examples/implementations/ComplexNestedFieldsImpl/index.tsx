@@ -1,6 +1,6 @@
 import { useFormHandler } from '@hooks';
 import { Component } from 'solid-js';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import * as yup from 'yup';
 
 const yupPersonShape = yup.object({

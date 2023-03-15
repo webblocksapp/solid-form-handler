@@ -18,5 +18,3 @@ export * from './objectPaths';
 export * from './objectValueExists';
 export * from './reorderArray';
 export * from './set';
-export * from './yupSchema';
-export * from './zodSchema';

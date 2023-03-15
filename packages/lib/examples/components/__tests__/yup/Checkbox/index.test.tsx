@@ -3,7 +3,7 @@ import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
 import { Checkbox } from '@example-components';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import { schema, Schema } from './mocks';
 
 const onChangeCallback = jest.fn(() => {});

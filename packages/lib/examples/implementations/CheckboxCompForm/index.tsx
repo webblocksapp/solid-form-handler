@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import * as yup from 'yup';
 import { Checkbox } from '@example-components';
 

@@ -1,6 +1,6 @@
 import { useFormHandler } from '@hooks';
 import { Component, onMount, For } from 'solid-js';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import * as yup from 'yup';
 
 type Schema = {

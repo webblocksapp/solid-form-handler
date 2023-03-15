@@ -11,7 +11,9 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "target": "esnext",
+    "module": "esnext",
     "paths": {
+      "@adapters": ["src/adapters"],
       "@components": ["src/components"],
       "@constants": ["src/constants"],
       "@hocs": ["src/hocs"],

@@ -1,5 +1,6 @@
 import { DATA_CONTAINS_ERRORS, ROOT_KEY } from '@constants';
-import { ValidationError, zodSchema } from '@utils';
+import { ValidationError } from '@utils';
+import { zodSchema } from '@adapters';
 import { z } from 'zod';
 
 describe('zodSchema', () => {

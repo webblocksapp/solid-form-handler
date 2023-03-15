@@ -3,7 +3,7 @@ import { Result } from 'solid-testing-library/dist/types';
 import { FormHandler } from '@interfaces';
 import { Checkboxes } from '@example-components';
 import { useFormHandler } from '@hooks';
-import { zodSchema } from '@utils';
+import { zodSchema } from '@adapters';
 import { schema, Schema, FAVORITE_FOODS } from './mocks';
 
 const onChangeCallback = jest.fn(() => {});

@@ -1,6 +1,6 @@
 import { TextInput } from '@example-components';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import { Component } from 'solid-js';
 import * as yup from 'yup';
 

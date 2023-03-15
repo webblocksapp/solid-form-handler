@@ -1,6 +1,6 @@
 import { Component, For, Show } from 'solid-js';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@utils';
+import { yupSchema } from '@adapters';
 import * as yup from 'yup';
 import { Field } from '@components';
 

@@ -1,7 +1,6 @@
 import { ErrorMap, ValidationSchema } from '@interfaces';
 import { flattenObject, set, get, ValidationError, formatObjectPath, objectValueExists } from '@utils';
-import { SchemaOf, reach, ValidationError as YupValidationError } from 'yup';
-import * as yup from 'yup';
+import { SchemaOf, reach, ValidationError as YupValidationError, AnySchema } from 'yup';
 import { DATA_CONTAINS_ERRORS, ROOT_KEY } from '@constants';
 
 /**
@@ -66,7 +65,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
   /**
    * Builds a default object from a yup schema
    */
-  const buildDefault = (_schema: yup.AnySchema = schema, path?: string, object?: any): T => {
+  const buildDefault = (_schema: AnySchema = schema, path?: string, object?: any): T => {
     let obj = object;
     path = path ? `${path}.` : '';
     const targetPath = path.replace(/\.$/, '');
@@ -81,7 +80,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
          * When the schema is an array without a default value, it reach the 0 index of the array for getting
          * the inner yup schema (it can be an object, array or a primitive schema).
          */
-        const reachedSchema = reach(_schema, '0') as yup.AnySchema;
+        const reachedSchema = reach(_schema, '0') as AnySchema;
         obj = buildDefault(reachedSchema, `${path}0`, obj);
       }
     } else if (schemaType === 'object') {
@@ -111,7 +110,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
     return obj;
   };
 
-  const buildDefaultValue = (schema: yup.AnySchema) => {
+  const buildDefaultValue = (schema: AnySchema) => {
     switch (schema._type) {
       case 'boolean':
         return false;

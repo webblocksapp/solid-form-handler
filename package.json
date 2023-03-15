@@ -10,6 +10,7 @@
     "storybook": "pnpm --filter solid-form-handler storybook",
     "build": "pnpm --filter solid-form-handler build",
     "build-www": "pnpm --filter www build",
+    "serve-www": "pnpm --filter www serve",
     "test": "pnpm --filter solid-form-handler test",
     "test-www": "pnpm --filter www test",
     "test-core": "pnpm --filter solid-form-handler test-core",

@@ -12,6 +12,7 @@
   "scripts": {
     "build": "vite build && cp .htaccess dist",
     "start": "vite",
+    "serve": "npx serve dist",
     "sync-components": "node scripts/syncExampleComponents.js",
     "test": "jest",
     "preview": "vite preview"

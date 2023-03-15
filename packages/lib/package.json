@@ -18,8 +18,8 @@
   },
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
-  "module": "./dist/index.cjs",
-  "main": "./dist/index.js",
+  "module": "./dist/index.cjs.js",
+  "main": "./dist/index.es.js",
   "files": [
     "dist",
     "README.md"
@@ -27,9 +27,9 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "node": "./dist/index.cjs"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "node": "./dist/index.cjs.js"
     }
   },
   "scripts": {

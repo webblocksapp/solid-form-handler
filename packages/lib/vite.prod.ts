@@ -15,7 +15,9 @@ export default defineConfig({
       entry: 'src/index.ts',
       name: 'SolidJSFormHandler',
       formats: ['es', 'cjs'],
-      fileName: 'index',
+      fileName: (format) => {
+        return `index.${format}.js`;
+      },
     },
     rollupOptions: {
       external,

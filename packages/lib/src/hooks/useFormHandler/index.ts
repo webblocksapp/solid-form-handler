@@ -9,6 +9,7 @@ import {
   STARTS_WITH_NUMBER_DOT_REGEXP,
   STARTS_WITH_ROOT_KEY_DOT_CHILDREN_REGEXP,
   STATE_KEY,
+  VALIDATION_ERROR,
 } from '@constants';
 import {
   Flatten,
@@ -530,8 +531,9 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       paths.forEach((key) => {
         setFieldAsValid(key);
       });
-    } catch (error) {
-      if (error instanceof ValidationError) {
+    } catch (e) {
+      if (e instanceof Error && e.name === VALIDATION_ERROR) {
+        const error = e as ValidationError;
         const errors: ErrorMap = [...error.children, { path, message: error.message }];
         const pathsWithError = errors.map((item) => item.path);
 
@@ -551,7 +553,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
 
         if (options.throwException) throw errors;
       } else {
-        console.error(error);
+        console.error(e);
       }
     }
   };

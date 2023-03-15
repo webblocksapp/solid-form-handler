@@ -1,5 +1,5 @@
 import { ValidationSchema } from '@interfaces';
-import { yupSchema, zodSchema } from '@utils';
+import { yupSchema, zodSchema } from '@adapters';
 import { z } from 'zod';
 import * as yup from 'yup';
 import { SchemaOf } from 'yup';

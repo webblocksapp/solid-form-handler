@@ -1,5 +1,6 @@
 import { Checkbox, TextInput } from '@components';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler } from 'solid-form-handler';
+import { yupSchema } from 'solid-form-handler/yup';
 import { Component, createEffect, Match, Show, Switch } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { schema } from './schema';

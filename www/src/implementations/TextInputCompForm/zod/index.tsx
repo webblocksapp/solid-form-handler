@@ -1,5 +1,6 @@
 import { Component } from 'solid-js';
-import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { useFormHandler } from 'solid-form-handler';
+import { zodSchema } from 'solid-form-handler/zod';
 import { z } from 'zod';
 import { TextInput } from '@components';
 

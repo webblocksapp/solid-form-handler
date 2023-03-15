@@ -1,5 +1,6 @@
 import { Component, createSignal, Match, Switch, Show } from 'solid-js';
-import { useFormHandler, zodSchema } from 'solid-form-handler';
+import { useFormHandler } from 'solid-form-handler';
+import { zodSchema } from 'solid-form-handler/zod';
 import { Step1 } from './Step1';
 import { Step2 } from './Step2';
 import { Step3 } from './Step3';

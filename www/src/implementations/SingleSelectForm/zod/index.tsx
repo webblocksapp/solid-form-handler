@@ -1,5 +1,6 @@
 import { Component, For, Show } from 'solid-js';
-import { Field, useFormHandler, zodSchema } from 'solid-form-handler';
+import { Field, useFormHandler } from 'solid-form-handler';
+import { zodSchema } from 'solid-form-handler/zod';
 import { z } from 'zod';
 
 const schema = z.object({

@@ -1,5 +1,6 @@
 import { Component, Show } from 'solid-js';
-import { Field, useFormHandler, yupSchema } from 'solid-form-handler';
+import { Field, useFormHandler } from 'solid-form-handler';
+import { yupSchema } from 'solid-form-handler/yup';
 import * as yup from 'yup';
 
 type Schema = {

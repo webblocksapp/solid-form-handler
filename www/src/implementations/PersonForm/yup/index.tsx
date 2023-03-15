@@ -1,5 +1,6 @@
 import { Component } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler } from 'solid-form-handler';
+import { yupSchema } from 'solid-form-handler/yup';
 import { personSchema } from './schema';
 import { Person } from './types';
 import { TextInput } from '@components';

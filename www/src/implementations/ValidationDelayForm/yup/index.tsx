@@ -1,5 +1,6 @@
 import { Component, createEffect } from 'solid-js';
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler } from 'solid-form-handler';
+import { yupSchema } from 'solid-form-handler/yup';
 import { TextInput } from '@components';
 import { schema } from './schema';
 import { createStore } from 'solid-js/store';

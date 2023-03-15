@@ -25,7 +25,8 @@ It supports the following data assertion libraries: yup and zod, however other v
 You can start by creating your own form field [components](https://solid-form-handler.com/docs/components) by using each of the code given on the docs website. The following is a final implementation of them:
 
 ```tsx
-import { useFormHandler, yupSchema } from 'solid-form-handler';
+import { useFormHandler } from 'solid-form-handler';
+import { yupSchema } from 'solid-form-handler/yup';
 import { Checkbox, Checkboxes, Radios, Select, TextInput } from '@components';
 import * as yup from 'yup';
 

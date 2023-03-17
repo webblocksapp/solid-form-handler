@@ -4,14 +4,16 @@ import { z } from 'zod';
 
 const _ySchema: yup.SchemaOf<{
   name: string;
+  age: number;
 }> = yup.object().shape({
   name: yup.string().required(),
+  age: yup.number().required().min(1),
 });
 
 export const ySchema = yupSchema(_ySchema);
 export const zSchema = zodSchema(
   z.object({
     name: z.string().min(1, 'name is a required field'),
-    email: z.string().email(),
+    age: z.number().min(1),
   })
 );

@@ -41,7 +41,6 @@ const bundle = async () => {
       await build({
         plugins: [dts(), solidPlugin(), tsconfigPaths()],
         build: {
-          minify: false,
           lib: {
             ...entry.lib,
             formats: ['es', 'cjs'],

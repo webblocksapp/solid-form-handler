@@ -78,8 +78,8 @@ export const zodSchema = <T>(schema: ZodSchema<T>): ValidationSchema<T> => {
         await reachedSchema.parseAsync(value);
       } catch (error) {
         if (error instanceof ZodError) {
-          const errorMessage = error.errors.find((item) => item.path.includes(lastKey))?.message || '';
-          throw new ValidationError(path, errorMessage);
+          const errorMessage = error.errors.find((item) => item.path.includes(lastKey))?.message;
+          if (errorMessage) throw new ValidationError(path, errorMessage);
         } else {
           console.error(error);
         }

@@ -10,28 +10,34 @@ const external = [...Object.keys(peerDependencies), ...Object.keys(devDependenci
 
 const entries = [
   {
-    lib: {
-      entry: 'src/index.ts',
-      fileName: (format: string) => {
-        return `index.${format}.js`;
-      },
-    },
-  },
-  {
+    plugins: [dts({ include: 'src/adapters/yupSchema/index.ts' })],
     lib: {
       entry: 'src/adapters/yupSchema/index.ts',
       fileName: (format: string) => {
         return `adapters/yupSchema/index.${format}.js`;
       },
     },
+    emptyOutDir: true,
   },
   {
+    plugins: [dts({ include: 'src/adapters/zodSchema/index.ts' })],
     lib: {
       entry: 'src/adapters/zodSchema/index.ts',
       fileName: (format: string) => {
         return `adapters/zodSchema/index.${format}.js`;
       },
     },
+    emptyOutDir: false,
+  },
+  {
+    plugins: [dts({ include: 'src' })],
+    lib: {
+      entry: 'src/index.ts',
+      fileName: (format: string) => {
+        return `index.${format}.js`;
+      },
+    },
+    emptyOutDir: false,
   },
 ];
 
@@ -39,7 +45,7 @@ const bundle = async () => {
   entries.forEach(
     async (entry) =>
       await build({
-        plugins: [dts(), solidPlugin(), tsconfigPaths()],
+        plugins: [...entry.plugins, solidPlugin(), tsconfigPaths()],
         build: {
           lib: {
             ...entry.lib,

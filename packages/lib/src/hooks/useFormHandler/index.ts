@@ -607,13 +607,19 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       setFormIsValidating(true);
       await validateField(
         ROOT_KEY,
-        { force: true, omitTriggers: true, throwException: true, ...options },
+        { force: true, omitTriggers: true, throwException: true, silentValidation: options?.silentValidation },
         { ..._, recursive: true }
       );
-    } catch (error) {
-      throw new FormErrorsException(error as ErrorMap);
-    } finally {
       setFormIsValidating(false);
+      return { isFormInvalid: false };
+    } catch (error) {
+      setFormIsValidating(false);
+
+      if (options?.throwException === false) {
+        return { isFormInvalid: true };
+      }
+
+      throw new FormErrorsException(error as ErrorMap);
     }
   };
 
@@ -1081,7 +1087,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     ) => Promise<void>,
     touchField,
     validateField: validateField as (path?: string, options?: ValidateFieldOptions) => Promise<void>,
-    validateForm,
+    validateForm: validateForm as (options?: ValidateOptions) => Promise<{ isFormInvalid: boolean }>,
     _: {
       addFieldsetState,
       buildFieldState,

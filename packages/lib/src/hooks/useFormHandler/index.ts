@@ -24,6 +24,7 @@ import {
   ErrorMap,
   ValidateFieldBehavior,
   SetFieldDefaultValueOptions,
+  FieldPath,
 } from '@interfaces';
 import {
   buildFieldStatePath,
@@ -62,6 +63,12 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
   const [formIsResetting, setFormIsResetting] = createSignal<boolean>(false);
   const [formIsFilling, setFormIsFilling] = createSignal<boolean>(false);
   const [formIsValidating, setFormIsValidating] = createSignal<boolean>(false);
+
+  /**
+   * Type safe field names functions.
+   */
+  const name = (name: FieldPath<T>): string => name;
+  const n = name;
 
   /**
    * Sets the field value inside the form data store.
@@ -1072,6 +1079,8 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     isFieldValidating,
     isFormInvalid,
     moveFieldset,
+    n,
+    name,
     removeFieldset,
     resetForm,
     setFieldTriggers,

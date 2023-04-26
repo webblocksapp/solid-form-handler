@@ -19,7 +19,7 @@ const yupPersonSchema = yupSchema(yupPersonShape);
 export const FormImpl: Component = () => {
   const formHandler = useFormHandler(yupPersonSchema);
   const [error, setError] = createSignal('');
-  const { formData } = formHandler;
+  const { formData, n } = formHandler;
 
   const onInput = (event: Event) => {
     const { name, value } = event.currentTarget as HTMLInputElement;
@@ -57,7 +57,7 @@ export const FormImpl: Component = () => {
         <br />
         <input
           data-testid="name"
-          name="name"
+          name={n('name')}
           onInput={onInput}
           value={formHandler.getFieldValue('name', (value) => String(value))}
         ></input>
@@ -69,7 +69,7 @@ export const FormImpl: Component = () => {
         <br />
         <input
           data-testid="age"
-          name="age"
+          name={n('age')}
           onInput={onInput}
           value={formHandler.getFieldValue('age', (value) => String(value))}
         ></input>

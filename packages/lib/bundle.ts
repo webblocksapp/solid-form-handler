@@ -42,21 +42,21 @@ const entries = [
 ];
 
 const bundle = async () => {
-  entries.forEach(
-    async (entry) =>
-      await build({
-        plugins: [...entry.plugins, solidPlugin(), tsconfigPaths()],
-        build: {
-          lib: {
-            ...entry.lib,
-            formats: ['es', 'cjs'],
-          },
-          rollupOptions: {
-            external,
-          },
+  for (let entry of entries) {
+    await build({
+      plugins: [...entry.plugins, solidPlugin(), tsconfigPaths()],
+      build: {
+        lib: {
+          ...entry.lib,
+          formats: ['es', 'cjs'],
         },
-      })
-  );
+        rollupOptions: {
+          external,
+        },
+        emptyOutDir: entry.emptyOutDir,
+      },
+    });
+  }
 };
 
 bundle();

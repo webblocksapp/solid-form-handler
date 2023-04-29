@@ -6,21 +6,17 @@ import 'bootstrap/dist/js/bootstrap.js';
 import { SidebarProvider } from '@components';
 import { loadSnippets } from '@utils';
 
-const main = async () => {
-  await loadSnippets();
+loadSnippets();
 
-  render(
-    () => (
-      <Router>
-        <SidebarProvider>
-          <Suspense>
-            <App />
-          </Suspense>
-        </SidebarProvider>
-      </Router>
-    ),
-    document.getElementById('root') as HTMLElement
-  );
-};
-
-main();
+render(
+  () => (
+    <Router>
+      <SidebarProvider>
+        <Suspense>
+          <App />
+        </Suspense>
+      </SidebarProvider>
+    </Router>
+  ),
+  document.getElementById('root') as HTMLElement
+);

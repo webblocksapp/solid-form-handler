@@ -1,6 +1,11 @@
-const snippets: {
-  [key: string]: any;
-} = {};
+import { createStore } from 'solid-js/store';
+
+const [snippetsStore, setSnippetsStore] = createStore<{
+  snippets: {
+    [key: string]: any;
+  };
+  loading: boolean;
+}>({ snippets: {}, loading: true });
 
 const implementations = import.meta.glob(
   '../../implementations/**/*.(ts|tsx)',
@@ -28,13 +33,14 @@ export const loadSnippets = async () => {
   for (let [key, value] of Object.entries(modules)) {
     promises.push(
       new Promise(async (resolve) => {
-        snippets[key] = await value();
+        setSnippetsStore('snippets', key, await value());
         resolve();
       })
     );
   }
 
   await Promise.all(promises);
+  setSnippetsStore('loading', false);
 };
 
-export { snippets };
+export { snippetsStore };

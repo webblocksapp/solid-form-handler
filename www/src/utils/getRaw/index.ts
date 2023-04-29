@@ -1,11 +1,11 @@
-import { snippets } from '@utils';
+import { snippetsStore } from '@utils';
 
 export const getRaw = (path: string) => {
   path = path.replace(/^\//, '');
 
-  for (let key in snippets) {
+  for (let key in snippetsStore.snippets) {
     if (key.match(`/${path}`)) {
-      return snippets[key];
+      return snippetsStore.snippets[key];
     }
   }
 

@@ -15,3 +15,7 @@
 .code-snippet.no-border {
   border: 0 !important;
 }
+
+.code-snippet.loading {
+  min-height: 150px;
+}

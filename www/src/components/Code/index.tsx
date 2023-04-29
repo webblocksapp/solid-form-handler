@@ -1,4 +1,13 @@
-import { Component, onMount, JSX, splitProps, createSignal } from 'solid-js';
+import {
+  Component,
+  onMount,
+  JSX,
+  splitProps,
+  createSignal,
+  Show,
+  createEffect,
+} from 'solid-js';
+import { snippetsStore } from '@utils';
 import Highlight from 'solid-highlight';
 import 'highlight.js/styles/atom-one-light.css';
 import './index.css';
@@ -37,20 +46,37 @@ export const Code: Component<CodeProps> = (props) => {
   };
 
   onMount(async () => {
-    const code = formatCode(((local.content || rest.children) as string) || '');
-    setCode(code);
+    const code = formatCode((rest.children as string) || '');
+    code && setCode(code);
+  });
+
+  createEffect(() => {
+    const code = formatCode((local.content as string) || '');
+    code && setCode(code);
   });
 
   return (
     <div {...rest}>
-      <div
-        class={`code-snippet border ${local.codeClass || ''}`}
-        classList={{ 'no-border': local.noBorder }}
+      <Show
+        when={snippetsStore.loading}
+        fallback={
+          <div
+            class={`code-snippet border ${local.codeClass || ''}`}
+            classList={{ 'no-border': local.noBorder }}
+          >
+            <Highlight autoDetect={false} language={local.language || 'tsx'}>
+              {code()}
+            </Highlight>
+          </div>
+        }
       >
-        <Highlight autoDetect={false} language={local.language || 'tsx'}>
-          {code()}
-        </Highlight>
-      </div>
+        <div
+          class="code-snippet loading border bg-light d-flex align-items-center justify-content-center"
+          classList={{ 'no-border': local.noBorder }}
+        >
+          Loading...
+        </div>
+      </Show>
     </div>
   );
 };

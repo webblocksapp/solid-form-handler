@@ -18,8 +18,8 @@
   },
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
-  "module": "./dist/index.cjs.js",
-  "main": "./dist/index.es.js",
+  "module": "./dist/cjs/index.js",
+  "main": "./dist/es/index.js",
   "files": [
     "dist",
     "README.md"
@@ -37,21 +37,21 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "node": "./dist/index.cjs.js"
+      "import": "./dist/es/index.js",
+      "require": "./dist/cjs/index.js",
+      "node": "./dist/cjs/index.js"
     },
     "./yup": {
       "types": "./dist/adapters/yupSchema/index.d.ts",
-      "import": "./dist/adapters/yupSchema/index.es.js",
-      "require": "./dist/adapters/yupSchema/index.cjs.js",
-      "node": "./dist/adapters/yupSchema/index.cjs.js"
+      "import": "./dist/adapters/yupSchema/es/index.js",
+      "require": "./dist/adapters/yupSchema/cjs/index.js",
+      "node": "./dist/adapters/yupSchema/cjs/index.js"
     },
     "./zod": {
       "types": "./dist/adapters/zodSchema/index.d.ts",
-      "import": "./dist/adapters/zodSchema/index.es.js",
-      "require": "./dist/adapters/zodSchema/index.cjs.js",
-      "node": "./dist/adapters/zodSchema/index.cjs.js"
+      "import": "./dist/adapters/zodSchema/es/index.js",
+      "require": "./dist/adapters/zodSchema/cjs/index.js",
+      "node": "./dist/adapters/zodSchema/cjs/index.js"
     }
   },
   "scripts": {

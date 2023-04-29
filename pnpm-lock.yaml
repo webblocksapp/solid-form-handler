@@ -154,7 +154,7 @@ importers:
         specifier: ^11.7.0
         version: 11.7.0
       solid-form-handler:
-        specifier: ^1.2.0-alpha.6
+        specifier: workspace:*
         version: link:../packages/lib
       solid-highlight:
         specifier: ^0.1.12

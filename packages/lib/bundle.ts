@@ -14,7 +14,7 @@ const entries = [
     lib: {
       entry: 'src/adapters/yupSchema/index.ts',
       fileName: (format: string) => {
-        return `adapters/yupSchema/index.${format}.js`;
+        return `adapters/yupSchema/${format}/index.js`;
       },
     },
     emptyOutDir: true,
@@ -24,7 +24,7 @@ const entries = [
     lib: {
       entry: 'src/adapters/zodSchema/index.ts',
       fileName: (format: string) => {
-        return `adapters/zodSchema/index.${format}.js`;
+        return `adapters/zodSchema/${format}/index.js`;
       },
     },
     emptyOutDir: false,
@@ -34,7 +34,7 @@ const entries = [
     lib: {
       entry: 'src/index.ts',
       fileName: (format: string) => {
-        return `index.${format}.js`;
+        return `${format}/index.js`;
       },
     },
     emptyOutDir: false,

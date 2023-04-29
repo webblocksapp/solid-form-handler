@@ -1,3 +1,13 @@
+.navbar > div {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.navbar > div,
+.docs-layout > div {
+  max-width: 1460px;
+}
+
 .docs-layout {
   display: grid;
   grid-template-rows: 1fr;
@@ -20,7 +30,7 @@
 
 .docs-layout > div {
   display: grid;
-  grid-template-columns: 230px 1fr;
+  grid-template-columns: 320px 1fr;
 }
 
 .docs-layout > div > div:nth-child(2) {
@@ -45,16 +55,6 @@
   margin-left: -10px;
 }
 
-.docs-layout .add-wrapper {
-  position: sticky;
-  top: calc(var(--navbar-height) + 24px);
-  height: calc(100vh - var(--navbar-height) - 48px);
-  min-width: 200px;
-  padding-left: 20px;
-  display: flex;
-  justify-content: center;
-}
-
 .docs-layout .sidebar .section-item {
   font-size: 18px;
 }
@@ -72,9 +72,9 @@
   margin: 0 auto;
 }
 
-@media (max-width: 1399px) {
-  .docs-layout .sidebar {
-    padding-left: 32px;
+@media (max-width: 1280px) {
+  .docs-layout > div {
+    grid-template-columns: 280px 1fr;
   }
 }
 
@@ -117,9 +117,5 @@
 
   .docs-layout > div > div:nth-child(2) {
     padding: 20px 10px;
-  }
-
-  .docs-layout .add-wrapper {
-    display: none;
   }
 }

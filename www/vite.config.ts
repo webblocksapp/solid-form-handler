@@ -14,16 +14,6 @@ export default defineConfig(({ mode }) => {
         inject: {
           data: {
             domain: 'https://www.solid-form-handler.com',
-            adSenseScript:
-              mode === 'production'
-                ? `
-                  <script 
-                    async 
-                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5056055199537470"
-                    crossorigin="anonymous">
-                  </script>
-                `
-                : '',
           },
         },
       }),

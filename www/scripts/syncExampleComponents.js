@@ -29,6 +29,7 @@ const writeComponents = async (initialPath, targetPath) => {
     'Radios',
     'Select',
     'TextInput',
+    'FileInput',
   ];
 
   components.forEach((component) => {

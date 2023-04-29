@@ -38,13 +38,5 @@ export default defineConfig(() => {
         ],
       },
     },
-    resolve: {
-      alias: {
-        'solid-form-handler/yup':
-          '../packages/lib/dist/adapters/yupSchema/index.es.js',
-        'solid-form-handler/zod':
-          '../packages/lib/dist/adapters/zodSchema/index.es.js',
-      },
-    },
   };
 });

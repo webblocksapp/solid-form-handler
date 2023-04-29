@@ -4,7 +4,7 @@ runs:
   using: composite
   steps:
     - name: Install dependencies and build
-      run: pnpm install --no-frozen-lockfile && pnpm build && pnpm build-www
+      run: pnpm install --no-frozen-lockfile && pnpm build-www
       shell: bash
     - name: Tests
       run: pnpm test-www

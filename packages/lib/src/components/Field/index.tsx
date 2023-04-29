@@ -6,6 +6,8 @@ import {
   CheckboxFieldProps,
   CheckboxGroupField,
   CheckboxGroupFieldProps,
+  FileInputField,
+  FileInputFieldProps,
   InputField,
   InputFieldProps,
   RadioGroupField,
@@ -15,7 +17,12 @@ import {
 const FIELD_PROPS_TO_OMIT = ['error', 'errorMessage', 'formHandler', 'render', 'triggers', 'mode'] as const;
 const FIELD_PROPS_TO_PRESERVE = ['id', 'name', 'value', 'onInput', 'onChange'] as const;
 
-export type FieldComponentProps = InputFieldProps | CheckboxFieldProps | CheckboxGroupFieldProps | RadioGroupFieldProps;
+export type FieldComponentProps =
+  | InputFieldProps
+  | FileInputFieldProps
+  | CheckboxFieldProps
+  | CheckboxGroupFieldProps
+  | RadioGroupFieldProps;
 export type FieldPropsReturn = FieldProps & {
   onInput?: CommonEvent;
   onChange?: CommonEvent;
@@ -113,6 +120,8 @@ export const Field = withFieldProvider((props: FieldComponentProps) => {
   switch (props.mode) {
     case 'input':
       return <InputField {...props} />;
+    case 'file-input':
+      return <FileInputField {...props} />;
     case 'checkbox':
       return <CheckboxField {...props} />;
     case 'checkbox-group':

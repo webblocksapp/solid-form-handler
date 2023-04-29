@@ -6,13 +6,13 @@ export type FileInputProps = Omit<TextInputProps, 'type' | 'value'> &
   ({ multiple?: false; value?: File } | { multiple?: true; value?: File[] });
 
 export const FileInput: Component<FileInputProps> = (props) => {
-  let fileInputRef: HTMLInputElement;
-  const [local, rest] = splitProps(props, ['classList', 'label', 'formHandler', 'multiple', 'value']);
+  let fileInput: HTMLInputElement;
+  const [local] = splitProps(props, ['classList', 'label', 'formHandler', 'multiple', 'value']);
 
   return (
     <Field
       {...props}
-      mode="input"
+      mode="file-input"
       render={(field) => (
         <div classList={local.classList}>
           <Show when={local.label}>
@@ -21,21 +21,18 @@ export const FileInput: Component<FileInputProps> = (props) => {
             </label>
           </Show>
           <input
-            ref={fileInputRef}
+            ref={fileInput}
+            multiple={local.multiple}
             type="file"
             classList={{ 'd-none': true }}
-            onChange={(event) => {
-              const fileField = event.target as HTMLInputElement;
-              const files = fileField.files || [];
-              field.helpers.onValueChange(local.multiple ? files : files[0]);
-            }}
+            onChange={field.props.onChange}
           />
           <button
             onBlur={field.props.onBlur}
             classList={{ 'is-invalid': field.helpers.error }}
             type="button"
             class="form-control bg-light file-btn d-flex p-0 overflow-hidden"
-            onClick={() => fileInputRef?.click()}
+            onClick={() => fileInput?.click()}
           >
             <span class="p-2 border-end">Choose File</span>
             <span class="p-2">

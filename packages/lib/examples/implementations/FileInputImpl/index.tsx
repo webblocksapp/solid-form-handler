@@ -22,7 +22,10 @@ export const FileInputImpl: Component<{ schema: ValidationSchema<any> }> = (prop
       <form onSubmit={submit}>
         <h3>File input implementation</h3>
         <div class="mb-3">
-          <FileInput data-testid="test-input" formHandler={formHandler} name="document" placeholder="PDF document" />
+          <FileInput data-testid="test-input" formHandler={formHandler} name="document" />
+        </div>
+        <div class="mb-3">
+          <FileInput multiple formHandler={formHandler} name="documents" />
         </div>
         <button>Submit</button>
         <p>

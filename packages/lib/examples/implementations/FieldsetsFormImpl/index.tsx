@@ -8,7 +8,7 @@ type Schema = {
   age: number;
 };
 
-const schema: yup.SchemaOf<Schema[]> = yup
+const schema: yup.Schema<Schema[]> = yup
   .array()
   .of(
     yup.object().shape({
@@ -16,7 +16,8 @@ const schema: yup.SchemaOf<Schema[]> = yup
       age: yup.number().required().typeError('Invalid age value'),
     })
   )
-  .min(1);
+  .min(1)
+  .required();
 
 export const FieldsetsFormImpl: Component = () => {
   const formHandler = useFormHandler<Schema[]>(yupSchema(schema));

@@ -4,6 +4,6 @@ export type Schema = {
   name: string;
 };
 
-export const schema: yup.SchemaOf<Schema> = yup.object().shape({
+export const schema: yup.Schema<Schema> = yup.object().shape({
   name: yup.string().required(),
 });

@@ -9,7 +9,7 @@ type Schema = {
   kelvin: number;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   celsius: yup.number().required(),
   kelvin: yup.number().required(),
 });

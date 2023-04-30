@@ -1,12 +1,12 @@
 import { ErrorMap, ValidationSchema } from '@interfaces';
 import { flattenObject, set, get, ValidationError, formatObjectPath, objectValueExists } from '@utils';
-import { SchemaOf, reach, ValidationError as YupValidationError, AnySchema } from 'yup';
+import { Schema, reach, ValidationError as YupValidationError, AnySchema } from 'yup';
 import { DATA_CONTAINS_ERRORS, ROOT_KEY } from '@constants';
 
 /**
  * Yup schema adapter for solid form handler.
  */
-export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
+export const yupSchema = <T>(schema: Schema<T>): ValidationSchema<T> => {
   /**
    * Checks if the field is part of the given yup schema.
    * Fields that are not part of the schema are considered as metadata
@@ -90,7 +90,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
        * If no, the default empty value is assigned to the object.
        */
       Object.keys(flattenObject(_schema.getDefault())).forEach((key) => {
-        const reachedSchema = reach(_schema, key);
+        const reachedSchema = reach(_schema, key) as AnySchema;
         obj = buildDefault(reachedSchema, `${path}${key}`, obj);
       });
     } else {
@@ -121,7 +121,7 @@ export const yupSchema = <T>(schema: SchemaOf<T>): ValidationSchema<T> => {
 
   const getFieldDataType = (path: string = '') => {
     if (path === ROOT_KEY) return schema._type;
-    return reach(schema, path).type;
+    return (reach(schema, path) as AnySchema).type;
   };
 
   return { isFieldFromSchema, validateAt, buildDefault, getFieldDataType };

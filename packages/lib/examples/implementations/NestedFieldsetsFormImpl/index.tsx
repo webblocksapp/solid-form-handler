@@ -10,7 +10,7 @@ type Schema = {
   }>;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   nested: yup
     .array(
       yup.object().shape({
@@ -18,7 +18,8 @@ const schema: yup.SchemaOf<Schema> = yup.object({
         age: yup.number().required().typeError('Invalid age value'),
       })
     )
-    .min(2),
+    .min(2)
+    .required(),
 });
 
 export const NestedFieldsetsFormImpl: Component = () => {

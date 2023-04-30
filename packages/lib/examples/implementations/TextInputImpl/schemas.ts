@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import { yupSchema, zodSchema } from '@adapters';
 import { z } from 'zod';
 
-const _ySchema: yup.SchemaOf<{
+const _ySchema: yup.Schema<{
   name: string;
   age: number;
 }> = yup.object().shape({

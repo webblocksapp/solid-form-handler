@@ -18,8 +18,9 @@ const fileSizes = (value?: File[]) => {
   return true;
 };
 
-const _ySchema: yup.SchemaOf<{
-  document?: File;
+const _ySchema: yup.Schema<{
+  document: File;
+  documents: File[];
 }> = yup.object().shape({
   document: yup
     .mixed<File>()
@@ -32,7 +33,8 @@ const _ySchema: yup.SchemaOf<{
       name: 'fileSize',
       message: 'File exceeds 200kb',
       test: fileSize,
-    }),
+    })
+    .required(),
   documents: yup
     .mixed<File[]>()
     .test({
@@ -45,7 +47,7 @@ const _ySchema: yup.SchemaOf<{
       message: 'One File exceeds 200kb',
       test: fileSizes,
     })
-    .default([]),
+    .required(),
 });
 
 export const ySchema = yupSchema(_ySchema);

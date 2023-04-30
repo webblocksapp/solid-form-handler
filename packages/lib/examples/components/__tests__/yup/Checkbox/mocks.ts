@@ -5,7 +5,7 @@ export type Schema = {
   status: 'enabled' | 'disabled';
 };
 
-export const schema: yup.SchemaOf<Schema> = yup.object().shape({
+export const schema: yup.Schema<Schema> = yup.object().shape({
   subscribed: yup.boolean().required().oneOf([true], 'subscribed is a required field'),
-  status: yup.mixed().oneOf(['enabled', 'disabled']),
+  status: yup.mixed<Schema['status']>().oneOf(['enabled', 'disabled']).required(),
 });

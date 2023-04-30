@@ -4,8 +4,12 @@ export type Schema = {
   gender: 'male' | 'female' | 'other';
 };
 
-export const schema: yup.SchemaOf<Schema> = yup.object().shape({
-  gender: yup.mixed().required().oneOf(['male', 'female', 'other'], 'gender is a required field'),
+export const schema: yup.Schema<Schema> = yup.object().shape({
+  gender: yup
+    .mixed<Schema['gender']>()
+    .required()
+    .oneOf(['male', 'female', 'other'], 'gender is a required field')
+    .required(),
 });
 
 export const GENDERS = [

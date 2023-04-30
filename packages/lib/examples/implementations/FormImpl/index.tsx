@@ -9,7 +9,7 @@ type Person = {
   age: number;
 };
 
-const yupPersonShape: yup.SchemaOf<Person> = yup.object().shape({
+const yupPersonShape: yup.Schema<Person> = yup.object().shape({
   name: yup.string().required(),
   age: yup.number().required().typeError('Age is required'),
 });

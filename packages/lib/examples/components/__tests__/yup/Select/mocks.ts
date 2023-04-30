@@ -4,7 +4,7 @@ export type Schema = {
   country: number;
 };
 
-export const schema: yup.SchemaOf<Schema> = yup.object().shape({
+export const schema: yup.Schema<Schema> = yup.object().shape({
   country: yup.number().required().typeError('country is a required field'),
 });
 

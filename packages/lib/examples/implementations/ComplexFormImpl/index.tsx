@@ -12,10 +12,10 @@ type Schema = {
     phone: string;
   };
   hasHouse: boolean;
-  houseAddress: string | undefined;
+  houseAddress?: string;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   name: yup.string().required(),
   age: yup.number().required().typeError('Age is required'),
   contact: yup.object().shape({
@@ -27,7 +27,7 @@ const schema: yup.SchemaOf<Schema> = yup.object({
     .required()
     .transform((value) => Boolean(value))
     .default(false),
-  houseAddress: yup.string().optional().when('hasHouse', { is: true, then: yup.string().required() }),
+  houseAddress: yup.string().when('hasHouse', { is: true, then: (schema) => schema.required() }),
 });
 
 export const ComplexFormImpl: Component = () => {

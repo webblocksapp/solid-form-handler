@@ -2,12 +2,12 @@ import * as yup from 'yup';
 import { yupSchema, zodSchema } from '@adapters';
 import { z } from 'zod';
 
-const _ySchema: yup.SchemaOf<{
+const _ySchema: yup.Schema<{
   isAdult: boolean;
   email?: string;
 }> = yup.object({
   isAdult: yup.boolean().required(),
-  email: yup.string().when('isAdult', { is: true, then: yup.string().email().required() }),
+  email: yup.string().when('isAdult', { is: true, then: (schema) => schema.required() }),
 });
 
 export const ySchema = yupSchema(_ySchema);

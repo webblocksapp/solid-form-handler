@@ -8,7 +8,7 @@ type Schema = {
   policy: boolean;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object().shape({
+const schema: yup.Schema<Schema> = yup.object().shape({
   policy: yup.boolean().required().oneOf([true], 'Field must be checked'),
 });
 

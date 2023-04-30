@@ -15,15 +15,15 @@ type Schema = {
   gender: 'male' | 'female' | 'other';
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object().shape({
+const schema: yup.Schema<Schema> = yup.object().shape({
   name: yup.string().required(),
   age: yup.number().required(),
   country: yup.number().required(),
   subscribed: yup.boolean().required().oneOf([true]),
-  status: yup.mixed().required().oneOf(['active', 'inactive']),
-  favoriteFoods: yup.array(yup.number().required()).min(2),
-  accountStatus: yup.mixed().required().oneOf(['active', 'inactive']),
-  gender: yup.mixed().required().oneOf(['male', 'female', 'other']),
+  status: yup.mixed<Schema['status']>().required().oneOf(['active', 'inactive']),
+  favoriteFoods: yup.array(yup.number().required()).min(2).required(),
+  accountStatus: yup.mixed<Schema['accountStatus']>().required().oneOf(['active', 'inactive']),
+  gender: yup.mixed<Schema['gender']>().required().oneOf(['male', 'female', 'other']),
 });
 
 export const SuidFormImpl: Component = () => {

@@ -8,7 +8,7 @@ type Schema = {
   name: string;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object().shape({
+const schema: yup.Schema<Schema> = yup.object().shape({
   name: yup.string().required(),
 });
 

@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import { yupSchema, zodSchema } from '@adapters';
 import { z } from 'zod';
 
-const _ySchema: yup.SchemaOf<{
+const _ySchema: yup.Schema<{
   country: number;
 }> = yup.object().shape({
   country: yup.number().required().typeError('Country is required'),

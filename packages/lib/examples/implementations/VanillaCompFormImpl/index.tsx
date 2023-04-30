@@ -14,14 +14,14 @@ type Schema = {
   gender: 'male' | 'female' | 'other';
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object().shape({
+const schema: yup.Schema<Schema> = yup.object().shape({
   name: yup.string().required(),
   age: yup.number().required().min(1),
   country: yup.number().required(),
   subscribed: yup.boolean().required().oneOf([true]),
-  status: yup.mixed().required().oneOf(['active', 'inactive']),
-  favoriteFoods: yup.array(yup.number().required()).min(2),
-  gender: yup.mixed().required().oneOf(['male', 'female', 'other']),
+  status: yup.mixed<Schema['status']>().required().oneOf(['active', 'inactive']),
+  favoriteFoods: yup.array(yup.number().required()).min(2).required(),
+  gender: yup.mixed<Schema['gender']>().required().oneOf(['male', 'female', 'other']),
 });
 
 export const VanillaCompFormImpl: Component = () => {

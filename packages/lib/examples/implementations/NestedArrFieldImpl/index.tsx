@@ -11,7 +11,7 @@ type Schema = {
   }>;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   contacts: yup
     .array(
       yup.object().shape({
@@ -19,7 +19,8 @@ const schema: yup.SchemaOf<Schema> = yup.object({
         phone: yup.string().required(),
       })
     )
-    .min(2),
+    .min(2)
+    .required(),
 });
 
 export const NestedFieldArrImpl: Component = () => {

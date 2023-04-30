@@ -9,12 +9,15 @@ type Schema = {
   age: number;
 };
 
-const schema: yup.SchemaOf<Schema[]> = yup.array().of(
-  yup.object().shape({
-    name: yup.string().required(),
-    age: yup.number().required().typeError('Invalid age value'),
-  })
-);
+const schema: yup.Schema<Schema[]> = yup
+  .array()
+  .of(
+    yup.object().shape({
+      name: yup.string().required(),
+      age: yup.number().required().typeError('Invalid age value'),
+    })
+  )
+  .required();
 
 export const FieldsetsFormStress1: Component = () => {
   const formHandler = useFormHandler<Schema[]>(yupSchema(schema));

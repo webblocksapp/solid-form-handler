@@ -10,14 +10,14 @@ type Schema = {
   accountStatus: 'active' | 'inactive';
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   acceptPolicy: yup
     .boolean()
     .oneOf([true], 'Accept policy is required')
     .required()
     .typeError('Accept policy is required'),
   acceptTerms: yup.boolean().required().default(false),
-  accountStatus: yup.mixed().oneOf(['active', 'inactive']).required().default('inactive'),
+  accountStatus: yup.mixed<Schema['accountStatus']>().oneOf(['active', 'inactive']).required().default('inactive'),
 });
 
 export const CheckboxCompForm: Component = () => {

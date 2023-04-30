@@ -6,7 +6,7 @@ import * as yup from 'yup';
 
 export type Schema = { name: string; email: string };
 
-export const schema: yup.SchemaOf<Schema> = yup.object({
+export const schema: yup.Schema<Schema> = yup.object({
   name: yup.string().required('Required field'),
   email: yup.string().email().required('Required field'),
 });

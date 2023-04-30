@@ -4,8 +4,8 @@ export type Schema = {
   favoriteFoods: Array<number>;
 };
 
-export const schema: yup.SchemaOf<Schema> = yup.object().shape({
-  favoriteFoods: yup.array(yup.number().required()).min(1, 'favoriteFoods is a required field'),
+export const schema: yup.Schema<Schema> = yup.object().shape({
+  favoriteFoods: yup.array(yup.number().required()).min(1, 'favoriteFoods is a required field').required(),
 });
 
 export const FAVORITE_FOODS = [

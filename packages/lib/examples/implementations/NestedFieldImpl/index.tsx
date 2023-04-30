@@ -11,7 +11,7 @@ type Schema = {
   };
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   contact: yup.object().shape({
     email: yup.string().required().email(),
     phone: yup.string().required(),

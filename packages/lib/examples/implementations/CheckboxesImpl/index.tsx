@@ -13,8 +13,8 @@ type CheckboxesSchema = {
   favoriteFoods: number[];
 };
 
-const checkboxesSchema: yup.SchemaOf<CheckboxesSchema> = yup.object({
-  favoriteFoods: yup.array(yup.number().required()).min(2),
+const checkboxesSchema: yup.Schema<CheckboxesSchema> = yup.object({
+  favoriteFoods: yup.array(yup.number().required()).min(2).required(),
 });
 
 const favoriteFoods: SelectableOption[] = [

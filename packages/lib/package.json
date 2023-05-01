@@ -1,7 +1,7 @@
 {
   "name": "solid-form-handler",
   "description": "A SolidJS library for simplifying form validations.",
-  "version": "1.2.0-alpha.6",
+  "version": "1.2.0",
   "license": "MIT",
   "type": "module",
   "keywords": [

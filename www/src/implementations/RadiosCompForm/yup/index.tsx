@@ -10,10 +10,13 @@ type Schema = {
   jsFramework: 'solidjs' | 'reactjs' | 'angular';
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   country: yup.number().required().typeError('country is required'),
   animal: yup.number().required().typeError('animal is required'),
-  jsFramework: yup.mixed().required().oneOf(['solidjs', 'reactjs', 'angular']),
+  jsFramework: yup
+    .mixed<Schema['jsFramework']>()
+    .required()
+    .oneOf(['solidjs', 'reactjs', 'angular']),
 });
 
 export const Form: Component = () => {

@@ -7,7 +7,7 @@ type Schema = {
   country: number;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   country: yup.number().required().typeError('country is required'),
 });
 

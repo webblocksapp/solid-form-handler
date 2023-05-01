@@ -28,7 +28,7 @@
     "solid-form-handler": "workspace:*",
     "solid-highlight": "^0.1.12",
     "solid-js": "^1.6.10",
-    "yup": "^0.32.11",
+    "yup": "^1.1.1",
     "zod": "^3.20.2"
   },
   "devDependencies": {

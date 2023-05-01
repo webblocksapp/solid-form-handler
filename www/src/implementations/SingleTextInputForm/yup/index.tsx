@@ -7,7 +7,7 @@ type Schema = {
   email: string;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   email: yup.string().email().required(),
 });
 

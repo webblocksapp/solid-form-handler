@@ -32,6 +32,7 @@ export const DOCS_MENU: TreeMenuItem[] = [
       { text: 'Checkbox', route: 'single-checkbox' },
       { text: 'Checkboxes', route: 'checkboxes' },
       { text: 'Radios', route: 'radios' },
+      { text: 'FileInput', route: 'file-input' },
     ],
   },
   {

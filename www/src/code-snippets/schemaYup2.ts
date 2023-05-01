@@ -7,7 +7,7 @@ type Company = {
   };
 };
 
-const companySchema: yup.SchemaOf<Company> = yup.object({
+const companySchema: yup.Schema<Company> = yup.object({
   name: yup.string().required(),
   contact: yup.object({
     email: yup.string().email().required(),

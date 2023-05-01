@@ -11,7 +11,7 @@ type Schema = {
   age: number;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().email().required(),

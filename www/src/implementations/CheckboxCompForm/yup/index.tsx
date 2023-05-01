@@ -10,7 +10,7 @@ type Schema = {
   accountStatus: 'active' | 'inactive';
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   acceptPolicy: yup
     .boolean()
     .oneOf([true], 'Accept policy is required')
@@ -18,7 +18,7 @@ const schema: yup.SchemaOf<Schema> = yup.object({
     .typeError('Accept policy is required'),
   acceptTerms: yup.boolean().required().default(false),
   accountStatus: yup
-    .mixed()
+    .mixed<Schema['accountStatus']>()
     .oneOf(['active', 'inactive'])
     .required()
     .default('inactive'),

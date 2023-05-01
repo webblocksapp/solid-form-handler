@@ -2,6 +2,7 @@ export * from './Checkbox';
 export * from './Checkboxes';
 export * from './Code';
 export * from './CodeTabs';
+export * from './FileInput';
 export * from './Implementation';
 export * from './Navbar';
 export * from './Radio';

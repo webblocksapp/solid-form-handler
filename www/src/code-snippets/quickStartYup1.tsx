@@ -13,7 +13,7 @@ type User = {
   subscribed: boolean;
 };
 
-export const userSchema: yup.SchemaOf<User> = yup.object({
+export const userSchema: yup.Schema<User> = yup.object({
   name: yup.string().required('Required field'),
   email: yup.string().email('Invalid email').required('Required field'),
   country: yup

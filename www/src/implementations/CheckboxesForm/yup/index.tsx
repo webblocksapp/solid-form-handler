@@ -12,8 +12,8 @@ type Schema = {
   favoriteFoods: number[];
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
-  favoriteFoods: yup.array(yup.number().required()).min(2),
+const schema: yup.Schema<Schema> = yup.object({
+  favoriteFoods: yup.array(yup.number().required()).required().min(2),
 });
 
 const favoriteFoods: SelectableOption[] = [

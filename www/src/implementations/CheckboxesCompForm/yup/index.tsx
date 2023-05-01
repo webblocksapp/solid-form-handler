@@ -9,10 +9,16 @@ type Schema = {
   jsFrameworks: Array<'solidjs' | 'reactjs' | 'angular'>;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
-  favoriteFoods: yup.array(yup.number().required()).min(2),
+const schema: yup.Schema<Schema> = yup.object({
+  favoriteFoods: yup.array(yup.number().required()).required().min(2),
   jsFrameworks: yup
-    .array(yup.mixed().oneOf(['solidjs', 'reactjs', 'angular']))
+    .array(
+      yup
+        .mixed<'solidjs' | 'reactjs' | 'angular'>()
+        .required()
+        .oneOf(['solidjs', 'reactjs', 'angular'])
+    )
+    .required()
     .min(2),
 });
 

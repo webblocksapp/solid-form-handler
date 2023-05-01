@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { Referrals } from './types';
 
-export const referralsSchema: yup.SchemaOf<Referrals> = yup.object({
+export const referralsSchema: yup.Schema<Referrals> = yup.object({
   hostName: yup.string().required(),
   hostEmail: yup.string().email().required(),
   referrals: yup
@@ -11,5 +11,6 @@ export const referralsSchema: yup.SchemaOf<Referrals> = yup.object({
         email: yup.string().email().required(),
       })
     )
+    .required()
     .min(1, 'At least one referral must be added'),
 });

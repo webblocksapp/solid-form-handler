@@ -12,7 +12,7 @@ type Schema = {
   ageRange: string;
 };
 
-const schema: yup.SchemaOf<Schema> = yup.object({
+const schema: yup.Schema<Schema> = yup.object({
   ageRange: yup.string().required(),
 });
 

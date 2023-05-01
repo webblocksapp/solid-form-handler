@@ -16,6 +16,7 @@ import {
   FieldHasError,
   FieldInputMode,
   FieldRadioGroupMode,
+  FileInput,
   FillForm,
   FormData,
   FormHasChanges,
@@ -142,6 +143,7 @@ export const mainRoutes: RouteDefinition[] = [
             component: Checkboxes,
           },
           { path: 'radios', component: Radios },
+          { path: 'file-input', component: FileInput },
           {
             path: 'form-validation',
             component: FormValidation,

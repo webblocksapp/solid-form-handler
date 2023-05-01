@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { Person } from './types';
 
-export const personSchema: yup.SchemaOf<Person> = yup.object({
+export const personSchema: yup.Schema<Person> = yup.object({
   name: yup.string().required(),
   age: yup.number().required().typeError('number is a required field'),
   contact: yup.object({

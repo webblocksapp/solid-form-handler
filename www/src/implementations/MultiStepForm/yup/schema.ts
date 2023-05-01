@@ -1,12 +1,15 @@
 import * as yup from 'yup';
 import { Schema } from './types';
 
-export const schema: yup.SchemaOf<Schema> = yup.object({
+export const schema: yup.Schema<Schema> = yup.object({
   step1: yup
     .object({
       firstName: yup.string().required(),
       secondName: yup.string().required(),
-      gender: yup.mixed().required().oneOf(['male', 'female', 'other']),
+      gender: yup
+        .mixed<Schema['step1']['gender']>()
+        .required()
+        .oneOf(['male', 'female', 'other']),
     })
     .required(),
   step2: yup

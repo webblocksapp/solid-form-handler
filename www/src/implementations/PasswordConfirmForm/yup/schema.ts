@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { Schema } from './types';
 
-export const schema: yup.SchemaOf<Schema> = yup.object({
+export const schema: yup.Schema<Schema> = yup.object({
   password: yup
     .string()
     .required()

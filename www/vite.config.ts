@@ -1,42 +1,32 @@
-import { createHtmlPlugin } from 'vite-plugin-html';
-import { defineConfig } from 'vite';
+import { defineConfig, Plugin } from 'vite';
 import copy from 'rollup-plugin-copy';
 import solidPlugin from 'vite-plugin-solid';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import dotenv from 'dotenv';
 
-export default defineConfig(() => {
-  return {
-    plugins: [
-      solidPlugin(),
-      tsconfigPaths({ root: __dirname }),
-      createHtmlPlugin({
-        template: 'index.html',
-        inject: {
-          data: {
-            domain: 'https://www.solid-form-handler.com',
-          },
-        },
-      }),
-    ],
-    server: { port: 4000 },
-    build: {
-      sourcemap: true,
-      target: 'esnext',
-      rollupOptions: {
-        plugins: [
-          copy({
-            copyOnce: true,
-            hook: 'closeBundle',
-            verbose: true,
-            targets: [
-              {
-                src: 'src/assets/images/**/*',
-                dest: 'dist/images',
-              },
-            ],
-          }),
-        ],
-      },
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
+export default defineConfig({
+  plugins: [solidPlugin(), tsconfigPaths({ root: __dirname })],
+  server: { port: 4000 },
+  base: process.env.VITE_BASE_URL,
+  build: {
+    minify: false,
+    target: 'esnext',
+    rollupOptions: {
+      plugins: [
+        copy({
+          copyOnce: true,
+          hook: 'closeBundle',
+          verbose: true,
+          targets: [
+            {
+              src: 'src/assets/images/**/*',
+              dest: 'dist/images',
+            },
+          ],
+        }) as Plugin,
+      ],
     },
-  };
+  },
 });

@@ -14,7 +14,8 @@
     "test": "pnpm --filter solid-form-handler test",
     "test-www": "pnpm --filter www test",
     "test-core": "pnpm --filter solid-form-handler test-core",
-    "sync-components": "pnpm --filter www sync-components"
+    "sync-components": "pnpm --filter www sync-components",
+    "deploy-docs": "pnpm --filter www deploy-docs"
   },
   "keywords": [],
   "author": "Mauricio Rivera",

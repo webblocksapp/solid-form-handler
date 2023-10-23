@@ -5,12 +5,13 @@ import './index.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import { SidebarProvider } from '@components';
 import { loadSnippets } from '@utils';
+import { BASE_URL } from '@constants';
 
 loadSnippets();
 
 render(
   () => (
-    <Router>
+    <Router base={BASE_URL}>
       <SidebarProvider>
         <Suspense>
           <App />

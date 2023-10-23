@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const prettier = require('prettier');
 
-const syncExampleComponents = async () => {
+const run = async () => {
   let baseInitialPath = path.join(__dirname, '../../', 'packages/lib/examples');
   let baseTargetPath = path.join(__dirname, '..', 'src');
 
@@ -46,4 +46,4 @@ const writeComponents = async (initialPath, targetPath) => {
   });
 };
 
-syncExampleComponents();
+run();

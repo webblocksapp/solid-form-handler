@@ -2,7 +2,7 @@
 
 ## Documentation
 
-**[Documentation is available here.](https://solid-form-handler.com)**
+**[Documentation is available here.](https://webblocksapp.github.io/solid-form-handler)**
 
 ## Overview
 

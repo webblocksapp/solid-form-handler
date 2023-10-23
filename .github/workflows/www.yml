@@ -27,9 +27,3 @@ jobs:
         uses: ./.github/workflows/actions/setup-pnpm
       - name: Build and test
         uses: ./.github/workflows/actions/www-build-and-test
-      - name: Deploy
-        uses: ./.github/workflows/actions/www-deploy
-        with:
-          ftp-server: ${{ secrets.FTP_SERVER }}
-          ftp-username: ${{ secrets.FTP_USERNAME }}
-          ftp-password: ${{ secrets.FTP_PASSWORD }}

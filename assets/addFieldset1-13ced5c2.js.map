@@ -1,0 +1,1 @@
+{"version":3,"file":"addFieldset1-13ced5c2.js","sources":["../../src/code-snippets/addFieldset1.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nformHandler.addFieldset();\\n\\n//For nested fieldset\\nformHandler.addFieldset({ basePath: 'nested' });\\n\""],"names":["addFieldset1"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;"}

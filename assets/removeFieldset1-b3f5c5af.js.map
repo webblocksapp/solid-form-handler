@@ -1,0 +1,1 @@
+{"version":3,"file":"removeFieldset1-b3f5c5af.js","sources":["../../src/code-snippets/removeFieldset1.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nformHandler.removeFieldset(1);\\n\\n//For nested fieldset\\nformHandler.removeFieldset(2, 'nested');\\n\""],"names":["removeFieldset1"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;"}

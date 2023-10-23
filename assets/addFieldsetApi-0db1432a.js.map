@@ -1,0 +1,1 @@
+{"version":3,"file":"addFieldsetApi-0db1432a.js","sources":["../../src/apis/addFieldsetApi.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nfunction addFieldset(options?: { basePath?: string }): void;\\n\""],"names":["addFieldsetApi"],"mappings":"AAAA,MAAAA,EAAe;AAAA;"}

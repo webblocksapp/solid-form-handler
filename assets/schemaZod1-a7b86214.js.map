@@ -1,0 +1,1 @@
+{"version":3,"file":"schemaZod1-a7b86214.js","sources":["../../src/code-snippets/schemaZod1.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nconst userSchema = z.object({\\n  name: z.string().min(1, 'name is required'),\\n  age: z.coerce.number().min(1, 'age is required'),\\n});\\n\""],"names":["schemaZod1"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;"}

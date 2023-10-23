@@ -1,0 +1,1 @@
+{"version":3,"file":"types-a73d0157.js","sources":["../../src/implementations/ProductsForm/yup/types.ts?raw"],"sourcesContent":["export default \"export type Product = {\\n  name: string;\\n  quantity: number;\\n};\\n\""],"names":["types"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;"}

@@ -1,0 +1,16 @@
+const e=`import { z } from 'zod';
+
+export const userSchema = z.object({
+  name: z.string().min(1, 'Required field'),
+  email: z.string().email(),
+  country: z.number().min(1, 'Country is required'),
+  favoriteFoods: z.array(z.number()).min(2),
+  gender: z
+    .string()
+    .refine((value) =>
+      ['male', 'female', 'other'].some((item) => item === value)
+    ),
+  subscribed: z.boolean().default(false),
+});
+`;export{e as default};
+//# sourceMappingURL=schema-b62852b8.js.map

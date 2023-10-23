@@ -1,0 +1,1 @@
+{"version":3,"file":"formDataApi-ace94b40.js","sources":["../../src/apis/formDataApi.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nfunction formData(): T;\\n\""],"names":["formDataApi"],"mappings":"AAAA,MAAAA,EAAe;AAAA;"}

@@ -54,4 +54,3 @@ export const SidebarMenu: Component<TreeMenuProps> = (props) => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-6eb961d9.js.map

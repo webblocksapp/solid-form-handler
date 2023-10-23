@@ -34,4 +34,3 @@ export const schema: yup.Schema<Schema> = yup.object({
     .required(),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-d6d34fd6.js.map

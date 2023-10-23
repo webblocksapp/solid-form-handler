@@ -6,4 +6,3 @@ export const schema: yup.Schema<Schema> = yup.object({
   email: yup.string().email().required('Required field'),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-ebebbb09.js.map

@@ -7,4 +7,3 @@ console.log(formHandler.formData());
  * {name: 'John', age: 28}
  */
 `;export{n as default};
-//# sourceMappingURL=fillForm1-94a6b274.js.map

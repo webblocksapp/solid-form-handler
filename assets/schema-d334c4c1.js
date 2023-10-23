@@ -12,4 +12,3 @@ export const schema = z.object({
     }, 'Email test@mail.com already exists'),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-d334c4c1.js.map

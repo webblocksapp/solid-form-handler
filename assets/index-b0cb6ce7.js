@@ -194,4 +194,3 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   );
 };
 `;export{e as default};
-//# sourceMappingURL=index-b0cb6ce7.js.map

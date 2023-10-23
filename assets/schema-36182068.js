@@ -11,4 +11,3 @@ export const personSchema: yup.Schema<Person> = yup.object({
   }),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-36182068.js.map

@@ -4,4 +4,3 @@ const userSchema = z.object({
   age: z.coerce.number().min(1, 'age is required'),
 });
 `;export{e as default};
-//# sourceMappingURL=schemaZod1-a7b86214.js.map

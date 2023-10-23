@@ -8,4 +8,3 @@ export const schema: yup.Schema<Schema> = yup.object({
     .when('isAdult', { is: true, then: (schema) => schema.required() }),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-b88a2463.js.map

@@ -1,1 +1,0 @@
-{"version":3,"file":"formIsFilling1-02f57b01.js","sources":["../../src/code-snippets/formIsFilling1.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nformHandler.fillForm({ name: 'John', age: 28 });\\n\\ncreateEffect(() => {\\n  console.log(formHandler.formIsFilling());\\n});\\n\""],"names":["formIsFilling1"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;AAAA;"}

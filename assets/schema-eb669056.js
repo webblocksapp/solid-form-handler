@@ -5,4 +5,3 @@ export const schema = z.object({
   email: z.string().email(),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-eb669056.js.map

@@ -8,4 +8,3 @@ type CheckboxFieldProps = CommonFieldProps & {
   render: (field: CheckboxFieldStore) => JSXElement;
 };
 `;export{e as default};
-//# sourceMappingURL=CheckboxFieldApi-1b6062c1.js.map

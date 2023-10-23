@@ -1,1 +1,0 @@
-{"version":3,"file":"formIsResetting1-aa2e6476.js","sources":["../../src/code-snippets/formIsResetting1.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nformHandler.resetForm();\\n\\ncreateEffect(() => {\\n  console.log(formHandler.formIsResetting());\\n});\\n\""],"names":["formIsResetting1"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;AAAA;"}

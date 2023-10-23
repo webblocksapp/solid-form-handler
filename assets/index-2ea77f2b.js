@@ -48,4 +48,3 @@ export const SidebarProvider: Component<SidebarProviderProps> = (props) => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-2ea77f2b.js.map

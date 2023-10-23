@@ -48,4 +48,3 @@ export const Checkboxes: Component<CheckboxesProps> = (props) => {
   );
 };
 `;export{e as default};
-//# sourceMappingURL=index-48a34fd5.js.map

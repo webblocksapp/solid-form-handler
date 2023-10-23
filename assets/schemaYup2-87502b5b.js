@@ -15,4 +15,3 @@ const companySchema: yup.Schema<Company> = yup.object({
   }),
 });
 `;export{n as default};
-//# sourceMappingURL=schemaYup2-87502b5b.js.map

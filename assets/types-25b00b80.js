@@ -3,4 +3,3 @@ const e=`export type Schema = {
   email?: string;
 };
 `;export{e as default};
-//# sourceMappingURL=types-25b00b80.js.map

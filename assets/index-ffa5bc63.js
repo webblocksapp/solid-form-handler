@@ -152,4 +152,3 @@ export const ReferralsForm: Component = () => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-ffa5bc63.js.map

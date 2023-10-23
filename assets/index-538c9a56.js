@@ -64,4 +64,3 @@ export const FileInput: Component<FileInputProps> = (props) => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-538c9a56.js.map

@@ -100,4 +100,3 @@ export const Form: Component = () => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-b7eb0362.js.map

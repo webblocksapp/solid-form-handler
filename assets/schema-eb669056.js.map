@@ -1,1 +1,0 @@
-{"version":3,"file":"schema-eb669056.js","sources":["../../src/implementations/ValidateOnForm/zod/schema.ts?raw"],"sourcesContent":["export default \"import { z } from 'zod';\\n\\nexport const schema = z.object({\\n  name: z.string().min(1, 'Required field'),\\n  email: z.string().email(),\\n});\\n\""],"names":["schema"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;AAAA;"}

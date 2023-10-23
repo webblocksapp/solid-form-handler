@@ -19,4 +19,3 @@ console.log(formData());
  * {name: 'John', age: 28}
  */
 `;export{n as default};
-//# sourceMappingURL=formData1-94d60342.js.map

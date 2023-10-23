@@ -51,4 +51,3 @@ export const CodeTabs: Component<CodeTabsProps> = (props) => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-41486bf1.js.map

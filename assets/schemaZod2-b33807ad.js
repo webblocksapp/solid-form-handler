@@ -7,4 +7,3 @@ const companySchema = z.object({
   }),
 });
 `;export{n as default};
-//# sourceMappingURL=schemaZod2-b33807ad.js.map

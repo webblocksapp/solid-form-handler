@@ -68,4 +68,3 @@ export const Navbar: Component<NavbarProps> = (props) => (
   </nav>
 );
 `;export{n as default};
-//# sourceMappingURL=index-2fe3ea89.js.map

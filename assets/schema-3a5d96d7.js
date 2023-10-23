@@ -13,4 +13,3 @@ export const productSchema: yup.Schema<Product[]> = yup
   )
   .required();
 `;export{r as default};
-//# sourceMappingURL=schema-3a5d96d7.js.map

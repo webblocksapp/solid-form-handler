@@ -8,4 +8,3 @@ const n=`export type Person = {
   };
 };
 `;export{n as default};
-//# sourceMappingURL=types-367714e4.js.map

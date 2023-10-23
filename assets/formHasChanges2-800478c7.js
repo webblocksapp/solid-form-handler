@@ -7,4 +7,3 @@ console.log(formHandler.formHasChanges()); // true
 formHandler.fillForm({ name: '', age: '' });
 console.log(formHandler.formHasChanges()); // false
 `;export{n as default};
-//# sourceMappingURL=formHasChanges2-800478c7.js.map

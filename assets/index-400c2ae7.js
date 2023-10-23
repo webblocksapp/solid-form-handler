@@ -164,4 +164,3 @@ export const Radio: Component<RadioProps> = (props) => {
   );
 };
 `;export{e as default};
-//# sourceMappingURL=index-400c2ae7.js.map

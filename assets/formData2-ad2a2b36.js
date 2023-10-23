@@ -25,4 +25,3 @@ console.log(formData());
  * { name: 'Google', contact: { email: 'google@gmail.com', phone: '1112223' } }
  */
 `;export{o as default};
-//# sourceMappingURL=formData2-ad2a2b36.js.map

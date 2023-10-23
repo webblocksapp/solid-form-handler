@@ -19,4 +19,3 @@ formHandler.setFieldValue('name', 'Laura');
  */
 formHandler.setFieldValue('name', 'John', { validateOn: ['blur'] });
 `;export{e as default};
-//# sourceMappingURL=useFormHandler2-3f544344.js.map

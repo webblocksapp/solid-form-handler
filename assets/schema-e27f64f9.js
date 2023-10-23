@@ -13,4 +13,3 @@ export const userSchema: yup.Schema<User> = yup.object({
   subscribed: yup.boolean().required().default(false),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-e27f64f9.js.map

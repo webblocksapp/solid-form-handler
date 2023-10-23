@@ -14,4 +14,3 @@ const n=`export type Schema = {
   };
 };
 `;export{n as default};
-//# sourceMappingURL=types-1b607f3e.js.map

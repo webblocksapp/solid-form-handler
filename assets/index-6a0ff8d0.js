@@ -73,4 +73,3 @@ export const Tabs: Component<TabsProps> = (props) => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-6a0ff8d0.js.map

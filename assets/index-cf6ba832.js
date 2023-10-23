@@ -65,4 +65,3 @@ export const Sidebar: Component<SidebarProps> = (props) => {
   );
 };
 `;export{e as default};
-//# sourceMappingURL=index-cf6ba832.js.map

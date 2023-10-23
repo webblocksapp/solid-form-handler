@@ -15,4 +15,3 @@ export const schema = z
     }
   });
 `;export{e as default};
-//# sourceMappingURL=schema-9cb20810.js.map

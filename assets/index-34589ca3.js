@@ -17,4 +17,3 @@ export const Redirect: Component<RedirectProps> = (props) => {
   return <></>;
 };
 `;export{e as default};
-//# sourceMappingURL=index-34589ca3.js.map

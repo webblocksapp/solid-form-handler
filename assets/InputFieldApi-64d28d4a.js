@@ -6,4 +6,3 @@ type InputFieldProps = CommonFieldProps & {
   render: (field: InputFieldStore) => JSXElement;
 };
 `;export{n as default};
-//# sourceMappingURL=InputFieldApi-64d28d4a.js.map

@@ -102,4 +102,3 @@ export const PersonForm: Component = () => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-440c3a00.js.map

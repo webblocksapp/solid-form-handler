@@ -33,4 +33,3 @@ export const schema = z.object({
     .required(),
 });
 `;export{n as default};
-//# sourceMappingURL=schema-5be1d24c.js.map

@@ -7,4 +7,3 @@ export const productSchema = z.array(
   })
 );
 `;export{n as default};
-//# sourceMappingURL=schema-ba55ef83.js.map

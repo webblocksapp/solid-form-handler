@@ -15,4 +15,3 @@ export const referralsSchema: yup.Schema<Referrals> = yup.object({
     .min(1, 'At least one referral must be added'),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-5a9807fb.js.map

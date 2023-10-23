@@ -24,4 +24,3 @@ export const schema: yup.Schema<Schema> = yup.object({
     }),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-ab647777.js.map

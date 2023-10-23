@@ -1,1 +1,0 @@
-{"version":3,"file":"moveFieldset1-3142057a.js","sources":["../../src/code-snippets/moveFieldset1.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nformHandler.moveFieldset(0, 2);\\n\\n//For nested fieldset\\nformHandler.removeFieldset(0, 2, 'nested');\\n\""],"names":["moveFieldset1"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;"}

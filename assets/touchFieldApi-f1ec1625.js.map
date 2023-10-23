@@ -1,1 +1,0 @@
-{"version":3,"file":"touchFieldApi-f1ec1625.js","sources":["../../src/apis/touchFieldApi.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nfunction touchField(path: string): void;\\n\""],"names":["touchFieldApi"],"mappings":"AAAA,MAAAA,EAAe;AAAA;"}

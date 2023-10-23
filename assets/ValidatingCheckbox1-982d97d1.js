@@ -39,4 +39,3 @@ const formHandler = useFormHandler(__VALIDATOR__Schema(schema));
   )}
 />;
 `;export{n as default};
-//# sourceMappingURL=ValidatingCheckbox1-982d97d1.js.map

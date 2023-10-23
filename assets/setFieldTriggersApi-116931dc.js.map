@@ -1,1 +1,0 @@
-{"version":3,"file":"setFieldTriggersApi-116931dc.js","sources":["../../src/apis/setFieldTriggersApi.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nfunction setFieldTriggers(path?: string, paths?: string[]): void;\\n\""],"names":["setFieldTriggersApi"],"mappings":"AAAA,MAAAA,EAAe;AAAA;"}

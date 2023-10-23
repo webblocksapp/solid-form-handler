@@ -47,4 +47,3 @@ export const Implementation: Component<ImplementationProps> = (props) => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-a0a86182.js.map

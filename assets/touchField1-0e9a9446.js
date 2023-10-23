@@ -11,4 +11,3 @@ const e=`//@ts-nocheck
   }}
 ></input>;
 `;export{e as default};
-//# sourceMappingURL=touchField1-0e9a9446.js.map

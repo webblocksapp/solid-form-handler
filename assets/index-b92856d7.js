@@ -188,4 +188,3 @@ export const Select: Component<SelectProps> = (props) => {
   );
 };
 `;export{e as default};
-//# sourceMappingURL=index-b92856d7.js.map

@@ -13,4 +13,3 @@ export const userSchema = z.object({
   subscribed: z.boolean().default(false),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-b62852b8.js.map

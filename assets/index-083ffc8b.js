@@ -81,4 +81,3 @@ export const Code: Component<CodeProps> = (props) => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-083ffc8b.js.map

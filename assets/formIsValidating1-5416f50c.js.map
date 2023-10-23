@@ -1,1 +1,0 @@
-{"version":3,"file":"formIsValidating1-5416f50c.js","sources":["../../src/code-snippets/formIsValidating1.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nformHandler.validateForm();\\n\\ncreateEffect(() => {\\n  console.log(formHandler.formIsValidating());\\n});\\n\""],"names":["formIsValidating1"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;AAAA;"}

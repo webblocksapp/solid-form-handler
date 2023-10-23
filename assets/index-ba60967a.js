@@ -123,4 +123,3 @@ export const UserForm: Component = () => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-ba60967a.js.map

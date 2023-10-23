@@ -7,4 +7,3 @@ const e=`export type User = {
   subscribed: boolean;
 };
 `;export{e as default};
-//# sourceMappingURL=types-d56a691f.js.map

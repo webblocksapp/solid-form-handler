@@ -1,1 +1,0 @@
-{"version":3,"file":"moveFieldsetApi-c4c59e38.js","sources":["../../src/apis/moveFieldsetApi.ts?raw"],"sourcesContent":["export default \"//@ts-nocheck\\nfunction moveFieldset(\\n  oldIndex?: number,\\n  newIndex?: number,\\n  basePath?: string\\n): void;\\n\""],"names":["moveFieldsetApi"],"mappings":"AAAA,MAAAA,EAAe;AAAA;AAAA;AAAA;AAAA;AAAA;"}

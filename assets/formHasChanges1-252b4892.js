@@ -7,4 +7,3 @@ console.log(formHandler.formHasChanges()); // true
 formHandler.setFieldValue('name', '');
 console.log(formHandler.formHasChanges()); // false
 `;export{e as default};
-//# sourceMappingURL=formHasChanges1-252b4892.js.map

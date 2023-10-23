@@ -4,4 +4,3 @@ const r=`export type Referrals = {
   referrals: Array<{ name: string; email: string }>;
 };
 `;export{r as default};
-//# sourceMappingURL=types-95199ade.js.map

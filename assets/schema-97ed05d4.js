@@ -10,4 +10,3 @@ export const personSchema = z.object({
   }),
 });
 `;export{n as default};
-//# sourceMappingURL=schema-97ed05d4.js.map

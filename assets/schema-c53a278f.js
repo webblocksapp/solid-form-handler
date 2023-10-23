@@ -13,4 +13,3 @@ export const referralsSchema = z.object({
     .min(1, 'At least one referral must be added'),
 });
 `;export{e as default};
-//# sourceMappingURL=schema-c53a278f.js.map

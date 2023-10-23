@@ -135,4 +135,3 @@ export const ProductsForm: Component = () => {
   );
 };
 `;export{n as default};
-//# sourceMappingURL=index-6c5d99b3.js.map

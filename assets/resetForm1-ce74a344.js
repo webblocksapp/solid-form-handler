@@ -13,4 +13,3 @@ console.log(formHandler.formData());
  * {name: '', age: ''}
  */
 `;export{n as default};
-//# sourceMappingURL=resetForm1-ce74a344.js.map

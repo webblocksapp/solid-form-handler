@@ -1,0 +1,3 @@
+const schema = "import * as yup from 'yup';\nimport { User } from './types';\n\nexport const userSchema: yup.Schema<User> = yup.object({\n  name: yup.string().required('Required field'),\n  email: yup.string().email('Invalid email').required('Email is required'),\n  country: yup.number().required().typeError('Country is required'),\n  favoriteFoods: yup.array(yup.number().required()).required().min(2),\n  gender: yup\n    .mixed<User['gender']>()\n    .oneOf(['male', 'female', 'other'])\n    .required(),\n  subscribed: yup.boolean().required().default(false),\n});\n";
+
+export { schema as default };

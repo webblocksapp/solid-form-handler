@@ -1,0 +1,3 @@
+const getFieldDefaultValue1 = "//@ts-nocheck\nformHandler.getFieldDefaultValue('age');\n\n//For nested objects you can access by dot notation\nformHandler.getFieldDefaultValue('contact.email');\n\n//For nested arrays too\nformHandler.getFieldDefaultValue('contacts.0.email');\nformHandler.getFieldDefaultValue('contacts[0]email');\n\n//And fieldsets\nformHandler.getFieldDefaultValue('0.contact.email');\nformHandler.getFieldDefaultValue('0.contacts.0.email');\nformHandler.getFieldDefaultValue('[0]contact.email');\nformHandler.getFieldDefaultValue('[0]contacts[0]email');\n";
+
+export { getFieldDefaultValue1 as default };

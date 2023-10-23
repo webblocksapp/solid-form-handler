@@ -1,0 +1,3 @@
+const ComponentFieldApi = "//@ts-nocheck\nfunction Field(props: FieldComponentProps): JSXElement;\n\ntype FieldComponentProps = CommonFieldProps &\n  (\n    | InputFieldProps\n    | CheckboxFieldProps\n    | CheckboxGroupFieldProps\n    | RadioGroupFieldProps\n  );\n\ninterface CommonFieldProps extends FieldProps {\n  onBlur?: CommonEvent;\n  onBlurOptions?: ValidateFieldOptions;\n}\n\ntype FieldProps = {\n  id?: string;\n  error?: boolean;\n  errorMessage?: string;\n  formHandler?: FormHandler;\n  name?: string;\n  triggers?: string[];\n  value?: any;\n};\n";
+
+export { ComponentFieldApi as default };

@@ -986,8 +986,7 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
       ? get<any[]>(formData.data, options.basePath).length
       : (formData.data as unknown as any[]).length;
     const builtPath = options?.basePath ? `${options?.basePath}.${length}` : `${length}`;
-    const data = { ...defaultData[0], ...getFieldDefaultValue(builtPath)[0] };
-
+    const data = clone({ ...defaultData[0], ...getFieldDefaultValue(builtPath)[0] });
     setFieldData(builtPath, data);
     addFieldsetState(builtPath, data);
     validateFieldsets(options?.basePath);

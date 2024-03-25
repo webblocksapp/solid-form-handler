@@ -1526,6 +1526,33 @@ function pathIntegration() {
         go: delta => window.history.go(delta)
     });
 }
+function hashIntegration() {
+    return createIntegration(() => window.location.hash.slice(1), ({ value, replace, scroll, state }) => {
+        if (replace) {
+            window.history.replaceState(state, "", "#" + value);
+        }
+        else {
+            window.location.hash = value;
+        }
+        const hashIndex = value.indexOf("#");
+        const hash = hashIndex >= 0 ? value.slice(hashIndex + 1) : "";
+        scrollToHash(hash, scroll);
+    }, notify => bindEvent(window, "hashchange", () => notify()), {
+        go: delta => window.history.go(delta),
+        renderPath: path => `#${path}`,
+        parsePath: str => {
+            const to = str.replace(/^.*?#/, "");
+            // Hash-only hrefs like `#foo` from plain anchors will come in as `/#foo` whereas a link to
+            // `/foo` will be `/#/foo`. Check if the to starts with a `/` and if not append it as a hash
+            // to the current path so we can handle these in-page anchors correctly.
+            if (!to.startsWith("/")) {
+                const [, path = "/"] = window.location.hash.split("#", 2);
+                return `${path}#${to}`;
+            }
+            return to;
+        }
+    });
+}
 
 const hasSchemeRegex = /^(?:[a-z0-9]+:)?\/\//i;
 const trimPathRegex = /^\/+|\/+$/g;
@@ -2317,7 +2344,7 @@ const ye = (e) => {
   let l = V;
   n.pop();
   for (let u = n.length - 1; u >= 0; u--) {
-    if (!I(n[u])) {
+    if (!R(n[u])) {
       l = n.join(".");
       break;
     }
@@ -2331,19 +2358,19 @@ const ye = (e) => {
     return `${V}.${S$1}`;
   for (let u = 0; u < n.length; u++) {
     const i = n[u], o = n[u + 1];
-    if (o === void 0 && I(i))
+    if (o === void 0 && R(i))
       l = l.replace(jr, `.${S$1}`);
-    else if (o === void 0 && !I(i))
+    else if (o === void 0 && !R(i))
       l = `${l}.${i}.${S$1}`;
-    else if (o && !I(i))
+    else if (o && !R(i))
       l = `${l}.${i}.${j}`;
     else {
-      if (I(i) && I(o))
+      if (R(i) && R(o))
         return;
       l = `${l}.${i}`;
     }
   }
-  if (I(l) ? l = `${V}.${S$1}` : l.match(Xe) && (l = `${V}.${j}.${l}`), l.match(Ve))
+  if (R(l) ? l = `${V}.${S$1}` : l.match(Xe) && (l = `${V}.${j}.${l}`), l.match(Ve))
     return l;
 }, Lr = (e) => {
   const n = zr(e), l = [];
@@ -2351,7 +2378,7 @@ const ye = (e) => {
     const i = Y(u);
     i != null && i.match(Ve) && l.push(i);
   }), { fieldStatePaths: l, fieldsPaths: n };
-}, _ = (e) => {
+}, A$2 = (e) => {
   let n;
   if (e === void 0)
     return n;
@@ -2540,7 +2567,7 @@ const Be = (e) => {
         f = `${f}${d}${m}`;
         const P = b$2(n, f), C = f.split(".");
         let T;
-        A$2(m) && A$2(y) && (T = []), !A$2(m) && A$2(y) && (T = []), A$2(m) && !A$2(y) && (T = {}), !A$2(m) && !A$2(y) && (T = {}), P === void 0 && y !== void 0 && l(...C, T), y === void 0 && l(...C, o);
+        I(m) && I(y) && (T = []), !I(m) && I(y) && (T = []), I(m) && !I(y) && (T = {}), !I(m) && !I(y) && (T = {}), P === void 0 && y !== void 0 && l(...C, T), y === void 0 && l(...C, o);
       }
   }];
 }, Pe = (e, n) => {
@@ -2580,7 +2607,7 @@ const Be = (e) => {
   const n = G(e).filter(
     (l) => {
       var u;
-      return !((u = l.match(re)) != null && u.length) && !I(l);
+      return !((u = l.match(re)) != null && u.length) && !R(l);
     }
   );
   return n.unshift(V), n;
@@ -2599,10 +2626,10 @@ const Be = (e) => {
     return !0;
   }
   return !1;
-}, I = (e = "") => {
+}, R = (e = "") => {
   var n, l;
   return Boolean((l = (n = String(e)) == null ? void 0 : n.match(Ye)) == null ? void 0 : l.length);
-}, A$2 = (e) => e === "" || e === null ? !1 : !isNaN(e), G = (e, n = "", l = []) => (n = n ? `${n}.` : "", typeof e == "object" && Object.keys(e).forEach((u) => {
+}, I = (e) => e === "" || e === null ? !1 : !isNaN(e), G = (e, n = "", l = []) => (n = n ? `${n}.` : "", typeof e == "object" && Object.keys(e).forEach((u) => {
   let i = `${n}${u}`;
   typeof e[u] == "object" && G(e[u], i, l), l.unshift(i);
 }), l), Ke = (e, n, l) => {
@@ -2639,7 +2666,7 @@ const Be = (e) => {
       return;
     c == null || delete c.mapValue;
     let { parentPath: E, currentPath: v, parentDefaultValue: F } = h;
-    Ae(E) && (r = Te(r), v = Te(v)), F = ve(_(F), v, Q(r, t)), await M(E, F, c, {
+    Ae(E) && (r = Te(r), v = Te(v)), F = ve(A$2(F), v, Q(r, t)), await M(E, F, c, {
       ...s,
       updateParent: !0,
       updateChild: !1
@@ -2690,7 +2717,7 @@ const Be = (e) => {
       return;
     const t = r.split("."), c = t.pop(), [s] = t.slice(-1);
     let h = c;
-    A$2(s) && (t.pop(), h = `${s}.${c}`);
+    I(s) && (t.pop(), h = `${s}.${c}`);
     const E = Gr(r), v = K(E), F = oe(E);
     return { parentPath: E, currentPath: h, parentValue: v, parentDefaultValue: F };
   }, er = async (r = "", t, c, s) => {
@@ -2723,7 +2750,7 @@ const Be = (e) => {
         value: v
       });
     return c;
-  }, be = (r = []) => l.validateOn === void 0 ? !0 : l.validateOn.some((t) => r.includes(t)), R = (r = "", t) => {
+  }, be = (r = []) => l.validateOn === void 0 ? !0 : l.validateOn.some((t) => r.includes(t)), _ = (r = "", t) => {
     const c = Y(r);
     c !== void 0 && (r = `data.${c}`, typeof t == "function" ? g(r, t) : g(r, (s) => ({ ...s, ...t })));
   }, ue = (r = "", t) => {
@@ -2734,7 +2761,7 @@ const Be = (e) => {
     return ie(r, c), s;
   }, tr = async (r = "", t = []) => new Promise((c) => {
     setTimeout(async () => {
-      R(r, { triggers: t }), c(void 0);
+      _(r, { triggers: t }), c(void 0);
     });
   }), nr = (r = "") => {
     var t;
@@ -2752,21 +2779,21 @@ const Be = (e) => {
       )
     ), await Promise.all(c);
   }, ar = (r = "", t) => {
-    R(r, {
+    _(r, {
       validationId: t
     });
   }, se = (r, t) => {
     const c = Y(r);
     if (c === void 0)
       return "";
-    const s = r.split(".").pop(), h = I(s) ? `.${s}` : "";
+    const s = r.split(".").pop(), h = R(s) ? `.${s}` : "";
     return `data.${c}.${t}${h}`;
   }, cr = (r = "", t) => {
-    r = fe(r), g(se(r, "defaultValue"), _(t));
+    r = fe(r), g(se(r, "defaultValue"), A$2(t));
   }, ie = (r = "", t) => {
-    g(se(r, "currentValue"), _(t));
+    g(se(r, "currentValue"), A$2(t));
   }, ur = (r = "", t) => {
-    r = fe(r), g(se(r, "initialValue"), _(t));
+    r = fe(r), g(se(r, "initialValue"), A$2(t));
   }, fe = (r = "") => Ae(r) ? r.replace(re, ".0") : r, Te = (r = "") => r.replace(Xe, "0.").replace(Br, ".0."), sr = (r = "") => {
     var t;
     if (r)
@@ -2810,7 +2837,7 @@ const Be = (e) => {
         console.error(F);
     }
   }, de = (r, t) => {
-    Er(r) && (t = { errorMessage: "", ...t }, R(r, (c) => {
+    Er(r) && (t = { errorMessage: "", ...t }, _(r, (c) => {
       const s = (t == null ? void 0 : t.validating) || !1, h = c.errorMessage && (t == null ? void 0 : t.errorMessage) === "" ? c.errorMessage : (t == null ? void 0 : t.errorMessage) || "";
       return {
         ...c,
@@ -2820,7 +2847,7 @@ const Be = (e) => {
       };
     }));
   }, De = (r) => {
-    R(r, {
+    _(r, {
       isInvalid: !1,
       validating: !1,
       errorMessage: ""
@@ -2892,8 +2919,8 @@ const Be = (e) => {
       errorMessage: t.reset ? "" : (s == null ? void 0 : s.errorMessage) || "",
       currentValue: void 0,
       // Will be populated when the user interacts with the form or is filled programmatically.
-      defaultValue: t.reset || t != null && t.fill ? _(s == null ? void 0 : s.defaultValue) : _(h),
-      initialValue: t.fill ? _(h) : _(s == null ? void 0 : s.defaultValue) ?? _(h),
+      defaultValue: t.reset || t != null && t.fill ? A$2(s == null ? void 0 : s.defaultValue) : A$2(h),
+      initialValue: t.fill ? A$2(h) : A$2(s == null ? void 0 : s.defaultValue) ?? A$2(h),
       touched: t.reset ? !1 : (s == null ? void 0 : s.touched) || !1,
       dirty: t.reset ? !1 : (s == null ? void 0 : s.dirty) || !1,
       triggers: s == null ? void 0 : s.triggers,
@@ -2916,7 +2943,7 @@ const Be = (e) => {
     return r && ((t = O(r)) == null ? void 0 : t.touched);
   }, Q = (r, t) => {
     const c = O(r);
-    return (c == null ? void 0 : c.dataType) === "number" && A$2(t) ? Number(t) : t === void 0 ? "" : t;
+    return (c == null ? void 0 : c.dataType) === "number" && I(t) ? Number(t) : t === void 0 ? "" : t;
   }, yr = async (r, t) => (m(!0), new Promise((c) => {
     setTimeout(async () => {
       r !== void 0 && (i("data", r), await J({ fill: !0, silentValidation: t == null ? void 0 : t.silentValidation }), m(!1), c(void 0));
@@ -2937,10 +2964,10 @@ const Be = (e) => {
     var t;
     return (t = O(r)) == null ? void 0 : t.validating;
   }, Pr = () => Ie(V), vr = (r, t) => {
-    R(r, { htmlElement: t });
-  }, Re = (r = "") => R(r, { touched: !0 }), _e = (r) => {
+    _(r, { htmlElement: t });
+  }, Re = (r = "") => _(r, { touched: !0 }), _e = (r) => {
     const t = O(r), c = !Pe(K(r), t == null ? void 0 : t.initialValue);
-    R(r, { ...t, dirty: c });
+    _(r, { ...t, dirty: c });
   }, Vr = () => {
     for (let r of G(u.data)) {
       const t = O(r);
@@ -2952,15 +2979,15 @@ const Be = (e) => {
     a(!0), i("data", e.buildDefault()), await J({ reset: !0 }), a(!1);
   }, $r = (r = "", t) => {
     var c;
-    return !!(I(r) || (c = r.match(re)) != null && c.length || Array.isArray(t) && !Array.isArray(t[0]) && typeof t[0] == "object");
+    return !!(R(r) || (c = r.match(re)) != null && c.length || Array.isArray(t) && !Array.isArray(t[0]) && typeof t[0] == "object");
   }, Cr = async (r) => {
     let t = r != null && r.basePath ? b$2(e.buildDefault(), r.basePath) : e.buildDefault();
-    const c = r != null && r.basePath ? b$2(u.data, r.basePath).length : u.data.length, s = r != null && r.basePath ? `${r == null ? void 0 : r.basePath}.${c}` : `${c}`, h = { ...t[0], ...oe(s)[0] };
+    const c = r != null && r.basePath ? b$2(u.data, r.basePath).length : u.data.length, s = r != null && r.basePath ? `${r == null ? void 0 : r.basePath}.${c}` : `${c}`, h = A$2({ ...t[0], ...oe(s)[0] });
     D(s, h), He(s, h), we(r == null ? void 0 : r.basePath);
   }, He = (r, t) => {
     G(t).forEach((s) => {
       const h = `${r}.${s}`;
-      R(h, { ...ge(h), defaultValue: b$2(t, s) }), H(h, { silentValidation: !0, force: !0 });
+      _(h, { ...ge(h), defaultValue: b$2(t, s) }), H(h, { silentValidation: !0, force: !0 });
     });
   }, br = (r, t) => {
     Se(r, t), D(t, (c) => c.filter((s, h) => h !== r)), we(t);
@@ -3018,7 +3045,7 @@ const Be = (e) => {
       parseValue: Q,
       removeFieldsetState: Se,
       setFieldData: D,
-      setFieldState: R,
+      setFieldState: _,
       setFieldChildren: ue
     }
   };
@@ -92200,6 +92227,9 @@ const require$$0 = /*@__PURE__*/getAugmentedNamespace(lib);
 
 loadSnippets();
 render$1(() => createComponent(Router, {
+  get source() {
+    return hashIntegration();
+  },
   base: BASE_URL,
   get children() {
     return createComponent(SidebarProvider, {

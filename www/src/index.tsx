@@ -1,5 +1,5 @@
 import { render, Suspense } from 'solid-js/web';
-import { Router } from '@solidjs/router';
+import { Router, hashIntegration } from '@solidjs/router';
 import { App } from './App';
 import './index.css';
 import 'bootstrap/dist/js/bootstrap.js';
@@ -11,7 +11,7 @@ loadSnippets();
 
 render(
   () => (
-    <Router base={BASE_URL}>
+    <Router source={hashIntegration()} base={BASE_URL}>
       <SidebarProvider>
         <Suspense>
           <App />

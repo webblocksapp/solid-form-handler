@@ -199,8 +199,16 @@ export const useFormHandler = <T = any>(validationSchema: ValidationSchema<T>, o
     _?: FormStateUpdateBehavior
   ): Promise<any> => {
     if (!path) return;
+    const validateOn = options?.validateOn || formHandlerOptions.validateOn;
 
-    options = { touch: true, dirty: true, validate: true, mapValue: (value) => value, ...options };
+    options = {
+      touch: true,
+      dirty: true,
+      validate: hasEventTypes(validateOn),
+      mapValue: (value) => value,
+      ...options,
+    };
+
     setFieldData(path, value, { mapValue: options.mapValue });
 
     const promises = Promise.all([

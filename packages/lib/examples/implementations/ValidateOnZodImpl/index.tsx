@@ -1,19 +1,19 @@
 import { Component } from 'solid-js';
 import { useFormHandler } from '@hooks';
-import { yupSchema } from '@adapters';
+import { zodSchema } from '@adapters';
 import { TextInput } from '@example-components';
-import * as yup from 'yup';
+import { z } from 'zod';
 
 export type Schema = { name: string; email: string };
 
-export const schema: yup.Schema<Schema> = yup.object({
-  name: yup.string().required('Required field'),
-  email: yup.string().email().required('Required field'),
+export const schema = z.object({
+  name: z.string().min(1, 'Required field'),
+  email: z.string().email().min(1, 'Required field'),
 });
 
-export const ValidateOnImpl: Component = () => {
-  const formHandler = useFormHandler(yupSchema(schema), {
-    validateOn: ['blur'],
+export const ValidateOnZodImpl: Component = () => {
+  const formHandler = useFormHandler(zodSchema(schema), {
+    validateOn: ['input'],
   });
   const { formData } = formHandler;
 

@@ -1,5 +1,5 @@
 import { CommonEvent, FieldProps, SetFieldValueOptions, ValidateFieldOptions } from '@interfaces';
-import { createEffect, createUniqueId, splitProps } from 'solid-js';
+import { createEffect, createUniqueId, mergeProps, splitProps } from 'solid-js';
 import { useFieldContext, withFieldProvider } from '@hocs';
 import {
   CheckboxField,
@@ -48,8 +48,8 @@ export const Field = withFieldProvider((props: FieldComponentProps) => {
    * if no form field event attribute matches the expected interface.
    */
   const onFieldBlur = (options?: ValidateFieldOptions) => {
-    props.formHandler?.validateField?.(props.name, options);
     props.formHandler?.touchField?.(props.name);
+    props.formHandler?.setFieldValue(props.name, props.formHandler?.getFieldValue(props.name), options);
   };
 
   /**
@@ -57,7 +57,7 @@ export const Field = withFieldProvider((props: FieldComponentProps) => {
    */
   const onBlur: FieldComponentProps['onBlur'] = (event) => {
     //Form handler prop validate and touch the field.
-    onFieldBlur(props.onBlurOptions);
+    onFieldBlur({ ...props.onBlurOptions, validateOn: ['blur'] });
 
     //onBlur prop is preserved
     if (typeof props.onBlur === 'function') {

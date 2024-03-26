@@ -22,7 +22,7 @@ It supports the following data assertion libraries: yup and zod, however other v
 
 ## Quick start:
 
-You can start by creating your own form field [components](https://solid-form-handler.com/docs/components) by using each of the code given on the docs website. The following is a final implementation of them:
+You can start by creating your own form field [components](https://webblocksapp.github.io/solid-form-handler/#/solid-form-handler/docs/components) by using each of the code given on the docs website. The following is a final implementation of them:
 
 ```tsx
 import { useFormHandler } from 'solid-form-handler';

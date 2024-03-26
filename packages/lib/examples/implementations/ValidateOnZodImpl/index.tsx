@@ -13,7 +13,7 @@ export const schema = z.object({
 
 export const ValidateOnZodImpl: Component = () => {
   const formHandler = useFormHandler(zodSchema(schema), {
-    validateOn: ['input'],
+    validateOn: ['blur'],
   });
   const { formData } = formHandler;
 
